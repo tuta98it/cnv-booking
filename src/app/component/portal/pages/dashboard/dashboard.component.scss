@@ -1,0 +1,89 @@
+.region_flex{
+  display: flex;
+  width: 100%;
+  /*height: calc(100vh - 185px);*/
+}
+.chart_1{
+  width: 50%;
+  align-items: center;
+  margin-right: 10px;
+  background: #FFFFFF;
+  /*box-shadow: 0px 1.5px 15px rgba(0, 0, 0, 0.15);*/
+  border-radius: 5px;
+}
+.chart_2{
+  width: 50%;
+  align-items: center;
+  margin-left: 10px;
+  background: #FFFFFF;
+  /*box-shadow: 0px 1.5px 15px rgba(0, 0, 0, 0.15);*/
+  border-radius: 5px;
+}
+#chart1 {
+  width: 100%;
+}
+#chart{
+  width: 70%;
+}
+.stype_text{
+  margin-left: 20px;
+}
+.div-button{
+  clear: both;
+  display: block;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+.filter-left{
+  min-width: 100%;
+}
+::ng-deep {
+  .filter-left input, .filter-left select, .filter-left nz-select, .filter-left button {
+    margin-right: 10px;
+  }
+  .ant-result-title {
+    font-size: 18px;
+  }
+  .ant-result{
+    padding-top: 10px;
+  }
+}
+.chart-region{
+  border: solid 1px #EEE;
+}
+.chart-title{
+  padding:4px 10px;
+  background: #EEE;
+  font-size: 18px;
+}
+.text-center{
+  text-align: center;
+}
+.a-download{
+  color: #FFF !important;
+  border-radius: 4px;
+  padding: 2px 6px;
+  margin-left: 9px;
+  background: #57CC99;
+}
+::ng-deep {
+  .apexcharts-legend-text {
+    font-size: 14px !important;
+    font-family: Roboto !important;
+  }
+  .apexcharts-text tspan {
+    font-family: 'Roboto' !important;
+    font-size: 14px !important;
+  }
+}
+nz-alert {
+  margin-bottom: 16px;
+}
+.btn-detail{
+  position: absolute;
+  right: 10px;
+  top: 15px;
+}
+::ng-deep .ant-alert p{
+  margin: 0 !important;
+}

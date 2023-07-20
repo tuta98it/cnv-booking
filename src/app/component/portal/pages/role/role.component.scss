@@ -1,0 +1,50 @@
+.btn_add{
+  float: right;
+}
+::ng-deep {
+  .ant-table-header-column {
+    width: 100%;
+  }
+
+  .anticon {
+    vertical-align: middle;
+  }
+  .ant-modal-close:active, .ant-modal-close:focus{
+    outline: none;
+  }
+}
+nz-input-number{
+  width: 100%;
+}
+
+.slt_size{
+  border: 1px solid #d9d9d9;
+  margin-right: 8px;
+  border-radius: 4px;
+  background-color: #EEEEEE;
+}
+.labeb_text{
+  display: flex;
+  margin-bottom: 20px;
+}
+label{
+  margin-right: 12px;
+  width: 200px;
+}
+.required{
+  color: red;
+  font-size: 12px;
+}
+.btn-delete{
+  color: #fff;
+  background-color: red;
+  padding: 6px;
+  border-radius: 4px;
+}
+.btn-edit{
+  color: #fff;
+  background-color: #52c417;
+  padding: 6px;
+  border-radius: 4px;
+  margin-right: 12px;
+}

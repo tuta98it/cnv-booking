@@ -1,0 +1,245 @@
+<button nz-button nzType="primary" class="btn-add-asset" type="button" (click)="showModalAdd()" *ngIf="checkAdd">
+  <em class="fas fa-plus"></em> {{'add_user' | translate }}
+</button>
+<div class="data-table">
+    <nz-table #basicTable [nzData]="datas" (nzCurrentPageDataChange)="currentPageDataChange($event)" [nzPageSizeOptions]="pageSize" [nzPageSize]="defaultPage" nzSize="small" nzShowSizeChanger [nzShowTotal]="rangeTemplate" [nzLoading]="loading">
+        <thead>
+            <tr>
+                <th nzShowCheckbox nzLeft="0px" nzWidth="50px" [(nzChecked)]="isAllDisplayDataChecked" [nzIndeterminate]="isIndeterminate" (nzCheckedChange)="checkAllRow($event)"></th>
+                <th class="text-nowrap" width="50px">#</th>
+                <th class="text-nowrap">Tên</th>
+                <th class="text-nowrap">Số điện thoại</th>
+                <th class="text-nowrap">Email</th>
+                <th class="text-nowrap">Mã nhân viên</th>
+                <th class="text-nowrap">Chuyên môn</th>
+                <th class="text-nowrap">Phòng</th>
+                <th class="text-nowrap">Ghi chú</th>
+                <th class="text-nowrap">Tài khoản</th>
+                <th class="text-nowrap">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let data of basicTable.data;let i = index;">
+                <td nzShowCheckbox [(nzChecked)]="mapOfCheckedId[data.id]" (nzCheckedChange)="refreshStatus()" nzLeft="0px" nzWidth="50px"></td>
+                <td class="text-nowrap">{{getRowIndex(i, basicTable.nzPageIndex, basicTable.nzPageSize)}}</td>
+                <td class="text-nowrap">{{ data.firstName}} {{data.lastName}}</td>
+                <td class="text-nowrap">{{ data.phoneNo }}</td>
+                <td class="text-nowrap">{{ data.email }}</td>
+                <td class="text-nowrap">{{ data.staffCode }}</td>
+                <td class="text-nowrap">{{ data.chuyenMon }}</td>
+                <td class="text-nowrap crop-text">{{ getTenPhong(getRowIndex(i, basicTable.nzPageIndex, basicTable.nzPageSize) - 1) }}</td>
+                <td class="text-nowrap crop-text">{{ data.description }}</td>
+                <td class="text-nowrap">{{ getUsername(getRowIndex(i, basicTable.nzPageIndex, basicTable.nzPageSize) - 1) }}</td>
+                <td class="text-nowrap">
+                    <button nz-button nzType="danger" (click)="showConfirm(data.id)" *ngIf="checkDelete">{{'delete' | translate }}</button>
+                    <button nz-button nzType="default" class="button-update" (click)="showModalUpdate(data)" *ngIf="checkUpdate">{{'edit' | translate }}</button>
+                    <button nz-button nzType="primary" class="button-update" (click)="showModalAddTaiKhoan(data)" [disabled]="getStatusBtnAddTaiKhoan(getRowIndex(i, basicTable.nzPageIndex, basicTable.nzPageSize) - 1)">Tạo tài khoản</button>
+                    <button nz-button nzType="default" class="btn-right button-update" (click)="showModalGroup(data)" *ngIf="data.user">Nhóm</button>
+                </td>
+            </tr>
+        </tbody>
+    </nz-table>
+    <ng-template #rangeTemplate let-range="range" let-total>
+        {{ range[0] }}-{{ range[1] }} {{'of' | translate }} {{ total }} {{'items' | translate }}
+    </ng-template>
+</div>
+
+<form [formGroup]="formAdd" (ngSubmit)="handleOk()">
+    <nz-modal [(nzVisible)]="isVisibleAdd" nzTitle="Add User" nzClosable="false" [nzTitle]="title" nzMaskClosable="false">
+        <ng-template #title>
+            Thông tin nhân sự
+            <div class="pull-right icon-close">
+                <em (click)="handleCancel()" nz-icon nzType="close" nzTheme="outline"></em>
+            </div>
+        </ng-template>
+        <div>
+            <div class="input-wrap" nz-row>
+                <label class="title-detail" nz-col [nzSpan]="8">Họ<em class="fa fa-asterisk required"></em></label>
+                <div nz-col [nzSpan]="16">
+                    <input nz-input formControlName="firstName" [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }" />
+                </div>
+            </div>
+            <div class="input-wrap" nz-row>
+                <label class="title-detail" nz-col [nzSpan]="8">Tên<em class="fa fa-asterisk required"></em></label>
+                <div nz-col [nzSpan]="16">
+                    <input nz-input formControlName="lastName" [ngClass]="{ 'is-invalid': submitted && f.lastName.errors }" />
+                </div>
+            </div>
+            <div class="input-wrap" nz-row>
+                <label class="title-detail" nz-col [nzSpan]="8">Mã nhân viên<em class="fa fa-asterisk required"></em></label>
+                <div nz-col [nzSpan]="16">
+                    <input nz-input formControlName="staffCode" />
+                </div>
+            </div>
+            <div class="input-wrap" nz-row>
+                <label class="title-detail" nz-col [nzSpan]="8">Số điện thoại<em class="fa fa-asterisk required"></em></label>
+                <div nz-col [nzSpan]="16">
+                    <input nz-input formControlName="phoneNo" />
+                </div>
+            </div>
+        </div>
+        <div [hidden]=isCollapse>
+            <div class="input-wrap" nz-row>
+                <label class="title-detail" nz-col [nzSpan]="8">Email</label>
+                <div nz-col [nzSpan]="16">
+                    <input nz-input formControlName="email" />
+                </div>
+            </div>
+            <div class="input-wrap" nz-row>
+                <label class="title-detail" nz-col [nzSpan]="8">Phòng</label>
+                <div nz-col [nzSpan]="16">
+                    <nz-select nzPlaceHolder="--Chọn Phòng--" formControlName="departmentId" style="width:200px">
+                        <nz-option *ngFor="let item of departments" nzLabel="{{item.name}}" [nzValue]="item.id"></nz-option>
+                    </nz-select>
+                </div>
+            </div>
+            <div class="input-wrap" nz-row>
+                <label class="title-detail" nz-col [nzSpan]="8">Chuyên môn</label>
+                <div nz-col [nzSpan]="16">
+                    <input nz-input formControlName="chuyenMon" />
+                </div>
+            </div>
+            <div class="input-wrap" nz-row>
+                <label class="title-detail" nz-col [nzSpan]="8">Số hợp đồng</label>
+                <div nz-col [nzSpan]="16">
+                    <input nz-input formControlName="soHopDongLd" />
+                </div>
+            </div>
+            <div class="input-wrap" nz-row>
+                <label class="title-detail" nz-col [nzSpan]="8">Số CMND</label>
+                <div nz-col [nzSpan]="16">
+                    <input nz-input formControlName="cmnd" />
+                </div>
+            </div>
+            <div class="input-wrap" nz-row>
+                <label class="title-detail" nz-col [nzSpan]="8">Ngày gia nhập</label>
+                <div nz-col [nzSpan]="16">
+                    <nz-date-picker formControlName="ngayGiaNhap"></nz-date-picker>
+                </div>
+            </div>
+            <div class="input-wrap" nz-row>
+                <label class="title-detail" nz-col [nzSpan]="8">Ngày sinh</label>
+                <div nz-col [nzSpan]="16">
+                    <nz-date-picker formControlName="dob"></nz-date-picker>
+                </div>
+            </div>
+            <div class="input-wrap" nz-row>
+                <label class="title-detail" nz-col [nzSpan]="8">Mức lương</label>
+                <div nz-col [nzSpan]="16">
+                    <input nz-input formControlName="salary" />
+                </div>
+            </div>
+            <div class="input-wrap" nz-row>
+                <label class="title-detail" nz-col [nzSpan]="8">Địa chỉ</label>
+                <div nz-col [nzSpan]="16">
+                    <input nz-input formControlName="address" />
+                </div>
+            </div>
+            <div class="input-wrap" nz-row>
+                <label class="title-detail" nz-col [nzSpan]="8">Vị trí</label>
+                <div nz-col [nzSpan]="16">
+                    <input nz-input formControlName="viTri" />
+                </div>
+            </div>
+            <div class="input-wrap" nz-row>
+                <label class="title-detail" nz-col [nzSpan]="8">Ghi chú</label>
+                <div nz-col [nzSpan]="16">
+                    <input nz-input formControlName="description" />
+                </div>
+            </div>
+            <div class="input-wrap" nz-row>
+                <label class="title-detail" nz-col [nzSpan]="8">Avatar</label>
+                <div nz-col [nzSpan]="16">
+                    <input nz-input formControlName="avatar" />
+                </div>
+            </div>
+            <div class="input-wrap" nz-row>
+                <label class="title-detail" nz-col [nzSpan]="8">Work Role</label>
+                <div nz-col [nzSpan]="16">
+                    <div class="row">
+                        <ng-container *ngFor="let role of workRoles" >
+                          <div class="col-md-6">
+                            <label nz-checkbox nzMode="checkable" (nzCheckedChange)="checkWorkRole(role.id)" formControlName="workRole"></label>
+                            {{role.name}}
+                          </div>
+                        </ng-container>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Footer -->
+        <div *nzModalFooter>
+            <button nz-button (click)="handleCancel()">{{'cancel' | translate }}</button>
+            <button nz-button nzType="primary" (click)="handleOk()" class="button-submit">{{'save' | translate }}</button>
+            <button nz-button [hidden]=!isCollapse (click)="toggleCollapse()">
+        Mở rộng
+        <i nz-icon [nzType]="isCollapse ? 'down' : 'up'"></i>
+      </button>
+            <button nz-button [hidden]=isCollapse (click)="toggleCollapse()">
+        Thu gọn
+        <i nz-icon [nzType]="isCollapse ? 'down' : 'up'"></i>
+      </button>
+        </div>
+    </nz-modal>
+</form>
+
+<form [formGroup]="formAddTaiKhoan" (ngSubmit)="handleAddTaiKhoan()">
+    <nz-modal [(nzVisible)]="isVisibleAddTaiKhoan" nzTitle="Add Taikhoan" nzClosable="false" [nzTitle]="titleTaikhoan" nzMaskClosable="false">
+        <ng-template #titleTaikhoan>
+            Tạo tài khoản cho {{staff.firstName}} {{staff.lastName}}
+            <div class="pull-right icon-close">
+                <em (click)="handleCancel()" nz-icon nzType="close" nzTheme="outline"></em>
+            </div>
+        </ng-template>
+        <div class="input-wrap">
+            <label class="title-detail" style="width: 40%;">Username<em class="fa fa-asterisk required"></em></label>
+            <input nz-input formControlName="username" maxlength="10" [ngClass]="{ 'is-invalid': submitted && f.username.errors }" />
+        </div>
+        <div class="message-required" *ngIf="submitted && f.username.errors">
+            <div *ngIf="f.username.errors.required">
+                {{'ms_validate_required' | translate }}
+            </div>
+            <div *ngIf="f.username.errors.minlength">
+                {{'ms_validate_more_characters_long' | translate }}
+            </div>
+            <div *ngIf="f.username.errors.maxlength">
+                {{'ms_validate_less_characters_long' | translate }}
+            </div>
+        </div>
+        <div class="input-wrap">
+            <label class="title-detail" style="width: 40%;">{{'password' | translate }}<em class="fa fa-asterisk required"></em></label>
+            <input [type]="passwordVisible ? 'text' : 'password'" nz-input placeholder="Nhập mật khẩu tối thiểu 8 ký tự" formControlName="password" maxlength="10" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
+        </div>
+        <div class="message-required" *ngIf="submitted && f.password.errors">
+            <div *ngIf="f.password.errors.required">
+                {{'ms_validate_required' | translate }}
+            </div>
+            <div *ngIf="f.password.errors.minlength">
+                {{'ms_validate_more_characters_long' | translate }}
+            </div>
+            <div *ngIf="f.password.errors.maxlength">
+                {{'ms_validate_less_characters_long' | translate }}
+            </div>
+        </div>
+        <div class="input-wrap">
+            <label class="title-detail" style="width: 40%;">Nhập lại mật khẩu<em class="fa fa-asterisk required"></em></label>
+            <input [type]="passwordVisible ? 'text' : 'password'" nz-input placeholder="Nhập lại " formControlName="repeatPassword" maxlength="10" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
+        </div>
+        <div class="message-required" *ngIf="submitted && f.password.errors">
+            <div *ngIf="f.password.errors.required">
+                {{'ms_validate_required' | translate }}
+            </div>
+            <div *ngIf="f.password.errors.minlength">
+                {{'ms_validate_more_characters_long' | translate }}
+            </div>
+            <div *ngIf="f.password.errors.maxlength">
+                {{'ms_validate_less_characters_long' | translate }}
+            </div>
+        </div>
+        <div *nzModalFooter>
+            <button nz-button (click)="handleCancel()">{{'cancel' | translate }}</button>
+            <button nz-button nzType="primary" (click)="handleAddTaiKhoan()" class="button-submit">Save</button>
+        </div>
+    </nz-modal>
+</form>
+<app-nhansu-groups (closeModal)="closeModalGroups()" [isVisible]="isVisibleGroup" [nhansu]="item"></app-nhansu-groups>

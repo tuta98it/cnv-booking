@@ -1,0 +1,55 @@
+<form [formGroup]="formUpdate" (ngSubmit)="handleOk()">
+  <nz-modal
+    [(nzVisible)]="isVisibleUpdate"
+    nzClosable="false" [nzTitle]="title"
+    nzMaskClosable="false">
+    <ng-template #title>
+      {{'title_modal_update_group' | translate }}
+      <div class="pull-right icon-close">
+        <em (click)="handleCancel()" nz-icon nzType="close" nzTheme="outline"></em>
+      </div>
+    </ng-template>
+
+    <div class="input-wrap">
+      <label class="title-detail">{{'name' | translate }}<em class="fa fa-asterisk required"></em></label>
+      <input nz-input formControlName="groupName" [ngClass]="{ 'is-invalid': submitted && f.groupName.errors }"/>
+    </div>
+    <div class="message-required" *ngIf="submitted && f.groupName.errors">
+      <div *ngIf="f.groupName.errors.required">
+        {{'name' | translate }} {{'ms_validate_required' | translate }}
+      </div>
+      <div *ngIf="f.groupName.errors.minlength">
+        {{'name' | translate }} {{'ms_validate_more_characters_long' | translate }}
+      </div>
+      <div *ngIf="f.groupName.errors.maxlength">
+        {{'name' | translate }} {{'ms_validate_less_characters_long' | translate }}
+      </div>
+      <!--<div *ngIf="f.groupName.errors.cannotContainSpace">{{'name' | translate }} {{'ms_validate_space' | translate }}</div>-->
+    </div>
+    <div class="input-wrap">
+      <label class="title-detail">{{'description' | translate }}</label>
+      <input nz-input formControlName="description" [ngClass]="{ 'is-invalid': submitted && f.description.errors }"/>
+    </div>
+    <div class="message-required" *ngIf="submitted && f.description.errors">
+      <div *ngIf="f.description.errors.maxlength">
+        {{'name' | translate }} {{'ms_validate_less_characters_long' | translate }}
+      </div>
+      <!--<div *ngIf="f.description.errors.cannotContainSpace">{{'name' | translate }} {{'ms_validate_space' | translate }}</div>-->
+    </div>
+    <div class="input-wrap">
+      <label class="title-detail">{{'role' | translate }}<em class="fa fa-asterisk required"></em></label>
+      <nz-select class="select-action" nzShowSearch nzMode="multiple" nzPlaceHolder="" [nzMaxTagCount]="3" formControlName="roleIds" [ngClass]="{ 'is-invalid': submitted && f.roleIds.errors }">
+        <nz-option *ngFor="let option of roleUpdate" [nzLabel]="option.roleName" [nzValue]="option.roleId"></nz-option>
+      </nz-select>
+    </div>
+    <div class="message-required" *ngIf="submitted && f.roleIds.errors">
+      <div *ngIf="f.roleIds.errors.required">
+        {{'role' | translate }} {{'ms_validate_required' | translate }}
+      </div>
+    </div>
+    <div *nzModalFooter>
+      <button nz-button (click)="handleCancel()">{{'cancel' | translate }}</button>
+      <button nz-button nzType="primary" (click)="handleOk()" class="button-submit">{{'save' | translate }}</button>
+    </div>
+  </nz-modal>
+</form>

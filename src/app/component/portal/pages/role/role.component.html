@@ -1,0 +1,47 @@
+<nz-table nzPageSize="150" #basicTable [nzData]="datas" [nzLoading]="loading" [nzScroll]="{ x: '800px', y: gridHeight }">
+  <thead>
+  <tr>
+    <th>#</th>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Descripion</th>
+    <th>
+      Action
+      <button (click)="showModalAdd()" nz-button nzType="primary" [nzSize]="size" class="btn_add"><i nz-icon nzType="plus"></i></button>
+    </th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let data of basicTable.data; let stt=index;">
+    <td>{{stt + 1}}</td>
+    <td>{{data.id}}</td>
+    <td>{{data.name}}</td>
+    <td>{{data.descripion}}</td>
+    <td>
+      <div style="display: flex">
+        <i nz-icon nzType="edit" (click)="showModal(data)" class="btn-edit"></i>
+        <i nz-icon nzType="delete" nzTheme="outline" (click)="onDeleteClick(data.id)"  class="btn-delete"></i>
+      </div>
+    </td>
+  </tr>
+  </tbody>
+</nz-table>
+<nz-modal  nzMaskClosable="false" nzWidth="800px" *ngIf="selectionData" [(nzVisible)]="isVisible" [nzTitle]="modalTitle" (nzOnCancel)="handleCancel()">
+  <div class="labeb_text">
+    <label>Name
+      <span class="required">*</span>
+    </label>
+    <input nz-input [(ngModel)]="selectionData.name" />
+  </div>
+  <div class="labeb_text">
+    <label>Descripion
+      <span class="required">*</span>
+    </label>
+    <input nz-input [(ngModel)]="selectionData.descripion" />
+  </div>
+  <div *nzModalFooter>
+    <button nz-button (click)="handleCancel()">{{'cancel' | translate }}</button>
+    <button [disabled]="isDisbled || (selectionData.currentSize > selectionData.size)" nz-button nzType="primary" (click)="handleOk()" class="button-submit">{{'save' | translate }}</button>
+  </div>
+</nz-modal>
+

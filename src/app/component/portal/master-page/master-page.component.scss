@@ -1,0 +1,151 @@
+body {
+  font: Roboto, "sans-serif", helvetica, verdana, sans-serif !important;
+}
+.dx-theme-generic-typography{
+  font: Roboto, RobotoFallback, "Noto Kufi Arabic", Helvetica, Arial, sans-serif !important;
+}
+.container {
+  background: #FFF;
+}
+
+.main {
+  padding: 4px 0;
+  padding-top: 12px;
+}
+
+h1 {
+  font-size: 16px !important;
+}
+
+.title-detail {
+  width: 235px !important;
+}
+
+.header_menu {
+  width: 100%;
+  top: 0px;
+  background: #22577A
+}
+
+.header_top {
+  display: flex;
+  width: 100%;
+  height: 50px;
+  top: 0px;
+  background: #FAFAFA;
+  align-items: center;
+}
+
+.header_menu .container {
+  background-color: transparent;
+}
+
+.header_top .container {
+  background-color: transparent;
+}
+
+::ng-deep {
+  .ant-menu-inline .ant-menu-item {
+    font-size: 16px;
+  }
+
+  .header_menu {
+    .ant-menu-item, .ant-menu-submenu-title {
+      padding: 0 10px;
+    }
+
+    .ant-menu {
+      background-color: transparent;
+      border-bottom: none;
+    }
+
+    .ant-menu-horizontal > .ant-menu-item > a {
+      color: #fff;
+      display: inline;
+      padding: 4px 6px;
+    }
+
+    .ant-menu-horizontal > .ant-menu-item {
+      border-bottom: none;
+    }
+
+    .ant-menu-horizontal > .ant-menu-item > a:hover, .ant-menu-item-selected > a {
+     /* color: #22577a !important;
+      background: #80ED99;*/
+
+      color: #fff !important;
+      background: #0399ab;
+
+      border-radius: 4px;
+    }
+
+    .ant-menu-item li:hover {
+      border-bottom: none !important;
+    }
+
+    .ant-menu-submenu-title > span {
+      color: #eee;
+      padding: 6px;
+    }
+
+    .ant-menu-submenu-title > span:hover, .ant-menu-submenu-selected > .ant-menu-submenu-title > span {
+      color: #fff !important;
+      background: #0399ab;
+      border-radius: 4px;
+    }
+
+    .ant-menu-submenu.ant-menu-submenu-horizontal {
+      border: none !important;
+    }
+
+    //.ant-menu-item{
+    //  padding-left: 0px;
+    //}
+    .ant-menu-horizontal > .ant-menu-item-active, .ant-menu-horizontal > .ant-menu-item-open, .ant-menu-horizontal > .ant-menu-item-selected, .ant-menu-horizontal > .ant-menu-item:hover, .ant-menu-horizontal > .ant-menu-submenu-active, .ant-menu-horizontal > .ant-menu-submenu-open, .ant-menu-horizontal > .ant-menu-submenu-selected, .ant-menu-horizontal > .ant-menu-submenu:hover {
+      border-bottom: none !important;
+    }
+
+    .ant-menu {
+      font-size: 16px !important;
+    }
+  }
+}
+
+.text-right {
+  text-align: right;
+  color: #FFF;
+}
+
+.main {
+  /*height: calc(100vh - 110px);*/
+}
+
+a.btn-primary {
+  color: #FFF !important;
+}
+footer{
+  display: flex;
+  padding: 4px 8px;
+  background: #ededed;
+  align-items: center;
+  text-align: right;
+  border-top: solid 1px #CCC;
+  direction: rtl;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  div{
+    margin-right: 8px;
+    text-align: right !important;
+  }
+}
+.chart-region{
+  font-family: Roboto;
+  span{
+    font-family: Roboto;
+    font-size: 14px;
+  }
+}

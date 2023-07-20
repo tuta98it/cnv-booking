@@ -1,0 +1,71 @@
+<!--<div class="bg_color">
+  <div class="region" style="padding-top: 150px;">
+    <img src="/assets/image/machine.png" style="width: 140px; height:auto;margin: auto; display: block;">
+    <div class="title">
+      <p style="">QUẢN LÝ PHƯƠNG TIỆN ĐO</p>
+    </div>
+    <form nz-form [formGroup]='validateForm' (ngSubmit)='submitForm()'>
+      <input nz-input id="inputEmail" formControlName='username' type="email" placeholder="Tên đăng nhập"
+             style="margin-bottom: 12px; height: 38px">
+      <input nz-input id="inputPassword" formControlName='password' type="password" placeholder="Mật khẩu"
+             style="height: 38px">
+      <label nz-checkbox style="color: #333; margin-top: 16px; margin-bottom: 24px">Nhớ lần đăng nhập</label>
+      <div>
+        <button nz-button nzType="primary"
+                style="background-color: #007e8d; border: none; margin: auto; display: block; width: 150px; height: 38px">
+          Đăng nhập
+        </button>
+      </div>
+      <div class="copyright">
+        <p style="width: 100%;text-align: center;display: block">Copyright @company all rights reserved.</p>
+      </div>
+    </form>
+  </div>
+</div>-->
+
+<div class="limiter">
+  <div class="container-login100">
+    <div class="wrap-login100 p-l-50 p-r-50 p-t-77 p-b-30">
+      <form class="login100-form validate-form"  nz-form [formGroup]='validateForm' (ngSubmit)='submitForm()'>
+        <span class="login100-form-title p-b-55">
+        Quản lý <br> phương tiện đo
+        </span>
+        <div class="wrap-input100 validate-input m-b-16" data-validate="Valid email is required: ex@abc.xyz">
+          <input class="input100" type="text" formControlName='username' placeholder="Tên đăng nhập">
+          <span class="focus-input100"></span>
+          <span class="symbol-input100">
+<span class="lnr lnr-envelope"></span>
+</span>
+        </div>
+        <div class="wrap-input100 validate-input m-b-16" data-validate="Password is required">
+          <input class="input100" type="password" formControlName='password' placeholder="Mật khẩu">
+          <span class="focus-input100"></span>
+          <span class="symbol-input100">
+<span class="lnr lnr-lock"></span>
+</span>
+        </div>
+        <div class="contact100-form-checkbox m-l-4">
+          <input class="input-checkbox100" id="ckb1" type="checkbox" name="remember-me">
+          <label class="label-checkbox100" for="ckb1">
+            Nhớ lần truy cập
+          </label>
+        </div>
+        <div class="container-login100-form-btn p-t-25">
+          <button class="login100-form-btn">
+            Đăng nhập
+          </button>
+        </div>
+        <div class="text-center w-full p-t-115">
+          <div style="text-align: center;font-size: 12px;">©Bộ Công an, Cục Khoa học, Chiến lược và Lịch sử Công an <br>Phòng Quản lý Khoa học và
+            Công nghệ
+          </div>
+          <div style="text-align: center;font-size: 12px;margin-top: 10px;">
+            <span class="fa fa-fw fa-phone"></span> Điện thoại: 069 2322066
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</div>
+

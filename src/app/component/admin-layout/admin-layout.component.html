@@ -1,0 +1,63 @@
+<nz-layout class="layout">
+    <nz-sider nzCollapsible [(nzCollapsed)]="isCollapsed" [nzBreakpoint]="'md'" nzWidth="250px"  [nzTrigger]="null" >
+        <a [routerLink]="['/user']"><img src="assets/image/logo.ico" class="image" style="width: 30px;"></a>
+        <ul nz-menu nzTheme="dark" nzMode="inline">
+            <ng-container *ngTemplateOutlet="menuTpl; context: { $implicit: menus }"></ng-container>
+            <ng-template #menuTpl let-menus>
+                <ng-container *ngFor="let name of groupName;let i = index;">
+                    <ul nz-menu nzMode="inline" nzTheme="dark" class="sider-menu">
+                        <li nz-submenu nzTitle="{{name}}" nzIcon="menu" >
+                            <ul>
+                                <li class="menu-item menu-item-flex" nz-menu-item *ngFor="let menu of groupMenu[i]">
+                                    <a routerLink="/admin/{{menu.path}}">{{menu.name}}</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <!-- <li class="menu-item menu-item-flex" nz-menu-item>
+                        <i nz-icon nzType="menu"></i>
+                        <a routerLink="/admin/{{menu.path}}">{{menu.name}}</a>
+                    </li> -->
+                </ng-container>
+            </ng-template>
+        </ul>
+    </nz-sider>
+    <nz-layout>
+        <nz-header>
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-6 col-md-10">
+                        <i class="trigger" nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'" (click)="isCollapsed = !isCollapsed"></i>
+                    </div>
+                    <div class="col-6 col-md-2 text-right">
+                        <div class="dropdown-toggle header-icon" nz-dropdown [nzDropdownMenu]="menu">
+                            <nz-avatar nzIcon="user" nzSize="small"></nz-avatar>
+                            <span class="d-none d-sm-inline-block" style="width: 5px;"></span>
+                            <span class="d-none d-sm-inline-block user-info">{{username}}</span>
+                        </div>
+                        <nz-dropdown-menu #menu="nzDropdownMenu">
+                            <ul nz-menu>
+                                <li nz-menu-item (click)="logout()"><span class="fa fa-sign-out"></span>&nbsp;Sign out</li>
+                                <li nz-menu-item>&nbsp;Profile</li>
+                            </ul>
+                        </nz-dropdown-menu>
+                    </div>
+                </div>
+            </div>
+
+        </nz-header>
+        <nz-content>
+            <nz-page-header class="site-page-header" [nzTitle]="pageName"></nz-page-header>
+
+            <div class="inner-content">
+                <nz-breadcrumb [nzAutoGenerate]="true" nzSeparator="/">
+                    <nz-breadcrumb-item>
+                        <a><span>Trang chủ</span></a>
+                    </nz-breadcrumb-item>
+                </nz-breadcrumb>
+                <router-outlet></router-outlet>
+            </div>
+        </nz-content>
+        <nz-footer>@ MESOCO 2020</nz-footer>
+    </nz-layout>
+</nz-layout>

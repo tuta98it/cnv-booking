@@ -1,0 +1,49 @@
+<form [formGroup]="formUpdate" (ngSubmit)="handleOk()">
+  <nz-modal
+    [(nzVisible)]="isVisibleUpdate" nzTitle="Add User"
+    nzClosable="false" [nzTitle]="title"
+    nzMaskClosable="false">
+    <ng-template #title>
+      {{'title_modal_update_role' | translate }}
+      <div class="pull-right icon-close">
+        <em (click)="handleCancel()" nz-icon nzType="close" nzTheme="outline"></em>
+      </div>
+    </ng-template>
+    <div class="input-wrap">
+      <label class="title-detail">{{'name' | translate }}<em class="fa fa-asterisk required"></em></label>
+      <input nz-input formControlName="roleName" [ngClass]="{ 'is-invalid': submitted && f.roleName.errors }"/>
+    </div>
+
+    <div class="message-required" *ngIf="submitted && f.roleName.errors">
+      <div *ngIf="f.roleName.errors.required">
+        {{'name' | translate }} {{'ms_validate_required' | translate }}
+      </div>
+      <div *ngIf="f.roleName.errors.minlength">
+        {{'name' | translate }} {{'ms_validate_more_characters_long' | translate }}
+      </div>
+      <div *ngIf="f.roleName.errors.maxlength">
+        {{'name' | translate }} {{'ms_validate_less_characters_long' | translate }}
+      </div>
+      <!--<div *ngIf="f.roleName.errors.cannotContainSpace">{{'name' | translate }} {{'ms_validate_space' | translate }}</div>-->
+    </div>
+    <div class="input-wrap">
+      <label class="title-detail">{{'name_action' | translate }}<em class="fa fa-asterisk required"></em></label>
+      <nz-select class="select-action" [ngClass]="{ 'is-invalid': submitted && f.actionId.errors }"
+                 [nzMaxTagCount]="4" formControlName="actionId"
+                 nzMode="multiple"
+                 nzPlaceHolder="">
+        <nz-option *ngFor="let item of actions" [nzLabel]="item.name" [nzValue]="item.actionId"></nz-option>
+      </nz-select>
+    </div>
+    <div class="message-required" *ngIf="submitted && f.actionId.errors">
+      <div *ngIf="f.actionId.errors.required">
+        {{'name_action' | translate }} {{'ms_validate_required' | translate }}
+      </div>
+    </div>
+    <div *nzModalFooter>
+      <button nz-button (click)="handleCancel()">{{'cancel' | translate }}</button>
+      <button nz-button nzType="primary" (click)="handleOk()" class="button-submit">{{'save' | translate }}</button>
+    </div>
+  </nz-modal>
+</form>
+

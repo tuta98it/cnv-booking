@@ -1,0 +1,46 @@
+<!--<button nz-button nzType="primary" class="btn-add-asset" type="button" (click)="showModalAdd()" *ngIf="checkAdd">
+  <em class="fas fa-plus"></em> {{'add_user' | translate }}
+</button>-->
+<div class="data-table">
+  <nz-table #basicTable [nzData]="datas"
+            (nzCurrentPageDataChange)="currentPageDataChange($event)"
+            [nzPageSizeOptions]="pageSize" [nzPageSize]="defaultPage" nzSize="small"
+            nzShowSizeChanger [nzShowTotal]="rangeTemplate" [nzLoading]="loading">
+    <thead>
+    <tr>
+      <th class="text-nowrap" width="50px">#</th>
+      <th class="text-nowrap" width="50px"></th>
+      <th class="text-nowrap">Tên nhóm</th>
+      <th class="text-nowrap">Ghi chú</th>
+      <th *ngFor="let role of this.allRoles; let i = index" [attr.data-index]="i" class="editable-row">
+        {{role.name}}
+      </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let data of basicTable.data;let i = index;">
+      <td class="text-nowrap">{{getRowIndex(i, basicTable.nzPageIndex, basicTable.nzPageSize)}}</td>
+      <td class="text-nowrap">
+        <button nzType="primary" [disabled]="!data.enable" nz-button (click)="saveUserGroup(data)">
+          <i class="fa fa-fw fa-save"></i>
+        </button>
+      </td>
+      <td class="text-nowrap">{{ data.name }}</td>
+      <td class="text-nowrap">{{ data.description }}</td>
+      <td *ngFor="let role of this.allRoles; let i = index" [attr.data-index]="i" class="editable-row">
+        <ng-container *ngIf="checkUserReport(role.id, data) == true;else elseBlock">
+          <label nzChecked="checked" (nzCheckedChange)="updateUserGroup(data, role.id, 0)" nz-checkbox></label>
+        </ng-container>
+        <ng-template #elseBlock>
+          <label (nzCheckedChange)="updateUserGroup(data, role.id, 1)" nz-checkbox ></label>
+        </ng-template>
+      </td>
+    </tr>
+    </tbody>
+  </nz-table>
+  <ng-template #rangeTemplate let-range="range" let-total>
+    {{ range[0] }}-{{ range[1] }} {{'of' | translate }} {{ total }} {{'items' | translate }}
+  </ng-template>
+</div>
+
+<app-nhomtaikhoan-users (closeModal)="closeModalUsers()" [isVisible]="isVisibleUser" [nhomtaikhoan]="item"></app-nhomtaikhoan-users>

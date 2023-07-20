@@ -1,0 +1,65 @@
+<form [formGroup]="formAdd" (ngSubmit)="handleOk()">
+  <nz-modal [(nzVisible)]="isVisible" nzTitle="Danh sách tài khoản" nzClosable="false" [nzTitle]="title" nzMaskClosable="false">
+    <ng-template #title>
+      Danh sách tài khoản
+      <div class="pull-right icon-close">
+        <em (click)="handleCancel()" nz-icon nzType="close" nzTheme="outline"></em>
+      </div>
+    </ng-template>
+      <div class="row">
+        <div class="col-md-9">
+          <nz-select style="width: 100%"
+                     nzShowSearch
+                     formControlName="userId"
+                     nzPlaceHolder="Tài khoản.." class="input-search"
+                     [nzShowArrow]="true">
+            <nz-option *ngFor="let o of users" [nzLabel]="o.fullname" [nzValue]="o.id">
+            </nz-option>
+          </nz-select>
+        </div>
+        <div class="col-md-3">
+          <button nz-button nzType="primary" (click)="handleOk()" class="button-submit right">Thêm mới</button>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-md-12">
+          <nz-table #basicTable [nzData]="usersInGroup"
+                    [nzPageSizeOptions]="pageSize" [nzPageSize]="defaultPage" nzSize="small"
+                    nzShowSizeChanger [nzShowTotal]="rangeTemplate" [nzLoading]="loading">
+            <thead>
+            <tr>
+              <th class="text-nowrap" width="50px">#</th>
+              <th class="text-nowrap">Họ tên</th>
+              <th class="text-nowrap">Tên đăng nhập</th>
+              <th class="text-nowrap"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let data of basicTable.data;let i = index;">
+              <td class="text-nowrap">{{getRowIndex(i, basicTable.nzPageIndex, basicTable.nzPageSize)}}</td>
+              <td class="text-nowrap">{{data.fullname}}</td>
+              <td class="text-nowrap">{{data.username}}</td>
+              <td class="text-nowrap">
+                <button title="Xóa nhóm" nz-button nzSize="small" nzType="default" class="btn-right button-update"
+                        (click)="showConfirm(data.id)">
+                  <span class="fa fa-times fa-fw"></span>
+                </button>
+              </td>
+            </tr>
+            </tbody>
+          </nz-table>
+        </div>
+      </div>
+    <!-- Footer -->
+    <div *nzModalFooter>
+      <button nz-button (click)="handleCancel()">Đóng</button>
+    </div>
+  </nz-modal>
+</form>
+<ng-template #rangeTemplate let-range="range" let-total>
+  {{ range[0] }}-{{ range[1] }} {{'of' | translate }} {{ total }} {{'items' | translate }}
+</ng-template>
+
+
+

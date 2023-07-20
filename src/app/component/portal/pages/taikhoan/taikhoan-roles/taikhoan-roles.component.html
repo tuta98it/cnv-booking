@@ -1,0 +1,36 @@
+<div class="data-table">
+  <nz-table #basicTable [nzData]="datas"
+            (nzCurrentPageDataChange)="currentPageDataChange($event)"
+            [nzPageSizeOptions]="pageSize" [nzPageSize]="defaultPage"
+            nzShowSizeChanger [nzShowTotal]="rangeTemplate" [nzLoading]="loading">
+    <thead>
+    <tr>
+      <th class="text-nowrap text-center" width="50px">#</th>
+      <th class="text-nowrap">Tên</th>
+      <th class="text-nowrap">Ghi chú</th>
+      <th *ngFor="let role of this.allRoles; let i = index" [attr.data-index]="i" class="editable-row" style="text-align: center;">
+        {{role.name}}
+      </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let data of basicTable.data;let i = index;">
+      <td class="text-nowrap text-center">{{getRowIndex(i, basicTable.nzPageIndex, basicTable.nzPageSize)}}</td>
+      <td class="text-nowrap">{{ data.fullname }}</td>
+      <td class="text-nowrap">{{ data.description }}</td>
+      <td *ngFor="let role of this.allRoles; let i = index" [attr.data-index]="i" class="editable-row" [nzAlign]="'center'">
+        <ng-container *ngIf="checkUserReport(role.id, data);else elseBlock">
+          <input type="checkbox" disabled checked>
+        </ng-container>
+        <ng-template #elseBlock>
+        </ng-template>
+      </td>
+    </tr>
+    </tbody>
+  </nz-table>
+  <ng-template #rangeTemplate let-range="range" let-total>
+    {{ range[0] }}-{{ range[1] }} {{'of' | translate }} {{ total }} {{'items' | translate }}
+  </ng-template>
+</div>
+
+<app-nhomtaikhoan-users (closeModal)="closeModalUsers()" [isVisible]="isVisibleUser" [nhomtaikhoan]="item"></app-nhomtaikhoan-users>

@@ -1,0 +1,145 @@
+<form [formGroup]="formUpdate" (ngSubmit)="handleOk()">
+<nz-modal
+  [(nzVisible)]="isVisible"
+  nzWidth="900px"
+  nzClosable="false" [nzTitle]="title"
+  nzMaskClosable="false"
+  (nzOnOk)="handleOk()"
+  (nzOnCancel)="handleCancel()">
+  <ng-template #title>
+    {{'title_modal_edit_user' | translate }}
+    <div class="pull-right icon-close">
+      <em (click)="handleCancel()" nz-icon nzType="close" nzTheme="outline"></em>
+    </div>
+  </ng-template>
+  <div class="col-md-12">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="input-wrap">
+          <label class="title-detail">{{'email' | translate }}<em class="fa fa-asterisk required"></em></label>
+          <input nz-input formControlName="email" [ngClass]="{ 'is-invalid': submitted && f.email.errors }"/>
+        </div>
+        <div class="message-required" *ngIf="submitted && f.email.errors">
+          <div *ngIf="f.email.errors.required">
+            {{'email' | translate }} {{'ms_validate_required' | translate }}
+          </div>
+          <div *ngIf="f.email.errors.minlength">
+            {{'email' | translate }} {{'ms_validate_more_characters_long' | translate }}
+          </div>
+          <div *ngIf="f.email.errors.maxlength">
+            {{'email' | translate }} {{'ms_validate_less_characters_long' | translate }}
+          </div>
+          <div *ngIf="f.email.errors.email">{{'email' | translate }} {{'ms_validate_email_invalid_address' | translate }}</div>
+          <!--<div *ngIf="f.email.errors.cannotContainSpace">{{'email' | translate }} {{'ms_validate_space' | translate }}</div>-->
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="input-wrap">
+          <label class="title-detail">{{'name' | translate }}<em class="fa fa-asterisk required"></em></label>
+          <input nz-input formControlName="name" [ngClass]="{ 'is-invalid': submitted && f.name.errors }"/>
+        </div>
+        <div class="message-required" *ngIf="submitted && f.name.errors">
+          <div *ngIf="f.name.errors.required">
+            {{'name' | translate }} {{'ms_validate_required' | translate }}
+          </div>
+          <div *ngIf="f.name.errors.minlength">
+            {{'name' | translate }} {{'ms_validate_more_characters_long' | translate }}
+          </div>
+          <div *ngIf="f.name.errors.maxlength">
+            {{'name' | translate }} {{'ms_validate_less_characters_long' | translate }}
+          </div>
+          <!--<div *ngIf="f.name.errors.cannotContainSpace">{{'name' | translate }} {{'ms_validate_space' | translate }}</div>-->
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="input-wrap">
+        <label class="title-detail" >{{'username' | translate }}<em class="fa fa-asterisk required"></em></label>
+        <input nz-input [attr.disabled]="true" formControlName="userName" />
+        </div>
+
+      </div>
+      <div class="col-md-6">
+        <div class="input-wrap">
+          <label class="title-detail">{{'mobile' | translate }}<em class="fa fa-asterisk required"></em></label>
+          <input nz-input formControlName="phone"  maxlength="10" [ngClass]="{ 'is-invalid': submitted && f.phone.errors }" (keypress)=_keyPress($event) />
+        </div>
+        <div class="message-required" *ngIf="submitted && f.phone.errors">
+          <div *ngIf="f.phone.errors.required">
+            {{'mobile' | translate }} {{'ms_validate_required' | translate }}
+          </div>
+          <div *ngIf="f.phone.errors.pattern">
+            {{'mobile' | translate }} {{'ms_validate_phone_invalid_address' | translate }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="input-wrap">
+        <label class="title-detail">{{'created_date' | translate }}</label>
+          <nz-date-picker formControlName="createdDate" nzDisabled class="date-picker" nzPlaceHolder="" ></nz-date-picker>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="input-wrap">
+        <label class="title-detail">{{'update_date' | translate }}</label>
+          <nz-date-picker formControlName="updatedDate" nzDisabled class="date-picker" nzPlaceHolder="" ></nz-date-picker>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="input-wrap">
+          <label class="title-detail">{{'group' | translate }}</label>
+          <nz-select nzShowSearch nzMode="multiple" nzPlaceHolder="" [nzMaxTagCount]="3" formControlName="groupIds">
+            <nz-option *ngFor="let option of groups" [nzLabel]="option.groupName" [nzValue]="option.groupId"></nz-option>
+          </nz-select>
+        </div>
+        <!--<div class="message-required" *ngIf="submitted && f.groupIds.errors">-->
+          <!--<div *ngIf="f.groupIds.errors.required">-->
+            <!--{{'group' | translate }} {{'ms_validate_required' | translate }}-->
+          <!--</div>-->
+        <!--</div>-->
+      </div>
+      <div class="col-md-6">
+        <div class="input-wrap">
+          <label class="title-detail">{{'role' | translate }}</label>
+          <nz-select nzShowSearch nzMode="multiple" nzPlaceHolder="" [nzMaxTagCount]="3" formControlName="roleIds">
+            <nz-option *ngFor="let option of roles" [nzLabel]="option.roleName" [nzValue]="option.roleId"></nz-option>
+          </nz-select>
+        </div>
+        <!--<div class="message-required" *ngIf="submitted && f.roleIds.errors">-->
+          <!--<div *ngIf="f.roleIds.errors.required">-->
+            <!--{{'role' | translate }} {{'ms_validate_required' | translate }}-->
+          <!--</div>-->
+        <!--</div>-->
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="input-wrap">
+        <label class="title-detail">{{'status' | translate }}<em class="fa fa-asterisk required"></em></label>
+          <nz-select nzShowSearch nzPlaceHolder="" nzSize="default" formControlName="status" [ngClass]="{ 'is-invalid': submitted && f.status.errors }">
+            <nz-option nzLabel="Active" nzValue="1"></nz-option>
+            <nz-option nzLabel="Inactive" nzValue="0"></nz-option>
+          </nz-select>
+        </div>
+        <div class="message-required" *ngIf="submitted && f.status.errors">
+          <div *ngIf="f.status.errors.required">
+            {{'status' | translate }} {{'ms_validate_required' | translate }}
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+      </div>
+    </div>
+    <div *nzModalFooter>
+      <button nz-button (click)="handleCancel()">{{'cancel' | translate }}</button>
+      <button nz-button nzType="primary" (click)="handleOk()" class="button-submit button-submit-user">{{'save' | translate }}</button>
+    </div>
+  </div>
+</nz-modal>
+</form>
+

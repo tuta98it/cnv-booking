@@ -1,0 +1,119 @@
+<div class="header_top">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4">
+        <div style="display: flex;align-items: center">
+          <img src="/assets/image/machine.png" style="width: auto; height: 40px">
+          <span style="color: #333;margin-left: 10px;">BOOKING - BACKEND</span>
+        </div>
+      </div>
+      <!--<div class="col-md-6">
+        <app-select-unit></app-select-unit>
+      </div>-->
+      <div class="col-md-8 text-right">
+        <div class="dropdown-toggle header-icon" nz-dropdown [nzDropdownMenu]="menu"
+             style="margin-top: 8px;color: #333">
+          <nz-avatar nzIcon="user" nzSize="small"></nz-avatar>
+          <span class="d-none d-sm-inline-block" style="width: 5px;"></span>
+          <span class="d-none d-sm-inline-block user-info">{{username}}</span>
+        </div>
+        <nz-dropdown-menu #menu="nzDropdownMenu" style="width: 120px;margin-right: 10px">
+          <ul nz-menu>
+            <li nz-menu-item (click)="logout()"><span class="fa fa-sign-out"></span>&nbsp;Đăng xuất</li>
+            <li nz-menu-item (click)="showModalUser()">Tài khoản</li>
+          </ul>
+        </nz-dropdown-menu>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="header_menu">
+  <div class="container">
+    <ul nz-menu nzMode="horizontal">
+      <li nz-menu-item [nzSelected]="url === '/dashboard' || url === '/'">
+        <a routerLink="/dashboard">Trang chủ</a>
+      </li>
+      <!--<li *ngIf="DANH_MUC_TB" nz-menu-item [nzSelected]="url === '/thiet-bi' || url.includes('thiet-bi/')">
+        <a routerLink="/thiet-bi">Danh mục Thiết bị</a>
+      </li>-->
+      <li *ngIf="PHAN_QUYEN_TAI_KHOAN" nz-submenu nzTitle="Quản trị hệ thống">
+        <ul>
+          <ul>
+            <li nz-menu-item [nzSelected]="url === '/nhom-tai-khoan'"><a routerLink="/nhom-tai-khoan">Nhóm tài khoản</a>
+            </li>
+            <li nz-menu-item [nzSelected]="url === '/nhom-tai-khoan/roles'"><a routerLink="/nhom-tai-khoan/roles">Phân
+              quyền nhóm</a></li>
+            <li nz-menu-item [nzSelected]="url === '/tai-khoan'"><a routerLink="/tai-khoan">Danh sách tài khoản</a></li>
+            <li nz-menu-item [nzSelected]="url === '/tai-khoan/roles'"><a routerLink="/tai-khoan/roles">Phân quyền tài
+              khoản</a></li>
+            <li nz-menu-item [nzSelected]="url === '/system/log'"><a routerLink="/system/log">Lịch sử hệ thống</a></li>
+          </ul>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+<div class="container">
+  <div class="main">
+    <router-outlet></router-outlet>
+  </div>
+</div>
+<!--profile-->
+<nz-modal nzWidth="800px" *ngIf="selectionData" [(nzVisible)]="isVisibleUser" [nzTitle]="modalTitle"
+          nzMaskClosable="false"
+          (nzOnCancel)="handleCancel()">
+  <nz-tabset>
+    <nz-tab nzTitle="Thông tin chung" (nzClick)="selectedTable(1)">
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label>Tên đăng nhập<span class="required">*</span></label>
+          <input disabled type="text" class="form-control form-control-sm" [(ngModel)]="selectionData.username">
+        </div>
+        <div class="form-group col-md-6">
+          <label>Họ và tên</label>
+          <input type="text" class="form-control form-control-sm" [(ngModel)]="selectionData.fullname">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label>Số điện thoại</label>
+          <input type="text" class="form-control form-control-sm" [(ngModel)]="selectionData.phoneNo">
+        </div>
+        <div class="form-group col-md-6">
+          <label>Email</label>
+          <input type="text" class="form-control form-control-sm" [(ngModel)]="selectionData.email">
+        </div>
+      </div>
+    </nz-tab>
+    <nz-tab nzTitle="Thay đổi mật khẩu" (nzClick)="selectedTable(2)">
+      <div class="form-group">
+        <label>Mật khẩu hiện tại</label>
+        <input type="password" class="form-control form-control-sm" [(ngModel)]="selectionPassword.oldPassword">
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label>Mật khẩu mới</label>
+          <input type="password" class="form-control form-control-sm" [(ngModel)]="selectionPassword.password">
+        </div>
+        <div class="form-group col-md-6">
+          <label>Nhập lại mật khẩu</label>
+          <input type="password" class="form-control form-control-sm" [(ngModel)]="selectionPassword.repeatPassword">
+        </div>
+      </div>
+    </nz-tab>
+  </nz-tabset>
+  <div *nzModalFooter>
+    <button nz-button (click)="handleCancel()">{{'cancel' | translate }}</button>
+    <button [disabled]="isDisbled" nz-button nzType="primary"
+            (click)="handleOk()" class="button-submit">Lưu
+    </button>
+  </div>
+</nz-modal>
+<footer>
+  <div>
+     Điện thoại: 09034388xx
+  </div>
+  <div>
+    <span class="fa fa-fw fa-phone"></span> Cao Nguyên Việt ©
+  </div>
+</footer>

@@ -1,0 +1,174 @@
+<!--<button nz-button nzType="primary" class="btn-add-asset" type="button" (click)="showModalAdd()" *ngIf="checkAdd">
+  <em class="fas fa-plus"></em> {{'add_user' | translate }}
+</button>-->
+<div class="data-table">
+  <nz-table #basicTable [nzData]="datas"
+            (nzCurrentPageDataChange)="currentPageDataChange($event)"
+            [nzPageSizeOptions]="pageSize" [nzPageSize]="defaultPage" nzSize="small"
+            nzShowSizeChanger [nzShowTotal]="rangeTemplate" [nzLoading]="loading">
+    <thead>
+      <tr>
+        <th nzShowCheckbox nzLeft="0px" nzWidth="50px" [(nzChecked)]="isAllDisplayDataChecked"
+            [nzIndeterminate]="isIndeterminate" (nzCheckedChange)="checkAllRow($event)"></th>
+        <th class="text-nowrap" width="50px">#</th>
+        <th class="text-nowrap">Họ tên</th>
+        <th class="text-nowrap">Tài khoản</th>
+        <!--<th class="text-nowrap">Phân quyền</th>-->
+        <th class="text-nowrap">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of basicTable.data;let i = index;">
+        <td nzShowCheckbox [(nzChecked)]="mapOfCheckedId[data.id]" (nzCheckedChange)="refreshStatus()" nzLeft="0px"
+            nzWidth="50px"></td>
+        <td class="text-nowrap">{{getRowIndex(i, basicTable.nzPageIndex, basicTable.nzPageSize)}}</td>
+        <td class="text-nowrap">{{ getHoTen(data.ho, data.ten) }}</td>
+        <td class="text-nowrap">{{ data.username }}</td>
+        <!--<td class="text-nowrap">{{ getQuyen(data.userRole) }}</td>-->
+        <td class="text-nowrap">
+          <button nz-button nzType="danger" class="btn-right" (click)="showConfirm(data.id)" *ngIf="checkDelete">{{'delete' | translate }}</button>
+          <button nz-button nzType="default" class="button-update btn-right" (click)="showModalPassword(data)">Đổi mật khẩu</button>
+          <button nz-button nzType="default" class="btn-right button-update" (click)="showModalGroup(data)" *ngIf="checkUpdate">Nhóm</button>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+  <ng-template #rangeTemplate let-range="range" let-total>
+    {{ range[0] }}-{{ range[1] }} {{'of' | translate }} {{ total }} {{'items' | translate }}
+  </ng-template>
+</div>
+
+<form [formGroup]="formAdd" (ngSubmit)="handleOk()">
+  <nz-modal [(nzVisible)]="isVisibleAdd" nzClosable="false" [nzTitle]="title" nzMaskClosable="false">
+    <ng-template #title>
+      Thêm tài khoản
+      <div class="pull-right icon-close">
+        <em (click)="handleCancel()" nz-icon nzType="close" nzTheme="outline"></em>
+      </div>
+    </ng-template>
+    <div class="input-wrap">
+      <label class="title-detail">Họ<em class="fa fa-asterisk required"></em></label>
+      <input nz-input formControlName="ho" />
+    </div>
+    <div class="input-wrap">
+      <label class="title-detail">Tên<em class="fa fa-asterisk required"></em></label>
+      <input nz-input formControlName="ten"/>
+    </div>
+    <div class="input-wrap">
+      <label class="title-detail">Tài khoản<em class="fa fa-asterisk required"></em></label>
+      <input nz-input formControlName="username" />
+    </div>
+    <div class="input-wrap">
+      <label class="title-detail">Mật khẩu<em class="fa fa-asterisk required"></em></label>
+      <nz-input-group [nzSuffix]="suffixTemplate">
+        <input [type]="passwordVisible ? 'text' : 'password'" nz-input placeholder="Nhập mật khẩu" formControlName="password"/>
+      </nz-input-group>
+      <ng-template #suffixTemplate>
+        <i nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'" (click)="passwordVisible = !passwordVisible"></i>
+      </ng-template>
+    </div>
+    <div class="input-wrap">
+      <label class="title-detail">Nhắc lại<em class="fa fa-asterisk required"></em></label>
+      <nz-input-group [nzSuffix]="suffixRepeatTemplate">
+        <input [type]="repeatpasswordVisible ? 'text' : 'password'" nz-input placeholder="Nhập lại mật khẩu" formControlName="repeatPassword" />
+      </nz-input-group>
+      <ng-template #suffixRepeatTemplate>
+        <i nz-icon [nzType]="repeatpasswordVisible ? 'eye-invisible' : 'eye'" (click)="repeatpasswordVisible = !repeatpasswordVisible"></i>
+      </ng-template>
+    </div>
+    <div class="input-wrap">
+      <label class="title-detail">Phân quyền<em class="fa fa-asterisk required"></em></label>
+      <nz-select nzMode="multiple" nzPlaceHolder="--Chọn quyền--" formControlName="roles" style="width:200px">
+        <nz-option [nzValue]="1" nzLabel="Quản trị"></nz-option>
+        <nz-option [nzValue]="2" nzLabel="Xem danh sách nhân sự"></nz-option>
+        <nz-option [nzValue]="3" nzLabel="Quản lý phòng ban"></nz-option>
+        <nz-option [nzValue]="4" nzLabel="Sửa chi tiết nhân sự"></nz-option>
+        <nz-option [nzValue]="5" nzLabel="Quản lý user"></nz-option>
+        <nz-option [nzValue]="6" nzLabel="Quản lý group user"></nz-option>
+        <nz-option [nzValue]="7" nzLabel="Duyệt xin nghỉ"></nz-option>
+        <nz-option [nzValue]="8" nzLabel="Chấm công"></nz-option>
+      </nz-select>
+    </div>
+    <!-- Footer -->
+    <div *nzModalFooter>
+      <button nz-button (click)="handleCancel()">{{'cancel' | translate }}</button>
+      <button nz-button nzType="primary" (click)="handleOk()" class="button-submit">{{'save' | translate }}</button>
+    </div>
+  </nz-modal>
+</form>
+
+<form [formGroup]="formUpdate" (ngSubmit)="handleOkUpdate()">
+  <nz-modal [(nzVisible)]="isVisibleUpdate" nzClosable="false" [nzTitle]="titleUpdate" nzMaskClosable="false">
+    <ng-template #titleUpdate>
+      Sửa tài khoản
+      <div class="pull-right icon-close">
+        <em (click)="handleCancelUpdate()" nz-icon nzType="close" nzTheme="outline"></em>
+      </div>
+    </ng-template>
+    <div class="input-wrap">
+      <label class="title-detail">Họ<em class="fa fa-asterisk required"></em></label>
+      <input nz-input formControlName="ho" />
+    </div>
+    <div class="input-wrap">
+      <label class="title-detail">Tên<em class="fa fa-asterisk required"></em></label>
+      <input nz-input formControlName="ten" />
+    </div>
+    <div class="input-wrap">
+      <label class="title-detail">Tài khoản<em class="fa fa-asterisk required"></em></label>
+      <input nz-input formControlName="username" disabled />
+    </div>
+    <div class="input-wrap">
+      <label class="title-detail">Phân quyền<em class="fa fa-asterisk required"></em></label>
+      <nz-select nzMode="multiple" nzPlaceHolder="--Chọn quyền--" formControlName="roles" style="width:200px">
+        <nz-option [nzValue]="1" nzLabel="Quản trị"></nz-option>
+        <nz-option [nzValue]="2" nzLabel="Xem danh sách nhân sự"></nz-option>
+        <nz-option [nzValue]="3" nzLabel="Quản lý phòng ban"></nz-option>
+        <nz-option [nzValue]="4" nzLabel="Sửa chi tiết nhân sự"></nz-option>
+        <nz-option [nzValue]="5" nzLabel="Quản lý user"></nz-option>
+        <nz-option [nzValue]="6" nzLabel="Quản lý group user"></nz-option>
+        <nz-option [nzValue]="7" nzLabel="Duyệt xin nghỉ"></nz-option>
+        <nz-option [nzValue]="8" nzLabel="Chấm công"></nz-option>
+      </nz-select>
+    </div>
+    <!-- Footer -->
+    <div *nzModalFooter>
+      <button nz-button (click)="handleCancelUpdate()">{{'cancel' | translate }}</button>
+      <button nz-button nzType="primary" (click)="handleOkUpdate()" class="button-submit">{{'save' | translate }}</button>
+    </div>
+  </nz-modal>
+</form>
+
+<form [formGroup]="formPassword" (ngSubmit)="handleOkPassword()">
+  <nz-modal [(nzVisible)]="isVisiblePassword" nzClosable="false" [nzTitle]="titlePassword" nzMaskClosable="false">
+    <ng-template #titlePassword>
+      Đổi mật khẩu
+      <div class="pull-right icon-close">
+        <em (click)="handleCancelPassword()" nz-icon nzType="close" nzTheme="outline"></em>
+      </div>
+    </ng-template>
+    <div class="input-wrap">
+      <label class="title-detail">Mật khẩu<em class="fa fa-asterisk required"></em></label>
+      <nz-input-group [nzSuffix]="suffixTemplate">
+        <input [type]="passwordVisible ? 'text' : 'password'" nz-input placeholder="Nhập mật khẩu" formControlName="password" />
+      </nz-input-group>
+      <ng-template #suffixTemplate>
+        <i nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'" (click)="passwordVisible = !passwordVisible"></i>
+      </ng-template>
+    </div>
+    <div class="input-wrap">
+      <label class="title-detail">Nhắc lại<em class="fa fa-asterisk required"></em></label>
+      <nz-input-group [nzSuffix]="suffixRepeatTemplate">
+        <input [type]="repeatpasswordVisible ? 'text' : 'password'" nz-input placeholder="Nhập lại mật khẩu" formControlName="repeatPassword" />
+      </nz-input-group>
+      <ng-template #suffixRepeatTemplate>
+        <i nz-icon [nzType]="repeatpasswordVisible ? 'eye-invisible' : 'eye'" (click)="repeatpasswordVisible = !repeatpasswordVisible"></i>
+      </ng-template>
+    </div>
+    <!-- Footer -->
+    <div *nzModalFooter>
+      <button nz-button (click)="handleCancelPassword()">{{'cancel' | translate }}</button>
+      <button nz-button nzType="primary" (click)="handleOkPassword()" class="button-submit">{{'save' | translate }}</button>
+    </div>
+  </nz-modal>
+</form>
+<app-taikhoan-groups (closeModal)="closeModalGroups()" [isVisible]="isVisibleGroup" [user]="item"></app-taikhoan-groups>

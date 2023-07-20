@@ -1,0 +1,57 @@
+<div class="action-button" style="clear: bottom;overflow: hidden;">
+  <div class="form-group" style="float: left">
+    <h1>Lịch sử hệ thống</h1>
+  </div>
+  <div class="form-group" style="float: right">
+    <button class="btn-success" nz-button nzType="primary" (click)="exportData()">
+      <span class="fa fa-fw fa-file-excel"></span>
+      Xuất Excel</button>
+  </div>
+</div>
+
+<dx-data-grid
+  id="gridContainer"
+  [dataSource]="datas"
+  [showColumnLines]="true"
+  (onExporting)="onExporting($event)"
+  [showRowLines]="true"
+  [height]="dxGridHeight"
+  [rowAlternationEnabled]="true"
+  [showBorders]="true"
+  [allowColumnResizing]="true"
+  columnResizingMode="widget"
+  [columnMinWidth]="50"
+  [columnAutoWidth]="true"
+  [selectedRowKeys]="[]"
+  [hoverStateEnabled]="true"
+>
+  <dxo-selection mode="single"></dxo-selection>
+  <!-- <dxo-load-panel [enabled]="true"></dxo-load-panel>-->
+  <!--<dxo-scrolling mode="virtual"></dxo-scrolling>-->
+  <dxo-sorting mode="multiple"></dxo-sorting>
+  <dxo-header-filter [visible]="true"></dxo-header-filter>
+  <dxo-filter-row [visible]="true" [applyFilter]="currentFilter"></dxo-filter-row>
+  <!--<dxi-column cssClass="text-center" caption="Action" [fixed]="true" fixedPosition="right" [width]="70" cellTemplate="cellBtnTemplate"></dxi-column>-->
+  <!--<dxi-column cssClass="text-center" caption="STT" [width]="55" dataField="stt" [fixed]="true" [allowFiltering]="false" [allowSorting]="false"></dxi-column>-->
+  <dxi-column caption="Người dùng" [width]="230" dataField="username" [fixed]="true"></dxi-column>
+  <dxi-column caption="Thời gian" [width]="200" dataField="actionTime" [fixed]="true"></dxi-column>
+  <dxi-column caption="IP" [width]="220" dataField="ipaddress"></dxi-column>
+  <dxi-column caption="Đối tượng" [width]="200" dataField="objectname"></dxi-column>
+  <dxi-column caption="Hành động" [width]="200" dataField="actionname"></dxi-column>
+  <dxi-column caption="Mô tả" [width]="200" dataField="description"></dxi-column>
+  <!--<div *dxTemplate="let item of 'cellBtnTemplate'">
+    <a class="btn-edit" (click)="showModal(item.data)">
+      <span *ngIf="EDIT_LABEL" class="fa fa-fw fa-edit"></span>
+    </a>
+    <a class="btn-delete" (click)="onDeleteClick(item.data.idDmthietBi)">
+      <span *ngIf="DELETE_LABEL" class="fa fa-fw fa-times"></span>
+    </a>
+  </div>-->
+  <dxo-summary>
+    <dxi-total-item
+      column="ten"
+      displayFormat="Số bản ghi: {0}"
+      summaryType="count">
+    </dxi-total-item>
+  </dxo-summary>
+</dx-data-grid>

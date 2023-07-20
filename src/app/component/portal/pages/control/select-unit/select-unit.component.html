@@ -1,0 +1,11 @@
+<div style="display: flex;align-items: center;">
+  <nz-select style="margin-right: 5px;" [disabled]="userInfo.userType >= 2" (ngModelChange)="unitChange($event, 2)" nzShowSearch nzAllowClear nzPlaceHolder="Chọn tỉnh/thành phố"
+             [(ngModel)]="tinhThanhId">
+    <nz-option *ngFor="let option of tinhThanhs" [nzLabel]="option.name" [nzValue]="option.idTinhThanh"></nz-option>
+  </nz-select>
+  <nz-select [disabled]="userInfo.userType >= 3"(ngModelChange)="unitChange($event, 3)" nzShowSearch nzAllowClear nzPlaceHolder="Chọn quận/huyện"
+             [(ngModel)]="quanHuyenId"
+  >
+    <nz-option *ngFor="let option of quanHuyens" [nzLabel]="option.name" [nzValue]="option.idTinhThanh"></nz-option>
+  </nz-select>
+</div>

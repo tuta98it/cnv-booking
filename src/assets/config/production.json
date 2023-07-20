@@ -1,0 +1,12 @@
+{
+    "api": {
+      "baseUrl": "https://be-booking.pmr.vn",
+      "reportUrl": "https://be-booking.pmr.vn/report"
+    },
+  "sso": {
+    "baseUrl": "http://10.33.68.71:8888/vnpt-sso"
+  },
+  "pageSize":[10,50,100],
+    "page":1,
+    "defaultPage":10
+}
