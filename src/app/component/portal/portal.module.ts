@@ -24,6 +24,7 @@ import {DateFormatPipe} from '../../shared/pipe/format-date.pipe';
 import {NzAvatarModule} from 'ng-zorro-antd/avatar';
 import {NzTabsModule} from 'ng-zorro-antd/tabs';
 import { SelectUnitComponent } from './pages/control/select-unit/select-unit.component';
+import { PartnerComponent } from './pages/partner/partner.component';
 
 const antDesignIcons = AllIcons as {
   [key: string]: IconDefinition;
@@ -33,6 +34,7 @@ const icons: IconDefinition[] = Object.keys(antDesignIcons).map(key => antDesign
   declarations: [
     MasterPageComponent,
     RoleComponent,
+    PartnerComponent,
     DashboardComponent,
     SelectUnitComponent,
   ],

@@ -10,11 +10,11 @@ import {AppConfigService} from 'src/app-config.service';
 import {NotificationService} from 'src/app/service/notification.service';
 
 @Component({
-  selector: 'app-taikhoan-list',
-  templateUrl: './taikhoan-list.component.html',
-  styleUrls: ['./taikhoan-list.component.scss']
+  selector: 'app-partner',
+  templateUrl: './partner.component.html',
+  styleUrls: ['./partner.component.scss']
 })
-export class TaikhoanListComponent extends TableSelectionAbstract implements OnInit, OnDestroy {
+export class PartnerComponent extends TableSelectionAbstract implements OnInit, OnDestroy  {
   datas: any[] = [];
   data: any;
   passwordVisible: boolean;
@@ -44,7 +44,6 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
   chooseGroup: any;
   tinhThanhs = [];
   quanHuyens = [];
-  filteredDatas: any[] = [];
   constructor(
     public translate: TranslateService,
     private modalService: NzModalService,
@@ -67,14 +66,12 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
       roles: [null],
       signatureImageUrl: [null, [Validators.required]],
       staffCode: [null],
-      province: [null],
-      district: [null],
       tinhThanhId: [null],
       quanHuyenId: [null]
     });
     this.formAdd.controls.tinhThanhId.valueChanges.subscribe(($event) => {
       if ($event) {
-        // this.getQuanHuyen($event);
+        this.getQuanHuyen($event);
       }
     })
     this.formPassword = this.fb.group({
@@ -87,6 +84,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
     };
     this.urlServiceSignature =
       this.configService.getConfig().api.baseUrl + `/Upload/UploadFile`;
+    this.getAllRole();
   }
 
   ngOnInit(): void {
@@ -97,7 +95,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
 
     this.get();
     this.getGroups();
-    // this.getTinhThanh();
+    this.getTinhThanh();
     this.getListData();
   }
 
@@ -144,6 +142,16 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
     });
   }
 
+  getAllRole() {
+    this.generalService.getRole().subscribe(res => {
+      if (res !== null) {
+        this.allRoles = res;
+      }
+    }, error => {
+
+    });
+  }
+
   showConfirm(id): void {
     this.get();
     this.modalService.confirm({
@@ -177,9 +185,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
       repeatPassword: '',
       signatureImageUrl: '',
       roles: [],
-      staffCode: '',
-      province: '',
-      district: ''
+      staffCode: ''
     });
   }
 
@@ -196,12 +202,9 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
       phoneNo: this.item.phoneNo,
       email: this.item.email,
       signatureImageUrl: this.item.signatureImageUrl,
-      staffCode: this.item.staffCode,
-      province: this.item.province,
-      district: this.item.district
+      roles: this.getRoles(this.item.userroles),
+      staffCode: this.item.staffCode
     });
-    console.log(this.formAdd.value);
-    
   }
 
   showModalPassword(data) {
@@ -322,6 +325,14 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
     }
   }
 
+  getRoles(userRole) {
+    const s = [];
+    for (let i = 0; i < userRole.length; i++) {
+      s[i] = userRole[i].roleId;
+    }
+    return s;
+  }
+
   onDeleteClick(id: any): void {
     // alert(id)
     const c = confirm('Bạn có chắc muốn xóa tài khoản này?');
@@ -370,22 +381,22 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
 
     });
   }
-  // getTinhThanh() {
-  //   this.generalService.getTinhThanh(null).subscribe(res => {
-  //     if (res !== null) {
-  //       this.tinhThanhs = res;
-  //     }
-  //   }, error => {
+  getTinhThanh() {
+    this.generalService.getTinhThanh(null).subscribe(res => {
+      if (res !== null) {
+        this.tinhThanhs = res;
+      }
+    }, error => {
 
-  //   });
-  // }
-  // getQuanHuyen(tinhthanhId) {
-  //   this.generalService.getTinhThanh(tinhthanhId).subscribe(res => {
-  //     if (res !== null) {
-  //       this.quanHuyens = res;
-  //     }
-  //   }, error => {
+    });
+  }
+  getQuanHuyen(tinhthanhId) {
+    this.generalService.getTinhThanh(tinhthanhId).subscribe(res => {
+      if (res !== null) {
+        this.quanHuyens = res;
+      }
+    }, error => {
 
-  //   });
-  // }
+    });
+  }
 }

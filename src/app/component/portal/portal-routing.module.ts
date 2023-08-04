@@ -3,6 +3,7 @@ import {RouterModule, Routes} from '@angular/router';
 import {MasterPageComponent} from './master-page/master-page.component';
 import {RoleComponent} from './pages/role/role.component';
 import {DashboardComponent} from './pages/dashboard/dashboard.component';
+import { PartnerComponent } from './pages/partner/partner.component';
 
 const routes: Routes = [
   {
@@ -64,6 +65,14 @@ const routes: Routes = [
           pagename: 'Hệ thống',
           breadcrumb: 'Hệ thống',
         },
+      },
+      {
+        path: 'doi-tac',
+        component: PartnerComponent,
+        data: {
+          pagename: 'Đối tác',
+          breadcrumb: 'Đối tác'
+        }
       },
     ]
   },

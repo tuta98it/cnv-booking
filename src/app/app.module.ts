@@ -25,7 +25,7 @@ export function configServiceFactory(config: AppConfigService) {
 }
 @NgModule({
   declarations: [
-    AppComponent,
+    AppComponent
   ],
   imports: [
     BrowserModule,

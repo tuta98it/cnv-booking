@@ -5,7 +5,7 @@ import {UrlConstant} from '../shared/constants/url.class';
 import {Role} from '../model/role.class';
 
 @Injectable()
-export class GeneralService  extends  BaseService {
+export class GeneralService extends  BaseService {
   //phong
   getPhong(): Observable<any[]> {
     return this.get(UrlConstant.LIST_PHONG);
@@ -35,29 +35,6 @@ export class GeneralService  extends  BaseService {
   }
   updateLoaimon(item: any): any {
     return this.put(UrlConstant.LIST_LOAIMON + '/' + item.id, item, 'text');
-  }
-
-  //taikhoan
-  getTaikhoan(): Observable<any[]> {
-    return this.get(UrlConstant.LIST_TAIKHOAN);
-  }
-  getTaikhoanById(id): Observable<any> {
-    return this.get(UrlConstant.LIST_TAIKHOAN + '/' + id);
-  }
-  deleteTaikhoan(id: number): Observable<any> {
-    return this.delete(UrlConstant.LIST_TAIKHOAN + '/' + id, null);
-  }
-  addTaikhoan(item: any): any {
-    return this.post(UrlConstant.LIST_TAIKHOAN, item);
-  }
-  updateTaikhoan(item: any): any {
-    return this.put(UrlConstant.LIST_TAIKHOAN + '/' + item.id, item, 'text');
-  }
-  updateUserPassword(item: any): any {
-    return this.post(UrlConstant.LIST_TAIKHOAN + '/ChangeUserPassword/' + item.id, item);
-  }
-  addGroup2User(item: any): any {
-    return this.post(UrlConstant.LIST_TAIKHOAN + '/AddGroup2User', item);
   }
 
   //monan
@@ -396,4 +373,32 @@ export class GeneralService  extends  BaseService {
     };
     return this.post('/Tinhthanh/GetTinhthanh', payload);
   }
+
+  //==============================================
+  //taikhoan
+  getTaikhoan(): Observable<any[]> {
+    return this.get(UrlConstant.LIST_TAIKHOAN);
+  }
+  getTaikhoanById(id): Observable<any> {
+    return this.get(UrlConstant.LIST_TAIKHOAN + '/' + id);
+  }
+  deleteTaikhoan(id: number): Observable<any> {
+    return this.delete(UrlConstant.LIST_TAIKHOAN + '/' + id, null);
+  }
+  addTaikhoan(item: any): any {
+    return this.post(UrlConstant.LIST_TAIKHOAN, item);
+  }
+  updateTaikhoan(item: any): any {
+    return this.put(UrlConstant.LIST_TAIKHOAN + '/' + item.id, item, 'text');
+  }
+  updateUserPassword(item: any): any {
+    return this.post(UrlConstant.LIST_TAIKHOAN + '/ChangeUserPassword/' + item.id, item);
+  }
+  addGroup2User(item: any): any {
+    return this.post(UrlConstant.LIST_TAIKHOAN + '/AddGroup2User', item);
+  }
+
+  //partner
+  
+
 }

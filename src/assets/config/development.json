@@ -1,6 +1,6 @@
 {
   "api": {
-    "baseUrl": "https://be-booking.pmr.vn",
+    "baseUrl": "https://localhost:44369",
     "ipUrl": "http://192.168.18.27:8456",
     "reportUrl": "https://be-booking.pmr.vn/report"
   },
