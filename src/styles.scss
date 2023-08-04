@@ -1205,6 +1205,21 @@ nz-select {
   border-color: #58B37F;
 }
 
+
+.ant-btn-tertiary{
+  color: #fff;
+  background-color: #5260ff;
+  border: none;
+  box-shadow: none;
+}
+
+.ant-btn-tertiary:focus, .ant-btn-tertiary:hover {
+  color: #fff;
+  background: #4c8dff;
+  border-color: #4c8dff;
+}
+
+
 .ant-table-body {
 }
 

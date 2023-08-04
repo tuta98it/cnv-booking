@@ -1,20 +1,34 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ActionsSubject, select, Store} from '@ngrx/store';
-import {TranslateService} from '@ngx-translate/core';
-import {NzModalService} from 'ng-zorro-antd/modal';
-import {GeneralService} from 'src/app/service/general-service';
-import {TableSelectionAbstract} from 'src/app/shared/component/table/table-selection.abstract';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Constant} from 'src/app/shared/constants/constant.class';
-import {AppConfigService} from 'src/app-config.service';
-import {NotificationService} from 'src/app/service/notification.service';
+import { Component, OnDestroy, OnInit,ViewChild } from '@angular/core';
+import { ActionsSubject, select, Store } from '@ngrx/store';
+import { TranslateService } from '@ngx-translate/core';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { GeneralService } from 'src/app/service/general-service';
+import { TableSelectionAbstract } from 'src/app/shared/component/table/table-selection.abstract';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Constant } from 'src/app/shared/constants/constant.class';
+import { AppConfigService } from 'src/app-config.service';
+import { NotificationService } from 'src/app/service/notification.service';
+import {Workbook} from 'exceljs';
+import { DateFormatPipe } from 'src/app/shared/pipe/format-date.pipe';
+import {exportDataGrid} from 'devextreme/excel_exporter';
+import {saveAs} from 'file-saver-es';
 
+import {
+  DxDataGridComponent,
+  DxTemplateDirective,
+  DxTooltipComponent,
+  DxTooltipModule,
+} from "devextreme-angular";
 @Component({
   selector: 'app-taikhoan-list',
   templateUrl: './taikhoan-list.component.html',
   styleUrls: ['./taikhoan-list.component.scss']
 })
 export class TaikhoanListComponent extends TableSelectionAbstract implements OnInit, OnDestroy {
+  @ViewChild("ListAccount") dataGridDetail: DxDataGridComponent;
+  // @ViewChild(DxDataGridComponent, { static: false }) dataGrid: DxDataGridComponent;
+
+
   datas: any[] = [];
   data: any;
   passwordVisible: boolean;
@@ -52,7 +66,8 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
     private generalService: GeneralService,
     private actionsSubject$: ActionsSubject,
     private configService: AppConfigService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private dateFormatPipe: DateFormatPipe,
   ) {
     super('id');
     this.formAdd = this.fb.group({
@@ -201,7 +216,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
       district: this.item.district
     });
     console.log(this.formAdd.value);
-    
+
   }
 
   showModalPassword(data) {
@@ -337,7 +352,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
         }
       }, error => {
         // Error handling and close the popup
-
+        this.notificationService.showNotification(Constant.ERROR, 'Đã có lỗi xảy ra!');
       });
     } else {
     }
@@ -353,7 +368,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
     });
   }
   removeUserFromGroup(userId, groupId) {
-    const params = {userId, groupId};
+    const params = { userId, groupId };
     this.generalService.removeUserFromGroup(params).subscribe(res => {
       this.notificationService.showNotification(Constant.SUCCESS, 'Xóa nhóm thành công');
       this.getGroupByUser();
@@ -362,7 +377,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
     });
   }
   addGroup2User() {
-    const payload = { userId: this.item.id, groupId: this.chooseGroup.id};
+    const payload = { userId: this.item.id, groupId: this.chooseGroup.id };
     this.generalService.addUserToGroup(payload).subscribe(res => {
       this.notificationService.showNotification(Constant.SUCCESS, 'Thêm nhóm tài khoản thành công');
       this.getGroupByUser();
@@ -370,6 +385,33 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
 
     });
   }
+
+
+  exportData() {
+    this.dataGridDetail.instance.exportToExcel(false);
+  }
+
+
+  onExporting(e) {
+    const workbook = new Workbook();
+    const worksheet = workbook.addWorksheet('Sheet1');
+
+    const from = this.dateFormatPipe.transformFull(new Date(), Constant.DATE_FMT_STR);
+    const dateStr =  from;
+    const fileName = `DS_Tai_Khoan_${dateStr}`;
+    exportDataGrid({
+      component: e.component,
+      worksheet,
+      autoFilterEnabled: true,
+    }).then(() => {
+      workbook.xlsx.writeBuffer().then((buffer) => {
+        saveAs(new Blob([buffer], {type: 'application/octet-stream'}), fileName + '.xlsx');
+      });
+    });
+    e.cancel = true;
+  }
+
+
   // getTinhThanh() {
   //   this.generalService.getTinhThanh(null).subscribe(res => {
   //     if (res !== null) {

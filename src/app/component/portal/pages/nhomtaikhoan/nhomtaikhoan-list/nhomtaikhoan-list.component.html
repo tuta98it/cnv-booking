@@ -3,57 +3,56 @@
     <h1>Danh sách tài khoản</h1>
   </div>
   <div class="form-group" style="float: right">
-    <button nz-button nzType="primary" class="btn-add-asset" type="button" (click)="showModalAdd()" *ngIf="checkAdd">
+    <button nz-button nzType="tertiary" class="btn-add-asset" type="button" (click)="showModalAdd()" *ngIf="checkAdd">
       <em class="fas fa-plus fa-fw"></em> Thêm
     </button>
   </div>
 </div>
-<nz-table #basicTable [nzData]="datas"
-          (nzCurrentPageDataChange)="currentPageDataChange($event)"
-          [nzPageSizeOptions]="pageSize" [nzPageSize]="defaultPage" nzSize="small"
-          nzShowSizeChanger [nzShowTotal]="rangeTemplate" [nzLoading]="loading">
+<nz-table #basicTable [nzData]="datas" (nzCurrentPageDataChange)="currentPageDataChange($event)"
+  [nzPageSizeOptions]="pageSize" [nzPageSize]="defaultPage" nzSize="small" nzShowSizeChanger
+  [nzShowTotal]="rangeTemplate" [nzLoading]="loading">
   <thead>
-  <tr>
-    <th nzShowCheckbox nzLeft="0px" nzWidth="50px" [(nzChecked)]="isAllDisplayDataChecked"
+    <tr>
+      <th nzShowCheckbox nzLeft="0px" nzWidth="50px" [(nzChecked)]="isAllDisplayDataChecked"
         [nzIndeterminate]="isIndeterminate" (nzCheckedChange)="checkAllRow($event)"></th>
-    <th class="text-nowrap" width="50px">#</th>
-    <th class="text-nowrap">Tên nhóm</th>
-    <th class="text-nowrap">Ghi chú</th>
-    <th class="text-nowrap">Action</th>
-  </tr>
+      <th class="text-nowrap" width="50px">#</th>
+      <th class="text-nowrap">Tên nhóm</th>
+      <th class="text-nowrap">Ghi chú</th>
+      <th class="text-nowrap">Action</th>
+    </tr>
   </thead>
   <tbody>
-  <tr *ngFor="let data of basicTable.data;let i = index;">
-    <td nzShowCheckbox [(nzChecked)]="mapOfCheckedId[data.id]" (nzCheckedChange)="refreshStatus()" nzLeft="0px"
+    <tr *ngFor="let data of basicTable.data;let i = index;">
+      <td nzShowCheckbox [(nzChecked)]="mapOfCheckedId[data.id]" (nzCheckedChange)="refreshStatus()" nzLeft="0px"
         nzWidth="50px"></td>
-    <td class="text-nowrap">{{getRowIndex(i, basicTable.nzPageIndex, basicTable.nzPageSize)}}</td>
-    <td class="text-nowrap">{{ data.name }}</td>
-    <td class="text-nowrap">{{ data.description }}</td>
-    <td class="text-nowrap">
-      <!--<button nz-button nzType="danger" class="btn-right" (click)="showConfirm(data.id)"
+      <td class="text-nowrap">{{getRowIndex(i, basicTable.nzPageIndex, basicTable.nzPageSize)}}</td>
+      <td class="text-nowrap">{{ data.name }}</td>
+      <td class="text-nowrap">{{ data.description }}</td>
+      <td class="text-nowrap">
+        <!--<button nz-button nzType="danger" class="btn-right" (click)="showConfirm(data.id)"
               *ngIf="checkDelete">{{'delete' | translate }}</button>-->
 
-      <button title="Xóa nhóm" nz-button nzSize="small" nzType="default" class="btn-right button-update"
-              (click)="showConfirm(data.id)">
-        <span class="fa fa-times fa-fw"></span>
-      </button>
+        <button title="Xóa nhóm" nz-button nzSize="small" nzType="default" class="btn-right button-update"
+          (click)="showConfirm(data.id)">
+          <span class="fa fa-times fa-fw"></span>
+        </button>
 
-      <!--<button nz-button nzType="default" class="btn-right button-update" (click)="showModalUpdate(data)"
+        <!--<button nz-button nzType="default" class="btn-right button-update" (click)="showModalUpdate(data)"
               *ngIf="checkUpdate">Sửa
       </button>-->
-      <button title="Sửa thông tin nhóm" nz-button nzSize="small" nzType="default" class="btn-right button-update"
-              (click)="showModalUpdate(data)">
-        <span class="fa fa-edit fa-fw"></span>
-      </button>
-      <!--<button nz-button nzType="default" class="btn-right button-update" (click)="showModalUser(data)"
+        <button title="Sửa thông tin nhóm" nz-button nzSize="small" nzType="default" class="btn-right button-update"
+          (click)="showModalUpdate(data)">
+          <span class="fa fa-edit fa-fw"></span>
+        </button>
+        <!--<button nz-button nzType="default" class="btn-right button-update" (click)="showModalUser(data)"
               *ngIf="checkUpdate">Tài khoản
       </button>-->
-      <button title="Danh sách tài khoản" nz-button nzSize="small" nzType="default" class="btn-right button-update"
-              (click)="showModalUser(data)">
-        <span class="fa fa-user fa-fw"></span>
-      </button>
-    </td>
-  </tr>
+        <button title="Danh sách tài khoản" nz-button nzSize="small" nzType="default" class="btn-right button-update"
+          (click)="showModalUser(data)">
+          <span class="fa fa-user fa-fw"></span>
+        </button>
+      </td>
+    </tr>
   </tbody>
 </nz-table>
 <ng-template #rangeTemplate let-range="range" let-total>
@@ -70,11 +69,11 @@
     </ng-template>
     <div class="input-wrap">
       <label class="title-detail">Tên nhóm<em class="fa fa-asterisk required"></em></label>
-      <input nz-input formControlName="name"/>
+      <input nz-input formControlName="name" />
     </div>
     <div class="input-wrap">
       <label class="title-detail">Ghi chú</label>
-      <input nz-input formControlName="description"/>
+      <input nz-input formControlName="description" />
     </div>
     <!-- Footer -->
     <div *nzModalFooter>
@@ -85,4 +84,4 @@
 </form>
 
 <app-nhomtaikhoan-users (closeModal)="closeModalUsers()" [isVisible]="isVisibleUser"
-                        [nhomtaikhoan]="item"></app-nhomtaikhoan-users>
+  [nhomtaikhoan]="item"></app-nhomtaikhoan-users>
