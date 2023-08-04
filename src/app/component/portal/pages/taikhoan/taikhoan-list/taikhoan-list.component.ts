@@ -1,13 +1,13 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ActionsSubject, select, Store} from '@ngrx/store';
-import {TranslateService} from '@ngx-translate/core';
-import {NzModalService} from 'ng-zorro-antd/modal';
-import {GeneralService} from 'src/app/service/general-service';
-import {TableSelectionAbstract} from 'src/app/shared/component/table/table-selection.abstract';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Constant} from 'src/app/shared/constants/constant.class';
-import {AppConfigService} from 'src/app-config.service';
-import {NotificationService} from 'src/app/service/notification.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActionsSubject, select, Store } from '@ngrx/store';
+import { TranslateService } from '@ngx-translate/core';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { GeneralService } from 'src/app/service/general-service';
+import { TableSelectionAbstract } from 'src/app/shared/component/table/table-selection.abstract';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Constant } from 'src/app/shared/constants/constant.class';
+import { AppConfigService } from 'src/app-config.service';
+import { NotificationService } from 'src/app/service/notification.service';
 
 @Component({
   selector: 'app-taikhoan-list',
@@ -201,7 +201,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
       district: this.item.district
     });
     console.log(this.formAdd.value);
-    
+
   }
 
   showModalPassword(data) {
@@ -337,7 +337,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
         }
       }, error => {
         // Error handling and close the popup
-
+        this.notificationService.showNotification(Constant.ERROR, 'Đã có lỗi xảy ra!');
       });
     } else {
     }
@@ -353,7 +353,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
     });
   }
   removeUserFromGroup(userId, groupId) {
-    const params = {userId, groupId};
+    const params = { userId, groupId };
     this.generalService.removeUserFromGroup(params).subscribe(res => {
       this.notificationService.showNotification(Constant.SUCCESS, 'Xóa nhóm thành công');
       this.getGroupByUser();
@@ -362,7 +362,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
     });
   }
   addGroup2User() {
-    const payload = { userId: this.item.id, groupId: this.chooseGroup.id};
+    const payload = { userId: this.item.id, groupId: this.chooseGroup.id };
     this.generalService.addUserToGroup(payload).subscribe(res => {
       this.notificationService.showNotification(Constant.SUCCESS, 'Thêm nhóm tài khoản thành công');
       this.getGroupByUser();
