@@ -1,20 +1,31 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ActionsSubject, select, Store} from '@ngrx/store';
-import {TranslateService} from '@ngx-translate/core';
-import {NzModalService} from 'ng-zorro-antd/modal';
-import {GeneralService} from 'src/app/service/general-service';
-import {TableSelectionAbstract} from 'src/app/shared/component/table/table-selection.abstract';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Constant} from 'src/app/shared/constants/constant.class';
-import {AppConfigService} from 'src/app-config.service';
-import {NotificationService} from 'src/app/service/notification.service';
-
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ActionsSubject, select, Store } from '@ngrx/store';
+import { TranslateService } from '@ngx-translate/core';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { GeneralService } from 'src/app/service/general-service';
+import { TableSelectionAbstract } from 'src/app/shared/component/table/table-selection.abstract';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Constant } from 'src/app/shared/constants/constant.class';
+import { AppConfigService } from 'src/app-config.service';
+import { NotificationService } from 'src/app/service/notification.service';
+import { removeAccents } from 'src/app/shared/utils/filters/remove-accents'
+import { Workbook } from 'exceljs';
+import { DateFormatPipe } from 'src/app/shared/pipe/format-date.pipe';
+import { exportDataGrid } from 'devextreme/excel_exporter';
+import { saveAs } from 'file-saver-es';
+import {
+  DxDataGridComponent,
+  DxTemplateDirective,
+  DxTooltipComponent,
+  DxTooltipModule,
+} from "devextreme-angular";
 @Component({
   selector: 'app-partner',
   templateUrl: './partner.component.html',
   styleUrls: ['./partner.component.scss']
 })
-export class PartnerComponent extends TableSelectionAbstract implements OnInit, OnDestroy  {
+export class PartnerComponent extends TableSelectionAbstract implements OnInit, OnDestroy {
+  @ViewChild("ListAccount") dataGridDetail: DxDataGridComponent;
   datas: any[] = [];
   data: any;
   passwordVisible: boolean;
@@ -44,6 +55,9 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
   chooseGroup: any;
   tinhThanhs = [];
   quanHuyens = [];
+  filteredDatas: any[] = [];
+  searchText = '';
+  userInfor: any;
   constructor(
     public translate: TranslateService,
     private modalService: NzModalService,
@@ -51,7 +65,8 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
     private generalService: GeneralService,
     private actionsSubject$: ActionsSubject,
     private configService: AppConfigService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private dateFormatPipe: DateFormatPipe,
   ) {
     super('id');
     this.formAdd = this.fb.group({
@@ -108,6 +123,7 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
     this.generalService.getTaikhoan().subscribe(res => {
       if (res !== null) {
         this.datas = res;
+        this.filteredDatas = res;
         this.loading = false;
         let stt = 0;
         this.datas.forEach(en => {
@@ -364,7 +380,7 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
     });
   }
   removeUserFromGroup(userId, groupId) {
-    const params = {userId, groupId};
+    const params = { userId, groupId };
     this.generalService.removeUserFromGroup(params).subscribe(res => {
       this.notificationService.showNotification(Constant.SUCCESS, 'Xóa nhóm thành công');
       this.getGroupByUser();
@@ -373,7 +389,7 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
     });
   }
   addGroup2User() {
-    const payload = { userId: this.item.id, groupId: this.chooseGroup.id};
+    const payload = { userId: this.item.id, groupId: this.chooseGroup.id };
     this.generalService.addUserToGroup(payload).subscribe(res => {
       this.notificationService.showNotification(Constant.SUCCESS, 'Thêm nhóm tài khoản thành công');
       this.getGroupByUser();
@@ -398,5 +414,43 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
     }, error => {
 
     });
+  }
+
+  exportData() {
+    this.dataGridDetail.instance.exportToExcel(false);
+  }
+
+
+  onExporting(e) {
+    const workbook = new Workbook();
+    const worksheet = workbook.addWorksheet('Sheet1');
+
+    const from = this.dateFormatPipe.transformFull(new Date(), Constant.DATE_FMT_STR);
+    const dateStr = from;
+    const fileName = `DS_Tai_Khoan_Doi_Tac_${dateStr}`;
+    exportDataGrid({
+      component: e.component,
+      worksheet,
+      autoFilterEnabled: true,
+    }).then(() => {
+      workbook.xlsx.writeBuffer().then((buffer) => {
+        saveAs(new Blob([buffer], { type: 'application/octet-stream' }), fileName + '.xlsx');
+      });
+    });
+    e.cancel = true;
+  }
+
+  onSearch() {
+    const keyword = removeAccents(this.searchText.trim().toLowerCase());
+    console.log(keyword);
+    this.filteredDatas = this.datas.filter((en) =>
+      removeAccents(en.id?.toString().trim()).toLowerCase().includes(keyword) ||
+      removeAccents(en.fullname?.trim()).toLowerCase().includes(keyword) ||
+      removeAccents(en.username?.trim()).toLowerCase().includes(keyword) ||
+      removeAccents(en.phoneNo?.trim()).toLowerCase().includes(keyword) ||
+      removeAccents(en.email?.trim()).toLowerCase().includes(keyword) ||
+      removeAccents(en.district?.trim()).toLowerCase().includes(keyword) ||
+      removeAccents(en.province?.trim()).toLowerCase().includes(keyword)
+    );
   }
 }

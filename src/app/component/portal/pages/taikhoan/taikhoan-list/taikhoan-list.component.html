@@ -3,17 +3,17 @@
     <h1>Danh sách tài khoản</h1>
 
   </div>
-  <div class="form-group" style="float: right; display: flex;  align-items: center;">
+  <div class="form-group" style="float: right; display: flex; align-items: center;">
     <!-- Tìm kiếm -->
     <!-- [(ngModel)]="searchText" (keyup.enter)="onSearch()"-->
-    <input style="width: 200px; border-radius: 4px; height: 32px;" class="mgr10" nzSize="small" nz-input type="text"
-      placeholder="Tìm kiếm theo tên hoặc username">
+    <input style="width: 200px; border-radius: 4px; height: 32px;" class="mgr10" nzSize="small" nz-input type="text" [(ngModel)]="searchText" (keyup)="onSearch()"
+      placeholder="Tìm kiếm theo tên, username, ...">
 
-    <!-- Nút thêm <em class="fas fa-plus fa-fw"></em>-->
-    <button nz-button nzType="primary" class="ant-btn-tertiary" type="button" (click)="showModalAdd()" *ngIf="checkAdd">
+    <!-- Nút thêm -->
+    <button nz-button nzType="primary" class="ant-btn-primary" type="button" (click)="showModalAdd()" *ngIf="checkAdd">
       <em class="fas fa-plus fa-fw" style="margin-right: 4px;"></em> Thêm</button>
+
     <!-- Nút xuất Excel -->
-    <!-- class="btn-green mgr10"-->
     <button nz-button nzType="primary" class="btn-green mgr10" (click)="exportData()">
       <span class="fa fa-fw fa-file-excel" style="margin-right: 4px;"></span>
       Xuất Excel
@@ -22,7 +22,7 @@
 </div>
 
 
-<dx-data-grid id="gridContainer" [dataSource]="datas" #ListAccount [showColumnLines]="true" [showRowLines]="true"
+<dx-data-grid id="gridContainer" [dataSource]="filteredDatas" #ListAccount [showColumnLines]="true" [showRowLines]="true"
   [height]="dxGridHeight" [rowAlternationEnabled]="true" [showBorders]="true" [allowColumnResizing]="true"
   columnResizingMode="widget" [columnMinWidth]="50" [columnAutoWidth]="true" (onExporting)="onExporting($event)">
   <dxo-scrolling mode="virtual"></dxo-scrolling>
@@ -39,12 +39,12 @@
   <dxi-column caption="Tỉnh/TP" [width]="150" dataField="province"></dxi-column>
   <dxi-column caption="Quận/Huyện" [width]="150" dataField="district"></dxi-column>
   <dxi-column caption="User ID	" [width]="80" dataField="id"></dxi-column>
-  <dxi-column caption="Phân quyền" dataField="roleStr"></dxi-column>
+  <dxi-column caption="Phòng ban" dataField="department"></dxi-column>
   <dxi-column caption="Số điện thoại" [width]="150" dataField="phoneNo"></dxi-column>
   <dxi-column caption="Email" [width]="140" dataField="email"></dxi-column>
   <div *dxTemplate="let item of 'cellBtnTemplate'">
-    <button title="Xóa tài khoản" nz-button nzSize="small" nzType="default" class="btn-right button-update"
-      (click)="onDeleteClick(item.data.id)" *ngIf="checkUpdate">
+    <button title="Xóa tài khoản" nz-button nzSize="small" nzType="default" class="btn-right button-update ant-btn-red"
+      (click)="showDeleteConfirm(item.data.id)" *ngIf="checkUpdate">
       <span class="fa fa-times fa-fw"></span>
     </button>
     <button title="Thông tin tài khoản" nz-button nzSize="small" nzType="default" class="btn-right button-update"
@@ -128,6 +128,16 @@
           <input nz-input formControlName="staffCode" [ngClass]="{ 'is-invalid': submitted && f.staffCode.errors }" />
         </div>
       </div>
+
+      <div class="input-wrap" nz-row>
+        <label class="title-detail" nz-col [nzSpan]="8">Phòng ban</label>
+        <div nz-col [nzSpan]="16">
+          <!-- [ngClass]="{ 'is-invalid': submitted && f.staffCode.errors }"  -->
+          <input nz-input formControlName="department"/>
+        </div>
+      </div>
+
+
       <div class="input-wrap" nz-row>
         <label class="title-detail" nz-col [nzSpan]="8">Số điện thoại</label>
         <div nz-col [nzSpan]="16">

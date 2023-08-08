@@ -12,7 +12,7 @@
       </div>-->
       <div class="col-md-8 text-right">
         <div class="dropdown-toggle header-icon" nz-dropdown [nzDropdownMenu]="menu"
-             style="margin-top: 8px;color: #333">
+          style="margin-top: 8px;color: #333">
           <nz-avatar nzIcon="user" nzSize="small"></nz-avatar>
           <span class="d-none d-sm-inline-block" style="width: 5px;"></span>
           <span class="d-none d-sm-inline-block user-info">{{username}}</span>
@@ -42,11 +42,13 @@
             <li nz-menu-item [nzSelected]="url === '/nhom-tai-khoan'"><a routerLink="/nhom-tai-khoan">Nhóm tài khoản</a>
             </li>
             <li nz-menu-item [nzSelected]="url === '/nhom-tai-khoan/roles'"><a routerLink="/nhom-tai-khoan/roles">Phân
-              quyền nhóm</a></li>
+                quyền nhóm</a></li>
+            <!-- *ngIf = 'userInfo.userType === 1' -->
             <li nz-menu-item [nzSelected]="url === '/tai-khoan'"><a routerLink="/tai-khoan">Danh sách tài khoản</a></li>
+            <!-- *ngIf = 'userInfo.userType === 0' -->
             <li nz-menu-item [nzSelected]="url === '/doi-tac'"><a routerLink="/doi-tac">Danh sách đối tác</a></li>
             <li nz-menu-item [nzSelected]="url === '/tai-khoan/roles'"><a routerLink="/tai-khoan/roles">Phân quyền tài
-              khoản</a></li>
+                khoản</a></li>
             <li nz-menu-item [nzSelected]="url === '/system/log'"><a routerLink="/system/log">Lịch sử hệ thống</a></li>
           </ul>
         </ul>
@@ -61,8 +63,7 @@
 </div>
 <!--profile-->
 <nz-modal nzWidth="800px" *ngIf="selectionData" [(nzVisible)]="isVisibleUser" [nzTitle]="modalTitle"
-          nzMaskClosable="false"
-          (nzOnCancel)="handleCancel()">
+  nzMaskClosable="false" (nzOnCancel)="handleCancel()">
   <nz-tabset>
     <nz-tab nzTitle="Thông tin chung" (nzClick)="selectedTable(1)">
       <div class="form-row">
@@ -105,14 +106,13 @@
   </nz-tabset>
   <div *nzModalFooter>
     <button nz-button (click)="handleCancel()">{{'cancel' | translate }}</button>
-    <button [disabled]="isDisbled" nz-button nzType="primary"
-            (click)="handleOk()" class="button-submit">Lưu
+    <button [disabled]="isDisbled" nz-button nzType="primary" (click)="handleOk()" class="button-submit">Lưu
     </button>
   </div>
 </nz-modal>
 <footer>
   <div>
-     Điện thoại: 09034388xx
+    Điện thoại: 09034388xx
   </div>
   <div>
     <span class="fa fa-fw fa-phone"></span> Cao Nguyên Việt ©

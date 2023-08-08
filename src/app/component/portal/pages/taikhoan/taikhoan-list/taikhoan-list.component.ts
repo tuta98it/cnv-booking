@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit,ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActionsSubject, select, Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { NzModalService } from 'ng-zorro-antd/modal';
@@ -8,11 +8,13 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Constant } from 'src/app/shared/constants/constant.class';
 import { AppConfigService } from 'src/app-config.service';
 import { NotificationService } from 'src/app/service/notification.service';
-import {Workbook} from 'exceljs';
+import { Workbook } from 'exceljs';
 import { DateFormatPipe } from 'src/app/shared/pipe/format-date.pipe';
-import {exportDataGrid} from 'devextreme/excel_exporter';
-import {saveAs} from 'file-saver-es';
+import { exportDataGrid } from 'devextreme/excel_exporter';
+import { saveAs } from 'file-saver-es';
 
+// import { removeAccents } from ;
+import { removeAccents } from 'src/app/shared/utils/filters/remove-accents'
 import {
   DxDataGridComponent,
   DxTemplateDirective,
@@ -59,6 +61,8 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
   tinhThanhs = [];
   quanHuyens = [];
   filteredDatas: any[] = [];
+  searchText = '';
+  userInfor: any;
   constructor(
     public translate: TranslateService,
     private modalService: NzModalService,
@@ -82,6 +86,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
       roles: [null],
       signatureImageUrl: [null, [Validators.required]],
       staffCode: [null],
+      department: [null],
       province: [null],
       district: [null],
       tinhThanhId: [null],
@@ -114,10 +119,17 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
     this.getGroups();
     // this.getTinhThanh();
     this.getListData();
+    this.getUserInfo();
   }
 
   ngOnDestroy(): void {
 
+  }
+
+
+  getUserInfo() {
+    this.userInfor = JSON.parse(localStorage.getItem(Constant.USER_INFO));
+    console.log('this.userInfor: ', this.userInfor);
   }
 
   getListData() {
@@ -125,6 +137,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
     this.generalService.getTaikhoan().subscribe(res => {
       if (res !== null) {
         this.datas = res;
+        this.filteredDatas = res;
         this.loading = false;
         let stt = 0;
         this.datas.forEach(en => {
@@ -155,28 +168,44 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
   get() {
     this.translate.use(this.translate.currentLang).subscribe(data => {
       this.data = data;
-
     });
   }
 
-  showConfirm(id): void {
+  showDeleteConfirm(id): void {
     this.get();
     this.modalService.confirm({
-      nzTitle: 'Confirm',
-      nzContent: 'Bạn có muốn xóa hay không?',
+      nzTitle: 'Bạn có chắc muốn xóa tài khoản này?',
+      nzContent: '<b style="color: red;">Tài khoản sẽ thể hoàn tác sau khi xoá</b>',
+      nzOkDanger: true,
       nzOkText: 'Đồng ý',
-      nzCancelText: 'Bỏ qua',
+      nzCancelText: 'Không',
       nzOnOk: () => this.deleteItem(id)
     });
   }
 
-  deleteItem(id) {
-    this.generalService.deleteTaikhoan(id).subscribe(res => {
-      this.notificationService.showNotification(Constant.SUCCESS, Constant.MESSAGE_DELETE_SUCCESS);
-      this.getListData();
-    }, error => {
+  // deleteItem(id) {
+  //   this.generalService.deleteTaikhoan(id).subscribe(res => {
+  //     this.notificationService.showNotification(Constant.SUCCESS, Constant.MESSAGE_DELETE_SUCCESS);
+  //     this.getListData();
+  //   }, error => {
 
-    });
+  //   });
+  // }
+
+  deleteItem(id) {
+      // Delete workspace here
+      this.generalService.deleteTaikhoan(id).subscribe(res => {
+        // Do some logic and close the popup
+        if (res && res.ret && res.ret[0].code !== 0) {
+          this.notificationService.showNotification(Constant.ERROR, 'Không thể xóa.');
+        } else {
+          this.notificationService.showNotification(Constant.SUCCESS, 'Xóa thành công');
+          this.getListData();
+        }
+      }, error => {
+        // Error handling and close the popup
+        this.notificationService.showNotification(Constant.ERROR, 'Đã có lỗi xảy ra!');
+      });
   }
 
   showModalAdd() {
@@ -193,6 +222,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
       signatureImageUrl: '',
       roles: [],
       staffCode: '',
+      department: '',
       province: '',
       district: ''
     });
@@ -201,6 +231,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
   showModalUpdate(data) {
     this.isVisibleAdd = true;
     this.item = data;
+    console.log('this.item: ', this.item);
     this.updated = true;
 
     this.formAdd.patchValue({
@@ -212,6 +243,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
       email: this.item.email,
       signatureImageUrl: this.item.signatureImageUrl,
       staffCode: this.item.staffCode,
+      department: this.item.department,
       province: this.item.province,
       district: this.item.district
     });
@@ -266,15 +298,20 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
   }
 
   handleOk() {
-    const formValue = this.formAdd.value;
+    let formValue = this.formAdd.value;
     const checkEmail = this.validateEmail(formValue.email);
+    let userType: any;
     if (!checkEmail) {
       return;
     }
     if (formValue.id === 0) {
       delete formValue.id;
       formValue.status = 1;
-      this.generalService.addTaikhoan(formValue).subscribe(res => {
+
+      userType = this.userInfor.userType == 0 ? 2 : this.userInfor.userType == 1 ? 3 : null;
+      const payload = { ...formValue, 'userType': userType };
+
+      this.generalService.addTaikhoan(payload).subscribe((res: any) => {
         if (res.ret && res.ret[0].code !== 0) {
           this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
           formValue.id = 0;
@@ -340,6 +377,13 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
   onDeleteClick(id: any): void {
     // alert(id)
     const c = confirm('Bạn có chắc muốn xóa tài khoản này?');
+    // this.modalService.confirm({
+    //   nzTitle: 'Confirm',
+    //   nzContent: 'Bạn có muốn xóa hay không?',
+    //   nzOkText: 'Đồng ý',
+    //   nzCancelText: 'Bỏ qua',
+    //   nzOnOk: () => this.deleteItem(id)
+    // });
     if (c === true) {
       // Delete workspace here
       this.generalService.deleteTaikhoan(id).subscribe(res => {
@@ -397,7 +441,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
     const worksheet = workbook.addWorksheet('Sheet1');
 
     const from = this.dateFormatPipe.transformFull(new Date(), Constant.DATE_FMT_STR);
-    const dateStr =  from;
+    const dateStr = from;
     const fileName = `DS_Tai_Khoan_${dateStr}`;
     exportDataGrid({
       component: e.component,
@@ -405,12 +449,34 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
       autoFilterEnabled: true,
     }).then(() => {
       workbook.xlsx.writeBuffer().then((buffer) => {
-        saveAs(new Blob([buffer], {type: 'application/octet-stream'}), fileName + '.xlsx');
+        saveAs(new Blob([buffer], { type: 'application/octet-stream' }), fileName + '.xlsx');
       });
     });
     e.cancel = true;
   }
 
+
+
+
+  // String.prototype.removeAccents = function() {
+  //   return this
+  //     .normalize("NFD")
+  //     .replace(/[\u0300-\u036f]/g, "");
+  // };
+
+  onSearch() {
+    const keyword = removeAccents(this.searchText.trim().toLowerCase());
+    console.log(keyword);
+    this.filteredDatas = this.datas.filter((en) =>
+      removeAccents(en.id?.toString().trim()).toLowerCase().includes(keyword) ||
+      removeAccents(en.fullname?.trim()).toLowerCase().includes(keyword) ||
+      removeAccents(en.username?.trim()).toLowerCase().includes(keyword) ||
+      removeAccents(en.phoneNo?.trim()).toLowerCase().includes(keyword) ||
+      removeAccents(en.email?.trim()).toLowerCase().includes(keyword) ||
+      removeAccents(en.district?.trim()).toLowerCase().includes(keyword) ||
+      removeAccents(en.province?.trim()).toLowerCase().includes(keyword)
+    );
+  }
 
   // getTinhThanh() {
   //   this.generalService.getTinhThanh(null).subscribe(res => {
