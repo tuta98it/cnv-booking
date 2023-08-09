@@ -120,7 +120,7 @@
       <div class="input-wrap" nz-row [hidden]=updated>
         <label class="title-detail" nz-col [nzSpan]="8">Tài khoản<em class="fa fa-asterisk required"></em></label>
         <div nz-col [nzSpan]="16">
-          <input nz-input formControlName="username" />
+          <input nz-input formControlName="username" autocomplete="new-password"/>
         </div>
       </div>
       <div [hidden]=updated>
@@ -128,7 +128,7 @@
           <label class="title-detail" nz-col [nzSpan]="8">Mật khẩu<em class="fa fa-asterisk required"></em></label>
           <div nz-col [nzSpan]="16">
             <nz-input-group [nzSuffix]="suffixTemplate">
-              <input [type]="passwordVisible ? 'text' : 'password'" nz-input placeholder="Nhập mật khẩu"
+              <input [type]="passwordVisible ? 'text' : 'password'" nz-input placeholder="Nhập mật khẩu" autocomplete="new-password"
                 formControlName="password" />
             </nz-input-group>
             <ng-template #suffixTemplate>
@@ -179,7 +179,7 @@
     <div class="input-wrap">
       <label class="title-detail" nz-col [nzSpan]="8">Mật khẩu<em class="fa fa-asterisk required"></em></label>
       <nz-input-group style="width: auto !important;" [nzSuffix]="suffixTemplate" nz-col [nzSpan]="16">
-        <input [type]="passwordVisible ? 'text' : 'password'" nz-input placeholder="Nhập mật khẩu"
+        <input [type]="passwordVisible ? 'text' : 'password'" nz-input placeholder="Nhập mật khẩu" autocomplete="new-password"
           formControlName="password" />
       </nz-input-group>
       <ng-template #suffixTemplate>
@@ -190,7 +190,7 @@
     <div class="input-wrap">
       <label class="title-detail" nz-col [nzSpan]="8">Nhắc lại<em class="fa fa-asterisk required"></em></label>
       <nz-input-group style="width: auto !important;" [nzSuffix]="suffixRepeatTemplate" nz-col [nzSpan]="16">
-        <input [type]="repeatpasswordVisible ? 'text' : 'password'" nz-input placeholder="Nhập lại mật khẩu"
+        <input [type]="repeatpasswordVisible ? 'text' : 'password'" nz-input placeholder="Nhập lại mật khẩu" autocomplete="new-password"
           formControlName="repeatPassword" />
       </nz-input-group>
       <ng-template #suffixRepeatTemplate>

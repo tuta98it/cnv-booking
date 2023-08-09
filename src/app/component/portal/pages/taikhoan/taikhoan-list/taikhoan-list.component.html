@@ -224,7 +224,7 @@
     <div class="input-wrap">
       <label class="title-detail" nz-col [nzSpan]="8">Mật khẩu<em class="fa fa-asterisk required"></em></label>
       <nz-input-group style="width: auto !important;" [nzSuffix]="suffixTemplate" nz-col [nzSpan]="16">
-        <input [type]="passwordVisible ? 'text' : 'password'" nz-input placeholder="Nhập mật khẩu"
+        <input [type]="passwordVisible ? 'text' : 'password'" nz-input placeholder="Nhập mật khẩu" autocomplete="new-password"
           formControlName="password" />
       </nz-input-group>
       <ng-template #suffixTemplate>
