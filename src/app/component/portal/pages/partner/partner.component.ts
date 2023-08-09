@@ -168,22 +168,30 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
     });
   }
 
-  showConfirm(id): void {
+  showDeleteConfirm(id): void {
     this.get();
     this.modalService.confirm({
-      nzTitle: 'Confirm',
-      nzContent: 'Bạn có muốn xóa hay không?',
+      nzTitle: 'Bạn có chắc muốn xóa tài khoản này?',
+      nzContent: '<b style="color: red;">Tài khoản sẽ thể hoàn tác sau khi xoá. Ấn đồng ý để xoá</b>',
+      nzOkDanger: true,
       nzOkText: 'Đồng ý',
-      nzCancelText: 'Bỏ qua',
+      nzCancelText: 'Không',
       nzOnOk: () => this.deleteItem(id)
     });
   }
 
   deleteItem(id) {
+    // Delete workspace here
     this.generalService.deleteTaikhoan(id).subscribe(res => {
-      this.notificationService.showNotification(Constant.SUCCESS, Constant.MESSAGE_DELETE_SUCCESS);
-      this.getListData();
+      // Do some logic and close the popup
+      if (res && res.ret && res.ret[0].code !== 0) {
+        this.notificationService.showNotification(Constant.ERROR, 'Không thể xóa.');
+      } else {
+        this.notificationService.showNotification(Constant.SUCCESS, 'Xóa thành công');
+        this.getListData();
+      }
     }, error => {
+      // Error handling and close the popup
 
     });
   }
