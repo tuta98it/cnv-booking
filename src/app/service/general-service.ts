@@ -1,17 +1,17 @@
-import {Injectable} from '@angular/core';
-import {BaseService} from '../shared/base-service/base-service.service';
-import {Observable} from 'rxjs';
-import {UrlConstant} from '../shared/constants/url.class';
-import {Role} from '../model/role.class';
+import { Injectable } from '@angular/core';
+import { BaseService } from '../shared/base-service/base-service.service';
+import { Observable } from 'rxjs';
+import { UrlConstant } from '../shared/constants/url.class';
+import { Role } from '../model/role.class';
 
 @Injectable()
-export class GeneralService extends  BaseService {
+export class GeneralService extends BaseService {
   //phong
   getPhong(): Observable<any[]> {
     return this.get(UrlConstant.LIST_PHONG);
   }
   getChiTietPhong(id: number): Observable<any[]> {
-    return this.get(UrlConstant.LIST_PHONG+ '/' + id);
+    return this.get(UrlConstant.LIST_PHONG + '/' + id);
   }
   deletePhong(id: number): Observable<number> {
     return this.delete(UrlConstant.LIST_PHONG + '/' + id, null);
@@ -342,7 +342,7 @@ export class GeneralService extends  BaseService {
     return this.get(UrlConstant.LIST_WAREHOUSE_FIRST_IMPORT + '/GetRelatedWarehouse');
   }
   uploadTonKho(FormData): Observable<any> {
-    return this.post( UrlConstant.FILE + '/UploadFirstImport', FormData);
+    return this.post(UrlConstant.FILE + '/UploadFirstImport', FormData);
   }
   //ca lam viec
   getCalamviec(search: any): Observable<any[]> {
@@ -398,7 +398,66 @@ export class GeneralService extends  BaseService {
     return this.post(UrlConstant.LIST_TAIKHOAN + '/AddGroup2User', item);
   }
 
-  //partner
-  
+  //User
+  postAccountForPartner(payload): Observable<any> {
+    return this.post(UrlConstant.LIST_USER + "/PostAccountForPartner", payload);
+  }
+
+  putUser2Partner(payload: any): Observable<any> {
+    return this.put(
+      UrlConstant.LIST_USER + `/PutUser2Partner/${payload.userId}`,
+      payload
+    );
+  }
+
+  //Partners
+  // getListPartner(): Observable<any[]> {
+  //   return this.get(UrlConstant.LIST_PARTNERS);
+  // }
+
+  getListPartner(): Observable<any[]> {
+    return this.get(UrlConstant.LIST_PARTNERS + "/GetPartnerForAcc");
+  }
+
+  getListPartnerNew(): Observable<any[]> {
+    return this.get(UrlConstant.LIST_PARTNERS + "/GetPartnerForSelect");
+  }
+
+  getListRootPartner(): Observable<any[]> {
+    return this.get(UrlConstant.LIST_PARTNERS + "/GetRootPartnes");
+  }
+
+  getAddPartner(item: any): any {
+    return this.post(UrlConstant.LIST_PARTNERS, item);
+  }
+
+  addPartnerAccount(item: any): any {
+    return this.post(UrlConstant.LIST_ACCOUNTP, item);
+  }
+
+  getUpdatePartner(item: any): any {
+    return this.put(UrlConstant.LIST_PARTNERS + "/" + item.id, item);
+  }
+
+  deletePartner(id: number): any {
+    return this.delete(UrlConstant.LIST_PARTNERS + "/" + id, null);
+  }
+
+  savePartnerRate(item: any): any {
+    return this.post(UrlConstant.LIST_PARTNERS + "/SavePartnerRate", item);
+  }
+
+  deletePartnerRate(id): any {
+    return this.delete(
+      UrlConstant.LIST_PARTNERS + "/DeletePartnerRate/" + id,
+      null
+    );
+  }
+
+  disablePartner(id: any): any {
+    return this.post(UrlConstant.LIST_PARTNERS + "/DisablePartner/" + id, null);
+  }
+
+
 
 }

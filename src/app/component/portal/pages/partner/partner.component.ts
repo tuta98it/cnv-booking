@@ -58,6 +58,9 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
   filteredDatas: any[] = [];
   searchText = '';
   userInfor: any;
+  formAccount: FormGroup;
+  isVisibleAddAccount: boolean = false;
+  isEnableUsername: boolean = false;
   constructor(
     public translate: TranslateService,
     private modalService: NzModalService,
@@ -100,6 +103,15 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
     this.urlServiceSignature =
       this.configService.getConfig().api.baseUrl + `/Upload/UploadFile`;
     this.getAllRole();
+
+    this.formAccount = this.fb.group({
+      userId: [null, [Validators.required]],
+      partnerId: [null, [Validators.required]],
+      fullname: [null, [Validators.required]],
+      username: [null, [Validators.required]],
+      password: [null, [Validators.required]],
+      repeatPassword: [null, [Validators.required]],
+    });
   }
 
   ngOnInit(): void {
@@ -120,17 +132,16 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
 
   getListData() {
     this.loading = true;
-    this.generalService.getTaikhoan().subscribe(res => {
+    this.generalService.getListPartner().subscribe(res => {
       if (res !== null) {
         this.datas = res;
-        this.filteredDatas = res;
         this.loading = false;
         let stt = 0;
         this.datas.forEach(en => {
-          stt++;
-          en.stt = stt;
-          en.roleStr = this.getQuyen(en.userroles);
+          en.stt = ++stt;
+          // en.roleStr = this.getQuyen(en.userroles);
         });
+        this.filteredDatas = this.datas;
         // console.log(this.datas);
         super.setListOfAllData(this.datas);
       }
@@ -274,6 +285,7 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
   handleCancel() {
     this.isVisibleAdd = false;
     this.updated = false;
+    this.isVisibleAddAccount = false;
     this.formAdd.reset();
   }
 
@@ -453,12 +465,66 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
     console.log(keyword);
     this.filteredDatas = this.datas.filter((en) =>
       removeAccents(en.id?.toString().trim()).toLowerCase().includes(keyword) ||
-      removeAccents(en.fullname?.trim()).toLowerCase().includes(keyword) ||
-      removeAccents(en.username?.trim()).toLowerCase().includes(keyword) ||
-      removeAccents(en.phoneNo?.trim()).toLowerCase().includes(keyword) ||
+      removeAccents(en.companyName?.trim()).toLowerCase().includes(keyword) ||
+      removeAccents(en.name?.trim()).toLowerCase().includes(keyword) ||
+      removeAccents(en.phone?.trim()).toLowerCase().includes(keyword) ||
       removeAccents(en.email?.trim()).toLowerCase().includes(keyword) ||
-      removeAccents(en.district?.trim()).toLowerCase().includes(keyword) ||
-      removeAccents(en.province?.trim()).toLowerCase().includes(keyword)
+      removeAccents(en.address?.trim()).toLowerCase().includes(keyword) ||
+      removeAccents(en.note?.trim()).toLowerCase().includes(keyword)
     );
+  }
+
+  showModalAccount(data) {
+    this.isVisibleAddAccount = true;
+    this.formAccount.patchValue({
+      userId: data.accountUserId,
+      partnerId: data.id,
+      fullname: data.accountFullName,
+      username: data.accountUserName,
+      password: "",
+      repeatPassword: "",
+    });
+    if (data.accountUserName) this.isEnableUsername = true
+    else this.isEnableUsername = false;
+    console.log(this.formAccount.value);
+  }
+
+  handleOkAddAccount() {
+    const formValue = this.formAccount.value;
+    if (formValue.userId == null) {
+      this.generalService.postAccountForPartner(formValue).subscribe((res: any) => {
+        if (!res.isValid) {
+          this.notificationService.showNotification(
+            Constant.ERROR,
+            res.errors[0].errorMessage
+          );
+        } else {
+          this.isVisibleAddAccount = false;
+          // this.getPartners();
+          this.notificationService.showNotification(
+            Constant.SUCCESS,
+            Constant.MESSAGE_ADD_SUCCESS
+          );
+          this.formAccount.reset();
+        }
+      });
+    } else {
+      this.generalService.putUser2Partner(formValue).subscribe((res: any) => {
+        if (!res.isValid) {
+          this.notificationService.showNotification(
+            Constant.ERROR,
+            res.errors[0].errorMessage
+          );
+        } else {
+          this.isVisibleAddAccount = false;
+          // this.getPartners();
+          this.notificationService.showNotification(
+            Constant.SUCCESS,
+            Constant.MESSAGE_UPDATE_SUCCESS
+          );
+          this.formAccount.reset();
+        }
+      });
+    }
   }
 }

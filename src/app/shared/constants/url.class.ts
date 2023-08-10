@@ -18,6 +18,8 @@ export class  UrlConstant {
   public static readonly LIST_PHONG = '/department';
   public static readonly LIST_LOAIMON = '/loaimon';
   public static readonly LIST_TAIKHOAN = '/user';
+  public static readonly LIST_PARTNERS = "/Partners";
+  public static readonly LIST_ACCOUNTP = "/User";
   public static readonly LIST_MONAN = '/monan';
   public static readonly UPLOAD = '/file/upload';
   public static readonly LIST_DONHANG = '/donHang';

@@ -22,9 +22,10 @@
 </div>
 
 
-<dx-data-grid id="gridContainer" [dataSource]="filteredDatas" #ListAccount [showColumnLines]="true" [showRowLines]="true"
-  [height]="dxGridHeight" [rowAlternationEnabled]="true" [showBorders]="true" [allowColumnResizing]="true"
-  columnResizingMode="widget" [columnMinWidth]="50" [columnAutoWidth]="true" (onExporting)="onExporting($event)">
+<dx-data-grid id="gridContainer" [dataSource]="filteredDatas" #ListAccount [showColumnLines]="true"
+  [showRowLines]="true" [height]="dxGridHeight" [rowAlternationEnabled]="true" [showBorders]="true"
+  [allowColumnResizing]="true" columnResizingMode="widget" [columnMinWidth]="50" [columnAutoWidth]="true"
+  (onExporting)="onExporting($event)">
   <dxo-scrolling mode="virtual"></dxo-scrolling>
   <dxo-sorting mode="multiple"></dxo-sorting>
 
@@ -32,16 +33,30 @@
   <dxo-filter-row [visible]="true" [applyFilter]="currentFilter"></dxo-filter-row>
   <dxi-column cssClass="text-center" caption="Action" [fixed]="true" [width]="170" fixedPosition="right"
     cellTemplate="cellBtnTemplate"></dxi-column>
+
+  <!-- STT -->
   <dxi-column cssClass="text-center" caption="STT" [width]="55" dataField="stt" [fixed]="true" [allowFiltering]="false"
     [allowSorting]="false"></dxi-column>
-  <dxi-column caption="Họ tên" [width]="230" dataField="fullname" [fixed]="true"></dxi-column>
-  <dxi-column caption="Tài khoản" [width]="150" dataField="username" [fixed]="true"></dxi-column>
-  <dxi-column caption="Tỉnh/TP" [width]="150" dataField="tinhThanh.name"></dxi-column>
-  <dxi-column caption="Quận/Huyện" [width]="150" dataField="quanHuyen.name"></dxi-column>
-  <dxi-column caption="User ID	" [width]="80" dataField="id"></dxi-column>
-  <dxi-column caption="Phân quyền" dataField="roleStr"></dxi-column>
-  <dxi-column caption="Số điện thoại" [width]="150" dataField="phoneNo"></dxi-column>
-  <dxi-column caption="Email" [width]="140" dataField="email"></dxi-column>
+
+  <dxi-column caption="Tên doanh nghiệp" [width]="100" dataField="companyName"></dxi-column>
+
+  <!-- Tên CTV -->
+  <dxi-column caption="Tên chủ doanh nghiệp" [fixed]="true" dataField="name" [width]="200"></dxi-column>
+
+  <!-- SĐT -->
+  <dxi-column caption="Số điện thoại" [width]="100" dataField="phone"></dxi-column>
+
+  <!-- Email -->
+  <dxi-column caption="Email" dataField="email" [width]="100"></dxi-column>
+
+  <!-- Địa chỉ -->
+  <dxi-column caption="Địa chỉ" [width]="100" dataField="address"></dxi-column>
+
+  <dxi-column caption="Ghi chú" dataField="note" [width]="100"></dxi-column>
+
+
+
+
   <div *dxTemplate="let item of 'cellBtnTemplate'">
     <button title="Xóa tài khoản" nz-button nzSize="small" nzType="default" class="btn-right button-update ant-btn-red"
       (click)="showDeleteConfirm(item.data.id)" *ngIf="checkUpdate">
@@ -51,10 +66,17 @@
       (click)="showModalUpdate(item.data)" *ngIf="checkUpdate">
       <span class="fa fa-edit fa-fw"></span>
     </button>
-    <button title="Danh sách nhóm" nz-button nzSize="small" nzType="default" class="btn-right button-update"
+    <!-- <button title="Danh sách nhóm" nz-button nzSize="small" nzType="default" class="btn-right button-update"
       (click)="showModalUserGroup(item.data)" *ngIf="checkUpdate">
       <span class="fa fa-user fa-fw"></span>
+    </button> -->
+
+    <button title="Danh sách nhóm" nz-button nzSize="small" nzType="default" class="btn-right button-update"
+      (click)="showModalAccount(item.data)">
+      <span class="fa fa-user fa-fw"></span>
     </button>
+
+
     <button title="Đổi mật khẩu" nz-button nzSize="small" nzType="default" class="btn-right button-update"
       (click)="showModalPassword(item.data)" *ngIf="checkUpdate">
       <span class="fa fa-key fa-fw"></span>
@@ -120,7 +142,7 @@
       <div class="input-wrap" nz-row [hidden]=updated>
         <label class="title-detail" nz-col [nzSpan]="8">Tài khoản<em class="fa fa-asterisk required"></em></label>
         <div nz-col [nzSpan]="16">
-          <input nz-input formControlName="username" autocomplete="new-password"/>
+          <input nz-input formControlName="username" autocomplete="new-password" />
         </div>
       </div>
       <div [hidden]=updated>
@@ -128,8 +150,8 @@
           <label class="title-detail" nz-col [nzSpan]="8">Mật khẩu<em class="fa fa-asterisk required"></em></label>
           <div nz-col [nzSpan]="16">
             <nz-input-group [nzSuffix]="suffixTemplate">
-              <input [type]="passwordVisible ? 'text' : 'password'" nz-input placeholder="Nhập mật khẩu" autocomplete="new-password"
-                formControlName="password" />
+              <input [type]="passwordVisible ? 'text' : 'password'" nz-input placeholder="Nhập mật khẩu"
+                autocomplete="new-password" formControlName="password" />
             </nz-input-group>
             <ng-template #suffixTemplate>
               <i nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"
@@ -179,8 +201,8 @@
     <div class="input-wrap">
       <label class="title-detail" nz-col [nzSpan]="8">Mật khẩu<em class="fa fa-asterisk required"></em></label>
       <nz-input-group style="width: auto !important;" [nzSuffix]="suffixTemplate" nz-col [nzSpan]="16">
-        <input [type]="passwordVisible ? 'text' : 'password'" nz-input placeholder="Nhập mật khẩu" autocomplete="new-password"
-          formControlName="password" />
+        <input [type]="passwordVisible ? 'text' : 'password'" nz-input placeholder="Nhập mật khẩu"
+          autocomplete="new-password" formControlName="password" />
       </nz-input-group>
       <ng-template #suffixTemplate>
         <i nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"
@@ -190,8 +212,8 @@
     <div class="input-wrap">
       <label class="title-detail" nz-col [nzSpan]="8">Nhắc lại<em class="fa fa-asterisk required"></em></label>
       <nz-input-group style="width: auto !important;" [nzSuffix]="suffixRepeatTemplate" nz-col [nzSpan]="16">
-        <input [type]="repeatpasswordVisible ? 'text' : 'password'" nz-input placeholder="Nhập lại mật khẩu" autocomplete="new-password"
-          formControlName="repeatPassword" />
+        <input [type]="repeatpasswordVisible ? 'text' : 'password'" nz-input placeholder="Nhập lại mật khẩu"
+          autocomplete="new-password" formControlName="repeatPassword" />
       </nz-input-group>
       <ng-template #suffixRepeatTemplate>
         <i nz-icon [nzType]="repeatpasswordVisible ? 'eye-invisible' : 'eye'"
@@ -258,4 +280,58 @@
   <div *nzModalFooter>
     <button nz-button (click)="handleCancelUserGroup()">{{'cancel' | translate }}</button>
   </div>
+</nz-modal>
+
+
+<!--Thêm tài khoản đối tác con-->
+<nz-modal (nzOnCancel)="handleCancel()" [(nzVisible)]="isVisibleAddAccount" [nzTitle]="titleaccount2"
+  [nzContent]="contentaccount2" [nzFooter]="footeraccount2">
+  <ng-template #titleaccount2>Thông tin tài khoản</ng-template>
+  <ng-template #contentaccount2>
+    <form nz-form [formGroup]="formAccount" (ngSubmit)="handleOkAddAccount()">
+      <div nz-row class="input-wrap nz-row">
+        <label class="title-detail" nz-col [nzSpan]="8" nzRequired nzFor="fullname">Họ và tên</label>
+        <div nz-col [nzSpan]="16" nzErrorTip="The input is not valid fullname!">
+          <input nz-input formControlName="fullname" placeholder="Họ và tên" />
+        </div>
+      </div>
+      <div nz-row class="input-wrap nz-row">
+        <label class="title-detail" nz-col [nzSpan]="8" nzRequired>Tên tài khoản</label>
+        <div nz-col [nzSpan]="16">
+          <input [readonly]="isEnableUsername" nz-input placeholder="Tên tài khoản" formControlName="username"
+            autocomplete="new-password" />
+        </div>
+      </div>
+      <div nz-row class="input-wrap nz-row">
+        <label class="title-detail" nz-col [nzSpan]="8" nzFor="password" nzRequired>Mật khẩu</label>
+        <div nz-col [nzSpan]="16">
+          <nz-input-group [nzSuffix]="suffixTemplate">
+            <input nz-input formControlName="password" [type]="passwordVisible ? 'text' : 'password'"
+              autocomplete="new-password" />
+            <ng-template #suffixTemplate>
+              <i nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"
+                (click)="passwordVisible = !passwordVisible"></i>
+            </ng-template>
+          </nz-input-group>
+        </div>
+      </div>
+      <div nz-row class="input-wrap nz-row">
+        <label class="title-detail" nz-col [nzSpan]="8" nzFor="repeatPassword" nzRequired>Lặp lại mật khẩu</label>
+        <div nz-col [nzSpan]="16">
+          <nz-input-group [nzSuffix]="suffixRepeatTemplate">
+            <input nz-input [type]="repeatpasswordVisible ? 'text' : 'password'" formControlName="repeatPassword"
+              autocomplete="new-password" />
+            <ng-template #suffixRepeatTemplate>
+              <i nz-icon [nzType]="repeatpasswordVisible ? 'eye-invisible' : 'eye'"
+                (click)="repeatpasswordVisible = !repeatpasswordVisible"></i>
+            </ng-template>
+          </nz-input-group>
+        </div>
+      </div>
+    </form>
+  </ng-template>
+  <ng-template #footeraccount2>
+    <button nz-button nzType="dashed" (click)="handleCancel()">{{'cancel' | translate }}</button>
+    <button nz-button nzType="primary" (click)="handleOkAddAccount()">{{'save' | translate }}</button>
+  </ng-template>
 </nz-modal>

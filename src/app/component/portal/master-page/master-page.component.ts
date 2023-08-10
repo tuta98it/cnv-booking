@@ -56,6 +56,7 @@ export class MasterPageComponent implements OnInit, OnDestroy {
   loading: boolean;
   datas: any[];
   size = 'small';
+  userInfo : any;
   selectionData: any;
   selectionPassword: any;
   isVisible = false;
@@ -130,15 +131,15 @@ export class MasterPageComponent implements OnInit, OnDestroy {
   }
   ngOnInit(): void {
     this.selectionPassword = {};
-    const userInfo = JSON.parse(localStorage.getItem(Constant.USER_INFO));
-    if (!userInfo) {
+    this.userInfo = JSON.parse(localStorage.getItem(Constant.USER_INFO));
+    if (!this.userInfo) {
       localStorage.removeItem(Constant.TOKEN);
       localStorage.removeItem(Constant.USER_INFO);
       this.router.navigate(['/login']);
     }
-    this.loginUserID = userInfo.id;
-    this.username = userInfo.fullname;
-    this.roleIds = userInfo.roles;
+    this.loginUserID = this.userInfo.id;
+    this.username = this.userInfo.fullname;
+    this.roleIds = this.userInfo.roles;
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd),
       map(() => this.getPageInfo())).subscribe((pageName: string) => {
