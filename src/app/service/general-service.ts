@@ -399,9 +399,6 @@ export class GeneralService extends BaseService {
   }
 
   //User
-  postAccountForPartner(payload): Observable<any> {
-    return this.post(UrlConstant.LIST_USER + "/PostAccountForPartner", payload);
-  }
 
   putUser2Partner(payload: any): Observable<any> {
     return this.put(
@@ -410,14 +407,48 @@ export class GeneralService extends BaseService {
     );
   }
 
-  //Partners
-  // getListPartner(): Observable<any[]> {
-  //   return this.get(UrlConstant.LIST_PARTNERS);
+  addUser(newData: any): Observable<any> {
+    return this.post(UrlConstant.LIST_USER, newData);
+  }
+
+
+  updateUser(newData: any): Observable<any> {
+    return this.put(UrlConstant.LIST_USER + `/${newData.id}`, newData);
+  }
+
+  postAccountForPartner(data: any): Observable<any> {
+    return this.post(UrlConstant.LIST_USER + '/PostAccountForPartner', data);
+  }
+
+
+  getByUserType(userType: any): Observable<any> {
+    return this.get(UrlConstant.LIST_USER + `/GetByUserType/${userType}`);
+  }
+
+
+  getByPartnerId(partnerId: any): Observable<any> {
+    return this.get(UrlConstant.LIST_USER + `/GetByPartnerId/${partnerId}`);
+  }
+
+
+  // putAccountForPartner(id: any, newData: any) {
+  //   return this.put(UrlConstant.LIST_USER + `/PutAccountForPartner/${id}`, newData);
   // }
 
-  getListPartner(): Observable<any[]> {
-    return this.get(UrlConstant.LIST_PARTNERS + "/GetPartnerForAcc");
+
+  changeUserPassword(id: any, newData: any): Observable<any> {
+    return this.post(UrlConstant.LIST_USER + `/ChangeUserPassword/${id}`, newData);
   }
+
+
+  //Partners
+  getListPartner(): Observable<any[]> {
+    return this.get(UrlConstant.LIST_PARTNERS);
+  }
+
+  // getListPartner(): Observable<any[]> {
+  //   return this.get(UrlConstant.LIST_PARTNERS + "/GetPartnerForAcc");
+  // }
 
   getListPartnerNew(): Observable<any[]> {
     return this.get(UrlConstant.LIST_PARTNERS + "/GetPartnerForSelect");

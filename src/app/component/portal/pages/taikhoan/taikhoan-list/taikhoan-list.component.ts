@@ -77,26 +77,26 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
     this.formAdd = this.fb.group({
       id: [null],
       fullname: [null],
-      username: [null],
+      roles: [null],
       phoneNo: [null],
       email: [null],
       status: [null],
+      username: [null],
       password: [null],
       repeatPassword: [null],
-      roles: [null],
-      signatureImageUrl: [null, [Validators.required]],
       staffCode: [null],
       department: [null],
-      province: [null],
-      district: [null],
-      tinhThanhId: [null],
-      quanHuyenId: [null]
+      // signatureImageUrl: [null, [Validators.required]],
+      // province: [null],
+      // district: [null],
+      // tinhThanhId: [null],
+      // quanHuyenId: [null]
     });
-    this.formAdd.controls.tinhThanhId.valueChanges.subscribe(($event) => {
-      if ($event) {
-        // this.getQuanHuyen($event);
-      }
-    })
+    // this.formAdd.controls.tinhThanhId.valueChanges.subscribe(($event) => {
+    //   if ($event) {
+    //     // this.getQuanHuyen($event);
+    //   }
+    // })
     this.formPassword = this.fb.group({
       id: [null],
       password: [null],
@@ -118,8 +118,8 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
     this.get();
     this.getGroups();
     // this.getTinhThanh();
-    this.getListData();
     this.getUserInfo();
+    this.getListData();
   }
 
   ngOnDestroy(): void {
@@ -134,23 +134,49 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
 
   getListData() {
     this.loading = true;
-    this.generalService.getTaikhoan().subscribe(res => {
-      if (res !== null) {
-        this.datas = res;
-        this.filteredDatas = res;
-        this.loading = false;
-        let stt = 0;
-        this.datas.forEach(en => {
-          stt++;
-          en.stt = stt;
-          en.roleStr = this.getQuyen(en.userroles);
-        });
-        // console.log(this.datas);
-        super.setListOfAllData(this.datas);
-      }
-    }, error => {
+    let service: any;
+    if (this.userInfor.userType === 0) {
+      // this.userInfor.userType
+      this.generalService.getByUserType(2).subscribe((res: any) => {
+        if (res !== null) {
+          this.datas = res;
+          this.loading = false;
+          let stt = 0;
+          this.datas.forEach(en => {
+            stt++;
+            en.stt = stt;
+            en.roleStr = this.getQuyen(en.userroles);
+          });
+          this.filteredDatas = this.datas;
+          console.log('this.filteredDatas : ', this.filteredDatas);
+          super.setListOfAllData(this.datas);
+        }
+      }, error => {
+      });
+    } else if (this.userInfor.userType === 1) {
+      console.log('this.userInfor.userType : ', this.userInfor.userType);
+      this.generalService.getByPartnerId(this.userInfor.partnerId).subscribe((res: any) => {
+        if (res !== null) {
+          this.datas = res;
+          this.loading = false;
+          let stt = 0;
+          this.datas.forEach(en => {
+            stt++;
+            en.stt = stt;
+            en.roleStr = this.getQuyen(en.userroles);
+          });
+          this.filteredDatas = this.datas;
+          console.log('this.filteredDatas : ', this.filteredDatas);
+          super.setListOfAllData(this.datas);
+        }
+      }, error => {
+      });;
+      // isGetAPT = true;
+    } else {
+      console.log('UserType không hợp lệ!');
+    }
 
-    });
+    // console.log('isGetAPT: ',  isGetAPT);
   }
 
   validateEmail(mail) {
@@ -193,19 +219,19 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
   // }
 
   deleteItem(id) {
-      // Delete workspace here
-      this.generalService.deleteTaikhoan(id).subscribe(res => {
-        // Do some logic and close the popup
-        if (res && res.ret && res.ret[0].code !== 0) {
-          this.notificationService.showNotification(Constant.ERROR, 'Không thể xóa.');
-        } else {
-          this.notificationService.showNotification(Constant.SUCCESS, 'Xóa thành công');
-          this.getListData();
-        }
-      }, error => {
-        // Error handling and close the popup
-        this.notificationService.showNotification(Constant.ERROR, 'Đã có lỗi xảy ra!');
-      });
+    // Delete workspace here
+    this.generalService.deleteTaikhoan(id).subscribe(res => {
+      // Do some logic and close the popup
+      if (res && res.ret && res.ret[0].code !== 0) {
+        this.notificationService.showNotification(Constant.ERROR, 'Không thể xóa.');
+      } else {
+        this.notificationService.showNotification(Constant.SUCCESS, 'Xóa thành công');
+        this.getListData();
+      }
+    }, error => {
+      // Error handling and close the popup
+      this.notificationService.showNotification(Constant.ERROR, 'Đã có lỗi xảy ra!');
+    });
   }
 
   showModalAdd() {
@@ -214,17 +240,14 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
     this.formAdd.patchValue({
       id: 0,
       fullname: '',
-      username: '',
+      roles: [],
       phoneNo: '',
       email: '',
+      department: '',
+      staffCode: '',
+      username: '',
       password: '',
       repeatPassword: '',
-      signatureImageUrl: '',
-      roles: [],
-      staffCode: '',
-      department: '',
-      province: '',
-      district: ''
     });
   }
 
@@ -237,15 +260,13 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
     this.formAdd.patchValue({
       id: this.item.id,
       fullname: this.item.fullname,
+      roles: this.item.roles,
       status: this.item.status,
-      username: this.item.username,
       phoneNo: this.item.phoneNo,
       email: this.item.email,
-      signatureImageUrl: this.item.signatureImageUrl,
       staffCode: this.item.staffCode,
       department: this.item.department,
-      province: this.item.province,
-      district: this.item.district
+      username: this.item.username,
     });
     console.log(this.formAdd.value);
 
@@ -307,7 +328,6 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
     if (formValue.id === 0) {
       delete formValue.id;
       formValue.status = 1;
-
       userType = this.userInfor.userType == 0 ? 2 : this.userInfor.userType == 1 ? 3 : null;
       const payload = { ...formValue, 'userType': userType };
 
@@ -473,8 +493,8 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
       removeAccents(en.username?.trim()).toLowerCase().includes(keyword) ||
       removeAccents(en.phoneNo?.trim()).toLowerCase().includes(keyword) ||
       removeAccents(en.email?.trim()).toLowerCase().includes(keyword) ||
-      removeAccents(en.district?.trim()).toLowerCase().includes(keyword) ||
-      removeAccents(en.province?.trim()).toLowerCase().includes(keyword)
+      removeAccents(en.department?.trim()).toLowerCase().includes(keyword) ||
+      removeAccents(en.staffCode?.trim()).toLowerCase().includes(keyword)
     );
   }
 

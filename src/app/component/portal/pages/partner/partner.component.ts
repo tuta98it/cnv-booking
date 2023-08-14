@@ -74,24 +74,26 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
     super('id');
     this.formAdd = this.fb.group({
       id: [null],
-      fullname: [null],
-      username: [null],
-      phoneNo: [null],
+      name: [null],
+      companyName: [null],
+      taxCode: [null],
+      phone: [null],
       email: [null],
-      status: [null],
+      address: [null],
+      numberOfStaff: [null],
+      debtMax: [null],
+      debtUsed: [null],
+      debtRemain: [null],
+      note: [null],
+      username: [null],
       password: [null],
       repeatPassword: [null],
-      roles: [null],
-      signatureImageUrl: [null, [Validators.required]],
-      staffCode: [null],
-      tinhThanhId: [null],
-      quanHuyenId: [null]
     });
-    this.formAdd.controls.tinhThanhId.valueChanges.subscribe(($event) => {
-      if ($event) {
-        this.getQuanHuyen($event);
-      }
-    })
+    // this.formAdd.controls.tinhThanhId.valueChanges.subscribe(($event) => {
+    //   if ($event) {
+    //     this.getQuanHuyen($event);
+    //   }
+    // })
     this.formPassword = this.fb.group({
       id: [null],
       password: [null],
@@ -106,8 +108,8 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
 
     this.formAccount = this.fb.group({
       userId: [null, [Validators.required]],
-      partnerId: [null, [Validators.required]],
       fullname: [null, [Validators.required]],
+      email: [null, [Validators.required]],
       username: [null, [Validators.required]],
       password: [null, [Validators.required]],
       repeatPassword: [null, [Validators.required]],
@@ -122,12 +124,19 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
 
     this.get();
     this.getGroups();
-    this.getTinhThanh();
+    // this.getTinhThanh();
     this.getListData();
+    this.getUserInfo();
   }
 
   ngOnDestroy(): void {
 
+  }
+
+
+  getUserInfo() {
+    this.userInfor = JSON.parse(localStorage.getItem(Constant.USER_INFO));
+    console.log('this.userInfor: ', this.userInfor);
   }
 
   getListData() {
@@ -193,7 +202,7 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
 
   deleteItem(id) {
     // Delete workspace here
-    this.generalService.deleteTaikhoan(id).subscribe(res => {
+    this.generalService.deletePartner(id).subscribe(res => {
       // Do some logic and close the popup
       if (res && res.ret && res.ret[0].code !== 0) {
         this.notificationService.showNotification(Constant.ERROR, 'Không thể xóa.');
@@ -212,15 +221,15 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
     this.formAdd.reset();
     this.formAdd.patchValue({
       id: 0,
-      fullname: '',
-      username: '',
-      phoneNo: '',
+      companyName: '',
+      name: '',
+      phone: '',
       email: '',
+      address: '',
+      note: '',
+      username: '',
       password: '',
       repeatPassword: '',
-      signatureImageUrl: '',
-      roles: [],
-      staffCode: ''
     });
   }
 
@@ -231,14 +240,18 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
 
     this.formAdd.patchValue({
       id: this.item.id,
-      fullname: this.item.fullname,
-      status: this.item.status,
-      username: this.item.username,
-      phoneNo: this.item.phoneNo,
+      companyName: this.item.companyName,
+      taxCode: this.item.taxCode,
+      name: this.item.name,
+      phone: this.item.phone,
       email: this.item.email,
-      signatureImageUrl: this.item.signatureImageUrl,
-      roles: this.getRoles(this.item.userroles),
-      staffCode: this.item.staffCode
+      address: this.item.address,
+      numberOfStaff: this.item.numberOfStaff,
+      debtMax: this.item.debtMax,
+      debtUsed: this.item.debtUsed,
+      debtRemain: this.item.debtRemain,
+      note: this.item.note,
+      username: this.item.username,
     });
   }
 
@@ -297,8 +310,8 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
     }
     if (formValue.id === 0) {
       delete formValue.id;
-      formValue.status = 1;
-      this.generalService.addTaikhoan(formValue).subscribe(res => {
+      // formValue.status = 1;
+      this.generalService.addUser(formValue).subscribe((res: any) => {
         if (res.ret && res.ret[0].code !== 0) {
           this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
           formValue.id = 0;
@@ -311,7 +324,7 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
 
       });
     } else {
-      this.generalService.updateTaikhoan(formValue).subscribe(res => {
+      this.generalService.updateUser(formValue).subscribe((res: any) => {
         if (res.ret && res.ret[0].code !== 0) {
           this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
         } else {
@@ -465,26 +478,47 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
     console.log(keyword);
     this.filteredDatas = this.datas.filter((en) =>
       removeAccents(en.id?.toString().trim()).toLowerCase().includes(keyword) ||
-      removeAccents(en.companyName?.trim()).toLowerCase().includes(keyword) ||
       removeAccents(en.name?.trim()).toLowerCase().includes(keyword) ||
+      removeAccents(en.companyName?.trim()).toLowerCase().includes(keyword) ||
+      removeAccents(en.taxCode?.trim()).toLowerCase().includes(keyword) ||
       removeAccents(en.phone?.trim()).toLowerCase().includes(keyword) ||
       removeAccents(en.email?.trim()).toLowerCase().includes(keyword) ||
       removeAccents(en.address?.trim()).toLowerCase().includes(keyword) ||
+      removeAccents(en.numberOfStaff?.toString().trim()).toLowerCase().includes(keyword) ||
+      removeAccents(en.debtMax?.toString().trim()).toLowerCase().includes(keyword) ||
+      removeAccents(en.debtUsed?.toString().trim()).toLowerCase().includes(keyword) ||
+      removeAccents(en.debtRemain?.toString().trim()).toLowerCase().includes(keyword) ||
       removeAccents(en.note?.trim()).toLowerCase().includes(keyword)
     );
   }
 
   showModalAccount(data) {
     this.isVisibleAddAccount = true;
+    // this.formAccount.patchValue({
+    //   id: data.userId,
+    //   // id: 0,
+    //   fullname: data.name,
+    //   staffCode: data.code,
+    //   email: data.email,
+    //   phoneNo: data.phone,
+    //   userType: this.userInfor.userType === 0 ? 1 : this.userInfor.userType === 1 ? 3 : null,
+    //   partnerId: this.userInfor.userType === 0 ? null : this.userInfor.userType === 1 ? this.userInfor.id : null,
+    //   // username: data.username,
+    //   username: '',
+    //   password: "",
+    //   repeatPassword: "",
+    // });
+
     this.formAccount.patchValue({
-      userId: data.accountUserId,
-      partnerId: data.id,
-      fullname: data.accountFullName,
-      username: data.accountUserName,
+      userId: data.userId,
+      // partnerId: data.id,
+      partnerId: this.userInfor.userType === 0 ? null : this.userInfor.userType === 1 ? data.id : null,
+      fullname: data.name,
+      username: data.username,
       password: "",
       repeatPassword: "",
     });
-    if (data.accountUserName) this.isEnableUsername = true
+    if (data.username) this.isEnableUsername = true
     else this.isEnableUsername = false;
     console.log(this.formAccount.value);
   }
@@ -492,6 +526,7 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
   handleOkAddAccount() {
     const formValue = this.formAccount.value;
     if (formValue.userId == null) {
+      // delete formValue.id;
       this.generalService.postAccountForPartner(formValue).subscribe((res: any) => {
         if (!res.isValid) {
           this.notificationService.showNotification(
@@ -509,7 +544,7 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
         }
       });
     } else {
-      this.generalService.putUser2Partner(formValue).subscribe((res: any) => {
+      this.generalService.changeUserPassword(formValue.userId, formValue).subscribe((res: any) => {
         if (!res.isValid) {
           this.notificationService.showNotification(
             Constant.ERROR,

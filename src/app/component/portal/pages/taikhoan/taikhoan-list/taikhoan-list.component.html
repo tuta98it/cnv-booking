@@ -6,8 +6,8 @@
   <div class="form-group" style="float: right; display: flex; align-items: center;">
     <!-- Tìm kiếm -->
     <!-- [(ngModel)]="searchText" (keyup.enter)="onSearch()"-->
-    <input style="width: 200px; border-radius: 4px; height: 32px;" class="mgr10" nzSize="small" nz-input type="text" [(ngModel)]="searchText" (keyup)="onSearch()"
-      placeholder="Tìm kiếm theo tên, username, ...">
+    <input style="width: 200px; border-radius: 4px; height: 32px;" class="mgr10" nzSize="small" nz-input type="text"
+      [(ngModel)]="searchText" (keyup)="onSearch()" placeholder="Tìm kiếm theo tên, username, ...">
 
     <!-- Nút thêm -->
     <button nz-button nzType="primary" class="ant-btn-primary" type="button" (click)="showModalAdd()" *ngIf="checkAdd">
@@ -22,9 +22,10 @@
 </div>
 
 
-<dx-data-grid id="gridContainer" [dataSource]="filteredDatas" #ListAccount [showColumnLines]="true" [showRowLines]="true"
-  [height]="dxGridHeight" [rowAlternationEnabled]="true" [showBorders]="true" [allowColumnResizing]="true"
-  columnResizingMode="widget" [columnMinWidth]="50" [columnAutoWidth]="true" (onExporting)="onExporting($event)">
+<dx-data-grid id="gridContainer" [dataSource]="filteredDatas" #ListAccount [showColumnLines]="true"
+  [showRowLines]="true" [height]="dxGridHeight" [rowAlternationEnabled]="true" [showBorders]="true"
+  [allowColumnResizing]="true" columnResizingMode="widget" [columnMinWidth]="50" [columnAutoWidth]="true"
+  (onExporting)="onExporting($event)">
   <dxo-scrolling mode="virtual"></dxo-scrolling>
   <dxo-sorting mode="multiple"></dxo-sorting>
 
@@ -34,14 +35,13 @@
     cellTemplate="cellBtnTemplate"></dxi-column>
   <dxi-column cssClass="text-center" caption="STT" [width]="55" dataField="stt" [fixed]="true" [allowFiltering]="false"
     [allowSorting]="false"></dxi-column>
-  <dxi-column caption="Họ tên" [width]="230" dataField="fullname" [fixed]="true"></dxi-column>
-  <dxi-column caption="Tài khoản" [width]="150" dataField="username" [fixed]="true"></dxi-column>
-  <dxi-column caption="Tỉnh/TP" [width]="150" dataField="province"></dxi-column>
-  <dxi-column caption="Quận/Huyện" [width]="150" dataField="district"></dxi-column>
+  <dxi-column caption="Tên nhân viên" [width]="230" dataField="fullname" [fixed]="true"></dxi-column>
+  <dxi-column caption="SĐT" [width]="150" dataField="phoneNo"></dxi-column>
+  <dxi-column caption="Email" [width]="150" dataField="email"></dxi-column>
+  <dxi-column caption="Chức vụ" [width]="150" dataField="roleStr" [fixed]="true"></dxi-column>
+  <dxi-column caption="Phòng ban" [width]="150" dataField="department"></dxi-column>
+  <dxi-column caption="Mã nhân viên" [width]="150" dataField="staffCode"></dxi-column>
   <!-- <dxi-column caption="User ID	" [width]="80" dataField="id"></dxi-column> -->
-  <dxi-column caption="Phòng ban" dataField="department"></dxi-column>
-  <dxi-column caption="Số điện thoại" [width]="150" dataField="phoneNo"></dxi-column>
-  <dxi-column caption="Email" [width]="140" dataField="email"></dxi-column>
   <div *dxTemplate="let item of 'cellBtnTemplate'">
     <button title="Xóa tài khoản" nz-button nzSize="small" nzType="default" class="btn-right button-update ant-btn-red"
       (click)="showDeleteConfirm(item.data.id)" *ngIf="checkUpdate">
@@ -51,10 +51,10 @@
       (click)="showModalUpdate(item.data)" *ngIf="checkUpdate">
       <span class="fa fa-edit fa-fw"></span>
     </button>
-    <button title="Danh sách nhóm" nz-button nzSize="small" nzType="default" class="btn-right button-update"
+    <!-- <button title="Danh sách nhóm" nz-button nzSize="small" nzType="default" class="btn-right button-update"
       (click)="showModalUserGroup(item.data)" *ngIf="checkUpdate">
       <span class="fa fa-user fa-fw"></span>
-    </button>
+    </button> -->
     <button title="Đổi mật khẩu" nz-button nzSize="small" nzType="default" class="btn-right button-update"
       (click)="showModalPassword(item.data)" *ngIf="checkUpdate">
       <span class="fa fa-key fa-fw"></span>
@@ -122,20 +122,6 @@
           <input nz-input formControlName="fullname" [ngClass]="{ 'is-invalid': submitted && f.fullname.errors }" />
         </div>
       </div>
-      <div class="input-wrap" nz-row>
-        <label class="title-detail" nz-col [nzSpan]="8">Mã nhân viên</label>
-        <div nz-col [nzSpan]="16">
-          <input nz-input formControlName="staffCode" [ngClass]="{ 'is-invalid': submitted && f.staffCode.errors }" />
-        </div>
-      </div>
-
-      <div class="input-wrap" nz-row>
-        <label class="title-detail" nz-col [nzSpan]="8">Phòng ban</label>
-        <div nz-col [nzSpan]="16">
-          <!-- [ngClass]="{ 'is-invalid': submitted && f.staffCode.errors }"  -->
-          <input nz-input formControlName="department"/>
-        </div>
-      </div>
 
 
       <div class="input-wrap" nz-row>
@@ -144,24 +130,65 @@
           <input nz-input formControlName="phoneNo" />
         </div>
       </div>
+
       <div class="input-wrap" nz-row>
         <label class="title-detail" nz-col [nzSpan]="8">Email</label>
         <div nz-col [nzSpan]="16">
           <input type="email" nz-input formControlName="email" />
         </div>
       </div>
+
+
+
+
+      <!-- Chức vụ -->
+      <div class="input-wrap">
+        <label class="title-detail">Chức vụ<em class="fa fa-asterisk required"></em></label>
+        <nz-select nzMode="multiple" nzPlaceHolder="--Chọn quyền--" formControlName="roles"
+          style="width: 20rem; margin-left: 2.5rem;">
+          <nz-option [nzValue]="1" nzLabel="Quản trị"></nz-option>
+          <nz-option [nzValue]="2" nzLabel="Xem danh sách nhân sự"></nz-option>
+          <nz-option [nzValue]="3" nzLabel="Quản lý phòng ban"></nz-option>
+          <nz-option [nzValue]="4" nzLabel="Sửa chi tiết nhân sự"></nz-option>
+          <nz-option [nzValue]="5" nzLabel="Quản lý user"></nz-option>
+          <nz-option [nzValue]="6" nzLabel="Quản lý group user"></nz-option>
+          <nz-option [nzValue]="7" nzLabel="Duyệt xin nghỉ"></nz-option>
+          <nz-option [nzValue]="8" nzLabel="Chấm công"></nz-option>
+        </nz-select>
+      </div>
+
+
+
+
       <div class="input-wrap" nz-row>
+        <label class="title-detail" nz-col [nzSpan]="8">Phòng ban</label>
+        <div nz-col [nzSpan]="16">
+          <!-- [ngClass]="{ 'is-invalid': submitted && f.staffCode.errors }"  -->
+          <input nz-input formControlName="department" />
+        </div>
+      </div>
+
+
+      <div class="input-wrap" nz-row>
+        <label class="title-detail" nz-col [nzSpan]="8">Mã nhân viên<em class="fas fa-asterisk required"></em></label>
+        <div nz-col [nzSpan]="16">
+          <input nz-input formControlName="staffCode" [ngClass]="{ 'is-invalid': submitted && f.staffCode.errors }" />
+        </div>
+      </div>
+
+
+      <!-- <div class="input-wrap" nz-row>
         <label class="title-detail" nz-col [nzSpan]="8">Tỉnh thành</label>
         <div nz-col [nzSpan]="16">
           <input nz-input name="province" formControlName="province" />
         </div>
-      </div>
-      <div class="input-wrap" nz-row>
+      </div> -->
+      <!-- <div class="input-wrap" nz-row>
         <label class="title-detail" nz-col [nzSpan]="8">Quận huyện</label>
         <div nz-col [nzSpan]="16">
           <input nz-input name="district" formControlName="district" />
         </div>
-      </div>
+      </div> -->
       <div class="input-wrap" nz-row [hidden]=updated>
         <label class="title-detail" nz-col [nzSpan]="8">Tài khoản<em class="fa fa-asterisk required"></em></label>
         <div nz-col [nzSpan]="16">
@@ -224,8 +251,8 @@
     <div class="input-wrap">
       <label class="title-detail" nz-col [nzSpan]="8">Mật khẩu<em class="fa fa-asterisk required"></em></label>
       <nz-input-group style="width: auto !important;" [nzSuffix]="suffixTemplate" nz-col [nzSpan]="16">
-        <input [type]="passwordVisible ? 'text' : 'password'" nz-input placeholder="Nhập mật khẩu" autocomplete="new-password"
-          formControlName="password" />
+        <input [type]="passwordVisible ? 'text' : 'password'" nz-input placeholder="Nhập mật khẩu"
+          autocomplete="new-password" formControlName="password" />
       </nz-input-group>
       <ng-template #suffixTemplate>
         <i nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"

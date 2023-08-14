@@ -38,21 +38,36 @@
   <dxi-column cssClass="text-center" caption="STT" [width]="55" dataField="stt" [fixed]="true" [allowFiltering]="false"
     [allowSorting]="false"></dxi-column>
 
-  <dxi-column caption="Tên doanh nghiệp" [width]="100" dataField="companyName"></dxi-column>
+  <dxi-column caption="Tên doanh nghiệp" [width]="200" dataField="companyName"></dxi-column>
 
   <!-- Tên CTV -->
   <dxi-column caption="Tên chủ doanh nghiệp" [fixed]="true" dataField="name" [width]="200"></dxi-column>
 
+  <!-- Mã số thuế -->
+  <dxi-column caption="Mã số thuế" [width]="120" dataField="taxCode"></dxi-column>
+
   <!-- SĐT -->
-  <dxi-column caption="Số điện thoại" [width]="100" dataField="phone"></dxi-column>
+  <dxi-column caption="Số điện thoại" [width]="150" dataField="phone"></dxi-column>
 
   <!-- Email -->
-  <dxi-column caption="Email" dataField="email" [width]="100"></dxi-column>
+  <dxi-column caption="Email" dataField="email" [width]="200"></dxi-column>
 
   <!-- Địa chỉ -->
-  <dxi-column caption="Địa chỉ" [width]="100" dataField="address"></dxi-column>
+  <dxi-column caption="Địa chỉ" [width]="200" dataField="address"></dxi-column>
 
-  <dxi-column caption="Ghi chú" dataField="note" [width]="100"></dxi-column>
+  <!-- Số lượng sinh viên -->
+  <dxi-column caption="SL nhân viên" [width]="120" dataField="numberOfStaff"></dxi-column>
+
+  <!-- Công nợ tối đa -->
+  <dxi-column caption="CN tối đa" [width]="100" dataField="debtMax"></dxi-column>
+
+  <!-- Công nợ đã sử dụng -->
+  <dxi-column caption="CN đã sử dụng" [width]="140" dataField="debtUsed"></dxi-column>
+
+  <!-- Công nợ còn lại -->
+  <dxi-column caption="CN còn lại" [width]="100" dataField="debtRemain"></dxi-column>
+
+  <dxi-column caption="Ghi chú" dataField="note"></dxi-column>
 
 
 
@@ -62,7 +77,7 @@
       (click)="showDeleteConfirm(item.data.id)" *ngIf="checkUpdate">
       <span class="fa fa-times fa-fw"></span>
     </button>
-    <button title="Thông tin tài khoản" nz-button nzSize="small" nzType="default" class="btn-right button-update"
+    <button title="Sửa thông tin tài khoản" nz-button nzSize="small" nzType="default" class="btn-right button-update"
       (click)="showModalUpdate(item.data)" *ngIf="checkUpdate">
       <span class="fa fa-edit fa-fw"></span>
     </button>
@@ -71,19 +86,18 @@
       <span class="fa fa-user fa-fw"></span>
     </button> -->
 
-    <button title="Danh sách nhóm" nz-button nzSize="small" nzType="default" class="btn-right button-update"
+    <button title="Tạo tài khoản" nz-button nzSize="small" nzType="default" class="btn-right button-update"
       (click)="showModalAccount(item.data)">
       <span class="fa fa-user fa-fw"></span>
     </button>
 
-
-    <button title="Đổi mật khẩu" nz-button nzSize="small" nzType="default" class="btn-right button-update"
+    <!-- <button title="Đổi mật khẩu" nz-button nzSize="small" nzType="default" class="btn-right button-update"
       (click)="showModalPassword(item.data)" *ngIf="checkUpdate">
       <span class="fa fa-key fa-fw"></span>
-    </button>
+    </button> -->
   </div>
   <dxo-summary>
-    <dxi-total-item column="fullname" displayFormat="Số bản ghi: {0}" summaryType="count">
+    <dxi-total-item column="name" displayFormat="Số bản ghi: {0}" summaryType="count">
     </dxi-total-item>
   </dxo-summary>
 </dx-data-grid>
@@ -98,54 +112,94 @@
     </ng-template>
     <div>
       <div class="input-wrap" nz-row>
-        <label class="title-detail" nz-col [nzSpan]="8">Họ tên<em class="fas fa-asterisk required"></em></label>
+        <label class="title-detail" nz-col [nzSpan]="8">Tên chủ doanh nghiệp<em
+            class="fas fa-asterisk required"></em></label>
         <div nz-col [nzSpan]="16">
-          <input nz-input formControlName="fullname" [ngClass]="{ 'is-invalid': submitted && f.fullname.errors }" />
+          <input nz-input formControlName="name" [ngClass]="{ 'is-invalid': submitted && f.name.errors }" />
         </div>
       </div>
       <div class="input-wrap" nz-row>
-        <label class="title-detail" nz-col [nzSpan]="8">Mã nhân viên</label>
+        <label class="title-detail" nz-col [nzSpan]="8">Tên doanh nghiệp<em
+            class="fa fa-asterisk required"></em></label>
         <div nz-col [nzSpan]="16">
-          <input nz-input formControlName="staffCode" [ngClass]="{ 'is-invalid': submitted && f.staffCode.errors }" />
+          <input nz-input formControlName="companyName"
+            [ngClass]="{ 'is-invalid': submitted && f.companyName.errors }" />
         </div>
       </div>
+      <div class="input-wrap" nz-row>
+        <label class="title-detail" nz-col [nzSpan]="8">Mã số thuế</label>
+        <div nz-col [nzSpan]="16">
+          <input nz-input formControlName="taxCode" />
+        </div>
+      </div>
+
       <div class="input-wrap" nz-row>
         <label class="title-detail" nz-col [nzSpan]="8">Số điện thoại</label>
         <div nz-col [nzSpan]="16">
-          <input nz-input formControlName="phoneNo" />
+          <input nz-input formControlName="phone" />
         </div>
       </div>
+
       <div class="input-wrap" nz-row>
         <label class="title-detail" nz-col [nzSpan]="8">Email</label>
         <div nz-col [nzSpan]="16">
           <input type="email" nz-input formControlName="email" />
         </div>
       </div>
+
+
       <div class="input-wrap" nz-row>
-        <label class="title-detail" nz-col [nzSpan]="8">Tỉnh thành</label>
+        <label class="title-detail" nz-col [nzSpan]="8">Địa chỉ</label>
         <div nz-col [nzSpan]="16">
-          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Chọn tỉnh/thành phố" formControlName="tinhThanhId">
-            <nz-option *ngFor="let option of tinhThanhs" [nzLabel]="option.name"
-              [nzValue]="option.idTinhThanh"></nz-option>
-          </nz-select>
+          <input nz-input formControlName="address" />
         </div>
       </div>
+
+
       <div class="input-wrap" nz-row>
-        <label class="title-detail" nz-col [nzSpan]="8">Quận huyện</label>
+        <label class="title-detail" nz-col [nzSpan]="8">SL nhân viên</label>
         <div nz-col [nzSpan]="16">
-          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Chọn quận huyện/đơn vị" formControlName="quanHuyenId">
-            <nz-option *ngFor="let option of quanHuyens" [nzLabel]="option.name"
-              [nzValue]="option.idTinhThanh"></nz-option>
-          </nz-select>
+          <input nz-input formControlName="numberOfStaff" />
         </div>
       </div>
-      <div class="input-wrap" nz-row [hidden]=updated>
+
+      <div class="input-wrap" nz-row>
+        <label class="title-detail" nz-col [nzSpan]="8">CN tối đa</label>
+        <div nz-col [nzSpan]="16">
+          <input nz-input formControlName="debtMax" />
+        </div>
+      </div>
+
+      <div class="input-wrap" nz-row>
+        <label class="title-detail" nz-col [nzSpan]="8">CN đã sử dụng</label>
+        <div nz-col [nzSpan]="16">
+          <input nz-input formControlName="debtUsed" />
+        </div>
+      </div>
+
+      <div class="input-wrap" nz-row>
+        <label class="title-detail" nz-col [nzSpan]="8">CN còn lại</label>
+        <div nz-col [nzSpan]="16">
+          <input nz-input formControlName="debtRemain" />
+        </div>
+      </div>
+
+      <div class="input-wrap" nz-row>
+        <label class="title-detail" nz-col [nzSpan]="8">Ghi chú</label>
+        <div nz-col [nzSpan]="16">
+          <input nz-input formControlName="note" />
+        </div>
+      </div>
+
+      <!-- <div class="input-wrap" nz-row [hidden]=updated>
         <label class="title-detail" nz-col [nzSpan]="8">Tài khoản<em class="fa fa-asterisk required"></em></label>
         <div nz-col [nzSpan]="16">
           <input nz-input formControlName="username" autocomplete="new-password" />
         </div>
-      </div>
-      <div [hidden]=updated>
+      </div> -->
+
+
+      <!-- <div [hidden]=updated>
         <div class="input-wrap" nz-row>
           <label class="title-detail" nz-col [nzSpan]="8">Mật khẩu<em class="fa fa-asterisk required"></em></label>
           <div nz-col [nzSpan]="16">
@@ -159,6 +213,7 @@
             </ng-template>
           </div>
         </div>
+
         <div class="input-wrap" nz-row>
           <label class="title-detail" nz-col [nzSpan]="8">Nhắc lại<em class="fa fa-asterisk required"></em></label>
           <div nz-col [nzSpan]="16">
@@ -172,15 +227,8 @@
             </ng-template>
           </div>
         </div>
-      </div>
-      <div class="input-wrap" nz-row>
-        <label class="title-detail" nz-col [nzSpan]="8">Danh sách quyền riêng</label>
-        <div nz-col [nzSpan]="16">
-          <nz-select nzMode="multiple" nzPlaceHolder="--Chọn quyền--" formControlName="roles" style="width:200px">
-            <nz-option *ngFor="let item of allRoles" nzLabel="{{item.name}}" [nzValue]="item.id"></nz-option>
-          </nz-select>
-        </div>
-      </div>
+
+      </div> -->
     </div>
     <!-- Footer -->
     <div *nzModalFooter>
