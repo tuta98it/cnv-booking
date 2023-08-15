@@ -511,8 +511,8 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
 
     this.formAccount.patchValue({
       userId: data.userId,
-      // partnerId: data.id,
-      partnerId: this.userInfor.userType === 0 ? null : this.userInfor.userType === 1 ? data.id : null,
+      partnerId: data.id,
+      // partnerId: this.userInfor.userType === 0 ? null : this.userInfor.userType === 1 ? data.id : null,
       fullname: data.name,
       username: data.username,
       password: "",
