@@ -136,8 +136,10 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
     this.loading = true;
     let service: any;
     if (this.userInfor.userType === 0) {
+
+
       // this.userInfor.userType
-      this.generalService.getByUserType(this.userInfor.userType).subscribe((res: any) => {
+      this.generalService.getByUserType(2).subscribe((res: any) => {
         if (res !== null) {
           this.datas = res;
           this.loading = false;
@@ -155,7 +157,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
       });
     } else if (this.userInfor.userType === 1) {
       console.log('this.userInfor.userType : ', this.userInfor.userType);
-      this.generalService.getByPartnerId(this.userInfor.partnerId).subscribe((res: any) => {
+      this.generalService.getByPartnerId(this.userInfor.id).subscribe((res: any) => {
         if (res !== null) {
           this.datas = res;
           this.loading = false;
