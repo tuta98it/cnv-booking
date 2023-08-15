@@ -32,6 +32,7 @@ import {NzTagModule} from 'ng-zorro-antd/tag';
 import {NzUploadModule} from 'ng-zorro-antd/upload';
 import {NzCheckboxModule} from 'ng-zorro-antd/checkbox';
 import {NzAlertModule} from 'ng-zorro-antd/alert';
+import { IsEmptyPipe } from './pipe/is-empty.pipe';
 
 @NgModule({
   imports: [
@@ -90,6 +91,7 @@ import {NzAlertModule} from 'ng-zorro-antd/alert';
     ImageFormatPipe,
     FullNameFormatPipe,
     OrderStatusFormatPipe,
+    IsEmptyPipe,
     NzInputNumberModule,
     QRCodeModule,
     NzUploadModule,
@@ -103,6 +105,7 @@ import {NzAlertModule} from 'ng-zorro-antd/alert';
     ImageFormatPipe,
     FullNameFormatPipe,
     OrderStatusFormatPipe,
+    IsEmptyPipe
   ],
   providers: [NotificationService],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ]

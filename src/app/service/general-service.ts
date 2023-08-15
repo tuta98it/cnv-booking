@@ -399,7 +399,6 @@ export class GeneralService extends BaseService {
   }
 
   //User
-
   putUser2Partner(payload: any): Observable<any> {
     return this.put(
       UrlConstant.LIST_USER + `/PutUser2Partner/${payload.userId}`,
@@ -489,6 +488,15 @@ export class GeneralService extends BaseService {
     return this.post(UrlConstant.LIST_PARTNERS + "/DisablePartner/" + id, null);
   }
 
+
+  addPartner(newData: any): Observable<any> {
+    return this.post(UrlConstant.LIST_PARTNERS, newData);
+  }
+
+
+  updatePartner(newData: any): Observable<any> {
+    return this.put(UrlConstant.LIST_PARTNERS + `/${newData.id}`, newData);
+  }
 
 
 }

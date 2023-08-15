@@ -105,7 +105,7 @@
 <form [formGroup]="formAdd" (ngSubmit)="handleOk()">
   <nz-modal [(nzVisible)]="isVisibleAdd" nzClosable="false" [nzTitle]="title" nzMaskClosable="false">
     <ng-template #title>
-      Thông tin tài khoản
+      {{titleFormPartner}}
       <div class="pull-right icon-close">
         <em (click)="handleCancel()" nz-icon nzType="close" nzTheme="outline"></em>
       </div>
@@ -115,7 +115,7 @@
         <label class="title-detail" nz-col [nzSpan]="8">Tên chủ doanh nghiệp<em
             class="fas fa-asterisk required"></em></label>
         <div nz-col [nzSpan]="16">
-          <input nz-input formControlName="name" [ngClass]="{ 'is-invalid': submitted && f.name.errors }" />
+          <input nz-input formControlName="name" [ngClass]="{ 'is-invalid': submitted && f.name.errors?.required}" />
         </div>
       </div>
       <div class="input-wrap" nz-row>
@@ -123,35 +123,38 @@
             class="fa fa-asterisk required"></em></label>
         <div nz-col [nzSpan]="16">
           <input nz-input formControlName="companyName"
-            [ngClass]="{ 'is-invalid': submitted && f.companyName.errors }" />
+            [ngClass]="{ 'is-invalid': submitted && f.companyName.errors?.required}" />
         </div>
       </div>
       <div class="input-wrap" nz-row>
-        <label class="title-detail" nz-col [nzSpan]="8">Mã số thuế</label>
+        <label class="title-detail" nz-col [nzSpan]="8">Mã số thuế<em class="fas fa-asterisk required"></em></label>
         <div nz-col [nzSpan]="16">
-          <input nz-input formControlName="taxCode" />
+          <input nz-input formControlName="taxCode"
+            [ngClass]="{ 'is-invalid': submitted && f.taxCode.errors?.required }" />
         </div>
       </div>
 
       <div class="input-wrap" nz-row>
         <label class="title-detail" nz-col [nzSpan]="8">Số điện thoại</label>
         <div nz-col [nzSpan]="16">
-          <input nz-input formControlName="phone" />
+          <input nz-input formControlName="phone">
         </div>
       </div>
 
       <div class="input-wrap" nz-row>
-        <label class="title-detail" nz-col [nzSpan]="8">Email</label>
+        <label class="title-detail" nz-col [nzSpan]="8">Email<em class="fas fa-asterisk required"></em></label>
         <div nz-col [nzSpan]="16">
-          <input type="email" nz-input formControlName="email" />
+          <input type="email" nz-input formControlName="email"
+            [ngClass]="{ 'is-invalid': submitted && f.email.errors?.required }" />
         </div>
       </div>
 
 
       <div class="input-wrap" nz-row>
-        <label class="title-detail" nz-col [nzSpan]="8">Địa chỉ</label>
+        <label class="title-detail" nz-col [nzSpan]="8">Địa chỉ<em class="fas fa-asterisk required"></em></label>
         <div nz-col [nzSpan]="16">
-          <input nz-input formControlName="address" />
+          <input nz-input formControlName="address"
+            [ngClass]="{ 'is-invalid': submitted && f.address.errors?.required }" />
         </div>
       </div>
 

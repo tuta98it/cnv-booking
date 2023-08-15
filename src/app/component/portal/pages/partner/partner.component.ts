@@ -61,6 +61,7 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
   formAccount: FormGroup;
   isVisibleAddAccount: boolean = false;
   isEnableUsername: boolean = false;
+  titleFormPartner = '';
   constructor(
     public translate: TranslateService,
     private modalService: NzModalService,
@@ -74,12 +75,12 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
     super('id');
     this.formAdd = this.fb.group({
       id: [null],
-      name: [null],
-      companyName: [null],
-      taxCode: [null],
+      name: [null, [Validators.required]],
+      companyName: [null, [Validators.required]],
+      taxCode: [null, [Validators.required]],
       phone: [null],
-      email: [null],
-      address: [null],
+      email: [null, [Validators.required]],
+      address: [null, [Validators.required]],
       numberOfStaff: [null],
       debtMax: [null],
       debtUsed: [null],
@@ -218,6 +219,8 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
 
   showModalAdd() {
     this.isVisibleAdd = true;
+    this.submitted = false;
+    this.titleFormPartner = 'Thêm đối tác mới';
     this.formAdd.reset();
     this.formAdd.patchValue({
       id: 0,
@@ -235,9 +238,10 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
 
   showModalUpdate(data) {
     this.isVisibleAdd = true;
+    this.submitted = false;
     this.item = data;
     this.updated = true;
-
+    this.titleFormPartner = 'Sủa thông tin đối tác';
     this.formAdd.patchValue({
       id: this.item.id,
       companyName: this.item.companyName,
@@ -305,36 +309,44 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
   handleOk() {
     const formValue = this.formAdd.value;
     const checkEmail = this.validateEmail(formValue.email);
-    if (!checkEmail) {
+    this.submitted = true;
+
+
+    if (this.formAdd.invalid) {
       return;
-    }
-    if (formValue.id === 0) {
-      delete formValue.id;
-      // formValue.status = 1;
-      this.generalService.addUser(formValue).subscribe((res: any) => {
-        if (res.ret && res.ret[0].code !== 0) {
-          this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
-          formValue.id = 0;
-        } else {
-          this.getListData();
-          this.isVisibleAdd = false;
-          this.notificationService.showNotification(Constant.SUCCESS, Constant.MESSAGE_ADD_SUCCESS);
-        }
-      }, error => {
-
-      });
     } else {
-      this.generalService.updateUser(formValue).subscribe((res: any) => {
-        if (res.ret && res.ret[0].code !== 0) {
-          this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
-        } else {
-          this.getListData();
-          this.isVisibleAdd = false;
-          this.notificationService.showNotification(Constant.SUCCESS, Constant.MESSAGE_UPDATE_SUCCESS);
-        }
-      }, error => {
+      if (!checkEmail) {
+        return;
+      }
+      if (formValue.id === 0) {
+        delete formValue.id;
+        // formValue.status = 1;
 
-      });
+        this.generalService.addPartner(formValue).subscribe((res: any) => {
+          if (res.ret && res.ret[0].code !== 0) {
+            this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
+            formValue.id = 0;
+          } else {
+            this.getListData();
+            this.isVisibleAdd = false;
+            this.notificationService.showNotification(Constant.SUCCESS, Constant.MESSAGE_ADD_SUCCESS);
+          }
+        }, error => {
+
+        });
+      } else {
+        this.generalService.updatePartner(formValue).subscribe((res: any) => {
+          if (res.ret && res.ret[0].code !== 0) {
+            this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
+          } else {
+            this.getListData();
+            this.isVisibleAdd = false;
+            this.notificationService.showNotification(Constant.SUCCESS, Constant.MESSAGE_UPDATE_SUCCESS);
+          }
+        }, error => {
+
+        });
+      }
     }
   }
 
