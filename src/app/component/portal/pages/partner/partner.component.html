@@ -56,16 +56,16 @@
   <dxi-column caption="Địa chỉ" [width]="200" dataField="address"></dxi-column>
 
   <!-- Số lượng sinh viên -->
-  <dxi-column caption="SL nhân viên" [width]="120" dataField="numberOfStaff"></dxi-column>
+  <dxi-column caption="Số lượng nhân viên" [width]="200" dataField="numberOfStaff"></dxi-column>
 
   <!-- Công nợ tối đa -->
-  <dxi-column caption="CN tối đa" [width]="100" dataField="debtMax"></dxi-column>
+  <dxi-column caption="Công nợ tối đa" [width]="200" dataField="debtMax"></dxi-column>
 
   <!-- Công nợ đã sử dụng -->
-  <dxi-column caption="CN đã sử dụng" [width]="140" dataField="debtUsed"></dxi-column>
+  <dxi-column caption="Công nợ đã sử dụng" [width]="200" dataField="debtUsed"></dxi-column>
 
   <!-- Công nợ còn lại -->
-  <dxi-column caption="CN còn lại" [width]="100" dataField="debtRemain"></dxi-column>
+  <dxi-column caption="Công nợ còn lại" [width]="200" dataField="debtRemain"></dxi-column>
 
   <dxi-column caption="Ghi chú" dataField="note"></dxi-column>
 
@@ -137,7 +137,7 @@
       <div class="input-wrap" nz-row>
         <label class="title-detail" nz-col [nzSpan]="8">Số điện thoại</label>
         <div nz-col [nzSpan]="16">
-          <input nz-input formControlName="phone">
+          <input nz-input formControlName="phone" type="tel">
         </div>
       </div>
 
@@ -160,28 +160,28 @@
 
 
       <div class="input-wrap" nz-row>
-        <label class="title-detail" nz-col [nzSpan]="8">SL nhân viên</label>
+        <label class="title-detail" nz-col [nzSpan]="8">Số lượng nhân viên</label>
         <div nz-col [nzSpan]="16">
           <input nz-input formControlName="numberOfStaff" />
         </div>
       </div>
 
       <div class="input-wrap" nz-row>
-        <label class="title-detail" nz-col [nzSpan]="8">CN tối đa</label>
+        <label class="title-detail" nz-col [nzSpan]="8">Công nợ tối đa</label>
         <div nz-col [nzSpan]="16">
           <input nz-input formControlName="debtMax" />
         </div>
       </div>
 
       <div class="input-wrap" nz-row>
-        <label class="title-detail" nz-col [nzSpan]="8">CN đã sử dụng</label>
+        <label class="title-detail" nz-col [nzSpan]="8">Công nợ đã sử dụng</label>
         <div nz-col [nzSpan]="16">
           <input nz-input formControlName="debtUsed" />
         </div>
       </div>
 
       <div class="input-wrap" nz-row>
-        <label class="title-detail" nz-col [nzSpan]="8">CN còn lại</label>
+        <label class="title-detail" nz-col [nzSpan]="8">Công nợ còn lại</label>
         <div nz-col [nzSpan]="16">
           <input nz-input formControlName="debtRemain" />
         </div>

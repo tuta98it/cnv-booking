@@ -21,6 +21,7 @@ import {
   DxTooltipComponent,
   DxTooltipModule,
 } from "devextreme-angular";
+import { IsEmptyPipe } from 'src/app/shared/pipe/is-empty.pipe';
 @Component({
   selector: 'app-taikhoan-list',
   templateUrl: './taikhoan-list.component.html',
@@ -63,6 +64,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
   filteredDatas: any[] = [];
   searchText = '';
   userInfor: any;
+  titleFormUser = '';
   constructor(
     public translate: TranslateService,
     private modalService: NzModalService,
@@ -76,16 +78,16 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
     super('id');
     this.formAdd = this.fb.group({
       id: [null],
-      fullname: [null],
+      fullname: [null, [Validators.required]],
       roles: [null],
-      phoneNo: [null],
-      email: [null],
+      phoneNo: [null, [Validators.required]],
+      email: [null, [Validators.required]],
       status: [null],
-      username: [null],
+      department: [null],
+      staffCode: [null, [Validators.required]],
+      username: [null, [Validators.required]],
       password: [null],
       repeatPassword: [null],
-      staffCode: [null],
-      department: [null],
       // signatureImageUrl: [null, [Validators.required]],
       // province: [null],
       // district: [null],
@@ -150,13 +152,11 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
             en.roleStr = this.getQuyen(en.userroles);
           });
           this.filteredDatas = this.datas;
-          console.log('this.filteredDatas : ', this.filteredDatas);
           super.setListOfAllData(this.datas);
         }
       }, error => {
       });
     } else if (this.userInfor.userType === 1) {
-      console.log('this.userInfor.userType : ', this.userInfor.userType);
       this.generalService.getByPartnerId(this.userInfor.id).subscribe((res: any) => {
         if (res !== null) {
           this.datas = res;
@@ -168,7 +168,6 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
             en.roleStr = this.getQuyen(en.userroles);
           });
           this.filteredDatas = this.datas;
-          console.log('this.filteredDatas : ', this.filteredDatas);
           super.setListOfAllData(this.datas);
         }
       }, error => {
@@ -237,12 +236,16 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
   }
 
   showModalAdd() {
+
     this.isVisibleAdd = true;
+    this.submitted = false;
+    this.titleFormUser = 'Thêm mới tài khoản';
     this.formAdd.reset();
     this.formAdd.patchValue({
       id: 0,
       fullname: '',
       roles: [],
+      status: 0,
       phoneNo: '',
       email: '',
       department: '',
@@ -255,8 +258,9 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
 
   showModalUpdate(data) {
     this.isVisibleAdd = true;
+    this.submitted = false;
     this.item = data;
-    console.log('this.item: ', this.item);
+    this.titleFormUser = 'Sủa thông tin tài khoản';
     this.updated = true;
 
     this.formAdd.patchValue({
@@ -268,7 +272,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
       email: this.item.email,
       staffCode: this.item.staffCode,
       department: this.item.department,
-      username: this.item.username,
+      username: this.item.username
     });
     console.log(this.formAdd.value);
 
@@ -323,11 +327,20 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
   handleOk() {
     let formValue = this.formAdd.value;
     const checkEmail = this.validateEmail(formValue.email);
+    this.submitted = true;
+
     let userType: any;
-    if (!checkEmail) {
-      return;
-    }
+
     if (formValue.id === 0) {
+      if (this.formAdd.invalid || this.isEmpty(this.formAdd.controls['roles'].value) || this.isEmpty(this.formAdd.controls['password'].value) || this.isEmpty(this.formAdd.controls['repeatPassword'].value)) {
+        return;
+      }
+
+      if (!checkEmail) {
+        this.notificationService.showNotification(Constant.ERROR, 'Email không đúng định dạng!');
+        return;
+      }
+
       delete formValue.id;
       formValue.status = 1;
       userType = this.userInfor.userType == 0 ? 2 : this.userInfor.userType == 1 ? 3 : null;
@@ -345,7 +358,20 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
       }, error => {
 
       });
+
+
     } else {
+      if (this.formAdd.invalid || this.isEmpty(this.formAdd.controls['roles'].value)) {
+        return;
+      }
+
+      if (!checkEmail) {
+        // this.notificationService.showNotification(Constant.ERROR, 'Email không đúng định dạng!');
+        return;
+      }
+
+      delete formValue.password;
+      delete formValue.repeatPassword;
       this.generalService.updateTaikhoan(formValue).subscribe(res => {
         if (res.ret && res.ret[0].code !== 0) {
           this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
@@ -357,6 +383,8 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
       }, error => {
 
       });
+
+
     }
   }
 
@@ -389,7 +417,6 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
 
   getQuyen(roles) {
     if (this.allRoles) {
-      // console.log(roles, this.allRoles);
       const userRoleIds = roles.map(en => en.roleId);
       const userRoles = this.allRoles.filter(en => userRoleIds.includes(en.id));
       return userRoles.map(en => en.name).join(', ');
@@ -500,6 +527,26 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
     );
   }
 
+
+  private isEmpty(value: any): boolean {
+    if (value === null || value === undefined) {
+      return true;
+    }
+
+    if (typeof value === 'string' && value.trim() === '') {
+      return true;
+    }
+
+    if (Array.isArray(value) && value.length === 0) {
+      return true;
+    }
+
+    if (typeof value === 'object' && Object.keys(value).length === 0) {
+      return true;
+    }
+
+    return false;
+  }
   // getTinhThanh() {
   //   this.generalService.getTinhThanh(null).subscribe(res => {
   //     if (res !== null) {
