@@ -108,12 +108,12 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
     this.getAllRole();
 
     this.formAccount = this.fb.group({
-      userId: [null, [Validators.required]],
-      fullname: [null, [Validators.required]],
-      email: [null, [Validators.required]],
+      // userId: [null, [Validators.required]],
+      partnerId: [null, [Validators.required]],
       username: [null, [Validators.required]],
       password: [null, [Validators.required]],
       repeatPassword: [null, [Validators.required]],
+      fullname: [null, [Validators.required]],
     });
   }
 
@@ -522,9 +522,8 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
     // });
 
     this.formAccount.patchValue({
-      userId: data.userId,
+      // userId: data.userId,
       partnerId: data.id,
-      // partnerId: this.userInfor.userType === 0 ? null : this.userInfor.userType === 1 ? data.id : null,
       fullname: data.name,
       username: data.username,
       password: "",
