@@ -38,7 +38,7 @@
   <dxi-column caption="Tên nhân viên" dataField="fullname" [fixed]="true"></dxi-column>
   <dxi-column caption="SĐT" [width]="200" dataField="phoneNo"></dxi-column>
   <dxi-column caption="Email" [width]="250" dataField="email"></dxi-column>
-  <dxi-column caption="Chức vụ" [width]="200" dataField="roleStr" [fixed]="true"></dxi-column>
+  <dxi-column caption="Chức vụ" [width]="200" dataField="position" [fixed]="true"></dxi-column>
   <dxi-column caption="Phòng ban" [width]="200" dataField="department"></dxi-column>
   <dxi-column caption="Mã nhân viên" [width]="200" dataField="staffCode"></dxi-column>
   <!-- <dxi-column caption="User ID	" [width]="80" dataField="id"></dxi-column> -->
@@ -144,7 +144,7 @@
       <!-- Chức vụ -->
       <!-- }  -->
       <div class="input-wrap">
-        <label class="title-detail">Chức vụ<em class="fa fa-asterisk required"></em></label>
+        <!-- <label class="title-detail">Chức vụ<em class="fa fa-asterisk required"></em></label>
         <nz-select nzMode="multiple" nzPlaceHolder="--Chọn quyền--" formControlName="roles"
           style="width: 19.7rem; margin-left: 2.6rem;" [ngClass]="{ 'is-invalid': submitted && submitted && ((formAdd.controls['roles'].value) | isEmpty) }">
           <nz-option [nzValue]="1" nzLabel="Quản trị"></nz-option>
@@ -155,7 +155,13 @@
           <nz-option [nzValue]="6" nzLabel="Quản lý group user"></nz-option>
           <nz-option [nzValue]="7" nzLabel="Duyệt xin nghỉ"></nz-option>
           <nz-option [nzValue]="8" nzLabel="Chấm công"></nz-option>
-        </nz-select>
+        </nz-select> -->
+
+        <label class="title-detail" nz-col [nzSpan]="8">Chức vụ<em class="fas fa-asterisk required"></em></label>
+        <div nz-col [nzSpan]="16">
+          <!-- [ngClass]="{ 'is-invalid': submitted && f.staffCode.errors }"  -->
+          <input nz-input formControlName="position" [ngClass]="{ 'is-invalid': submitted && f.email.errors?.required }"/>
+        </div>
       </div>
 
 

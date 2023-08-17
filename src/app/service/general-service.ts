@@ -424,6 +424,10 @@ export class GeneralService extends BaseService {
     return this.get(UrlConstant.LIST_USER + `/GetByUserType/${userType}`);
   }
 
+  getUserForSysAdmin(): Observable<any> {
+    return this.get(UrlConstant.LIST_USER + '/GetUserForSysAdmin/');
+  }
+
 
   getByPartnerId(partnerId: any): Observable<any> {
     return this.get(UrlConstant.LIST_USER + `/GetByPartnerId/${partnerId}`);

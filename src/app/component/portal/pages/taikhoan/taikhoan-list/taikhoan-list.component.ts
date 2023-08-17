@@ -88,6 +88,8 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
       username: [null, [Validators.required]],
       password: [null],
       repeatPassword: [null],
+      position: [null, [Validators.required]],
+      partnerId: [null],
       // signatureImageUrl: [null, [Validators.required]],
       // province: [null],
       // district: [null],
@@ -141,7 +143,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
 
 
       // this.userInfor.userType
-      this.generalService.getByUserType(2).subscribe((res: any) => {
+      this.generalService.getUserForSysAdmin().subscribe((res: any) => {
         if (res !== null) {
           this.datas = res;
           this.loading = false;
@@ -157,7 +159,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
       }, error => {
       });
     } else if (this.userInfor.userType === 1) {
-      this.generalService.getByPartnerId(this.userInfor.id).subscribe((res: any) => {
+      this.generalService.getByPartnerId(this.userInfor.partnerId).subscribe((res: any) => {
         if (res !== null) {
           this.datas = res;
           this.loading = false;
@@ -253,6 +255,8 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
       username: '',
       password: '',
       repeatPassword: '',
+      position: '',
+      partnerId: this.userInfor.id == 0 ? null : this.userInfor.partnerId
     });
   }
 
@@ -272,7 +276,9 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
       email: this.item.email,
       staffCode: this.item.staffCode,
       department: this.item.department,
-      username: this.item.username
+      username: this.item.username,
+      position: this.item.position,
+      partnerId: this.item.partnerId
     });
     console.log(this.formAdd.value);
 
@@ -330,9 +336,8 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
     this.submitted = true;
 
     let userType: any;
-
     if (formValue.id === 0) {
-      if (this.formAdd.invalid || this.isEmpty(this.formAdd.controls['roles'].value) || this.isEmpty(this.formAdd.controls['password'].value) || this.isEmpty(this.formAdd.controls['repeatPassword'].value)) {
+      if (this.formAdd.invalid || this.isEmpty(this.formAdd.controls['password'].value) || this.isEmpty(this.formAdd.controls['repeatPassword'].value)) {
         return;
       }
 
@@ -340,12 +345,10 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
         this.notificationService.showNotification(Constant.ERROR, 'Email không đúng định dạng!');
         return;
       }
-
       delete formValue.id;
       formValue.status = 1;
       userType = this.userInfor.userType == 0 ? 2 : this.userInfor.userType == 1 ? 3 : null;
       const payload = { ...formValue, 'userType': userType };
-
       this.generalService.addTaikhoan(payload).subscribe((res: any) => {
         if (res.ret && res.ret[0].code !== 0) {
           this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
@@ -361,7 +364,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
 
 
     } else {
-      if (this.formAdd.invalid || this.isEmpty(this.formAdd.controls['roles'].value)) {
+      if (this.formAdd.invalid) {
         return;
       }
 
