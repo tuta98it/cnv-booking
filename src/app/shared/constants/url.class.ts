@@ -44,4 +44,11 @@ export class  UrlConstant {
   public static readonly LIST_VAITRO = '/workrole';
 
 
+  // vhlBookingApi
+  public static readonly BOOKING = '/booking';
+
+
+
+
+
 }

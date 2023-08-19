@@ -25,6 +25,7 @@ import {NzAvatarModule} from 'ng-zorro-antd/avatar';
 import {NzTabsModule} from 'ng-zorro-antd/tabs';
 import { SelectUnitComponent } from './pages/control/select-unit/select-unit.component';
 import { PartnerComponent } from './pages/partner/partner.component';
+import { BookingFlightsComponent } from './pages/booking-flights/booking-flights.component';
 
 const antDesignIcons = AllIcons as {
   [key: string]: IconDefinition;
@@ -35,11 +36,12 @@ const icons: IconDefinition[] = Object.keys(antDesignIcons).map(key => antDesign
     MasterPageComponent,
     RoleComponent,
     PartnerComponent,
+    BookingFlightsComponent,
     DashboardComponent,
     SelectUnitComponent,
   ],
   imports: [
-    SharedModule,
+  SharedModule,
     RouterModule.forChild([]),
     PortalRoutingModule,
     NzDropDownModule,

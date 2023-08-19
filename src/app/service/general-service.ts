@@ -502,5 +502,20 @@ export class GeneralService extends BaseService {
     return this.put(UrlConstant.LIST_PARTNERS + `/${newData.id}`, newData);
   }
 
+  // Booking
+  // /api/Booking/adminhistorybooking lịch sử giữ vé
+  getAdminHistoryBooking(payload: any): any {
+    return this.post('/api' + `${UrlConstant.BOOKING}` + '/adminhistorybooking', payload);
+  }
 
+
+  // Xuất vé
+  getAdminticket(payload: any): any {
+    return this.post('/api' + `${UrlConstant.BOOKING}` + '/adminticket', payload);
+  }
+
+  // Xuất vé
+  getMyTicket(payload: any): any {
+    return this.post('/api' + `${UrlConstant.BOOKING}` + '/myticket', payload);
+  }
 }
