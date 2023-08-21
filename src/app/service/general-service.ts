@@ -518,4 +518,13 @@ export class GeneralService extends BaseService {
   getMyTicket(payload: any): any {
     return this.post('/api' + `${UrlConstant.BOOKING}` + '/myticket', payload);
   }
+
+  // Tài khoản đăng kí
+  getUserRegister(): any {
+    return this.get(UrlConstant.USER_REGISTER);
+  }
+
+  updateUserRegister(item: any): any {
+    return this.put(UrlConstant.USER_REGISTER + '/' + item.id, item, 'text');
+  }
 }

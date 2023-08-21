@@ -26,6 +26,7 @@ import {NzTabsModule} from 'ng-zorro-antd/tabs';
 import { SelectUnitComponent } from './pages/control/select-unit/select-unit.component';
 import { PartnerComponent } from './pages/partner/partner.component';
 import { BookingFlightsComponent } from './pages/booking-flights/booking-flights.component';
+import { UserRegisterComponent } from './pages/user-register/user-register.component';
 
 const antDesignIcons = AllIcons as {
   [key: string]: IconDefinition;
@@ -39,6 +40,7 @@ const icons: IconDefinition[] = Object.keys(antDesignIcons).map(key => antDesign
     BookingFlightsComponent,
     DashboardComponent,
     SelectUnitComponent,
+    UserRegisterComponent,
   ],
   imports: [
   SharedModule,

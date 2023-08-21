@@ -5,6 +5,7 @@ import {RoleComponent} from './pages/role/role.component';
 import {DashboardComponent} from './pages/dashboard/dashboard.component';
 import { PartnerComponent } from './pages/partner/partner.component';
 import { BookingFlightsComponent } from './pages/booking-flights/booking-flights.component';
+import { UserRegisterComponent } from './pages/user-register/user-register.component';
 const routes: Routes = [
   {
     path: '', component: MasterPageComponent,
@@ -44,9 +45,6 @@ const routes: Routes = [
           breadcrumb: 'Tài khoản',
         },
       },
-
-
-
       {
         path: 'nhom-tai-khoan',
         loadChildren: () =>
@@ -77,13 +75,20 @@ const routes: Routes = [
           breadcrumb: 'Đối tác'
         }
       },
-
       {
         path: 'booking-flights',
         component: BookingFlightsComponent,
         data: {
           pagename: 'Xuất vé',
           breadcrumb: 'Xuất vé'
+        }
+      },
+      {
+        path: 'user-register',
+        component: UserRegisterComponent,
+        data: {
+          pagename: 'Tài khoản đăng kí',
+          breadcrumb: 'Tài khoản đăng kí'
         }
       },
     ]

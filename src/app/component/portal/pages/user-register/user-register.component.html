@@ -1,0 +1,38 @@
+<div class="action-button" style="clear: bottom;overflow: hidden;">
+    <div class="form-group" style="float: left">
+      <h1>Danh sách tài khoản đăng kí</h1>
+    </div>
+    <div class="form-group" style="float: right; display: flex; float: right">
+      <input style="width: 200px; border-radius: 4px; height: 32px;" class="mgr10" nzSize="small" nz-input type="text"
+        [(ngModel)]="searchText" (keyup)="onSearch()" placeholder="Tìm kiếm">
+    </div>
+  </div>
+  
+  
+  <dx-data-grid id="gridContainer" [dataSource]="filteredDatas" #ListAccount [showColumnLines]="true"
+    [showRowLines]="true" [height]="dxGridHeight" [rowAlternationEnabled]="true" [showBorders]="true"
+    [allowColumnResizing]="true" columnResizingMode="widget" [columnMinWidth]="50" [columnAutoWidth]="true">
+    <dxo-load-panel [enabled]="true"></dxo-load-panel>
+    <dxo-scrolling mode="virtual"></dxo-scrolling>
+    <dxo-sorting mode="multiple"></dxo-sorting>
+    <dxo-header-filter [visible]="true"></dxo-header-filter>
+    <dxo-filter-row [visible]="true" [applyFilter]="currentFilter"></dxo-filter-row>
+
+    <dxi-column cssClass="text-center" caption="STT" [width]="55" dataField="stt" [fixed]="true" [allowFiltering]="false"
+    [allowSorting]="false"></dxi-column>
+    <dxi-column caption="Họ" [width]="200" dataField="lastName" [fixed]="true" ></dxi-column>
+    <dxi-column caption="Tên" [width]="200" dataField="firstName"></dxi-column>
+    <dxi-column caption="SĐT" [width]="200" dataField="phoneNo"></dxi-column>
+    <dxi-column caption="Email" [width]="250" dataField="email"></dxi-column>
+    <dxi-column caption="Địa chỉ" dataField="address"></dxi-column>
+    <dxi-column caption="Đơn vị công tác" dataField="companyName" [width]="250"></dxi-column>
+    <dxi-column caption="Trạng thái" dataField="status" [width]="200" cellTemplate="cellStatus" [allowFiltering]="false"></dxi-column>
+    <div *dxTemplate="let item of 'cellStatus'" (click)="showUpdateConfirm(item.data)" class="status" [ngClass]="{'confirmed': item.data.status == 1, 'not-confirmed': item.data.status == 0}">
+        {{item.data.status == 0 ? 'Chưa duyệt' : 'Đã duyệt'}}
+    </div>    
+    <dxo-summary>
+      <dxi-total-item column="lastName" displayFormat="Số bản ghi: {0}" summaryType="count">
+      </dxi-total-item>
+    </dxo-summary>
+  </dx-data-grid>
+  
