@@ -503,16 +503,8 @@ export class GeneralService extends BaseService {
   }
 
   // Booking
-  // /api/Booking/adminhistorybooking lịch sử giữ vé
-  getAdminHistoryBooking(payload: any): any {
-    return this.post('/api' + `${UrlConstant.BOOKING}` + '/adminhistorybooking', payload);
-  }
 
 
-  // Xuất vé
-  getAdminticket(payload: any): any {
-    return this.post('/api' + `${UrlConstant.BOOKING}` + '/adminticket', payload);
-  }
 
   // Xuất vé
   getMyTicket(payload: any): any {
@@ -527,4 +519,21 @@ export class GeneralService extends BaseService {
   updateUserRegister(item: any): any {
     return this.put(UrlConstant.USER_REGISTER + '/' + item.id, item, 'text');
   }
+
+  // /api/Booking/adminhistorybooking Quản lý giữ vé
+  getAdminHistoryBooking(payload: any): any {
+    return this.post('/api' + `${UrlConstant.BOOKING}` + '/adminhistorybooking', payload);
+  }
+
+  // Xuất vé - Admin
+  getAdminTicket(payload: any): any {
+    return this.post('/api' + `${UrlConstant.BOOKING}` + '/adminticket', payload);
+  }
+
+
+  // Huỷ vé - Admin
+  getAdminVodiTicket(payload: any): any {
+    return this.post('/api' + `${UrlConstant.BOOKING}` + '/adminvoidticket', payload);
+  }
+
 }

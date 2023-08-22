@@ -1,0 +1,59 @@
+<div class="action-button" style="clear: bottom;overflow: hidden;">
+  <div class="form-group" style="float: left">
+    <h1>Danh sách vé đã xuất</h1>
+  </div>
+  <div class="form-group" style="float: right; display: flex; float: right">
+
+
+    <!-- Tìm kiếm -->
+    <input style="width: 200px; border-radius: 4px; height: 32px;" class="mgr10" nzSize="small" nz-input type="text"
+      [(ngModel)]="searchText" (keyup)="onSearch()" placeholder="Tìm kiếm theo Tên khách hàng, Hãng bãy, ...">
+
+    <!-- <button nz-button nzType="primary" class="btn-add-asset" type="button" (click)="showModalAdd()" *ngIf="checkAdd">
+      <em class="fas fa-plus fa-fw"></em> Thêm
+    </button> -->
+
+    <!-- Nút xuất Excel -->
+    <button nz-button nzType="primary" class="btn-green mgr10" (click)="exportData()">
+      <span class="fa fa-fw fa-file-excel" style="margin-right: 4px;"></span>
+      Xuất Excel
+    </button>
+  </div>
+</div>
+
+
+<dx-data-grid id="gridContainer" [dataSource]="filteredDatas" #ListAccount [showColumnLines]="true"
+  [showRowLines]="true" [height]="dxGridHeight" [rowAlternationEnabled]="true" [showBorders]="true"
+  [allowColumnResizing]="true" columnResizingMode="widget" [columnMinWidth]="50" [columnAutoWidth]="true"
+  (onExporting)="onExporting($event)">
+  <dxo-load-panel [enabled]="true"></dxo-load-panel>
+  <dxo-scrolling mode="virtual"></dxo-scrolling>
+  <dxo-sorting mode="multiple"></dxo-sorting>
+  <dxo-header-filter [visible]="true"></dxo-header-filter>
+  <dxo-filter-row [visible]="true" [applyFilter]="currentFilter"></dxo-filter-row>
+
+
+  <dxi-column cssClass="text-center" caption="STT" [width]="55" dataField="stt" [fixed]="true" [allowFiltering]="false"
+    [allowSorting]="false"></dxi-column>
+  <dxi-column caption="Tên khách hàng" [width]="200" dataField="passengerName"></dxi-column>
+  <dxi-column caption="Hãng bay" dataField="airlineName" [width]="200"></dxi-column>
+  <dxi-column caption="Mã đặt chỗ" [width]="200" dataField="bookingNumber"></dxi-column>
+  <dxi-column caption="Số vé" [width]="200" dataField="ticketNumber"></dxi-column>
+  <dxi-column caption="Ngày đặt vé" dataField="dateCreated" dataType="date" format="HH:mm dd/MM/yy"></dxi-column>
+  <dxi-column caption="Xuất vé" cssClass="text-center" dataField="status" [width]="200" cellTemplate="cellBillet"></dxi-column>
+  <div *dxTemplate="let item of 'cellBillet'">
+
+    <div *ngIf="item.data.status === 'OK'">
+      <a nz-button nzType="link" nzBlock>Xem vé</a>
+    </div>
+
+    <div *ngIf="item.data.status === 'FAIL'">
+      Lỗi đặt vé
+    </div>
+  </div>
+
+  <dxo-summary>
+    <dxi-total-item column="passengerName" displayFormat="Số bản ghi: {0}" summaryType="count">
+    </dxi-total-item>
+  </dxo-summary>
+</dx-data-grid>

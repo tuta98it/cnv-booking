@@ -1,11 +1,13 @@
-import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
-import {MasterPageComponent} from './master-page/master-page.component';
-import {RoleComponent} from './pages/role/role.component';
-import {DashboardComponent} from './pages/dashboard/dashboard.component';
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { MasterPageComponent } from './master-page/master-page.component';
+import { RoleComponent } from './pages/role/role.component';
+import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { PartnerComponent } from './pages/partner/partner.component';
-import { BookingFlightsComponent } from './pages/booking-flights/booking-flights.component';
 import { UserRegisterComponent } from './pages/user-register/user-register.component';
+import { AdminTicketComponent } from './pages/admin-ticket/admin-ticket.component';
+import { AdminVoidTicketComponent } from './pages/admin-void-ticket/admin-void-ticket.component';
+import { AdminHistoryHoldingTicketComponent } from './pages/admin-history-holding-ticket/admin-history-holding-ticket.component';
 const routes: Routes = [
   {
     path: '', component: MasterPageComponent,
@@ -76,8 +78,18 @@ const routes: Routes = [
         }
       },
       {
-        path: 'booking-flights',
-        component: BookingFlightsComponent,
+        path: 'admin-history-holding-ticket',
+        component: AdminHistoryHoldingTicketComponent,
+        data: {
+          pagename: 'Quản lý giữ vé',
+          breadcrumb: 'Quản lý giữ vé'
+        }
+      },
+
+
+      {
+        path: 'admin-ticket',
+        component: AdminTicketComponent,
         data: {
           pagename: 'Xuất vé',
           breadcrumb: 'Xuất vé'
@@ -89,6 +101,16 @@ const routes: Routes = [
         data: {
           pagename: 'Tài khoản đăng kí',
           breadcrumb: 'Tài khoản đăng kí'
+
+        }
+      },
+
+      {
+        path: 'admin-void-ticket',
+        component: AdminVoidTicketComponent,
+        data: {
+          pagename: 'Huỷ vé',
+          breadcrumb: 'Huỷ vé'
         }
       },
     ]
@@ -97,7 +119,7 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-exports: [RouterModule]
+  exports: [RouterModule]
 })
 export class PortalRoutingModule {
 }
