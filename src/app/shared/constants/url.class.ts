@@ -47,4 +47,6 @@ export class  UrlConstant {
   // vhlBookingApi
   public static readonly BOOKING = '/booking';
   public static readonly USER_REGISTER = '/UserRegister';
+
+  public static readonly LIST_TEST_RESULT = "/ResultValues";
 }

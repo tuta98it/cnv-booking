@@ -13,6 +13,7 @@ import { Workbook } from 'exceljs';
 import { DateFormatPipe } from 'src/app/shared/pipe/format-date.pipe';
 import { exportDataGrid } from 'devextreme/excel_exporter';
 import { saveAs } from 'file-saver-es';
+import {NzUploadChangeParam, NzUploadFile} from 'ng-zorro-antd/upload';
 import {
   DxDataGridComponent,
   DxTemplateDirective,
@@ -62,6 +63,17 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
   isVisibleAddAccount: boolean = false;
   isEnableUsername: boolean = false;
   titleFormPartner = '';
+
+  uploadHeader: any;
+  baseImageurl = '';
+  uploadUrl = '';
+  order: any;
+  selectedResult: any;
+  previewUrl = '';
+  visibleUpload = false;
+  previewFileResult = false;
+  curFileResults = [];
+  newFileResults = [];
   constructor(
     public translate: TranslateService,
     private modalService: NzModalService,
@@ -115,6 +127,12 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
       repeatPassword: [null, [Validators.required]],
       fullname: [null, [Validators.required]],
     });
+
+    this.uploadHeader = {
+      Authorization: 'Bearer ' + localStorage.getItem(Constant.TOKEN),
+    };
+    this.uploadUrl = `${this.configService.getConfig().api.baseUrl}/file/upload`;
+    this.baseImageurl = this.configService.getConfig().api.baseUrl + '/Uploads/';
   }
 
   ngOnInit(): void {
@@ -152,7 +170,7 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
           // en.roleStr = this.getQuyen(en.userroles);
         });
         this.filteredDatas = this.datas;
-        // console.log(this.datas);
+        console.log(this.datas);
         super.setListOfAllData(this.datas);
       }
     }, error => {
@@ -177,6 +195,21 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
       this.data = data;
 
     });
+  }
+
+  handlePreview = async (file: NzUploadFile): Promise<void> => {
+    if (!file.url && !file.preview) {
+
+    }
+    this.previewUrl = this.baseImageurl + file.response[0].path;
+    this.previewFileResult = true;
+  }
+
+  handleRemove = async (file: NzUploadFile): Promise<void> => {
+    const path = file.response[0].path;
+    if (path) {
+      this.newFileResults = this.newFileResults.filter(en => en.filePath !== path);
+    }
   }
 
   getAllRole() {
@@ -573,4 +606,75 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
       });
     }
   }
+
+  toFullPath(filePath) {
+    return this.configService.getConfig().api.reportUrl.replace('Viewer', '') + filePath;
+  }
+
+  openModalUpload(data) {
+    this.newFileResults = [];
+    this.selectedResult = data;
+    this.visibleUpload = true;
+    if (data.files != null) {
+      this.curFileResults = data.files;
+    }
+    const orderId = this.order.id;
+    const resultTypeId = this.selectedResult.resultTypeId;
+    const orderTypeId = this.selectedResult.orderTypeId;
+    // console.log(this.selectedResult);
+    this.uploadUrl = `${this.configService.getConfig().api.baseUrl}/Upload/UploadFileOutsource?orderId=${orderId}&resultTypeId=${resultTypeId}&orderTypeId=${orderTypeId}`;
+  }
+
+  closeModalUpload() {
+    this.visibleUpload = false;
+  }
+
+  openPreviewFileResult(event, filename) {
+    this.previewFileResult = true;
+    this.previewUrl = this.baseImageurl + filename;
+    event.stopPropagation();
+  }
+
+  removeResult(data) {
+    this.generalService.removeFile(data.id).subscribe((res: any) => {
+      this.getListData();
+      this.curFileResults = this.curFileResults.filter(en => en.id !== data.id);
+    });
+  }
+
+  handleChange(info: NzUploadChangeParam): void {
+    if (info.file.status !== 'uploading') {
+    }
+    if (info.file.status === 'done') {
+      console.log(info.file.response);
+      const file = {
+        fileName: info.file.response.fileName,
+        filePath: info.file.response.path
+      };
+      this.newFileResults = [...this.newFileResults, file];
+    } else if (info.file.status === 'error') {
+      // this.msg.error(`${info.file.name} file upload failed.`);
+    }
+  }
+
+  saveFileResult() {
+    if (this.newFileResults.length === 0) {
+      this.visibleUpload = false;
+    }
+    const data = this.selectedResult;
+    const payload = {
+      resultTypeId: data.resultTypeId,
+      orderTypeId: data.orderTypeId,
+      orderId: data.orderId,
+      files: this.newFileResults
+    };
+    this.notificationService.showNotification(Constant.SUCCESS, 'Tải lên file đính kèm thành công');
+    this.getListData();
+    this.visibleUpload = false;
+  }
+
+  closePdf() {
+    this.previewFileResult = false;
+  }
+
 }

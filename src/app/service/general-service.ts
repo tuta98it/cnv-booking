@@ -536,4 +536,37 @@ export class GeneralService extends BaseService {
     return this.post('/api' + `${UrlConstant.BOOKING}` + '/adminvoidticket', payload);
   }
 
+
+  //TestResult
+  updateTestResult(item: any): any {
+    return this.put(UrlConstant.LIST_TEST_RESULT + "/" + item.id, item);
+  }
+
+  approveTestResult(item: any): any {
+    return this.put(UrlConstant.LIST_TEST_RESULT + "/Approve/" + item.id, item);
+  }
+
+  cancelTestResult(item: any): any {
+    return this.put(UrlConstant.LIST_TEST_RESULT + "/Cancel/" + item.id, item);
+  }
+
+  updateResultValue(payload): any {
+    return this.post(UrlConstant.LIST_TEST_RESULT + "/Save", payload);
+  }
+
+  updateMultiResultValue(payload): any {
+    return this.post(UrlConstant.LIST_TEST_RESULT + "/SaveAll", payload);
+  }
+
+  updateResultNote(payload): any {
+    return this.post(UrlConstant.LIST_TEST_RESULT + "/SaveNoteResult", payload);
+  }
+
+  saveFile(payload): any {
+    return this.post(UrlConstant.LIST_TEST_RESULT + "/SaveFile", payload);
+  }
+
+  removeFile(id): any {
+    return this.delete(`/ResultValues/RemoveFile/${id}`, id);
+  }
 }

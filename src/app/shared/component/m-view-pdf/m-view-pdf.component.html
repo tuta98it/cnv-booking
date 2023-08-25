@@ -1,0 +1,35 @@
+<div *ngIf="isLoaded" style="text-align: center">
+  <div style="background-color: white">
+    <button
+      nz-button
+      nzType="primary"
+      (click)="prevPage()"
+      [disabled]="page === 1">
+      <i nz-icon nzType="left" nzTheme="outline" style="font-size: 20px"></i>
+    </button>
+    <span style="margin: 0px 4px">{{ page }} / {{ totalPage }}</span>
+    <button
+      nz-button
+      nzType="primary"
+      (click)="nextPage()"
+      [disabled]="page === totalPage">
+      <i nz-icon nzType="right" style="font-size: 20px" nzTheme="outline"></i>
+    </button>
+  </div>
+</div>
+
+<pdf-viewer
+  [src]="pdfDocumentSrc"
+  [rotation]="0"
+  [(page)]="page"
+  [original-size]="false"
+  [show-all]="true"
+  [fit-to-page]="false"
+  [zoom]="1"
+  [zoom-scale]="'page-width'"
+  [stick-to-page]="true"
+  [render-text]="true"
+  [external-link-target]="'blank'"
+  [autoresize]="true"
+  [show-borders]="false"
+  (after-load-complete)="afterLoadComplete($event)"></pdf-viewer>

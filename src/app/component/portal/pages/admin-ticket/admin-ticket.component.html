@@ -40,7 +40,7 @@
   <dxi-column caption="Mã đặt chỗ" [width]="200" dataField="bookingNumber"></dxi-column>
   <dxi-column caption="Số vé" [width]="200" dataField="ticketNumber"></dxi-column>
   <dxi-column caption="Ngày đặt vé" dataField="dateCreated" dataType="date" format="HH:mm dd/MM/yy"></dxi-column>
-  <dxi-column caption="Xuất vé" cssClass="text-center" dataField="status" [width]="200" cellTemplate="cellBillet"></dxi-column>
+  <dxi-column caption="Xuất vé" cssClass="text-center" [width]="200" cellTemplate="cellBillet"></dxi-column>
   <div *dxTemplate="let item of 'cellBillet'">
 
     <div *ngIf="item.data.status === 'OK'">
