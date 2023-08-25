@@ -5,7 +5,7 @@
       <p style="">QUẢN LÝ PHƯƠNG TIỆN ĐO</p>
     </div>
     <form nz-form [formGroup]='validateForm' (ngSubmit)='submitForm()'>
-      <input nz-input id="inputEmail" formControlName='username' type="email" placeholder="Tên đăng nhập"
+      <input nz-input id="inputEmail" formControlName='email' type="email" placeholder="Tên đăng nhập"
              style="margin-bottom: 12px; height: 38px">
       <input nz-input id="inputPassword" formControlName='password' type="password" placeholder="Mật khẩu"
              style="height: 38px">
@@ -31,7 +31,7 @@
           CMS <br> CAO NGUYÊN VIỆT
         </span>
         <div class="wrap-input100 validate-input m-b-16" data-validate="Valid email is required: ex@abc.xyz">
-          <input class="input100" type="text" formControlName='username' placeholder="Tên đăng nhập">
+          <input class="input100" type="text" formControlName='email' placeholder="Tên đăng nhập">
           <span class="focus-input100"></span>
           <span class="symbol-input100">
             <span class="lnr lnr-envelope"></span>

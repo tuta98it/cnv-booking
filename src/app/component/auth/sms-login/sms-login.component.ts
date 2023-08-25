@@ -40,7 +40,7 @@ export class SmsLoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.validateForm = this.fb.group({
-      username: [null, [Validators.required]],
+      email: [null, [Validators.required]],
       password: [null, [Validators.required]],
     });
     this.returnUrl = this.route.snapshot.queryParams.returnUrl || Constant.WELCOME;

@@ -38,17 +38,13 @@
       </li>-->
       <li *ngIf="PHAN_QUYEN_TAI_KHOAN" nz-submenu nzTitle="Quản trị hệ thống">
         <ul>
-          <ul>
-            <li nz-menu-item [nzSelected]="url === '/tai-khoan'"><a routerLink="/tai-khoan">Danh sách tài khoản</a></li>
-            <li nz-menu-item [nzSelected]="url === '/user-register'"><a routerLink="/user-register">Danh sách đăng kí</a></li>
-            <li *ngIf='userInfo.userType == 0' nz-menu-item [nzSelected]="url === '/doi-tac'"><a routerLink="/doi-tac">Danh sách đối tác</a></li>
-          </ul>
+          <li nz-menu-item [nzSelected]="url === '/tai-khoan'"><a routerLink="/tai-khoan">Danh sách tài khoản</a></li>
+          <li nz-menu-item [nzSelected]="url === '/user-register'"><a routerLink="/user-register">Danh sách đăng kí</a></li>
+          <li *ngIf='userInfo.userType == 0' nz-menu-item [nzSelected]="url === '/doi-tac'"><a routerLink="/doi-tac">Danh sách đối tác</a></li>
           <li nz-submenu nzTitle="Vé máy bay">
             <ul>
               <li nz-menu-item [nzSelected]="url === '/admin-history-holding-ticket'"><a routerLink="/admin-history-holding-ticket">Quản lý giữ vé</a></li>
-
               <li nz-menu-item [nzSelected]="url === '/admin-ticket'"><a routerLink="/admin-ticket">Quản lý xuất vé</a></li>
-
               <li nz-menu-item [nzSelected]="url === '/admin-void-ticket'"><a routerLink="/admin-void-ticket">Quản lý huỷ vé</a></li>
             </ul>
           </li>
