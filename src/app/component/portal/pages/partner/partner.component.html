@@ -46,12 +46,12 @@
   <dxi-column caption="Công nợ tối đa" [width]="200" dataField="debtMax"></dxi-column>
   <dxi-column caption="Công nợ đã sử dụng" [width]="200" dataField="debtUsed"></dxi-column>
   <dxi-column caption="Công nợ còn lại" [width]="200" dataField="debtRemain"></dxi-column>
-  <dxi-column caption="Giấy phép kinh doanh" [width]="250" cellTemplate="cellBusinessLicenses"></dxi-column>
-  <dxi-column caption="Hợp đồng" [width]="250" cellTemplate="cellContract"></dxi-column>
+  <dxi-column caption="Giấy phép kinh doanh" [width]="450" cellTemplate="cellBusinessLicenses"></dxi-column>
+  <dxi-column caption="Hợp đồng" [width]="450" cellTemplate="cellContract"></dxi-column>
   <dxi-column caption="Ghi chú" [width]="500" dataField="note"></dxi-column>
 
 
-  <div *dxTemplate="let partner of 'cellBusinessLicenses'" (click)="openModalUpload(data)">
+  <div *dxTemplate="let partner of 'cellBusinessLicenses'" >
     <ng-container *ngIf="partner.data.partnerFile">
       <div style="display: flex; flex-direction: column;">
         <div *ngFor="let file of partner.data.partnerFile; let i = index">
@@ -59,16 +59,22 @@
             <i nz-icon nzType="file-pdf" nzTheme="outline"></i> {{file.fileName}}</a>
         </div>
       </div>
+      <div style="margin-top: 0.5rem; display: flex; justify-content: end;">
+        <button nz-button nzSize="small" nzType="dashed" (click)="openModalUpload(partner.data, 1)"><span nz-icon nzType="sync" nzTheme="outline"></span>Cập nhật GPKD cho {{partner.data.companyName}}</button>
+      </div>
     </ng-container>
   </div>
 
-  <div *dxTemplate="let partner of 'cellContract'">
+  <div *dxTemplate="let partner of 'cellContract'" (click)="openModalUpload(partner.data, 2)">
     <ng-container *ngIf="partner.data.partnerFile">
       <div style="display: flex; flex-direction: column;">
         <div *ngFor="let file of partner.data.partnerFile; let i = index">
           <a *ngIf="file.type == 2" href="{{toFullPath(file.filePath)}}" target="_blank">
             <i nz-icon nzType="file-pdf" nzTheme="outline"></i> {{file.fileName}}</a>
         </div>
+      </div>
+      <div style="margin-top: 0.5rem; display: flex; justify-content: end;">
+        <button nz-button nzSize="small" nzType="dashed" (click)="openModalUpload(partner.data, 2)"><span nz-icon nzType="sync" nzTheme="outline"></span>Cập nhật HĐ cho {{partner.data.companyName}}</button>
       </div>
     </ng-container>
   </div>
@@ -398,7 +404,7 @@
     <div *ngIf="curFileResults.length > 0" class="mgb30">
       <b>Các file đã upload</b>
       <div class="ant-upload-list">
-        <div *ngFor="let item of curFileResults" class="ant-upload-list-text-container">
+        <div *ngFor="let file of curFileResults" class="ant-upload-list-text-container">
           <div class="ant-upload-list-item">
             <div class="ant-upload-list-item-info">
               <span class="ant-upload-span">
@@ -406,9 +412,9 @@
                   <i nz-icon nzType="paper-clip"></i>
                 </div>
                 <span class="ant-upload-list-item-name"
-                  (click)="openPreviewFileResult($event, item.fileName)">{{item.id}}-{{item.fileName}}</span>
+                  (click)="openPreviewFileResult($event, file.filePath)">{{file.id}}-{{file.fileName}}</span>
                 <span class="ant-upload-list-item-card-actions">
-                  <i nz-icon nzType="delete" (click)="removeResult(item)"></i>
+                  <i nz-icon nzType="delete" (click)="removeResult(file)"></i>
                 </span>
               </span>
             </div>
@@ -416,8 +422,7 @@
         </div>
       </div>
     </div>
-    <nz-upload [nzAction]="uploadUrl" nzName="postedFile" [nzHeaders]="uploadHeader" [nzPreview]="handlePreview"
-      [nzRemove]="handleRemove"
+    <nz-upload [nzAction]="uploadUrl" nzName="postedFile" [nzHeaders]="uploadHeader" [nzPreview]="handlePreview" [nzRemove]="handleRemove"
       [nzShowUploadList]="{showPreviewIcon:true, showRemoveIcon:true, showDownloadIcon: false}"
       (nzChange)="handleChange($event)">
       <button nz-button>

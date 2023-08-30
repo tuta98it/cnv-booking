@@ -49,4 +49,8 @@ export class  UrlConstant {
   public static readonly USER_REGISTER = '/UserRegister';
 
   public static readonly LIST_TEST_RESULT = "/ResultValues";
+
+  // Hotel
+  public static readonly HOTEL = "/Hotel";
+
 }

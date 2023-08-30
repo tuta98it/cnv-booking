@@ -34,6 +34,9 @@ import {NzCheckboxModule} from 'ng-zorro-antd/checkbox';
 import {NzAlertModule} from 'ng-zorro-antd/alert';
 import { IsEmptyPipe } from './pipe/is-empty.pipe';
 import { MViewPdfComponent } from './component/m-view-pdf/m-view-pdf.component';
+import { NzImageModule } from 'ng-zorro-antd/image';
+import { NzMessageModule } from 'ng-zorro-antd/message';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -62,7 +65,9 @@ import { MViewPdfComponent } from './component/m-view-pdf/m-view-pdf.component';
     NzTagModule,
     NzUploadModule,
     NzCheckboxModule,
-    NzAlertModule
+    NzAlertModule,
+    NzImageModule,
+    NzMessageModule
   ],
   exports: [
     DateFormatPipe,
@@ -97,7 +102,9 @@ import { MViewPdfComponent } from './component/m-view-pdf/m-view-pdf.component';
     NzUploadModule,
     NzCheckboxModule,
     NzAlertModule,
-    MViewPdfComponent
+    MViewPdfComponent,
+    NzImageModule,
+    NzMessageModule
   ],
   declarations: [
     DateFormatPipe,

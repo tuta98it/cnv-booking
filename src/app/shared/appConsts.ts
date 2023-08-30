@@ -3,7 +3,8 @@ export class AppConsts {
     static api: {
         baseUrl: string,
         ipUrl: string,
-        reportUrl: string
+        reportUrl: string,
+        url: string
     };
     static apisso: {
       baseUrl: string

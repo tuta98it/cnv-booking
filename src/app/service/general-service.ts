@@ -567,6 +567,24 @@ export class GeneralService extends BaseService {
   }
 
   removeFile(id): any {
-    return this.delete(`/ResultValues/RemoveFile/${id}`, id);
+    return this.delete(`/Partners/RemoveFile/${id}`, id);
+  }
+
+
+  // Hotel
+  getHotels(): Observable<any> {
+    return this.get(UrlConstant.HOTEL);
+  }
+
+  addHotel(hotel: any): any{
+    this.post(UrlConstant.HOTEL, hotel);
+  }
+
+  updateHotelByID(idHotel: any, hotel: any): any{
+    this.put(`UrlConstant.HOTEL/${idHotel}`, hotel);
+  }
+
+  deleteHotelByID(idHotel: any): any{
+    this.delete(`UrlConstant.HOTEL/${idHotel}`, idHotel);
   }
 }

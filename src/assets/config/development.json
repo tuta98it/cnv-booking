@@ -2,7 +2,8 @@
   "api": {
     "baseUrl": "https://localhost:44369",
     "ipUrl": "http://192.168.18.27:8456",
-    "reportUrl": "https://be-booking.pmr.vn/report"
+    "reportUrl": "https://be-booking.pmr.vn/report",
+    "url": "https://be-booking.pmr.vn"
   },
     "sso": {
       "baseUrl": "http://10.33.68.71:8888/vnpt-sso"

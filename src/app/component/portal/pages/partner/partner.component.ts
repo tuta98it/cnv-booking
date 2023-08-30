@@ -131,7 +131,7 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
     this.uploadHeader = {
       Authorization: 'Bearer ' + localStorage.getItem(Constant.TOKEN),
     };
-    this.uploadUrl = `${this.configService.getConfig().api.baseUrl}/file/upload`;
+    this.uploadUrl = `${this.configService.getConfig().api.baseUrl}/Upload/UploadFile`;
     this.baseImageurl = this.configService.getConfig().api.baseUrl + '/Uploads/';
   }
 
@@ -201,7 +201,8 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
     if (!file.url && !file.preview) {
 
     }
-    this.previewUrl = this.baseImageurl + file.response[0].path;
+    console.log('file: ', file);
+    this.previewUrl = this.configService.getConfig().api.url + '/' + file.response[0].path;
     this.previewFileResult = true;
   }
 
@@ -607,35 +608,35 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
     }
   }
 
-  toFullPath(filePath) {
-    return this.configService.getConfig().api.reportUrl.replace('Viewer', '') + filePath;
+  toFullPath(filePath: any) {
+    return this.configService.getConfig().api.url + '/' + filePath;
   }
 
-  openModalUpload(data) {
+  openModalUpload(data: any, type: any) {
     this.newFileResults = [];
     this.selectedResult = data;
     this.visibleUpload = true;
-    if (data.files != null) {
-      this.curFileResults = data.files;
+    if (data.partnerFile != null) {
+      this.curFileResults = data.partnerFile.filter((obj: any) => {
+        return obj.type === type
+      });
     }
-    const orderId = this.order.id;
-    const resultTypeId = this.selectedResult.resultTypeId;
-    const orderTypeId = this.selectedResult.orderTypeId;
-    // console.log(this.selectedResult);
-    this.uploadUrl = `${this.configService.getConfig().api.baseUrl}/Upload/UploadFileOutsource?orderId=${orderId}&resultTypeId=${resultTypeId}&orderTypeId=${orderTypeId}`;
+    const partnerId = data.id;
+    this.uploadUrl = `${this.configService.getConfig().api.baseUrl}/Upload/UploadFile?partnerId=${partnerId}&type=${type}`;
   }
 
   closeModalUpload() {
     this.visibleUpload = false;
   }
 
-  openPreviewFileResult(event, filename) {
+  openPreviewFileResult(event: any, filePath: any) {
     this.previewFileResult = true;
-    this.previewUrl = this.baseImageurl + filename;
+    // this.previewUrl = this.baseImageurl + filename;
+    this.previewUrl = this.configService.getConfig().api.url + '/' + filePath;
     event.stopPropagation();
   }
 
-  removeResult(data) {
+  removeResult(data: any) {
     this.generalService.removeFile(data.id).subscribe((res: any) => {
       this.getListData();
       this.curFileResults = this.curFileResults.filter(en => en.id !== data.id);
@@ -662,12 +663,6 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
       this.visibleUpload = false;
     }
     const data = this.selectedResult;
-    const payload = {
-      resultTypeId: data.resultTypeId,
-      orderTypeId: data.orderTypeId,
-      orderId: data.orderId,
-      files: this.newFileResults
-    };
     this.notificationService.showNotification(Constant.SUCCESS, 'Tải lên file đính kèm thành công');
     this.getListData();
     this.visibleUpload = false;

@@ -8,6 +8,8 @@ import { UserRegisterComponent } from './pages/user-register/user-register.compo
 import { AdminTicketComponent } from './pages/admin-ticket/admin-ticket.component';
 import { AdminVoidTicketComponent } from './pages/admin-void-ticket/admin-void-ticket.component';
 import { AdminHistoryHoldingTicketComponent } from './pages/admin-history-holding-ticket/admin-history-holding-ticket.component';
+import { HotelComponent } from './pages/hotel/hotel.component';
+
 const routes: Routes = [
   {
     path: '', component: MasterPageComponent,
@@ -104,13 +106,20 @@ const routes: Routes = [
 
         }
       },
-
       {
         path: 'admin-void-ticket',
         component: AdminVoidTicketComponent,
         data: {
           pagename: 'Huỷ vé',
           breadcrumb: 'Huỷ vé'
+        }
+      },
+      {
+        path: 'hotel',
+        component: HotelComponent,
+        data: {
+          pagename: 'Đặt phòng',
+          breadcrumb: 'Đặt phòng'
         }
       },
     ]

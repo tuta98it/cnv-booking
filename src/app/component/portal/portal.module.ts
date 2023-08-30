@@ -29,8 +29,7 @@ import { UserRegisterComponent } from './pages/user-register/user-register.compo
 import { AdminVoidTicketComponent } from './pages/admin-void-ticket/admin-void-ticket.component';
 import { AdminTicketComponent } from './pages/admin-ticket/admin-ticket.component';
 import { AdminHistoryHoldingTicketComponent } from './pages/admin-history-holding-ticket/admin-history-holding-ticket.component';
-
-
+import { HotelComponent } from './pages/hotel/hotel.component';
 const antDesignIcons = AllIcons as {
   [key: string]: IconDefinition;
 };
@@ -46,6 +45,7 @@ const icons: IconDefinition[] = Object.keys(antDesignIcons).map(key => antDesign
     DashboardComponent,
     SelectUnitComponent,
     UserRegisterComponent,
+    HotelComponent
   ],
   imports: [
     SharedModule,
@@ -60,7 +60,7 @@ const icons: IconDefinition[] = Object.keys(antDesignIcons).map(key => antDesign
     NzAvatarModule,
     NzTabsModule
   ],
-  providers: [GeneralService, FileManagerService, MenuService, SignalRService, DateFormatPipe]
+  providers: [GeneralService, FileManagerService, MenuService, SignalRService, DateFormatPipe, ]
 })
 export class PortalModule {
 
