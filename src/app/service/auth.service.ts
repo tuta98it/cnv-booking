@@ -12,6 +12,12 @@ export class AuthService {
   login(payload): Observable<any> {
     return this.httpClient.post(this.configService.getConfig().api.baseUrl + '/login', payload);
   }
+
+  loginAdmin(payload): Observable<any> {
+    return this.httpClient.post(this.configService.getConfig().api.baseUrl + '/loginAdmin', payload);
+  }
+
+
   logout() {
     const headers = {
       Authorization: 'Bearer ' + localStorage.getItem(Constant.TOKEN),

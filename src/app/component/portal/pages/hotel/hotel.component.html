@@ -30,22 +30,24 @@
   <dxo-sorting mode="multiple"></dxo-sorting>
   <dxo-header-filter [visible]="true"></dxo-header-filter>
   <dxo-filter-row [visible]="true" [applyFilter]="currentFilter"></dxo-filter-row>
+  <dxo-master-detail [enabled]="true" template="detail"></dxo-master-detail>
+
 
   <dxi-column cssClass="text-center" caption="Action" [fixed]="true" [width]="100" fixedPosition="right"
     cellTemplate="cellBtnTemplate"></dxi-column>
   <dxi-column cssClass="text-center" caption="STT" [width]="55" dataField="stt" [fixed]="true" [allowFiltering]="false"
     [allowSorting]="false"></dxi-column>
-
-  <!-- <dxi-column caption="Trạng thái" dataField="status" [fixed]="true"></dxi-column> -->
   <dxi-column caption="Tên khách sạn" [width]="200" dataField="name" [fixed]="true"></dxi-column>
   <dxi-column caption="Địa chỉ" [width]="200" dataField="address"></dxi-column>
-  <dxi-column caption="Số điện thoại" [width]="200" dataField="phone"></dxi-column>
-  <dxi-column caption="Email" [width]="300" dataField="email"></dxi-column>
+  <dxi-column caption="Số điện thoại" [width]="200" dataField="phoneNo"></dxi-column>
+  <dxi-column caption="Email" [width]="300" dataField="contactEmail"></dxi-column>
   <dxi-column caption="Mô tả" [width]="400" dataField="description"></dxi-column>
-  <dxi-column caption="Website" [width]="200" dataField="website" cellTemplate="cellWebsite"></dxi-column>
+  <dxi-column caption="Website" [width]="200" dataField="websiteUrl" cellTemplate="cellWebsite"></dxi-column>
   <dxi-column caption="Facebook" [width]="200" dataField="facebook" cellTemplate="cellFacebook"></dxi-column>
   <dxi-column caption="Hạng" [width]="100" dataField="ratingStar"></dxi-column>
-  <dxi-column caption="Hình ảnh" [width]="200" dataField="images" cellTemplate="cellImages"></dxi-column>
+  <dxi-column caption="Hình ảnh khách sạn" [width]="200" dataField="images" cellTemplate="cellImages"></dxi-column>
+  <dxi-column caption="Tiện ích khách sạn" cssClass="text-center" [width]="200"
+    cellTemplate="cellUtilityHotels"></dxi-column>
 
   <div *dxTemplate="let item of 'cellBtnTemplate'">
     <button title="Xóa tài khoản" nz-button nzSize="small" nzType="default" class="btn-right button-update ant-btn-red"
@@ -70,6 +72,32 @@
       {{images.data.name}}</button>
   </div>
 
+  <div *dxTemplate="let item of 'cellUtilityHotels'">
+    <a nz-button nzType="link" (click)="previewDetailUtilityHotels(item.data.utilityHotels)" nzBlock>«Chi tiết»</a>
+  </div>
+
+  <div *dxTemplate="let order of 'detail'">
+    <!-- <dxi-column caption="Địa chỉ" [width]="200">{{order.data.name}}</dxi-column> -->
+    <dx-data-grid id="gridDetail" [dataSource]="order.data.roomHotels" [showBorders]="true">
+
+      <dxi-column cssClass="text-center" caption="STT" [width]="55" dataField="stt" [fixed]="true"
+        [allowFiltering]="false" [allowSorting]="false"></dxi-column>
+      <dxi-column caption="Loại phòng" [width]="200" dataField="name"></dxi-column>
+      <dxi-column caption="Miêu tả phòng" [width]="200" dataField="description"></dxi-column>
+      <dxi-column caption="Phòng số" [width]="200" dataField="roomNumber"></dxi-column>
+      <dxi-column caption="Số tầng" [width]="200" dataField="floorNumber"></dxi-column>
+      <dxi-column caption="Giá phòng" [width]="200" dataField="price"></dxi-column>
+      <dxi-column caption="Hình ảnh phòng" [width]="200" dataField="images" cellTemplate="cellImages"></dxi-column>
+      <dxi-column caption="Tiện ích phòng" cssClass="text-center" [width]="200"  cellTemplate="cellUtilityRooms"></dxi-column>
+      <div *dxTemplate="let images of 'cellImages'">
+        <button *ngIf="images" nz-button nzSize="small" nzType="dashed" (click)="previewImagesHotel(images.value)">Xem
+          ảnh</button>
+      </div>
+      <div *dxTemplate="let item of 'cellUtilityRooms'">
+        <a nz-button nzType="link" (click)="previewDetailUtilityRooms(item.data.utilityRooms)" nzBlock>«Chi tiết»</a>
+      </div>
+    </dx-data-grid>
+  </div>
   <dxo-summary>
     <dxi-total-item column="name" displayFormat="Số bản ghi: {0}" summaryType="count">
     </dxi-total-item>
@@ -97,15 +125,15 @@
       <div class="input-wrap" nz-row>
         <label class="title-detail" nz-col [nzSpan]="8">Số điện thoại<em class="fa fa-asterisk required"></em></label>
         <div nz-col [nzSpan]="16">
-          <input nz-input formControlName="phone" type="tel"
-            [ngClass]="{ 'is-invalid': submitted && f.phone.errors?.required }" />
+          <input nz-input formControlName="phoneNo" type="tel"
+            [ngClass]="{ 'is-invalid': submitted && f.phoneNo.errors?.required }" />
         </div>
       </div>
 
       <div class="input-wrap" nz-row>
         <label class="title-detail" nz-col [nzSpan]="8">Email<em class="fa fa-asterisk required"></em></label>
         <div nz-col [nzSpan]="16">
-          <input type="email" nz-input formControlName="email"
+          <input type="email" nz-input formControlName="contactEmail"
             [ngClass]="{ 'is-invalid': submitted && f.email.errors?.required }" />
         </div>
       </div>
@@ -130,8 +158,8 @@
       <div class="input-wrap" nz-row>
         <label class="title-detail" nz-col [nzSpan]="8">Website<em class="fas fa-asterisk required"></em></label>
         <div nz-col [nzSpan]="16">
-          <input nz-input formControlName="website"
-            [ngClass]="{ 'is-invalid': submitted && f.website.errors?.required }" />
+          <input nz-input formControlName="websiteUrl"
+            [ngClass]="{ 'is-invalid': submitted && f.websiteUrl.errors?.required }" />
         </div>
       </div>
 
@@ -151,14 +179,30 @@
         </div>
       </div>
 
-      <div class="clearfix">
-        <nz-upload
-          class="upload-list-inline"
-          nzAction=""
-          nzListType="picture"
-          [(nzFileList)]="imagesForm"
-          (nzChange)="handleChange($event)"
-        >
+
+
+      <div class="input-wrap" nz-row>
+        <label class="title-detail" nz-col [nzSpan]="8">Phòng số<em class="fas fa-asterisk required"></em></label>
+        <div nz-col [nzSpan]="16">
+          <input nz-input formControlName="numRooms"
+            [ngClass]="{ 'is-invalid': submitted && f.numRooms.errors?.required }" />
+        </div>
+      </div>
+
+
+
+      <!-- <div class="input-wrap" nz-row>
+        <label class="title-detail" nz-col [nzSpan]="8">Tiện ích<em class="fas fa-asterisk required"></em></label>
+        <div nz-col [nzSpan]="16">
+          <input nz-input formControlName="utilities"
+            [ngClass]="{ 'is-invalid': submitted && f.utilities.errors?.required }" />
+        </div>
+      </div> -->
+
+
+      <!-- <div class="clearfix">
+        <nz-upload class="upload-list-inline" nzAction="" nzListType="picture" [(nzFileList)]="imagesForm"
+          (nzChange)="handleChange($event)">
           <button nz-button>
             <span>
               <span nz-icon nzType="upload"></span>
@@ -166,7 +210,7 @@
             </span>
           </button>
         </nz-upload>
-      </div>
+      </div> -->
     </div>
 
     <div *nzModalFooter>
@@ -175,3 +219,32 @@
     </div>
   </nz-modal>
 </form>
+
+<nz-modal [(nzVisible)]="isVisibleDetailUtility" nzTitle="Thông tin chi tiết" [nzContent]="content" [nzFooter]="footer"
+  nzWidth="1500px" (nzOnCancel)="handleCancel()">
+  <ng-template #content>
+    <dx-data-grid id="gridContainer" [dataSource]="listDetailUtility" [showColumnLines]="true" [showRowLines]="true"
+      [height]="dxGridHeight" [rowAlternationEnabled]="true" [showBorders]="true" [allowColumnResizing]="true"
+      columnResizingMode="widget" [columnMinWidth]="50" [columnAutoWidth]="true">
+
+
+      <dxo-load-panel [enabled]="true"></dxo-load-panel>`
+      <dxo-scrolling mode="virtual"></dxo-scrolling>
+      <dxo-sorting mode="multiple"></dxo-sorting>
+      <dxo-header-filter [visible]="true"></dxo-header-filter>
+      <dxo-filter-row [visible]="true" [applyFilter]="currentFilter"></dxo-filter-row>
+
+      <dxi-column cssClass="text-center" caption="STT" [width]="55" dataField="stt" [fixed]="true"
+        [allowFiltering]="false" [allowSorting]="false"></dxi-column>
+      <dxi-column caption="Tiện ích" [fixed]="true" [width]="150" dataField="name"
+        cssClass="vertical-align-middle"></dxi-column>
+
+      <dxo-summary>
+        <dxi-total-item column="name" displayFormat="Số bản ghi: {0}" summaryType="count">
+        </dxi-total-item>
+      </dxo-summary>
+    </dx-data-grid>
+  </ng-template>
+
+  <ng-template #footer> </ng-template>
+</nz-modal>

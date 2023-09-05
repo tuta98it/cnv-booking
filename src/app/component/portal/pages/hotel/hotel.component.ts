@@ -88,7 +88,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
       response: 'Server Error 500', // custom error message to show
       url: 'http://www.baidu.com/zzz.png'
     }
-  ];;
+  ];
   hotels = [
     {
       id: 0,
@@ -453,7 +453,9 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
         }
       ]
     },
-  ]
+  ];
+  isVisibleDetailUtility: boolean = false;
+  listDetailUtility: any[];
   constructor(
     public translate: TranslateService,
     private modalService: NzModalService,
@@ -470,13 +472,14 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
     this.formAdd = this.fb.group({
       id: [null],
       name: [null, [Validators.required]],
-      phone: [null, [Validators.required]],
-      email: [null, [Validators.required]],
+      phoneNo: [null, [Validators.required]],
+      contactEmail: [null, [Validators.required]],
       address: [null, [Validators.required]],
       description: [null],
-      website: [null, [Validators.required]],
+      websiteUrl: [null, [Validators.required]],
       facebook: [null, [Validators.required]],
       ratingStar: [null, [Validators.required]],
+      numRooms: [null, [Validators.required]],
     });
 
 
@@ -520,9 +523,15 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
     this.generalService.getHotels().subscribe((res: any) => {
       this.datas = res;
       let stt = 0;
-      this.datas.forEach(en => {
+      this.datas.forEach((en: any) => {
         en.stt = ++stt;
+
+        let sttx = 0;
+        en.roomHotels.forEach((enx: any) => {
+          enx.stt = ++sttx;
+        });
       });
+
       this.filteredDatas = this.datas;
     });
   }
@@ -559,7 +568,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
 
   deleteItem(id) {
     // Delete workspace here
-    this.generalService.deleteTaikhoan(id).subscribe(res => {
+    this.generalService.deleteHotelByID(id).subscribe((res: any) => {
       // Do some logic and close the popup
       if (res && res.ret && res.ret[0].code !== 0) {
         this.notificationService.showNotification(Constant.ERROR, 'Không thể xóa.');
@@ -580,13 +589,14 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
     this.formAdd.reset();
     this.formAdd.patchValue({
       name: '',
-      phone: '',
-      email: '',
+      phoneNo: '',
+      contactEmail: '',
       address: '',
       description: '',
-      website: '',
+      websiteUrl: '',
       facebook: '',
       ratingStar: '',
+      numRooms: ''
     });
   }
 
@@ -600,13 +610,14 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
     this.formAdd.patchValue({
       id: this.item.id,
       name: this.item.name,
-      phone: this.item.phone,
-      email: this.item.email,
+      phoneNo: this.item.phoneNo,
+      contactEmail: this.item.contactEmail,
       address: this.item.address,
       description: this.item.description,
-      website: this.item.website,
+      websiteUrl: this.item.websiteUrl,
       facebook: this.item.facebook,
       ratingStar: this.item.ratingStar,
+      numRooms: this.item.numRooms,
     });
   }
 
@@ -614,13 +625,14 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
   handleCancel() {
     this.isVisibleAdd = false;
     this.updated = false;
+    this.isVisibleDetailUtility = false;
     this.formAdd.reset();
   }
 
   handleOk() {
     this.submitted = true;
     let formValue = this.formAdd.value;
-    const checkEmail = this.validateEmail(formValue.email);
+    const checkEmail = this.validateEmail(formValue.contactEmail);
     if (!checkEmail) {
       this.notificationService.showNotification(Constant.ERROR, 'Email không đúng định dạng!');
       return;
@@ -629,61 +641,35 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
       this.notificationService.showNotification(Constant.ERROR, 'Tồn tại thông tin khách sạn chưa điền!');
       return;
     }
-    if (!formValue.id) {
+
+    if (formValue.id === 0) {
       delete formValue.id;
       /// add
+      this.generalService.addHotel(formValue).subscribe((res: any) => {
+        if (res.ret && res.ret[0].code !== 0) {
+          this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
+        } else {
+          this.getListData();
+          this.isVisibleAdd = false;
+          this.notificationService.showNotification(Constant.SUCCESS, Constant.MESSAGE_ADD_SUCCESS);
+        }
+      }, (error: any) => {
+
+      });
     } else {
-      /// update
+      // / update
+      this.generalService.updateHotelByID(formValue.id, formValue).subscribe((res: any) => {
+        if (res.ret && res.ret[0].code !== 0) {
+          this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
+        } else {
+          this.getListData();
+          this.isVisibleAdd = false;
+          this.notificationService.showNotification(Constant.SUCCESS, Constant.MESSAGE_UPDATE_SUCCESS);
+        }
+      }, error => {
+
+      })
     }
-    // let userType: any;
-    // if (formValue.id === 0) {
-    //   if (this.formAdd.invalid || this.isEmpty(this.formAdd.controls['password'].value) || this.isEmpty(this.formAdd.controls['repeatPassword'].value)) {
-    //     return;
-    //   }
-
-    //   if (!checkEmail) {
-    //     this.notificationService.showNotification(Constant.ERROR, 'Email không đúng định dạng!');
-    //     return;
-    //   }
-    //   delete formValue.id;
-    //   formValue.status = 1;
-    //   userType = this.userInfor.userType == 0 ? 2 : this.userInfor.userType == 1 ? 3 : null;
-    //   const payload = { ...formValue, 'userType': userType };
-    //   this.generalService.addTaikhoan(payload).subscribe((res: any) => {
-    //     if (res.ret && res.ret[0].code !== 0) {
-    //       this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
-    //       formValue.id = 0;
-    //     } else {
-    //       this.getListData();
-    //       this.isVisibleAdd = false;
-    //       this.notificationService.showNotification(Constant.SUCCESS, Constant.MESSAGE_ADD_SUCCESS);
-    //     }
-    //   }, error => {
-
-    //   });
-    // } else {
-    //   if (this.formAdd.invalid) {
-    //     return;
-    //   }
-
-    //   if (!checkEmail) {
-    //     return;
-    //   }
-
-    //   delete formValue.password;
-    //   delete formValue.repeatPassword;
-    //   this.generalService.updateTaikhoan(formValue).subscribe(res => {
-    //     if (res.ret && res.ret[0].code !== 0) {
-    //       this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
-    //     } else {
-    //       this.getListData();
-    //       this.isVisibleAdd = false;
-    //       this.notificationService.showNotification(Constant.SUCCESS, Constant.MESSAGE_UPDATE_SUCCESS);
-    //     }
-    //   }, error => {
-
-    //   });
-    // }
   }
 
 
@@ -746,9 +732,9 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
     this.filteredDatas = this.datas.filter((en) =>
       removeAccents(en.name?.toString().trim()).toLowerCase().includes(keyword) ||
       removeAccents(en.address?.trim()).toLowerCase().includes(keyword) ||
-      removeAccents(en.phone?.trim()).toLowerCase().includes(keyword) ||
-      removeAccents(en.website?.trim()).toLowerCase().includes(keyword) ||
-      removeAccents(en.email?.trim()).toLowerCase().includes(keyword) ||
+      removeAccents(en.phoneNo?.trim()).toLowerCase().includes(keyword) ||
+      removeAccents(en.websiteUrl?.trim()).toLowerCase().includes(keyword) ||
+      removeAccents(en.contactEmail?.trim()).toLowerCase().includes(keyword) ||
       removeAccents(en.facebook?.trim()).toLowerCase().includes(keyword) ||
       removeAccents(en.ratingStar?.trim()).toLowerCase().includes(keyword)
     );
@@ -797,5 +783,25 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
     } else if (info.file.status === 'error') {
       this.msg.error(`${info.file.name} file upload failed.`);
     }
+  }
+
+
+
+  previewDetailUtilityHotels(utilityHotels: any) {
+    this.isVisibleDetailUtility = true;
+    this.listDetailUtility = utilityHotels;
+    let stt = 0;
+    this.listDetailUtility.forEach(en => {
+      en.stt = ++stt;
+    });
+  }
+
+  previewDetailUtilityRooms(utilityRooms: any) {
+    this.isVisibleDetailUtility = true;
+    this.listDetailUtility = utilityRooms;
+    let stt = 0;
+    this.listDetailUtility.forEach(en => {
+      en.stt = ++stt;
+    });
   }
 }

@@ -1352,11 +1352,25 @@ nz-input-number {
   border: solid 1px #CCC;
 }
 
-.dx-header-row.dx-column-lines td {
-  background: #22577A !important;
-  color: #FFF;
-  font-weight: bold;
+dx-data-grid#gridContainer {
+  .dx-header-row.dx-column-lines td {
+    background: #22577A !important;
+    color: #FFF;
+    font-weight: bold;
+
+
+  }
 }
+
+
+dx-data-grid#gridDetail {
+  .dx-header-row.dx-column-lines td {
+    background: #fff !important;
+    color: #959595;
+    font-weight: bold;
+  }
+}
+
 
 .dx-datagrid .dx-row>td {}
 
