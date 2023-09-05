@@ -40,7 +40,7 @@ export class SmsLoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.validateForm = this.fb.group({
-      email: [null, [Validators.required]],
+      username: [null, [Validators.required]],
       password: [null, [Validators.required]],
     });
     this.returnUrl = this.route.snapshot.queryParams.returnUrl || Constant.WELCOME;
@@ -51,7 +51,7 @@ export class SmsLoginComponent implements OnInit {
     }
   }
   submitForm(): void {
-    this.sub = this.authService.login(this.validateForm.value).subscribe(res => {
+    this.sub = this.authService.loginAdmin(this.validateForm.value).subscribe(res => {
       if (res !== null && !res.message) {
         localStorage.setItem(Constant.TOKEN, res.token);
         localStorage.setItem(Constant.USER_INFO, JSON.stringify(res));
