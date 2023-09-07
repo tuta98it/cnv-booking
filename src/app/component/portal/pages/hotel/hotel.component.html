@@ -38,12 +38,13 @@
   <dxi-column cssClass="text-center" caption="STT" [width]="55" dataField="stt" [fixed]="true" [allowFiltering]="false"
     [allowSorting]="false"></dxi-column>
   <dxi-column caption="Tên khách sạn" [width]="200" dataField="name" [fixed]="true"></dxi-column>
+  <dxi-column caption="Mã khách sạn" [width]="200" dataField="code" [fixed]="true"></dxi-column>
   <dxi-column caption="Địa chỉ" [width]="200" dataField="address"></dxi-column>
   <dxi-column caption="Số điện thoại" [width]="200" dataField="phoneNo"></dxi-column>
   <dxi-column caption="Email" [width]="300" dataField="contactEmail"></dxi-column>
   <dxi-column caption="Mô tả" [width]="400" dataField="description"></dxi-column>
   <dxi-column caption="Website" [width]="200" dataField="websiteUrl" cellTemplate="cellWebsite"></dxi-column>
-  <dxi-column caption="Facebook" [width]="200" dataField="facebook" cellTemplate="cellFacebook"></dxi-column>
+  <dxi-column caption="Facebook" [width]="200" dataField="facebook" cellTemplate="cellFacebook" [visible]="false"></dxi-column>
   <dxi-column caption="Hạng" [width]="100" dataField="ratingStar"></dxi-column>
   <dxi-column caption="Hình ảnh khách sạn" [width]="200" dataField="images" cellTemplate="cellImages"></dxi-column>
   <dxi-column caption="Tiện ích khách sạn" cssClass="text-center" [width]="200"
@@ -123,6 +124,14 @@
 
 
       <div class="input-wrap" nz-row>
+        <label class="title-detail" nz-col [nzSpan]="8">Mã khách hàng<em class="fas fa-asterisk required"></em></label>
+        <div nz-col [nzSpan]="16">
+          <input nz-input formControlName="code" [ngClass]="{ 'is-invalid': submitted && f.code.errors?.required }" />
+        </div>
+      </div>
+
+
+      <div class="input-wrap" nz-row>
         <label class="title-detail" nz-col [nzSpan]="8">Số điện thoại<em class="fa fa-asterisk required"></em></label>
         <div nz-col [nzSpan]="16">
           <input nz-input formControlName="phoneNo" type="tel"
@@ -134,7 +143,7 @@
         <label class="title-detail" nz-col [nzSpan]="8">Email<em class="fa fa-asterisk required"></em></label>
         <div nz-col [nzSpan]="16">
           <input type="email" nz-input formControlName="contactEmail"
-            [ngClass]="{ 'is-invalid': submitted && f.email.errors?.required }" />
+            [ngClass]="{ 'is-invalid': submitted && f.contactEmail.errors?.required }" />
         </div>
       </div>
 
@@ -163,13 +172,13 @@
         </div>
       </div>
 
-      <div class="input-wrap" nz-row>
+      <!-- <div class="input-wrap" nz-row>
         <label class="title-detail" nz-col [nzSpan]="8">Facebook<em class="fas fa-asterisk required"></em></label>
         <div nz-col [nzSpan]="16">
           <input nz-input formControlName="facebook"
             [ngClass]="{ 'is-invalid': submitted && f.facebook.errors?.required }" />
         </div>
-      </div>
+      </div> -->
 
       <div class="input-wrap" nz-row>
         <label class="title-detail" nz-col [nzSpan]="8">Hạng<em class="fas fa-asterisk required"></em></label>

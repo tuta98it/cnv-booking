@@ -573,18 +573,18 @@ export class GeneralService extends BaseService {
 
   // Hotel
   getHotels(): Observable<any> {
-    return this.get(UrlConstant.HOTEL);
+    return this.get(`/api${UrlConstant.HOTEL}`);
   }
 
-  addHotel(hotel: any): any{
-    this.post(UrlConstant.HOTEL, hotel);
+  addHotel(hotel: any): any {
+    return this.post(`/api${UrlConstant.HOTEL}`, hotel);
   }
 
-  updateHotelByID(idHotel: any, hotel: any): any{
-    this.put(`UrlConstant.HOTEL/${idHotel}`, hotel);
+  updateHotelByID(idHotel: any, hotel: any): Observable<any> {
+    return this.put(`/api${UrlConstant.HOTEL}/${idHotel}`, hotel);
   }
 
-  deleteHotelByID(idHotel: any): any{
-    this.delete(`UrlConstant.HOTEL/${idHotel}`, idHotel);
+  deleteHotelByID(idHotel: any): Observable<any> {
+    return this.delete(`/api${UrlConstant.HOTEL}/${idHotel}`, idHotel);
   }
 }

@@ -472,12 +472,13 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
     this.formAdd = this.fb.group({
       id: [null],
       name: [null, [Validators.required]],
+      code: [null, [Validators.required]],
       phoneNo: [null, [Validators.required]],
       contactEmail: [null, [Validators.required]],
       address: [null, [Validators.required]],
       description: [null],
       websiteUrl: [null, [Validators.required]],
-      facebook: [null, [Validators.required]],
+      // facebook: [null, [Validators.required]],
       ratingStar: [null, [Validators.required]],
       numRooms: [null, [Validators.required]],
     });
@@ -589,12 +590,13 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
     this.formAdd.reset();
     this.formAdd.patchValue({
       name: '',
+      code: '',
       phoneNo: '',
       contactEmail: '',
       address: '',
       description: '',
       websiteUrl: '',
-      facebook: '',
+      // facebook: '',
       ratingStar: '',
       numRooms: ''
     });
@@ -610,12 +612,13 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
     this.formAdd.patchValue({
       id: this.item.id,
       name: this.item.name,
+      code: this.item.code,
       phoneNo: this.item.phoneNo,
       contactEmail: this.item.contactEmail,
       address: this.item.address,
       description: this.item.description,
       websiteUrl: this.item.websiteUrl,
-      facebook: this.item.facebook,
+      // facebook: this.item.facebook,
       ratingStar: this.item.ratingStar,
       numRooms: this.item.numRooms,
     });
