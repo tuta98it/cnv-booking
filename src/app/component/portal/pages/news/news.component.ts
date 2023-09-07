@@ -343,9 +343,19 @@ export class NewsComponent extends TableSelectionAbstract implements OnInit, OnD
     return false;
   }
 
-  previewImagesNews(images: any) {
-    console.log('images: ', images);
-    this.nzImageService.preview(images, { nzZoom: 1.5, nzRotate: 0 });
+  previewImagesNews(image: any) {
+    console.log('image: ', image);
+    let arrImage: any[] = [];
+    if (typeof image === 'string') {
+      let objCurrent = {
+        src : image,
+        // width : '200px',
+        // height : '200px',
+        alt : 'Ảnh trực quan'
+      }
+      arrImage.push(objCurrent);
+    }
+    this.nzImageService.preview(arrImage, { nzZoom: 1.5, nzRotate: 0 });
   }
 
   handleChange(info: NzUploadChangeParam): void {
