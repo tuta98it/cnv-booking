@@ -587,4 +587,23 @@ export class GeneralService extends BaseService {
   deleteHotelByID(idHotel: any): Observable<any> {
     return this.delete(`/api${UrlConstant.HOTEL}/${idHotel}`, idHotel);
   }
+
+
+  // News
+  getNews(): Observable<any> {
+    return this.get(`/api${UrlConstant.NEWS}`);
+  }
+
+  addNews(News: any): Observable<any> {
+    return this.post(`/api${UrlConstant.NEWS}`, News);
+  }
+
+  updateNewsByID(idNews: any, News: any): Observable<any> {
+    return this.put(`/api${UrlConstant.NEWS}/${idNews}`, News);
+  }
+
+  deleteNewsByID(idNews: any): Observable<any> {
+    return this.delete(`/api${UrlConstant.NEWS}/${idNews}`, idNews);
+  }
+
 }

@@ -42,6 +42,7 @@
           <li nz-menu-item [nzSelected]="url === '/user-register'"><a routerLink="/user-register">Danh sách đăng kí</a></li>
           <li *ngIf='userInfo.userType == 0' nz-menu-item [nzSelected]="url === '/doi-tac'"><a routerLink="/doi-tac">Danh sách đối tác</a></li>
           <li nz-menu-item [nzSelected]="url === '/hotel'"><a routerLink="/hotel">Đặt phòng</a></li>
+          <li nz-menu-item [nzSelected]="url === '/news'"><a routerLink="/news">Tin tức</a></li>
           <li nz-submenu nzTitle="Vé máy bay">
             <ul>
               <li nz-menu-item [nzSelected]="url === '/admin-history-holding-ticket'"><a routerLink="/admin-history-holding-ticket">Quản lý giữ vé</a></li>

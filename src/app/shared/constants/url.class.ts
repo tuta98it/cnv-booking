@@ -53,4 +53,7 @@ export class  UrlConstant {
   // Hotel
   public static readonly HOTEL = "/Hotel";
 
+    // News
+    public static readonly NEWS = "/News";
+
 }

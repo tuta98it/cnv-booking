@@ -7,7 +7,7 @@
     <!-- Tìm kiếm -->
     <!-- [(ngModel)]="searchText" (keyup.enter)="onSearch()"-->
     <input style="width: 200px; border-radius: 4px; height: 32px;" class="mgr10" nzSize="small" nz-input type="text"
-      [(ngModel)]="searchText" (keyup)="onSearch()" placeholder="Tìm kiếm theo tên khách, địa chỉ, STD ...">
+      [(ngModel)]="searchText" (keyup)="onSearch()" placeholder="Tìm kiếm theo tên khách sạn, mã khách sạn, STĐ ...">
 
     <!-- Nút thêm -->
     <button nz-button nzType="primary" class="ant-btn-primary" type="button" (click)="showModalAdd()" *ngIf="checkAdd">
@@ -22,7 +22,7 @@
 </div>
 
 
-<dx-data-grid id="gridContainer" [dataSource]="filteredDatas" #ListAccount [showColumnLines]="true"
+<dx-data-grid id="gridContainer" [dataSource]="filteredDatas" #ListHotels [showColumnLines]="true"
   [showRowLines]="true" [height]="dxGridHeight" [rowAlternationEnabled]="true" [showBorders]="true"
   [allowColumnResizing]="true" columnResizingMode="widget" [columnMinWidth]="50" [columnAutoWidth]="true"
   (onExporting)="onExporting($event)">
@@ -51,11 +51,11 @@
     cellTemplate="cellUtilityHotels"></dxi-column>
 
   <div *dxTemplate="let item of 'cellBtnTemplate'">
-    <button title="Xóa tài khoản" nz-button nzSize="small" nzType="default" class="btn-right button-update ant-btn-red"
+    <button title="Xóa khách sạn" nz-button nzSize="small" nzType="default" class="btn-right button-update ant-btn-red"
       (click)="showDeleteConfirm(item.data.id)" *ngIf="checkUpdate">
       <span class="fa fa-times fa-fw"></span>
     </button>
-    <button title="Chỉnh sửa thông tin tài khoản" nz-button nzSize="small" nzType="default"
+    <button title="Chỉnh sửa thông tin khách sạn" nz-button nzSize="small" nzType="default"
       class="btn-right button-update" (click)="showModalUpdate(item.data)" *ngIf="checkUpdate">
       <span class="fa fa-edit fa-fw"></span>
     </button>

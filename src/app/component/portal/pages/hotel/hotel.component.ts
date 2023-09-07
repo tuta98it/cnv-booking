@@ -31,7 +31,7 @@ import { NzUploadChangeParam } from 'ng-zorro-antd/upload';
   styleUrls: ['./hotel.component.scss']
 })
 export class HotelComponent extends TableSelectionAbstract implements OnInit, OnDestroy {
-  @ViewChild("ListAccount") dataGridDetail: DxDataGridComponent;
+  @ViewChild("ListHotels") dataGridDetail: DxDataGridComponent;
   // @ViewChild(DxDataGridComponent, { static: false }) dataGrid: DxDataGridComponent;
 
 
@@ -514,13 +514,6 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
 
   getListData() {
     this.loading = true;
-    // this.datas = this.hotels;
-    // let stt = 0;
-    // this.datas.forEach(en => {
-    //   en.stt = ++stt;
-    // });
-    // this.filteredDatas = this.datas;
-    this.filteredDatas = this.datas;
     this.generalService.getHotels().subscribe((res: any) => {
       this.datas = res;
       let stt = 0;
@@ -558,8 +551,8 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
   showDeleteConfirm(id: any): void {
     this.get();
     this.modalService.confirm({
-      nzTitle: 'Bạn có chắc muốn xóa tài khoản này?',
-      nzContent: '<b style="color: red;">Tài khoản sẽ thể hoàn tác sau khi xoá. Ấn đồng ý để xoá</b>',
+      nzTitle: 'Bạn có chắc muốn xóa khách sạn này?',
+      nzContent: '<b style="color: red;">khách sạn sẽ thể hoàn tác sau khi xoá. Ấn đồng ý để xoá</b>',
       nzOkDanger: true,
       nzOkText: 'Đồng ý',
       nzCancelText: 'Không',
@@ -606,7 +599,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
     this.isVisibleAdd = true;
     this.submitted = false;
     this.item = data;
-    this.titleFormUser = 'Sủa thông tin tài khoản';
+    this.titleFormUser = 'Sủa thông tin khách sạn';
     this.updated = true;
 
     this.formAdd.patchValue({
@@ -679,7 +672,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
 
   onDeleteClick(id: any): void {
     // alert(id)
-    const c = confirm('Bạn có chắc muốn xóa tài khoản này?');
+    const c = confirm('Bạn có chắc muốn xóa khách sạn này?');
     // this.modalService.confirm({
     //   nzTitle: 'Confirm',
     //   nzContent: 'Bạn có muốn xóa hay không?',
@@ -774,10 +767,6 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
   }
 
   handleChange(info: NzUploadChangeParam): void {
-
-    console.log('imagesForm:', this.imagesForm);
-
-
     if (info.file.status !== 'uploading') {
       console.log(info.file, info.fileList);
     }

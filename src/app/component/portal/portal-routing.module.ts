@@ -9,6 +9,7 @@ import { AdminTicketComponent } from './pages/admin-ticket/admin-ticket.componen
 import { AdminVoidTicketComponent } from './pages/admin-void-ticket/admin-void-ticket.component';
 import { AdminHistoryHoldingTicketComponent } from './pages/admin-history-holding-ticket/admin-history-holding-ticket.component';
 import { HotelComponent } from './pages/hotel/hotel.component';
+import { NewsComponent } from './pages/news/news.component';
 
 const routes: Routes = [
   {
@@ -120,6 +121,14 @@ const routes: Routes = [
         data: {
           pagename: 'Đặt phòng',
           breadcrumb: 'Đặt phòng'
+        }
+      },
+      {
+        path: 'news',
+        component: NewsComponent,
+        data: {
+          pagename: 'Tin tức',
+          breadcrumb: 'Tin tức'
         }
       },
     ]

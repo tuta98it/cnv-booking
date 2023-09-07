@@ -30,6 +30,8 @@ import { AdminVoidTicketComponent } from './pages/admin-void-ticket/admin-void-t
 import { AdminTicketComponent } from './pages/admin-ticket/admin-ticket.component';
 import { AdminHistoryHoldingTicketComponent } from './pages/admin-history-holding-ticket/admin-history-holding-ticket.component';
 import { HotelComponent } from './pages/hotel/hotel.component';
+import { NewsComponent } from './pages/news/news.component';
+import { DxDateBoxModule } from 'devextreme-angular';
 const antDesignIcons = AllIcons as {
   [key: string]: IconDefinition;
 };
@@ -45,7 +47,8 @@ const icons: IconDefinition[] = Object.keys(antDesignIcons).map(key => antDesign
     DashboardComponent,
     SelectUnitComponent,
     UserRegisterComponent,
-    HotelComponent
+    HotelComponent,
+    NewsComponent
   ],
   imports: [
     SharedModule,
@@ -58,7 +61,8 @@ const icons: IconDefinition[] = Object.keys(antDesignIcons).map(key => antDesign
     DxDataGridModule,
     DxNumberBoxModule,
     NzAvatarModule,
-    NzTabsModule
+    NzTabsModule,
+    DxDateBoxModule
   ],
   providers: [GeneralService, FileManagerService, MenuService, SignalRService, DateFormatPipe, ]
 })
