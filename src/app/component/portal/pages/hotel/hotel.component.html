@@ -61,11 +61,11 @@
     </button>
   </div>
   <div *dxTemplate="let linkWebsite of 'cellWebsite'">
-    <a *ngIf="linkWebsite.value" href='{{linkWebsite.value}}' target="_blank" rel="noopener noreferrer">Website
+    <a *ngIf="linkWebsite.value" href='{{linkWebsite.value}}' target="_blank">Website
       {{linkWebsite.data.name}}</a>
   </div>
   <div *dxTemplate="let linkFacebook of 'cellFacebook'">
-    <a *ngIf="linkFacebook.value" href='{{linkFacebook.value}}' target="_blank" rel="noopener noreferrer">Facebook
+    <a *ngIf="linkFacebook.value" href='{{linkFacebook.value}}' target="_blank">Facebook
       {{linkFacebook.data.name}}</a>
   </div>
   <div *dxTemplate="let images of 'cellImages'">
@@ -124,7 +124,7 @@
 
 
       <div class="input-wrap" nz-row>
-        <label class="title-detail" nz-col [nzSpan]="8">Mã khách hàng<em class="fas fa-asterisk required"></em></label>
+        <label class="title-detail" nz-col [nzSpan]="8">Mã khách sạn<em class="fas fa-asterisk required"></em></label>
         <div nz-col [nzSpan]="16">
           <input nz-input formControlName="code" [ngClass]="{ 'is-invalid': submitted && f.code.errors?.required }" />
         </div>

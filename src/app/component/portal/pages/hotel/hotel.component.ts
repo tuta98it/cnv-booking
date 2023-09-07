@@ -555,7 +555,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
     });
   }
 
-  showDeleteConfirm(id): void {
+  showDeleteConfirm(id: any): void {
     this.get();
     this.modalService.confirm({
       nzTitle: 'Bạn có chắc muốn xóa tài khoản này?',
