@@ -481,6 +481,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
       // facebook: [null, [Validators.required]],
       ratingStar: [null, [Validators.required]],
       numRooms: [null, [Validators.required]],
+      imageUrl: [null, [Validators.required]],
     });
 
 
@@ -591,7 +592,8 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
       websiteUrl: '',
       // facebook: '',
       ratingStar: '',
-      numRooms: ''
+      numRooms: '',
+      imageUrl: ''
     });
   }
 
@@ -614,6 +616,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
       // facebook: this.item.facebook,
       ratingStar: this.item.ratingStar,
       numRooms: this.item.numRooms,
+      imageUrl: this.item.imageUrl,
     });
   }
 
@@ -757,13 +760,19 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
     return false;
   }
 
-  previewImagesHotel(images: any) {
-    images.forEach((element: any) => {
-
-    });
-    console.log('images: ', images);
-
-    this.nzImageService.preview(images, { nzZoom: 1.5, nzRotate: 0 });
+  previewImagesHotel(image: any) {
+    console.log('image: ', image);
+    let arrImage: any[] = [];
+    if (typeof image === 'string') {
+      let objCurrent = {
+        src : image,
+        // width : '200px',
+        // height : '200px',
+        alt : 'Ảnh trực quan'
+      }
+      arrImage.push(objCurrent);
+    }
+    this.nzImageService.preview(arrImage, { nzZoom: 1.5, nzRotate: 0 });
   }
 
   handleChange(info: NzUploadChangeParam): void {

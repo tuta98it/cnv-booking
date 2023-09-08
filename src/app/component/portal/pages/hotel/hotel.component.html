@@ -46,7 +46,7 @@
   <dxi-column caption="Website" [width]="200" dataField="websiteUrl" cellTemplate="cellWebsite"></dxi-column>
   <dxi-column caption="Facebook" [width]="200" dataField="facebook" cellTemplate="cellFacebook" [visible]="false"></dxi-column>
   <dxi-column caption="Hạng" [width]="100" dataField="ratingStar"></dxi-column>
-  <dxi-column caption="Hình ảnh khách sạn" [width]="200" dataField="images" cellTemplate="cellImages"></dxi-column>
+  <dxi-column caption="Hình ảnh khách sạn" [width]="200" dataField="imageUrl" cellTemplate="cellImages"></dxi-column>
   <dxi-column caption="Tiện ích khách sạn" cssClass="text-center" [width]="200"
     cellTemplate="cellUtilityHotels"></dxi-column>
 
@@ -198,6 +198,13 @@
         </div>
       </div>
 
+      <div class="input-wrap" nz-row>
+        <label class="title-detail" nz-col [nzSpan]="8">URL ảnh<em class="fas fa-asterisk required"></em></label>
+        <div nz-col [nzSpan]="16">
+          <input nz-input formControlName="imageUrl"
+            [ngClass]="{'is-invalid': submitted && f.imageUrl.errors?.required}" />
+        </div>
+      </div>
 
 
       <!-- <div class="input-wrap" nz-row>
