@@ -766,8 +766,8 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
     if (typeof image === 'string') {
       let objCurrent = {
         src : image,
-        // width : '200px',
-        // height : '200px',
+        width : '50%',
+        height : '50%',
         alt : 'Ảnh trực quan'
       }
       arrImage.push(objCurrent);
