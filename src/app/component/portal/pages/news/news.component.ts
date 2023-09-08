@@ -32,16 +32,9 @@ import { NzUploadChangeParam } from 'ng-zorro-antd/upload';
 })
 export class NewsComponent extends TableSelectionAbstract implements OnInit, OnDestroy {
   @ViewChild("ListNews") dataGridDetail: DxDataGridComponent;
-  // @ViewChild(DxDataGridComponent, { static: false }) dataGrid: DxDataGridComponent;
-
-
   datas: any[] = [];
-  data: any;
-  passwordVisible: boolean;
-  repeatpasswordVisible: boolean;
   isVisibleAdd: boolean;
   isVisibleUpdate: boolean;
-  isVisiblePassword: boolean;
   item: any;
   loading: boolean;
   checkDelete = true;
@@ -49,17 +42,7 @@ export class NewsComponent extends TableSelectionAbstract implements OnInit, OnD
   checkUpdate = true;
   submitted = false;
   updated: boolean;
-  pageSize: any;
-  page: any;
-  defaultPage: any;
   formAdd: FormGroup;
-  formPassword: FormGroup;
-  allRoles: any[];
-  usergroups: any[];
-  baseUrl: any;
-  signature: any = {};
-  urlServiceSignature = '';
-  groups = [];
   filteredDatas: any[] = [];
   searchText = '';
   userInfor: any;
@@ -71,8 +54,6 @@ export class NewsComponent extends TableSelectionAbstract implements OnInit, OnD
     private modalService: NzModalService,
     private notificationService: NotificationService,
     private generalService: GeneralService,
-    private actionsSubject: ActionsSubject,
-    private configService: AppConfigService,
     private fb: FormBuilder,
     private dateFormatPipe: DateFormatPipe,
     private nzImageService: NzImageService,
@@ -89,21 +70,9 @@ export class NewsComponent extends TableSelectionAbstract implements OnInit, OnD
     });
 
 
-    this.signature = {
-      Authorization: 'Bearer ' + localStorage.getItem(Constant.TOKEN),
-    };
-
-    this.urlServiceSignature =
-      this.configService.getConfig().api.baseUrl + `/Upload/UploadFile`;
   }
 
   ngOnInit(): void {
-    this.pageSize = this.configService.getConfig().pageSize;
-    this.page = this.configService.getConfig().page;
-    this.defaultPage = this.configService.getConfig().defaultPage;
-    this.baseUrl = this.configService.getConfig().api.baseUrl;
-
-    this.get();
     this.getUserInfo();
     this.getListData();
   }
@@ -141,14 +110,9 @@ export class NewsComponent extends TableSelectionAbstract implements OnInit, OnD
     return this.formAdd.controls;
   }
 
-  get() {
-    this.translate.use(this.translate.currentLang).subscribe(data => {
-      this.data = data;
-    });
-  }
+
 
   showDeleteConfirm(id: any): void {
-    this.get();
     this.modalService.confirm({
       nzTitle: 'Bạn có chắc muốn xóa bài đăng này?',
       nzContent: '<b style="color: red;">bài đăng sẽ thể hoàn tác sau khi xoá. Ấn đồng ý để xoá</b>',
