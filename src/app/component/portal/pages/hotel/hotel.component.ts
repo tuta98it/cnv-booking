@@ -25,6 +25,7 @@ import { IsEmptyPipe } from 'src/app/shared/pipe/is-empty.pipe';
 import { filter } from 'rxjs/operators';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzUploadChangeParam } from 'ng-zorro-antd/upload';
+import { NzUploadFile } from 'ng-zorro-antd/upload';
 @Component({
   selector: 'app-hotel',
   templateUrl: './hotel.component.html',
@@ -53,6 +54,10 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
   titleFormUser = '';
   isVisibleDetailUtility: boolean = false;
   listDetailUtility: any[];
+  uploadHeader: any;
+  baseImageurl = '';
+  uploadUrl = '';
+  fileList: NzUploadFile[] = [];
   constructor(
     public translate: TranslateService,
     private modalService: NzModalService,
@@ -80,6 +85,11 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
       numRooms: [null, [Validators.required]],
       imageUrl: [null, [Validators.required]],
     });
+    this.uploadHeader = {
+      Authorization: 'Bearer ' + localStorage.getItem(Constant.TOKEN),
+    };
+
+    this.uploadUrl = `${this.configService.getConfig().api.baseUrl}/Upload`;
   }
 
   ngOnInit(): void {
@@ -354,11 +364,9 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
   }
 
   handleChange(info: NzUploadChangeParam): void {
-    if (info.file.status !== 'uploading') {
-      console.log(info.file, info.fileList);
-    }
     if (info.file.status === 'done') {
       this.msg.success(`${info.file.name} file uploaded successfully`);
+      this.formAdd.controls['imageUrl'].setValue(`${this.configService.getConfig().api.baseUrl}/${info.file.response.path}`);
     } else if (info.file.status === 'error') {
       this.msg.error(`${info.file.name} file upload failed.`);
     }

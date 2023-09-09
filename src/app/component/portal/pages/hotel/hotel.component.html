@@ -172,13 +172,6 @@
         </div>
       </div>
 
-      <!-- <div class="input-wrap" nz-row>
-        <label class="title-detail" nz-col [nzSpan]="8">Facebook<em class="fas fa-asterisk required"></em></label>
-        <div nz-col [nzSpan]="16">
-          <input nz-input formControlName="facebook"
-            [ngClass]="{ 'is-invalid': submitted && f.facebook.errors?.required }" />
-        </div>
-      </div> -->
 
       <div class="input-wrap" nz-row>
         <label class="title-detail" nz-col [nzSpan]="8">Hạng<em class="fas fa-asterisk required"></em></label>
@@ -200,9 +193,17 @@
 
       <div class="input-wrap" nz-row>
         <label class="title-detail" nz-col [nzSpan]="8">URL ảnh<em class="fas fa-asterisk required"></em></label>
-        <div nz-col [nzSpan]="16">
+        <!-- <div nz-col [nzSpan]="16">
           <input nz-input formControlName="imageUrl"
             [ngClass]="{'is-invalid': submitted && f.imageUrl.errors?.required}" />
+        </div> -->
+        <div nz-col [nzSpan]="16">
+          <nz-upload [nzAction]="uploadUrl" nzName="postedFile" [nzHeaders]="uploadHeader" (nzChange)="handleChange($event)" [nzFileList]="fileList">
+            <button nz-button>
+              <span nz-icon nzType="upload"></span>
+              Nhấn để tải ảnh
+            </button>
+          </nz-upload>
         </div>
       </div>
 

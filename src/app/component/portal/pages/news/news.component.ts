@@ -15,6 +15,7 @@ import { saveAs } from 'file-saver-es';
 import { NzImageService } from 'ng-zorro-antd/image';
 // import { removeAccents } from ;
 import { removeAccents } from 'src/app/shared/utils/filters/remove-accents';
+import { NzUploadFile } from 'ng-zorro-antd/upload';
 import {
   DxDataGridComponent,
   DxTemplateDirective,
@@ -49,6 +50,10 @@ export class NewsComponent extends TableSelectionAbstract implements OnInit, OnD
   titleFormUser = '';
   isVisibleDetailUtility: boolean = false;
   listDetailUtility: any[];
+  uploadHeader: any;
+  baseImageurl = '';
+  uploadUrl = '';
+  fileList: NzUploadFile[] = [];
   constructor(
     public translate: TranslateService,
     private modalService: NzModalService,
@@ -57,7 +62,8 @@ export class NewsComponent extends TableSelectionAbstract implements OnInit, OnD
     private fb: FormBuilder,
     private dateFormatPipe: DateFormatPipe,
     private nzImageService: NzImageService,
-    private msg: NzMessageService
+    private msg: NzMessageService,
+    private configService: AppConfigService,
   ) {
     super('id');
     this.formAdd = this.fb.group({
@@ -70,6 +76,11 @@ export class NewsComponent extends TableSelectionAbstract implements OnInit, OnD
     });
 
 
+    this.uploadHeader = {
+      Authorization: 'Bearer ' + localStorage.getItem(Constant.TOKEN),
+    };
+
+    this.uploadUrl = `${this.configService.getConfig().api.baseUrl}/Upload`;
   }
 
   ngOnInit(): void {
@@ -148,9 +159,10 @@ export class NewsComponent extends TableSelectionAbstract implements OnInit, OnD
       title: '',
       imageUrl: '',
       content: '',
-      datePosted: '',
+      datePosted: new Date(),
       summary: '',
     });
+    this.fileList = [];
   }
 
   showModalUpdate(data: any) {
@@ -323,11 +335,9 @@ export class NewsComponent extends TableSelectionAbstract implements OnInit, OnD
   }
 
   handleChange(info: NzUploadChangeParam): void {
-    if (info.file.status !== 'uploading') {
-      console.log(info.file, info.fileList);
-    }
     if (info.file.status === 'done') {
       this.msg.success(`${info.file.name} file uploaded successfully`);
+      this.formAdd.controls['imageUrl'].setValue(`${this.configService.getConfig().api.baseUrl}/${info.file.response.path}`);
     } else if (info.file.status === 'error') {
       this.msg.error(`${info.file.name} file upload failed.`);
     }
