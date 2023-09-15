@@ -613,7 +613,6 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
   }
 
   openModalUpload(data: any, type: any) {
-    this.newFileResults = [];
     this.selectedResult = data;
     this.visibleUpload = true;
     if (data.partnerFile != null) {

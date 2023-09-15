@@ -26,6 +26,8 @@ import { filter } from 'rxjs/operators';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzUploadChangeParam } from 'ng-zorro-antd/upload';
 import { NzUploadFile } from 'ng-zorro-antd/upload';
+import { StringUtils } from 'src/app/shared/utils/string-utils.class';
+
 @Component({
   selector: 'app-hotel',
   templateUrl: './hotel.component.html',
@@ -58,6 +60,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
   baseImageurl = '';
   uploadUrl = '';
   fileList: NzUploadFile[] = [];
+
   constructor(
     public translate: TranslateService,
     private modalService: NzModalService,
@@ -183,6 +186,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
       numRooms: '',
       imageUrl: ''
     });
+    this.uploadUrl = `${this.configService.getConfig().api.baseUrl}/Upload`;
   }
 
   showModalUpdate(data: any) {
@@ -206,6 +210,17 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
       numRooms: this.item.numRooms,
       imageUrl: this.item.imageUrl,
     });
+    this.fileList = [];
+
+    this.fileList = [
+      {
+        uid: '1',
+        name: StringUtils.getFileNameFromImageURL(this.item.imageUrl),
+        status: 'done',
+        url: this.item.imageUrl,
+      },
+    ];
+    this.uploadUrl = `${this.configService.getConfig().api.baseUrl}/Upload/UploadHotelImage?hotelId=${this.item.id}`;
   }
 
 
@@ -366,6 +381,12 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
   handleChange(info: NzUploadChangeParam): void {
     if (info.file.status === 'done') {
       this.msg.success(`${info.file.name} file uploaded successfully`);
+      this.fileList = [{
+        uid: '1',
+        name: info.file.name,
+        status: 'done',
+        url: `${this.configService.getConfig().api.baseUrl}/${info.file.response.path}`,
+      },];
       this.formAdd.controls['imageUrl'].setValue(`${this.configService.getConfig().api.baseUrl}/${info.file.response.path}`);
     } else if (info.file.status === 'error') {
       this.msg.error(`${info.file.name} file upload failed.`);

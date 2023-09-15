@@ -22,10 +22,10 @@ import {
   DxTooltipComponent,
   DxTooltipModule,
 } from "devextreme-angular";
-import { IsEmptyPipe } from 'src/app/shared/pipe/is-empty.pipe';
 import { filter } from 'rxjs/operators';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzUploadChangeParam } from 'ng-zorro-antd/upload';
+import { StringUtils } from 'src/app/shared/utils/string-utils.class';
 @Component({
   selector: 'app-news',
   templateUrl: './news.component.html',
@@ -180,6 +180,15 @@ export class NewsComponent extends TableSelectionAbstract implements OnInit, OnD
       datePosted: this.item.datePosted,
       summary: this.item.summary,
     });
+
+    this.fileList = [
+      {
+        uid: '1',
+        name: StringUtils.getFileNameFromImageURL(this.item.imageUrl),
+        status: 'done',
+        url: this.item.imageUrl,
+      },
+    ];
   }
 
 
@@ -299,35 +308,15 @@ export class NewsComponent extends TableSelectionAbstract implements OnInit, OnD
   }
 
 
-  private isEmpty(value: any): boolean {
-    if (value === null || value === undefined) {
-      return true;
-    }
-
-    if (typeof value === 'string' && value.trim() === '') {
-      return true;
-    }
-
-    if (Array.isArray(value) && value.length === 0) {
-      return true;
-    }
-
-    if (typeof value === 'object' && Object.keys(value).length === 0) {
-      return true;
-    }
-
-    return false;
-  }
-
   previewImagesNews(image: any) {
     console.log('image: ', image);
     let arrImage: any[] = [];
     if (typeof image === 'string') {
       let objCurrent = {
-        src : image,
-        width : '50%',
-        height : '50%',
-        alt : 'Ảnh trực quan'
+        src: image,
+        width: '50%',
+        height: '50%',
+        alt: 'Ảnh trực quan'
       }
       arrImage.push(objCurrent);
     }
@@ -337,6 +326,12 @@ export class NewsComponent extends TableSelectionAbstract implements OnInit, OnD
   handleChange(info: NzUploadChangeParam): void {
     if (info.file.status === 'done') {
       this.msg.success(`${info.file.name} file uploaded successfully`);
+      this.fileList = [{
+        uid: '1',
+        name: info.file.name,
+        status: 'done',
+        url: `${this.configService.getConfig().api.baseUrl}/${info.file.response.path}`,
+      },];
       this.formAdd.controls['imageUrl'].setValue(`${this.configService.getConfig().api.baseUrl}/${info.file.response.path}`);
     } else if (info.file.status === 'error') {
       this.msg.error(`${info.file.name} file upload failed.`);
