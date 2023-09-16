@@ -1,5 +1,6 @@
 export class StringUtils {
   static getFileNameFromImageURL(imageUrl: any) {
+    if(!imageUrl) return
     // Sử dụng hàm `split('/')` để tách chuỗi theo dấu "/"
     var parts = imageUrl.split('/');
     // Lấy phần tử cuối cùng trong mảng parts (chứa tên tệp)

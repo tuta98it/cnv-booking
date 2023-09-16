@@ -37,9 +37,12 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
   @ViewChild("ListHotels") dataGridDetail: DxDataGridComponent;
   datas: any[] = [];
   data: any;
+  listUtilityHotel = [];
+  listUtilityRoom = [];
   passwordVisible: boolean;
   repeatpasswordVisible: boolean;
-  isVisibleAdd: boolean;
+  isVisibleAddHotel: boolean;
+  isVisibleAddRoom: boolean;
   isVisibleUpdate: boolean;
   isVisiblePassword: boolean;
   item: any;
@@ -49,11 +52,13 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
   checkUpdate = true;
   submitted = false;
   updated: boolean;
-  formAdd: FormGroup;
+  formAddHotel: FormGroup;
+  formAddRoom: FormGroup;
   filteredDatas: any[] = [];
   searchText = '';
   userInfor: any;
   titleFormUser = '';
+  titleFormRoom = '';
   isVisibleDetailUtility: boolean = false;
   listDetailUtility: any[];
   uploadHeader: any;
@@ -74,7 +79,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
     private msg: NzMessageService
   ) {
     super('id');
-    this.formAdd = this.fb.group({
+    this.formAddHotel = this.fb.group({
       id: [null],
       name: [null, [Validators.required]],
       code: [null, [Validators.required]],
@@ -83,11 +88,24 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
       address: [null, [Validators.required]],
       description: [null],
       websiteUrl: [null, [Validators.required]],
+      utilityHotels: [null],
       // facebook: [null, [Validators.required]],
       ratingStar: [null, [Validators.required]],
       numRooms: [null, [Validators.required]],
       imageUrl: [null, [Validators.required]],
     });
+
+    this.formAddRoom = this.fb.group({
+      id: [null],
+      name: [null, [Validators.required]],
+      description: [null],
+      roomNumber: [null, [Validators.required]],
+      floorNumber: [null,[Validators.required]],
+      price: [null, [Validators.required]],
+      imageUrl: [null, [Validators.required]],
+      utilityRooms: [null],
+    });
+
     this.uploadHeader = {
       Authorization: 'Bearer ' + localStorage.getItem(Constant.TOKEN),
     };
@@ -97,6 +115,8 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
 
   ngOnInit(): void {
     this.getUserInfo();
+    this.getListUtilityHotels();
+    this.getListUtilityRooms();
     this.getListData();
   }
 
@@ -127,6 +147,21 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
     });
   }
 
+
+  getListUtilityHotels() {
+    this.generalService.getListUtilityHotel().subscribe((res: any) => {
+      this.listUtilityHotel = res.data;
+      console.log("this.listUtilityHotel: ", this.listUtilityHotel);
+    });
+  }
+
+
+  getListUtilityRooms() {
+    this.generalService.getListUtilityRoom().subscribe((res: any) => {
+      this.listUtilityRoom = res.data;
+    });
+  }
+
   validateEmail(mail: any) {
     if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail) || !mail) {
       return (true);
@@ -135,8 +170,12 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
     return (false);
   }
 
-  get f() {
-    return this.formAdd.controls;
+  get formControlHotel() {
+    return this.formAddHotel.controls;
+  }
+
+  get formControlRoom() {
+    return this.formAddRoom.controls;
   }
 
 
@@ -168,12 +207,12 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
     });
   }
 
-  showModalAdd() {
-    this.isVisibleAdd = true;
+  showModalAddHotel() {
+    this.isVisibleAddHotel = true;
     this.submitted = false;
     this.titleFormUser = 'Thêm mới khách sạn';
-    this.formAdd.reset();
-    this.formAdd.patchValue({
+    this.formAddHotel.reset();
+    this.formAddHotel.patchValue({
       name: '',
       code: '',
       phoneNo: '',
@@ -181,22 +220,24 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
       address: '',
       description: '',
       websiteUrl: '',
+      utilityHotels: [],
       // facebook: '',
       ratingStar: '',
       numRooms: '',
       imageUrl: ''
     });
+    this.fileList = [];
     this.uploadUrl = `${this.configService.getConfig().api.baseUrl}/Upload`;
   }
 
-  showModalUpdate(data: any) {
-    this.isVisibleAdd = true;
+  showModalUpdateHotel(data: any) {
+    this.isVisibleAddHotel = true;
     this.submitted = false;
     this.item = data;
     this.titleFormUser = 'Sủa thông tin khách sạn';
     this.updated = true;
 
-    this.formAdd.patchValue({
+    this.formAddHotel.patchValue({
       id: this.item.id,
       name: this.item.name,
       code: this.item.code,
@@ -205,6 +246,8 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
       address: this.item.address,
       description: this.item.description,
       websiteUrl: this.item.websiteUrl,
+      utilityHotels: this.getIDUtilityHotels(this.item.utilityHotels),
+      // utilityHotels: this.getUtilityHotels(this.item.utilityHotels),
       // facebook: this.item.facebook,
       ratingStar: this.item.ratingStar,
       numRooms: this.item.numRooms,
@@ -223,27 +266,40 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
     this.uploadUrl = `${this.configService.getConfig().api.baseUrl}/Upload/UploadHotelImage?hotelId=${this.item.id}`;
   }
 
-
-  handleCancel() {
-    this.isVisibleAdd = false;
-    this.updated = false;
-    this.isVisibleDetailUtility = false;
-    this.formAdd.reset();
+  getIDUtilityHotels(utilityHotel: any) {
+    const s = [];
+    for (var i = 0; i < utilityHotel.length; i++) {
+      s[i] = utilityHotel[i].id;
+    }
+    return s;
   }
 
-  handleOk() {
+
+  handleCancel() {
+    this.isVisibleAddHotel = false;
+    this.isVisibleAddRoom = false;
+    this.updated = false;
+    this.isVisibleDetailUtility = false;
+    this.formAddHotel.reset();
+    this.formAddRoom.reset();
+  }
+
+  saveNewHotel() {
     this.submitted = true;
-    let formValue = this.formAdd.value;
+    let formValue = this.formAddHotel.value;
     const checkEmail = this.validateEmail(formValue.contactEmail);
     if (!checkEmail) {
       this.notificationService.showNotification(Constant.ERROR, 'Email không đúng định dạng!');
       return;
     }
-    if (this.formAdd.invalid) {
+    if (this.formAddHotel.invalid) {
       this.notificationService.showNotification(Constant.ERROR, 'Tồn tại thông tin khách sạn chưa điền!');
       return;
     }
 
+    const idsUtilityHotels = formValue.utilityHotels;
+    // Sử dụng phương thức filter để lọc các phần tử có id trong danh sách targetIds
+    formValue.utilityHotels = this.listUtilityHotel.filter(utilityHotel => idsUtilityHotels.includes(utilityHotel.id));
     if (formValue.id === 0) {
       delete formValue.id;
       /// add
@@ -252,7 +308,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
           this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
         } else {
           this.getListData();
-          this.isVisibleAdd = false;
+          this.isVisibleAddHotel = false;
           this.notificationService.showNotification(Constant.SUCCESS, Constant.MESSAGE_ADD_SUCCESS);
         }
       }, (error: any) => {
@@ -265,7 +321,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
           this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
         } else {
           this.getListData();
-          this.isVisibleAdd = false;
+          this.isVisibleAddHotel = false;
           this.notificationService.showNotification(Constant.SUCCESS, Constant.MESSAGE_UPDATE_SUCCESS);
         }
       }, error => {
@@ -368,17 +424,17 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
     let arrImage: any[] = [];
     if (typeof image === 'string') {
       let objCurrent = {
-        src : image,
-        width : '50%',
-        height : '50%',
-        alt : 'Ảnh trực quan'
+        src: image,
+        width: '50%',
+        height: '50%',
+        alt: 'Ảnh trực quan'
       }
       arrImage.push(objCurrent);
     }
     this.nzImageService.preview(arrImage, { nzZoom: 1.5, nzRotate: 0 });
   }
 
-  handleChange(info: NzUploadChangeParam): void {
+  handleChangeImages(info: NzUploadChangeParam, form: any): void {
     if (info.file.status === 'done') {
       this.msg.success(`${info.file.name} file uploaded successfully`);
       this.fileList = [{
@@ -387,7 +443,13 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
         status: 'done',
         url: `${this.configService.getConfig().api.baseUrl}/${info.file.response.path}`,
       },];
-      this.formAdd.controls['imageUrl'].setValue(`${this.configService.getConfig().api.baseUrl}/${info.file.response.path}`);
+      console.log('formType: ', form);
+
+      if(form === 'hotel'){
+        this.formAddHotel.controls['imageUrl'].setValue(`${this.configService.getConfig().api.baseUrl}/${info.file.response.path}`);
+      }else if(form === 'room'){
+        this.formAddRoom.controls['imageUrl'].setValue(`${this.configService.getConfig().api.baseUrl}/${info.file.response.path}`);
+      }
     } else if (info.file.status === 'error') {
       this.msg.error(`${info.file.name} file upload failed.`);
     }
@@ -411,5 +473,106 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
     this.listDetailUtility.forEach(en => {
       en.stt = ++stt;
     });
+  }
+
+  showModalAddRoom(idHotel: any) {
+    this.isVisibleAddRoom = true;
+    this.submitted = false;
+    this.titleFormRoom = 'Thêm mới phòng';
+    this.formAddRoom.reset();
+    this.formAddRoom.patchValue({
+      name: '',
+      description: '',
+      // hotelId: '' ,
+      hotelName: '',
+      roomNumber: '',
+      floorNumber: '',
+      price: '',
+      imageUrl: '',
+      utilityRooms: [],
+    });
+    this.fileList = [];
+    this.uploadUrl = `${this.configService.getConfig().api.baseUrl}/Upload`;
+  }
+
+  showModalUpdateRoom(idHotel: any, data: any) {
+    this.isVisibleAddRoom = true;
+    this.submitted = false;
+    this.item = data;
+    this.titleFormRoom = 'Sủa thông tin phòng';
+    this.updated = true;
+
+    this.formAddRoom.patchValue({
+      id: this.item.id,
+      name: this.item.name,
+      description: this.item.description,
+      roomNumber: this.item.roomNumber,
+      floorNumber: this.item.floorNumber,
+      price: this.item.price,
+      imageUrl: this.item.imageUrl,
+      utilityRooms: this.getIDUtilityRooms(this.item.utilityRooms),
+    });
+    this.fileList = this.item.imageUrl ? [
+      {
+        uid: '1',
+        name: this.item.imageUrl ? StringUtils.getFileNameFromImageURL(this.item.imageUrl) : '',
+        status: 'done',
+        url: this.item.imageUrl ? this.item.imageUrl : "",
+      },
+    ] : [];
+
+    // this.uploadUrl = `${this.configService.getConfig().api.baseUrl}/Upload/UploadHotelImage?hotelId=${this.item.id}`;
+  }
+
+  saveNewRoom() {
+    this.submitted = true;
+    let formValue = this.formAddRoom.value;
+    console.log('this.formAddRoom.value;', formValue);
+
+
+    if (this.formAddRoom.invalid) {
+      this.notificationService.showNotification(Constant.ERROR, 'Tồn tại thông tin khách sạn chưa điền!');
+      return;
+    }
+
+    const idsUtilityRooms = formValue.utilityRooms;
+    // Sử dụng phương thức filter để lọc các phần tử có id trong danh sách idsUtilityRooms
+    formValue.utilityRooms = this.listUtilityRoom.filter(utilityRoom => idsUtilityRooms.includes(utilityRoom.id));
+    if (formValue.id === 0) {
+      delete formValue.id;
+      /// add
+      this.generalService.addRoom(formValue).subscribe((res: any) => {
+        if (res.ret && res.ret[0].code !== 0) {
+          this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
+        } else {
+          this.getListData();
+          this.isVisibleAddRoom = false;
+          this.notificationService.showNotification(Constant.SUCCESS, Constant.MESSAGE_ADD_SUCCESS);
+        }
+      }, (error: any) => {
+
+      });
+    } else {
+      // / update
+      this.generalService.updateRoomByID(formValue.id, formValue).subscribe((res: any) => {
+        if (res.ret && res.ret[0].code !== 0) {
+          this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
+        } else {
+          this.getListData();
+          this.isVisibleAddRoom = false;
+          this.notificationService.showNotification(Constant.SUCCESS, Constant.MESSAGE_UPDATE_SUCCESS);
+        }
+      }, error => {
+
+      })
+    }
+  }
+
+  getIDUtilityRooms(utilityRooms: any) {
+    const ids = [];
+    for (var i = 0; i < utilityRooms.length; i++) {
+      ids[i] = utilityRooms[i].id;
+    }
+    return ids;
   }
 }

@@ -119,8 +119,8 @@ const routes: Routes = [
         path: 'hotel',
         component: HotelComponent,
         data: {
-          pagename: 'Đặt phòng',
-          breadcrumb: 'Đặt phòng'
+          pagename: 'DS khách sạn',
+          breadcrumb: 'DS khách sạn'
         }
       },
       {

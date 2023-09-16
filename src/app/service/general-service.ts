@@ -606,4 +606,69 @@ export class GeneralService extends BaseService {
     return this.delete(`/api${UrlConstant.NEWS}/${idNews}`, idNews);
   }
 
+  // Utility
+  private getListUtilityByType(utilityType: any): Observable<any> {
+    return this.get(`/api${UrlConstant.UTILITY}/GetByType/${utilityType}`);
+  }
+
+
+  getAllUtility(): Observable<any> {
+    return this.get(`/api${UrlConstant.UTILITY}`);
+  }
+
+  getListUtilityHotel(): Observable<any> {
+    // return this.get(`/api${UrlConstant.UTILITY}/1`);
+    return this.getListUtilityByType(1);
+  }
+
+
+  getListUtilityRoom(): Observable<any> {
+    // return this.get(`/api${UrlConstant.UTILITY}/2`);
+    return this.getListUtilityByType(2);
+  }
+
+
+  addUtilityRoom(nameUtilityRoom: any): Observable<any> {
+    const payload = {
+      id: 0,
+      type: 2,
+      name: nameUtilityRoom
+    }
+    return this.post(`/api${UrlConstant.UTILITY}`, payload);
+  }
+
+  addUtilityHotel(nameUtilityHotel: any): Observable<any> {
+    const payload = {
+      id: 0,
+      type: 1,
+      name: nameUtilityHotel
+    }
+    return this.post(`/api${UrlConstant.UTILITY}`, payload);
+  }
+
+  updateUtilityByID(idUtility: any, utility: any): Observable<any> {
+    return this.put(`/api${UrlConstant.UTILITY}/${idUtility}`, utility);
+  }
+
+  deleteUtilityByID(idUtility: any): Observable<any> {
+    return this.delete(`/api${UrlConstant.UTILITY}/${idUtility}`, idUtility);
+  }
+
+  // Rooms
+  getRooms(): Observable<any> {
+    return this.get(`/api${UrlConstant.ROOM}`);
+  }
+
+  addRoom(room: any): Observable<any> {
+    return this.post(`/api${UrlConstant.ROOM}`, room);
+  }
+
+  updateRoomByID(idRoom: any, room: any): Observable<any> {
+    return this.put(`/api${UrlConstant.ROOM}/${idRoom}`, room);
+  }
+
+  deleteRoomByID(idRoom: any): Observable<any> {
+    return this.delete(`/api${UrlConstant.ROOM}/${idRoom}`, idRoom);
+  }
+
 }

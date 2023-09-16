@@ -1,4 +1,4 @@
-export class  UrlConstant {
+export class UrlConstant {
   public static readonly LOGIN = '/oauth/token';
   public static readonly LOGOUT = '/login/logout';
   public static readonly VALIDATE = '/login/validate';
@@ -39,7 +39,7 @@ export class  UrlConstant {
   public static readonly LIST_MINETURNSSTAFF = '/mineturnsstaffs';
   public static readonly LIST_WAREHOUSE_FIRST_IMPORT = '/warehousefirstimport';
 
-  public static readonly  FILE = '/file';
+  public static readonly FILE = '/file';
   public static readonly LIST_CALAMVIEC = '/workshift';
   public static readonly LIST_VAITRO = '/workrole';
 
@@ -53,7 +53,13 @@ export class  UrlConstant {
   // Hotel
   public static readonly HOTEL = "/Hotel";
 
-    // News
-    public static readonly NEWS = "/News";
+  // News
+  public static readonly NEWS = "/News";
 
+
+  // Utility
+  public static readonly UTILITY = "/Utility";
+
+  // Room
+  public static readonly ROOM = "/Room";
 }
