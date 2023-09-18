@@ -57,7 +57,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
   filteredDatas: any[] = [];
   searchText = '';
   userInfor: any;
-  titleFormUser = '';
+  titleFormHotel = '';
   titleFormRoom = '';
   isVisibleDetailUtility: boolean = false;
   listDetailUtility: any[];
@@ -97,6 +97,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
 
     this.formAddRoom = this.fb.group({
       id: [null],
+      hotelId: [null],
       name: [null, [Validators.required]],
       description: [null],
       roomNumber: [null, [Validators.required]],
@@ -126,7 +127,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
 
   getUserInfo() {
     this.userInfor = JSON.parse(localStorage.getItem(Constant.USER_INFO));
-    console.log('this.userInfor: ', this.userInfor);
+    // console.log('this.userInfor: ', this.userInfor);
   }
 
   getListData() {
@@ -151,7 +152,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
   getListUtilityHotels() {
     this.generalService.getListUtilityHotel().subscribe((res: any) => {
       this.listUtilityHotel = res.data;
-      console.log("this.listUtilityHotel: ", this.listUtilityHotel);
+      // console.log("this.listUtilityHotel: ", this.listUtilityHotel);
     });
   }
 
@@ -210,9 +211,10 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
   showModalAddHotel() {
     this.isVisibleAddHotel = true;
     this.submitted = false;
-    this.titleFormUser = 'Thêm mới khách sạn';
+    this.titleFormHotel = 'Thêm mới khách sạn';
     this.formAddHotel.reset();
     this.formAddHotel.patchValue({
+      id: 0,
       name: '',
       code: '',
       phoneNo: '',
@@ -234,7 +236,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
     this.isVisibleAddHotel = true;
     this.submitted = false;
     this.item = data;
-    this.titleFormUser = 'Sủa thông tin khách sạn';
+    this.titleFormHotel = 'Sủa thông tin khách sạn';
     this.updated = true;
 
     this.formAddHotel.patchValue({
@@ -300,6 +302,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
     const idsUtilityHotels = formValue.utilityHotels;
     // Sử dụng phương thức filter để lọc các phần tử có id trong danh sách targetIds
     formValue.utilityHotels = this.listUtilityHotel.filter(utilityHotel => idsUtilityHotels.includes(utilityHotel.id));
+    console.log('formValue.id: ', formValue.id);
     if (formValue.id === 0) {
       delete formValue.id;
       /// add
@@ -398,27 +401,6 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
     );
   }
 
-
-  private isEmpty(value: any): boolean {
-    if (value === null || value === undefined) {
-      return true;
-    }
-
-    if (typeof value === 'string' && value.trim() === '') {
-      return true;
-    }
-
-    if (Array.isArray(value) && value.length === 0) {
-      return true;
-    }
-
-    if (typeof value === 'object' && Object.keys(value).length === 0) {
-      return true;
-    }
-
-    return false;
-  }
-
   previewImagesHotel(image: any) {
     console.log('image: ', image);
     let arrImage: any[] = [];
@@ -481,9 +463,10 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
     this.titleFormRoom = 'Thêm mới phòng';
     this.formAddRoom.reset();
     this.formAddRoom.patchValue({
+      id: 0,
       name: '',
       description: '',
-      // hotelId: '' ,
+      hotelId: idHotel,
       hotelName: '',
       roomNumber: '',
       floorNumber: '',
@@ -504,6 +487,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
 
     this.formAddRoom.patchValue({
       id: this.item.id,
+      hotelId: idHotel,
       name: this.item.name,
       description: this.item.description,
       roomNumber: this.item.roomNumber,
@@ -527,8 +511,6 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
   saveNewRoom() {
     this.submitted = true;
     let formValue = this.formAddRoom.value;
-    console.log('this.formAddRoom.value;', formValue);
-
 
     if (this.formAddRoom.invalid) {
       this.notificationService.showNotification(Constant.ERROR, 'Tồn tại thông tin khách sạn chưa điền!');

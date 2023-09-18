@@ -43,12 +43,11 @@
   <dxi-column caption="Email" [width]="300" dataField="contactEmail"></dxi-column>
   <dxi-column caption="Mô tả" [width]="400" dataField="description"></dxi-column>
   <dxi-column caption="Website" [width]="200" dataField="websiteUrl" cellTemplate="cellWebsite"></dxi-column>
-  <dxi-column caption="Facebook" [width]="200" dataField="facebook" cellTemplate="cellFacebook"
-    [visible]="false"></dxi-column>
-  <dxi-column caption="Hạng" [width]="100" dataField="ratingStar"></dxi-column>
-  <dxi-column caption="Hình ảnh khách sạn" [width]="200" dataField="imageUrl" cellTemplate="cellImages"></dxi-column>
-  <dxi-column caption="Tiện ích khách sạn" cssClass="text-center" [width]="200"
-    cellTemplate="cellUtilityHotels"></dxi-column>
+  <dxi-column caption="Facebook" [width]="200" dataField="facebook" cellTemplate="cellFacebook" [visible]="false"></dxi-column>
+  <dxi-column caption="Hạng" [width]="150" dataField="ratingStar"></dxi-column>
+  <dxi-column caption="Số phòng" [width]="150" dataField="numRooms"></dxi-column>
+  <dxi-column caption="Hình ảnh khách sạn" [width]="250" dataField="imageUrl" cellTemplate="cellImages"></dxi-column>
+  <dxi-column caption="Tiện ích khách sạn" cssClass="text-center" [width]="200" cellTemplate="cellUtilityHotels"></dxi-column>
 
   <div *dxTemplate="let item of 'cellBtnTemplate'">
     <button title="Xóa khách sạn" nz-button nzSize="small" nzType="default" class="btn-right button-update ant-btn-red"
@@ -77,28 +76,24 @@
     <a nz-button nzType="link" (click)="previewDetailUtilityHotels(item.data.utilityHotels)" nzBlock>«Chi tiết»</a>
   </div>
 
-  <div *dxTemplate="let order of 'detail'">
-
+  <div *dxTemplate="let hotel of 'detail'">
     <!-- Nút thêm -->
     <div class="action-button" style="clear: bottom;overflow: hidden;">
       <div class="form-group" style="float: left">
-        <h5>DS các phòng KS {{order.data.name}}</h5>
+        <h5>DS các phòng KS {{hotel.data.name}}</h5>
 
       </div>
       <div class="form-group" style="float: right; display: flex; align-items: center;">
         <!-- Tìm kiếm -->
 
         <!-- Nút thêm -->
-        <button nz-button nzType="primary" class="ant-btn-primary" type="button" (click)="showModalAddRoom(order.data.id)"
+        <button nz-button nzType="primary" class="ant-btn-primary" type="button" (click)="showModalAddRoom(hotel.data.id)"
           *ngIf="checkAdd">
           <em class="fas fa-plus fa-fw" style="margin-right: 4px;"></em> Thêm phòng</button>
       </div>
     </div>
-
-
-
-    <!-- <dxi-column caption="Địa chỉ" [width]="200">{{order.data.name}}</dxi-column> -->
-    <dx-data-grid id="gridDetail" [dataSource]="order.data.roomHotels" [showBorders]="true">
+    <!-- <dxi-column caption="Địa chỉ" [width]="200">{{hotel.data.name}}</dxi-column> -->
+    <dx-data-grid id="gridDetail" [dataSource]="hotel.data.roomHotels" [showBorders]="true">
       <dxi-column cssClass="text-center" caption="Action" [fixed]="true" [width]="100" fixedPosition="right"
       cellTemplate="cellBtnDetailTemplate"></dxi-column>
       <dxi-column cssClass="text-center" caption="STT" [width]="55" dataField="stt" [fixed]="true"
@@ -108,23 +103,23 @@
       <dxi-column caption="Phòng số" [width]="200" dataField="roomNumber"></dxi-column>
       <dxi-column caption="Tầng số" [width]="200" dataField="floorNumber"></dxi-column>
       <dxi-column caption="Giá phòng" [width]="200" dataField="price"></dxi-column>
-      <dxi-column caption="Hình ảnh phòng" [width]="200" dataField="images" cellTemplate="cellImages"></dxi-column>
+      <dxi-column caption="Hình ảnh phòng" [width]="200" dataField="imageUrl" cellTemplate="cellImages"></dxi-column>
       <dxi-column caption="Tiện ích phòng" cssClass="text-center" [width]="200"
         cellTemplate="cellUtilityRooms"></dxi-column>
       <div *dxTemplate="let images of 'cellImages'">
         <button *ngIf="images" nz-button nzSize="small" nzType="dashed" (click)="previewImagesHotel(images.value)">Xem
           ảnh</button>
       </div>
-      <div *dxTemplate="let item of 'cellUtilityRooms'">
-        <a nz-button nzType="link" (click)="previewDetailUtilityRooms(item.data.utilityRooms)" nzBlock>«Chi tiết»</a>
+      <div *dxTemplate="let room of 'cellUtilityRooms'">
+        <a nz-button nzType="link" (click)="previewDetailUtilityRooms(room.data.utilityRooms)" nzBlock>«Chi tiết»</a>
       </div>
-      <div *dxTemplate="let item of 'cellBtnDetailTemplate'">
-        <button title="Xóa khách sạn" nz-button nzSize="small" nzType="default" class="btn-right button-update ant-btn-red"
-          (click)="showDeleteConfirm(item.data.id)" *ngIf="checkUpdate">
+      <div *dxTemplate="let room of 'cellBtnDetailTemplate'">
+        <button title="Xóa phòng" nz-button nzSize="small" nzType="default" class="btn-right button-update ant-btn-red"
+          (click)="showDeleteConfirm(room.data.id)" *ngIf="checkUpdate">
           <span class="fa fa-times fa-fw"></span>
         </button>
-        <button title="Chỉnh sửa thông tin khách sạn" nz-button nzSize="small" nzType="default"
-          class="btn-right button-update" (click)="showModalUpdateRoom(item.data.id,item.data)" *ngIf="checkUpdate">
+        <button title="Chỉnh sửa thông tin phòng" nz-button nzSize="small" nzType="default"
+          class="btn-right button-update" (click)="showModalUpdateRoom(hotel.data.id, room.data)" *ngIf="checkUpdate">
           <span class="fa fa-edit fa-fw"></span>
         </button>
       </div>
@@ -137,9 +132,9 @@
 </dx-data-grid>
 
 <form [formGroup]="formAddHotel" (ngSubmit)="saveNewHotel()">
-  <nz-modal [(nzVisible)]="isVisibleAddHotel" nzClosable="false" [nzTitle]="title" nzMaskClosable="false">
-    <ng-template #title>
-      {{titleFormUser}}
+  <nz-modal [(nzVisible)]="isVisibleAddHotel" nzClosable="false" [nzTitle]="titleHotel" nzMaskClosable="false">
+    <ng-template #titleHotel>
+      {{titleFormHotel}}
       <div class="pull-right icon-close">
         <em (click)="handleCancel()" nz-icon nzType="close" nzTheme="outline"></em>
       </div>
@@ -150,7 +145,7 @@
       <div class="input-wrap" nz-row>
         <label class="title-detail" nz-col [nzSpan]="8">Tên khách sạn<em class="fas fa-asterisk required"></em></label>
         <div nz-col [nzSpan]="16">
-          <input nz-input formControlName="name" [ngClass]="{ 'is-invalid': submitted && formControlHotel.name.errors?.required }" />
+          <input nz-input formControlName="name" type="text" [ngClass]="{ 'is-invalid': submitted && formControlHotel.name.errors?.required }" />
         </div>
       </div>
 
@@ -158,7 +153,7 @@
       <div class="input-wrap" nz-row>
         <label class="title-detail" nz-col [nzSpan]="8">Mã khách sạn<em class="fas fa-asterisk required"></em></label>
         <div nz-col [nzSpan]="16">
-          <input nz-input formControlName="code" [ngClass]="{ 'is-invalid': submitted && formControlHotel.code.errors?.required }" />
+          <input nz-input formControlName="code" type="text" [ngClass]="{ 'is-invalid': submitted && formControlHotel.code.errors?.required }" />
         </div>
       </div>
 
@@ -174,7 +169,7 @@
       <div class="input-wrap" nz-row>
         <label class="title-detail" nz-col [nzSpan]="8">Email<em class="fa fa-asterisk required"></em></label>
         <div nz-col [nzSpan]="16">
-          <input type="email" nz-input formControlName="contactEmail"
+          <input type="email" nz-input formControlName="contactEmail" type="text"
             [ngClass]="{ 'is-invalid': submitted && formControlHotel.contactEmail.errors?.required }" />
         </div>
       </div>
@@ -183,7 +178,7 @@
       <div class="input-wrap" nz-row>
         <label class="title-detail" nz-col [nzSpan]="8">Địa chỉ<em class="fas fa-asterisk required"></em></label>
         <div nz-col [nzSpan]="16">
-          <input nz-input formControlName="address"
+          <input nz-input formControlName="address" type="text"
             [ngClass]="{ 'is-invalid': submitted && formControlHotel.address.errors?.required }" />
         </div>
       </div>
@@ -191,7 +186,7 @@
       <div class="input-wrap" nz-row>
         <label class="title-detail" nz-col [nzSpan]="8">Mô tả</label>
         <div nz-col [nzSpan]="16">
-          <input nz-input formControlName="description" />
+          <input nz-input formControlName="description" type="text"/>
         </div>
       </div>
 
@@ -199,7 +194,7 @@
       <div class="input-wrap" nz-row>
         <label class="title-detail" nz-col [nzSpan]="8">Website<em class="fas fa-asterisk required"></em></label>
         <div nz-col [nzSpan]="16">
-          <input nz-input formControlName="websiteUrl"
+          <input nz-input formControlName="websiteUrl" type="text"
             [ngClass]="{ 'is-invalid': submitted && formControlHotel.websiteUrl.errors?.required }" />
         </div>
       </div>
@@ -208,7 +203,7 @@
       <div class="input-wrap" nz-row>
         <label class="title-detail" nz-col [nzSpan]="8">Hạng<em class="fas fa-asterisk required"></em></label>
         <div nz-col [nzSpan]="16">
-          <input nz-input formControlName="ratingStar"
+          <input nz-input formControlName="ratingStar" type="number"
             [ngClass]="{ 'is-invalid': submitted && formControlHotel.ratingStar.errors?.required }" />
         </div>
       </div>
@@ -216,9 +211,9 @@
 
 
       <div class="input-wrap" nz-row>
-        <label class="title-detail" nz-col [nzSpan]="8">Phòng số<em class="fas fa-asterisk required"></em></label>
+        <label class="title-detail" nz-col [nzSpan]="8">Số phòng<em class="fas fa-asterisk required"></em></label>
         <div nz-col [nzSpan]="16">
-          <input nz-input formControlName="numRooms"
+          <input nz-input formControlName="numRooms" type="number"
             [ngClass]="{ 'is-invalid': submitted && formControlHotel.numRooms.errors?.required }" />
         </div>
       </div>
@@ -273,8 +268,8 @@
 
 
 <form [formGroup]="formAddRoom" (ngSubmit)="saveNewRoom()">
-  <nz-modal [(nzVisible)]="isVisibleAddRoom" nzClosable="false" [nzTitle]="title" nzMaskClosable="false">
-    <ng-template #title>
+  <nz-modal [(nzVisible)]="isVisibleAddRoom" nzClosable="false" [nzTitle]="titleRoom" nzMaskClosable="false">
+    <ng-template #titleRoom>
       {{titleFormRoom}}
       <div class="pull-right icon-close">
         <em (click)="handleCancel()" nz-icon nzType="close" nzTheme="outline"></em>
@@ -360,9 +355,9 @@
   </nz-modal>
 </form>
 
-<nz-modal [(nzVisible)]="isVisibleDetailUtility" nzTitle="Thông tin chi tiết" [nzContent]="content" [nzFooter]="footer"
+<nz-modal [(nzVisible)]="isVisibleDetailUtility" nzTitle="Thông tin chi tiết" [nzContent]="contentDetail" [nzFooter]="footerDetail"
   nzWidth="1500px" (nzOnCancel)="handleCancel()">
-  <ng-template #content>
+  <ng-template #contentDetail>
     <dx-data-grid id="gridContainer" [dataSource]="listDetailUtility" [showColumnLines]="true" [showRowLines]="true"
       [height]="dxGridHeight" [rowAlternationEnabled]="true" [showBorders]="true" [allowColumnResizing]="true"
       columnResizingMode="widget" [columnMinWidth]="50" [columnAutoWidth]="true">
@@ -386,5 +381,5 @@
     </dx-data-grid>
   </ng-template>
 
-  <ng-template #footer> </ng-template>
+  <ng-template #footerDetail> </ng-template>
 </nz-modal>
