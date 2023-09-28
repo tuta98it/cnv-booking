@@ -589,6 +589,10 @@ export class GeneralService extends BaseService {
   }
 
 
+  deleteHotelImageByID(idImage: any): Observable<any> {
+    return this.delete(`/api${UrlConstant.HOTEL}/DeleteHotelFile/${idImage}`, idImage);
+  }
+
   // News
   getNews(): Observable<any> {
     return this.get(`/api${UrlConstant.NEWS}`);
@@ -669,6 +673,10 @@ export class GeneralService extends BaseService {
 
   deleteRoomByID(idRoom: any): Observable<any> {
     return this.delete(`/api${UrlConstant.ROOM}/${idRoom}`, idRoom);
+  }
+
+  deleteRoomImageByID(idImage: any): Observable<any> {
+    return this.delete(`/api${UrlConstant.ROOM}/DeleteRoomFile/${idImage}`, idImage);
   }
 
 }
