@@ -8,7 +8,7 @@ export class CurrencyFormatPipe implements PipeTransform {
 
   transform(value: number): any {
     if(value) {
-      return NumberUtils.currencyFormat(value.toString());
+      return NumberUtils.getMoneyStr(value);
     }
     return value;
   }
