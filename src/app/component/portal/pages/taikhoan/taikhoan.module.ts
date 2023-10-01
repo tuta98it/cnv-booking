@@ -16,8 +16,8 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
     TaikhoanRolesComponent
   ],
   imports: [
-    SharedModule,
     TaikhoanRoutingModule,
+    SharedModule,
     NhomtaikhoanModule,
     DxDataGridModule,
     NzModalModule

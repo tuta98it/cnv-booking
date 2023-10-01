@@ -51,7 +51,6 @@
   <dxi-column caption="Hình ảnh khách sạn" [width]="250" dataField="hotelFile" cellTemplate="cellImages"></dxi-column>
   <dxi-column caption="Tiện ích khách sạn" cssClass="text-center" [width]="200"
     cellTemplate="cellUtilityHotels"></dxi-column>
-
   <div *dxTemplate="let item of 'cellBtnTemplate'">
     <button title="Xóa khách sạn" nz-button nzSize="small" nzType="default" class="btn-right button-update ant-btn-red"
       (click)="showDeleteConfirm(item.data.id)" *ngIf="checkUpdate">
@@ -74,7 +73,6 @@
     <button *ngIf="images" nz-button nzSize="small" nzType="dashed" (click)="previewImages(images.value)">Xem ảnh
       {{images.data.name}}</button>
   </div>
-
   <div *dxTemplate="let item of 'cellUtilityHotels'">
     <a nz-button nzType="link" (click)="previewDetailUtilityHotels(item.data.utilityHotels)" nzBlock>«Chi tiết»</a>
   </div>
@@ -119,7 +117,8 @@
         cellTemplate="cellImages"></dxi-column>
       <dxi-column caption="Tiện ích phòng" cssClass="text-center" [width]="200"
         cellTemplate="cellUtilityRooms"></dxi-column>
-
+      <dxi-column caption="Còn phòng?" cssClass="text-center" [width]="200" dataField="isAvailable"
+        cellTemplate="cellIsRoom"></dxi-column>
       <div *dxTemplate="let price of 'cellPrice'">
         {{price.value | currencyFormat}}
       </div>
@@ -139,6 +138,11 @@
       <div *dxTemplate="let room of 'cellUtilityRooms'">
         <a nz-button nzType="link" (click)="previewDetailUtilityRooms(room.data.utilityRooms)" nzBlock>«Chi tiết»</a>
       </div>
+      <div *dxTemplate="let isAvaliableRoomOBJ of 'cellIsRoom'">
+        <!-- {{isAvaliable.value}} -->
+        <nz-switch [(ngModel)]="isAvaliableRoomOBJ.value"
+          (click)="clickSwitchIsAvaliable(isAvaliableRoomOBJ.value, isAvaliableRoomOBJ.data.id)"></nz-switch>
+      </div>
       <div *dxTemplate="let room of 'cellBtnDetailTemplate'">
         <button title="Xóa phòng" nz-button nzSize="small" nzType="default" class="btn-right button-update ant-btn-red"
           (click)="showDeleteConfirm(room.data.id)" *ngIf="checkUpdate">
@@ -156,7 +160,6 @@
     </dxi-total-item>
   </dxo-summary>
 </dx-data-grid>
-
 <form [formGroup]="formAddHotel" (ngSubmit)="saveHotel()">
   <nz-modal nzWidth="1040px" [(nzVisible)]="isVisibleAddHotel" nzClosable="false" [nzTitle]="titleHotel"
     [nzContent]="contelHotel" nzMaskClosable="false">
@@ -166,7 +169,6 @@
         <em (click)="handleCancel()" nz-icon nzType="close" nzTheme="outline"></em>
       </div>
     </ng-template>
-
     <ng-template nzModalContent #contelHotel>
       <div style="display: flex; justify-content: space-between;">
         <div style="width: 48%;">
@@ -215,17 +217,16 @@
                 [ngClass]="{ 'is-invalid': submitted && formControlHotel.address.errors?.required }" />
             </div>
           </div>
-
           <div class="input-wrap" nz-row>
             <label class="title-detail" nz-col [nzSpan]="8">Mô tả</label>
             <div nz-col [nzSpan]="16">
-              <textarea nz-input formControlName="description" placeholder="Mô tả khách sạn ..."
-                [nzAutosize]="{ minRows: 4, maxRows: 8 }"></textarea>
+              <!-- <textarea nz-input formControlName="description" placeholder="Mô tả khách sạn ..."
+                [nzAutosize]="{ minRows: 4, maxRows: 8 }"></textarea> -->
               <!-- <input nz-input formControlName="description" type="text" /> -->
+              <angular-editor [placeholder]="'Mô tả khách sạn ...'" formControlName="description"
+                [config]="configDescriptionHotel"></angular-editor>
             </div>
           </div>
-
-
           <div class="input-wrap" nz-row>
             <label class="title-detail" nz-col [nzSpan]="8">Website<em class="fas fa-asterisk required"></em></label>
             <div nz-col [nzSpan]="16">
@@ -294,7 +295,6 @@
       </div> -->
       </div>
     </ng-template>
-
     <div *nzModalFooter>
       <button nz-button (click)="handleCancel()">{{'cancel' | translate }}</button>
       <button nz-button nzType="primary" (click)="saveHotel()" class="button-submit">{{'save' | translate }}</button>
@@ -419,7 +419,6 @@
     </div>
   </nz-modal>
 </form>
-
 <nz-modal [(nzVisible)]="isVisibleDetailUtility" nzTitle="Thông tin chi tiết" [nzContent]="contentDetail"
   [nzFooter]="footerDetail" nzWidth="1500px" (nzOnCancel)="handleCancel()">
   <ng-template #contentDetail>

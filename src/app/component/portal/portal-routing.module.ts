@@ -117,7 +117,8 @@ const routes: Routes = [
       },
       {
         path: 'hotel',
-        component: HotelComponent,
+        loadChildren: () =>
+          import('./pages/hotel/hotel.module').then(m => m.HotelModule),
         data: {
           pagename: 'DS khách sạn',
           breadcrumb: 'DS khách sạn'

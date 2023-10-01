@@ -679,4 +679,9 @@ export class GeneralService extends BaseService {
     return this.delete(`/api${UrlConstant.ROOM}/DeleteRoomFile/${idImage}`, idImage);
   }
 
+  SetAvailableRoom(obdjIsAvaliable: any): Observable<any> {
+    return this.post(`/api${UrlConstant.ROOM}/SetAvailable`, obdjIsAvaliable);
+  }
+
+
 }

@@ -27,7 +27,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzUploadChangeParam } from 'ng-zorro-antd/upload';
 import { NzUploadFile } from 'ng-zorro-antd/upload';
 import { StringUtils } from 'src/app/shared/utils/string-utils.class';
-
+import { AngularEditorConfig } from '@kolkov/angular-editor';
 @Component({
   selector: 'app-hotel',
   templateUrl: './hotel.component.html',
@@ -66,9 +66,49 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
   uploadUrl = '';
   fileList: NzUploadFile[] = [];
   listURLFiles: any[] = [];
-
+  htmlContent = '';
+  configDescriptionHotel: AngularEditorConfig = {
+    editable: true,
+    spellcheck: true,
+    height: '10rem',
+    minHeight: '5rem',
+    maxHeight: 'auto',
+    width: 'auto',
+    minWidth: '0',
+    translate: 'yes',
+    enableToolbar: true,
+    showToolbar: true,
+    placeholder: 'Mô tả ...',
+    defaultParagraphSeparator: '',
+    defaultFontName: '',
+    defaultFontSize: '',
+    fonts: [
+      { class: 'arial', name: 'Arial' },
+      { class: 'times-new-roman', name: 'Times New Roman' },
+      { class: 'calibri', name: 'Calibri' },
+      { class: 'comic-sans-ms', name: 'Comic Sans MS' }
+    ],
+    customClasses: [
+      {
+        name: 'quote',
+        class: 'quote',
+      },
+      {
+        name: 'redText',
+        class: 'redText'
+      },
+      {
+        name: 'titleText',
+        class: 'titleText',
+        tag: 'h1',
+      },
+    ],
+    uploadUrl: 'v1/image',
+    sanitize: true,
+    toolbarPosition: 'top',
+    toolbarHiddenButtons: []
+  };
   constructor(
-    public translate: TranslateService,
     private modalService: NzModalService,
     private notificationService: NotificationService,
     private generalService: GeneralService,
@@ -676,6 +716,33 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
       this.msg.error(`file ${file.name} tải lên không thành công.`);
     }
   }
+
+  // switchValueIsAvaliable = false;
+  clickSwitchIsAvaliable(isAvaliableUpdate: boolean, roomID: any): void {
+    this.generalService.SetAvailableRoom({ roomId: roomID, isAvailable: isAvaliableUpdate }).subscribe(
+      {
+        next: (res) => {
+          if (res.ret && res.ret[0].code !== 0) {
+            this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
+          } else {
+            this.getListData();
+            this.isVisibleAddRoom = false;
+            this.notificationService.showNotification(Constant.SUCCESS, 'Cập nhật trạng thái phòng thành công');
+          }
+        },
+
+        error: (error) => {
+          this.notificationService.showNotification(Constant.ERROR, 'Cập nhật trạng thái phòng thất bại');
+        },
+
+        complete: () => {
+
+        }
+
+      }
+    );
+  }
+
   getIDUtilityRooms(utilityRooms: any) {
     const ids = [];
     for (var i = 0; i < utilityRooms.length; i++) {
