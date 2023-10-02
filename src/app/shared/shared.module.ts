@@ -36,7 +36,7 @@ import { IsEmptyPipe } from './pipe/is-empty.pipe';
 import { MViewPdfComponent } from './component/m-view-pdf/m-view-pdf.component';
 import { NzImageModule } from 'ng-zorro-antd/image';
 import { NzMessageModule } from 'ng-zorro-antd/message';
-
+import { AngularEditorModule } from '@kolkov/angular-editor';
 @NgModule({
   imports: [
     CommonModule,
@@ -67,7 +67,8 @@ import { NzMessageModule } from 'ng-zorro-antd/message';
     NzCheckboxModule,
     NzAlertModule,
     NzImageModule,
-    NzMessageModule
+    NzMessageModule,
+    AngularEditorModule
   ],
   exports: [
     DateFormatPipe,
@@ -104,7 +105,8 @@ import { NzMessageModule } from 'ng-zorro-antd/message';
     NzAlertModule,
     MViewPdfComponent,
     NzImageModule,
-    NzMessageModule
+    NzMessageModule,
+    AngularEditorModule
   ],
   declarations: [
     DateFormatPipe,

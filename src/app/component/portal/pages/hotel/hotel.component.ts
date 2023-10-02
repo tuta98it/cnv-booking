@@ -28,6 +28,8 @@ import { NzUploadChangeParam } from 'ng-zorro-antd/upload';
 import { NzUploadFile } from 'ng-zorro-antd/upload';
 import { StringUtils } from 'src/app/shared/utils/string-utils.class';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
+import { DataService } from 'src/app/service/data.service';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-hotel',
   templateUrl: './hotel.component.html',
@@ -109,6 +111,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
     toolbarHiddenButtons: []
   };
   constructor(
+    private router: Router,
     private modalService: NzModalService,
     private notificationService: NotificationService,
     private generalService: GeneralService,
@@ -117,7 +120,8 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
     private fb: FormBuilder,
     private dateFormatPipe: DateFormatPipe,
     private nzImageService: NzImageService,
-    private msg: NzMessageService
+    private msg: NzMessageService,
+    private dataService: DataService,
   ) {
     super('id');
     this.formAddHotel = this.fb.group({
@@ -281,6 +285,15 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
     this.uploadUrl = `${this.configService.getConfig().api.baseUrl}/Upload/UploadHotelImage?hotelId=0`;
   }
 
+  routingPageHotelAdd() {
+    const data = {
+      isUpdateHotel: false,
+      item: {}
+    };
+    this.dataService.setData(data);
+    this.router.navigate(['hotel/edit-hotel']);
+  }
+
   showModalUpdateHotel(data: any) {
     this.isVisibleAddHotel = true;
     this.submitted = false;
@@ -314,6 +327,15 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
       this.fileList.push(objHotel)
     }
     this.uploadUrl = `${this.configService.getConfig().api.baseUrl}/Upload/UploadHotelImage?hotelId=${this.item.id}`;
+  }
+
+  routingPageHotelUpdate(item: any) {
+    const data = {
+      isUpdateHotel: true,
+      item: item,
+    };
+    this.dataService.setData(data);
+    this.router.navigate(['hotel/edit-hotel']);
   }
 
   getIDUtilityHotels(utilityHotel: any) {

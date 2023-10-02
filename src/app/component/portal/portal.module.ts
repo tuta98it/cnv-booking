@@ -33,7 +33,6 @@ import { HotelComponent } from './pages/hotel/hotel.component';
 import { NewsComponent } from './pages/news/news.component';
 import { DxDateBoxModule } from 'devextreme-angular';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
-import { AngularEditorModule } from '@kolkov/angular-editor';
 const antDesignIcons = AllIcons as {
   [key: string]: IconDefinition;
 };
@@ -53,8 +52,8 @@ const icons: IconDefinition[] = Object.keys(antDesignIcons).map(key => antDesign
     NewsComponent
   ],
   imports: [
-    SharedModule,
     RouterModule.forChild([]),
+    SharedModule,
     PortalRoutingModule,
     NzDropDownModule,
     NzBreadCrumbModule,
@@ -66,7 +65,6 @@ const icons: IconDefinition[] = Object.keys(antDesignIcons).map(key => antDesign
     NzTabsModule,
     DxDateBoxModule,
     NzSwitchModule,
-    AngularEditorModule
   ],
   providers: [GeneralService, FileManagerService, MenuService, SignalRService, DateFormatPipe, ]
 })

@@ -10,7 +10,7 @@
       [(ngModel)]="searchText" (keyup)="onSearch()" placeholder="Tìm kiếm theo tên khách sạn, mã khách sạn, STĐ ...">
 
     <!-- Nút thêm -->
-    <button nz-button nzType="primary" class="ant-btn-primary" type="button" (click)="showModalAddHotel()"
+    <button nz-button nzType="primary" class="ant-btn-primary" type="button" (click)="routingPageHotelAdd()"
       *ngIf="checkAdd">
       <em class="fas fa-plus fa-fw" style="margin-right: 4px;"></em> Thêm khách sạn</button>
 
@@ -21,8 +21,6 @@
     </button>
   </div>
 </div>
-
-
 <dx-data-grid id="gridContainer" [dataSource]="filteredDatas" #ListHotels [showColumnLines]="true" [showRowLines]="true"
   [height]="dxGridHeight" [rowAlternationEnabled]="true" [showBorders]="true" [allowColumnResizing]="true"
   columnResizingMode="widget" [columnMinWidth]="50" [columnAutoWidth]="true" (onExporting)="onExporting($event)">
@@ -57,7 +55,7 @@
       <span class="fa fa-times fa-fw"></span>
     </button>
     <button title="Chỉnh sửa thông tin khách sạn" nz-button nzSize="small" nzType="default"
-      class="btn-right button-update" (click)="showModalUpdateHotel(item.data)" *ngIf="checkUpdate">
+      class="btn-right button-update" (click)="routingPageHotelUpdate(item.data)" *ngIf="checkUpdate">
       <span class="fa fa-edit fa-fw"></span>
     </button>
   </div>
@@ -160,6 +158,7 @@
     </dxi-total-item>
   </dxo-summary>
 </dx-data-grid>
+
 <form [formGroup]="formAddHotel" (ngSubmit)="saveHotel()">
   <nz-modal nzWidth="1040px" [(nzVisible)]="isVisibleAddHotel" nzClosable="false" [nzTitle]="titleHotel"
     [nzContent]="contelHotel" nzMaskClosable="false">
@@ -301,6 +300,7 @@
     </div>
   </nz-modal>
 </form>
+
 <form [formGroup]="formAddRoom" (ngSubmit)="saveRoom()">
   <nz-modal nzWidth="1040px" [(nzVisible)]="isVisibleAddRoom" nzClosable="false" [nzTitle]="titleRoom"
     [nzContent]="contelRoom" nzMaskClosable="false">
@@ -419,6 +419,7 @@
     </div>
   </nz-modal>
 </form>
+
 <nz-modal [(nzVisible)]="isVisibleDetailUtility" nzTitle="Thông tin chi tiết" [nzContent]="contentDetail"
   [nzFooter]="footerDetail" nzWidth="1500px" (nzOnCancel)="handleCancel()">
   <ng-template #contentDetail>
