@@ -125,6 +125,15 @@ const routes: Routes = [
         }
       },
       {
+        path: 'booking-hotel',
+        loadChildren: () =>
+          import('./pages/booking-hotel/booking-hotel.module').then(m => m.BookingHotelModule),
+        data: {
+          pagename: 'QL khách sạn',
+          breadcrumb: 'QL khách sạn'
+        }
+      },
+      {
         path: 'news',
         component: NewsComponent,
         data: {

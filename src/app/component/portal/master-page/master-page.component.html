@@ -41,8 +41,13 @@
           <li nz-menu-item [nzSelected]="url === '/tai-khoan'"><a routerLink="/tai-khoan">Danh sách tài khoản</a></li>
           <li nz-menu-item [nzSelected]="url === '/user-register'"><a routerLink="/user-register">Danh sách đăng kí</a></li>
           <li *ngIf='userInfo.userType == 0' nz-menu-item [nzSelected]="url === '/doi-tac'"><a routerLink="/doi-tac">Danh sách đối tác</a></li>
-          <li nz-menu-item [nzSelected]="url === '/hotel'"><a routerLink="/hotel">DS khách sạn</a></li>
           <li nz-menu-item [nzSelected]="url === '/news'"><a routerLink="/news">Tin tức</a></li>
+          <li nz-submenu nzTitle="Khách sạn">
+            <ul>
+              <li nz-menu-item [nzSelected]="url === '/hotel'"><a routerLink="/hotel">DS khách sạn</a></li>
+              <li nz-menu-item [nzSelected]="url === '/booking-hotel'"><a routerLink="/booking-hotel">QL đặt khách sạn</a></li>
+            </ul>
+          </li>
           <li nz-submenu nzTitle="Vé máy bay">
             <ul>
               <li nz-menu-item [nzSelected]="url === '/admin-history-holding-ticket'"><a routerLink="/admin-history-holding-ticket">Quản lý giữ vé</a></li>

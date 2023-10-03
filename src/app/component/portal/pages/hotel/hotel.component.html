@@ -38,7 +38,7 @@
   <dxi-column caption="Tên khách sạn" [width]="200" dataField="name" [fixed]="true"></dxi-column>
   <dxi-column caption="Mã khách sạn" [width]="200" dataField="code" [fixed]="true"></dxi-column>
   <dxi-column caption="Địa chỉ" [width]="200" dataField="address"></dxi-column>
-  <dxi-column caption="Số điện thoại" [width]="200" dataField="phoneNo" dataType="number"></dxi-column>
+  <dxi-column caption="Số điện thoại" [width]="200" dataField="phoneNo"></dxi-column>
   <dxi-column caption="Email" [width]="300" dataField="contactEmail"></dxi-column>
   <dxi-column caption="Mô tả" [width]="400" dataField="description"></dxi-column>
   <dxi-column caption="Website" [width]="200" dataField="websiteUrl" cellTemplate="cellWebsite"></dxi-column>
@@ -80,7 +80,6 @@
     <div class="action-button" style="clear: bottom;overflow: hidden;">
       <div class="form-group" style="float: left">
         <h5>DS các phòng KS {{hotel.data.name}}</h5>
-
       </div>
       <div class="form-group" style="float: right; display: flex; align-items: center;">
         <!-- Tìm kiếm -->
@@ -100,17 +99,17 @@
       <dxi-column caption="Loại phòng" [width]="200" dataField="name" dataType="string"></dxi-column>
       <dxi-column caption="Miêu tả phòng" [width]="400" dataField="description" dataType="string"></dxi-column>
       <dxi-column caption="Phòng số" cssClass="text-left" [width]="200" dataField="roomNumber"
-        dataType="number"></dxi-column>
-      <dxi-column caption="Giá phòng" cssClass="text-left" [width]="200" dataField="price" dataType="number"
+      ></dxi-column>
+      <dxi-column caption="Giá phòng" cssClass="text-left" [width]="200" dataField="price"
         cellTemplate="cellPrice"></dxi-column>
       <dxi-column caption="Giường phụ" cssClass="text-left" [width]="200" dataField="extraBed"
-        dataType="number"></dxi-column>
+      ></dxi-column>
       <dxi-column caption="Giá giường phụ" cssClass="text-left" [width]="200" dataField="extraBedPrice"
-        dataType="number" cellTemplate="cellExtraBedPrice"></dxi-column>
+       cellTemplate="cellExtraBedPrice"></dxi-column>
       <dxi-column caption="Phụ phí người lớn" cssClass="text-left" [width]="200" dataField="adultSurcharge"
-        dataType="number" cellTemplate="cellAdultSurcharge"></dxi-column>
+       cellTemplate="cellAdultSurcharge"></dxi-column>
       <dxi-column caption="Phụ phí trẻ em" cssClass="text-left" [width]="200" dataField="childSurcharge"
-        dataType="number" cellTemplate="cellChildSurcharge"></dxi-column>
+       cellTemplate="cellChildSurcharge"></dxi-column>
       <dxi-column caption="Hình ảnh phòng" cssClass="text-center" [width]="200" dataField="roomFiles"
         cellTemplate="cellImages"></dxi-column>
       <dxi-column caption="Tiện ích phòng" cssClass="text-center" [width]="200"
@@ -118,16 +117,20 @@
       <dxi-column caption="Còn phòng?" cssClass="text-center" [width]="200" dataField="isAvailable"
         cellTemplate="cellIsRoom"></dxi-column>
       <div *dxTemplate="let price of 'cellPrice'">
-        {{price.value | currencyFormat}}
+        {{price.value | currencyFormat}} <i class="fa-solid fa-dong-sign"
+        style="color: #868e96;"></i>
       </div>
       <div *dxTemplate="let extraBedPrice of 'cellExtraBedPrice'">
-        {{extraBedPrice.value | currencyFormat}}
+        {{extraBedPrice.value | currencyFormat}} <i class="fa-solid fa-dong-sign"
+        style="color: #868e96;"></i>
       </div>
       <div *dxTemplate="let adultSurcharge of 'cellAdultSurcharge'">
-        {{adultSurcharge.value | currencyFormat}}
+        {{adultSurcharge.value | currencyFormat}} <i class="fa-solid fa-dong-sign"
+        style="color: #868e96;"></i>
       </div>
       <div *dxTemplate="let childSurcharge of 'cellChildSurcharge'">
-        {{childSurcharge.value | currencyFormat}}
+        {{childSurcharge.value | currencyFormat}} <i class="fa-solid fa-dong-sign"
+        style="color: #868e96;"></i>
       </div>
       <div *dxTemplate="let images of 'cellImages'">
         <button *ngIf="images" nz-button nzSize="small" nzType="dashed" (click)="previewImages(images.value)">Xem
@@ -436,7 +439,7 @@
 
       <dxi-column cssClass="text-center" caption="STT" [width]="55" dataField="stt" [fixed]="true"
         [allowFiltering]="false" [allowSorting]="false"></dxi-column>
-      <dxi-column caption=" ích" [fixed]="true" [width]="150" dataField="name"
+      <dxi-column caption="Tiện ích" [fixed]="true" [width]="150" dataField="name"
         cssClass="vertical-align-middle"></dxi-column>
 
       <dxo-summary>

@@ -532,7 +532,7 @@ export class GeneralService extends BaseService {
 
 
   // Huỷ vé - Admin
-  getAdminVodiTicket(payload: any): any {
+  getAdminVoidTicket(payload: any): any {
     return this.post('/api' + `${UrlConstant.BOOKING}` + '/adminvoidticket', payload);
   }
 
@@ -591,6 +591,19 @@ export class GeneralService extends BaseService {
 
   deleteHotelImageByID(idImage: any): Observable<any> {
     return this.delete(`/api${UrlConstant.HOTEL}/DeleteHotelFile/${idImage}`, idImage);
+  }
+
+  // BookingHotel
+  getAdminBookingHotels(payload: any): Observable<any> {
+    return this.post(`/api${UrlConstant.BOOKING_HOTEL}/adminhistorybookinghotel`, payload);
+  }
+
+  confirmBooking(payload: any): Observable<any> {
+    return this.post(`/api${UrlConstant.BOOKING_HOTEL}/confirmBooking`, payload);
+  }
+
+  refuseBooking(payload: any): Observable<any> {
+    return this.post(`/api${UrlConstant.BOOKING_HOTEL}/refuseBooking`, payload);
   }
 
   // News

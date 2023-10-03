@@ -33,6 +33,7 @@ import { HotelComponent } from './pages/hotel/hotel.component';
 import { NewsComponent } from './pages/news/news.component';
 import { DxDateBoxModule } from 'devextreme-angular';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
+import { BookingHotelComponent } from './pages/booking-hotel/booking-hotel.component';
 const antDesignIcons = AllIcons as {
   [key: string]: IconDefinition;
 };
@@ -49,7 +50,8 @@ const icons: IconDefinition[] = Object.keys(antDesignIcons).map(key => antDesign
     SelectUnitComponent,
     UserRegisterComponent,
     HotelComponent,
-    NewsComponent
+    BookingHotelComponent,
+    NewsComponent,
   ],
   imports: [
     RouterModule.forChild([]),
@@ -66,7 +68,7 @@ const icons: IconDefinition[] = Object.keys(antDesignIcons).map(key => antDesign
     DxDateBoxModule,
     NzSwitchModule,
   ],
-  providers: [GeneralService, FileManagerService, MenuService, SignalRService, DateFormatPipe, ]
+  providers: [GeneralService, FileManagerService, MenuService, SignalRService, DateFormatPipe,]
 })
 export class PortalModule {
 

@@ -1,0 +1,192 @@
+<div class="action-button" style="clear: bottom;overflow: hidden;">
+  <div class="form-group" style="float: left">
+    <h1>Danh sách lượt đặt khách sạn</h1>
+  </div>
+</div>
+<dx-data-grid id="gridContainer" [dataSource]="filteredDatas" #ListHotels [showColumnLines]="true" [showRowLines]="true"
+  [height]="dxGridHeight" [rowAlternationEnabled]="true" [showBorders]="true" [allowColumnResizing]="true"
+  columnResizingMode="widget" [columnMinWidth]="50" [columnAutoWidth]="true" (onExporting)="onExporting($event)">
+  <dxo-scrolling mode="virtual"></dxo-scrolling>
+  <dxo-sorting mode="multiple"></dxo-sorting>
+  <dxo-header-filter [visible]="true"></dxo-header-filter>
+  <dxo-filter-row [visible]="true" [applyFilter]="currentFilter"></dxo-filter-row>
+  <dxo-master-detail [enabled]="true" template="detailBookingHotel"></dxo-master-detail>
+  <dxi-column cssClass="text-center" caption="Action" [fixed]="true" [width]="100" fixedPosition="right"
+    cellTemplate="cellBtnTemplate"></dxi-column>
+
+  <dxi-column cssClass="text-center" caption="STT" [width]="55" dataField="stt" [fixed]="true" [allowFiltering]="false"
+    [allowSorting]="false"></dxi-column>
+  <dxi-column caption="Họ tên người đặt" dataField="contactName" [fixed]="true"></dxi-column>
+  <dxi-column caption="Số điện thoại" [width]="200" dataField="contactPhone"></dxi-column>
+  <dxi-column caption="Email" [width]="300" dataField="contactEmail"></dxi-column>
+  <dxi-column caption="Mã đặt KS" [width]="200" dataField="bookingCode"></dxi-column>
+  <dxi-column caption="Ngày đặt" [width]="200" dataField="dateCreated" dataType="date"
+    format="HH:mm dd/MM/yy"></dxi-column>
+  <dxi-column caption="Trạng thái" cssClass="text-center" [width]="200" dataField="bookingStatus" fixedPosition="right"
+    cellTemplate="cellBookingStatus"></dxi-column>
+
+  <div *dxTemplate="let bookingStatus of 'cellBookingStatus'">
+    <div style="
+    display: flex;
+    align-items: flex-start;
+    flex-direction: row;
+    justify-content: center">
+      <span *ngIf="bookingStatus.value === 0" nz-icon nzType="warning" style="color: #ffc107" nzTheme="outline"></span>
+      <span *ngIf="bookingStatus.value === 1" nz-icon nzType="check" style="color: #52c41a" nzTheme="outline"></span>
+      <span *ngIf="bookingStatus.value === 2" nz-icon nzType="close" style="color: #dc3545" nzTheme="outline"></span>
+      <div style="margin-left: 0.25rem;">
+        {{bookingStatus.value | bookingHotelStatus}}
+      </div>
+    </div>
+  </div>
+  <div *dxTemplate="let item of 'cellBtnTemplate'">
+    <button title="Từ chối yêu cầu" nz-button nzSize="small" nzType="default"
+      class="btn-right button-update ant-btn-red" (click)="onRefuseBookingHotel(item.data)" *ngIf="checkUpdate">
+      <span class="fa fa-times fa-fw"></span>
+    </button>
+    <button title="Xác nhận yêu cầu" nz-button nzSize="small" nzType="default" class="btn-right button-update"
+      (click)="onConfirmBookingHotel(item.data)" *ngIf="checkUpdate">
+      <span class="fa fa-check fa-fw"></span>
+    </button>
+  </div>
+  <div *dxTemplate="let bookingHotel of 'detailBookingHotel'">
+    <div class="action-button" style="clear: bottom;overflow: hidden;">
+      <div class="form-group" style="float: left">
+        <h5>DS chi tiết lượt booking</h5>
+      </div>
+    </div>
+    <dx-data-grid id="gridDetail" [dataSource]="bookingHotel.data.bookingHotelDetails" [showBorders]="true">
+      <dxi-column cssClass="text-center" caption="STT" [width]="55" dataField="stt" [fixed]="true"
+        [allowFiltering]="false" [allowSorting]="false"></dxi-column>
+      <dxi-column caption="Tên khách sạn" [width]="200" dataField="hotelName" dataType="string"></dxi-column>
+      <dxi-column caption="Ngày check-in" [width]="200" dataField="checkinDate" dataType="date"
+        format="HH:mm dd/MM/yy"></dxi-column>
+      <dxi-column caption="Ngày check-out" [width]="200" dataField="checkoutDate" dataType="date"
+        format="HH:mm dd/MM/yy"></dxi-column>
+      <dxi-column caption="Số phòng" [width]="100" dataField="amount"></dxi-column>
+      <dxi-column caption="Số người lớn" [width]="100" dataField="adt"></dxi-column>
+      <dxi-column caption="Số trẻ em" [width]="100" dataField="chd"></dxi-column>
+      <dxi-column caption="Giường phụ" [width]="150" dataField="extraBed"></dxi-column>
+      <dxi-column caption="Giá giường phụ" [width]="150" dataField="extraBedPrice"
+        cellTemplate="cellExtraBedPrice"></dxi-column>
+      <dxi-column caption="Phụ phí người lớn" [width]="150" dataField="adultSurcharge"
+        cellTemplate="cellAdultSurcharge"></dxi-column>
+      <dxi-column caption="Phụ phí trẻ em" [width]="150" dataField="childSurcharge"
+        cellTemplate="cellChildSurcharge"></dxi-column>
+      <dxi-column caption="Giá phòng" [width]="100" dataField="price" cellTemplate="cellPriceRoom"></dxi-column>
+      <dxi-column caption="Tổng chi phí" [width]="100" dataField="totalPrice"
+        cellTemplate="cellTotalPrice"></dxi-column>
+      <dxi-column caption="Chi tiết khách hàng" cssClass="text-center" [width]="200" dataField="bookingHotelPassengers"
+        cellTemplate="cellBookingHotelPassengers"></dxi-column>
+      <div *dxTemplate="let price of 'cellPrice'">
+        {{price.value | currencyFormat}}
+      </div>
+      <div *dxTemplate="let extraBedPrice of 'cellExtraBedPrice'">
+        {{extraBedPrice.value | currencyFormat}}
+      </div>
+      <div *dxTemplate="let adultSurcharge of 'cellAdultSurcharge'">
+        {{adultSurcharge.value | currencyFormat}}
+      </div>
+      <div *dxTemplate="let childSurcharge of 'cellChildSurcharge'">
+        {{childSurcharge.value | currencyFormat}}
+      </div>
+      <div *dxTemplate="let priceRoom of 'cellPriceRoom'">
+        {{priceRoom.value | currencyFormat}}
+      </div>
+      <div *dxTemplate="let totalPrice of 'cellTotalPrice'">
+        {{totalPrice.value | currencyFormat}}
+      </div>
+      <div *dxTemplate="let bookingHotelPassenger of 'cellBookingHotelPassengers'">
+        <a nz-button nzType="link" (click)="previewDetailBookingHotelPassengers(bookingHotelPassenger.value)"
+          nzBlock>«Chi tiết»</a>
+      </div>
+
+      <dxo-summary>
+        <dxi-total-item column="hotelName" displayFormat="Số lượt booking: {0}" summaryType="count">
+        </dxi-total-item>
+      </dxo-summary>
+    </dx-data-grid>
+  </div>
+  <dxo-summary>
+    <dxi-total-item column="contactName" displayFormat="Số bản ghi: {0}" summaryType="count">
+    </dxi-total-item>
+  </dxo-summary>
+</dx-data-grid>
+
+
+<nz-modal [(nzVisible)]="isVisibleDetailBookingHotelPassengers" nzTitle="Thông tin chi tiết khách hàng"
+  [nzContent]="contentDetail" nzWidth="1500px" (nzOnCancel)="handleCancel()">
+  <ng-template #contentDetail>
+    <dx-data-grid id="gridContainer" [dataSource]="listBookingHotelPassengers" [showColumnLines]="true"
+      [showRowLines]="true" [height]="dxGridHeight" [rowAlternationEnabled]="true" [showBorders]="true"
+      [allowColumnResizing]="true" columnResizingMode="widget" [columnMinWidth]="50" [columnAutoWidth]="true">
+
+
+      <dxo-load-panel [enabled]="true"></dxo-load-panel>`
+      <dxo-scrolling mode="virtual"></dxo-scrolling>
+      <dxo-sorting mode="multiple"></dxo-sorting>
+      <dxo-header-filter [visible]="true"></dxo-header-filter>
+      <dxo-filter-row [visible]="true" [applyFilter]="currentFilter"></dxo-filter-row>
+
+      <dxi-column cssClass="text-center" caption="STT" [width]="55" dataField="stt" [fixed]="true"
+        [allowFiltering]="false" [allowSorting]="false"></dxi-column>
+
+      <dxi-column caption="Họ tên khách hàng" [fixed]="true" [width]="200" dataField="fullName"
+        cssClass="vertical-align-middle"></dxi-column>
+      <dxi-column caption="Số điện thoại" [fixed]="true" [width]="150" dataField="phone"
+        cssClass="vertical-align-middle"></dxi-column>
+      <dxi-column caption="Email" [fixed]="true" [width]="150" dataField="email"
+        cssClass="vertical-align-middle"></dxi-column>
+      <dxo-summary>
+        <dxi-total-item column="fullName" displayFormat="Số bản ghi: {0}" summaryType="count">
+        </dxi-total-item>
+      </dxo-summary>
+    </dx-data-grid>
+  </ng-template>
+</nz-modal>
+
+<!-- Confirm agreement booking hotel -->
+<nz-modal [(nzVisible)]="isVisibleConfirm" [nzContent]="contentConfirm" nzWidth="500px" (nzOnCancel)="handleCancel()">
+  <div *nzModalTitle>
+    Xác nhận yêu cầu đặt khách sạn
+  </div>
+  <ng-template #contentConfirm>
+    <nz-input-group [nzSuffix]="textAreaClearConfirm" [nzPrefix]=""
+      class="ant-input-affix-wrapper-textarea-with-clear-btn">
+      <textarea nz-input [(ngModel)]="textValueNoteConfirm" [nzAutosize]="{ minRows: 5, maxRows: 10 }"
+        placeholder="Nội dung ghi chú ..."></textarea>
+    </nz-input-group>
+    <!-- <ng-template #prefixTemplateNote><span nz-icon nzType="info-circle" nzTheme="outline"></span></ng-template> -->
+    <ng-template #textAreaClearConfirm>
+      <span nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="textValueNoteConfirm"
+        (click)="textValueNoteConfirm = null"></span>
+    </ng-template>
+  </ng-template>
+  <div *nzModalFooter>
+    <button nz-button nzType="default" (click)="handleCancel()">Huỷ</button>
+    <button nz-button nzType="primary" (click)="handleOkConfirmBookingHotel()" [nzLoading]="isConfirmLoading">Xác
+      nhận</button>
+  </div>
+</nz-modal>
+
+<!-- Refuse booking hotel request -->
+<nz-modal [(nzVisible)]="isVisibleRefuse" [nzContent]="contentRefuse" nzWidth="450px" (nzOnCancel)="handleCancel()">
+  <div *nzModalTitle>
+    Từ chối yêu cầu đặt khách sạn
+  </div>
+  <ng-template #contentRefuse>
+    <nz-input-group [nzSuffix]="textAreaClearConfirm" class="ant-input-affix-wrapper-textarea-with-clear-btn">
+      <textarea nz-input [(ngModel)]="textValueNoteRefuse" [nzAutosize]="{ minRows: 5, maxRows: 10 }"
+        placeholder="Nội dung ghi chú ..." nzStatus="warning"></textarea>
+    </nz-input-group>
+    <!-- <ng-template #prefixTemplateNote><span nz-icon nzType="info-circle" nzTheme="outline"></span></ng-template> -->
+    <ng-template #textAreaClearConfirm>
+      <span nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="textValueNoteRefuse"
+        (click)="textValueNoteRefuse = null"></span>
+    </ng-template>
+  </ng-template>
+  <div *nzModalFooter>
+    <button nz-button nzType="default" (click)="handleCancel()">Huỷ</button>
+    <button nz-button nzType="dashed" nzDanger (click)="handleOkRefuse()" [nzLoading]="isRefuseLoading">Từ chối</button>
+  </div>
+</nz-modal>

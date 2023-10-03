@@ -49,7 +49,7 @@ export class AdminVoidTicketComponent extends TableSelectionAbstract implements 
       "page": 1,
       "pageSize": 100
     }
-    this.generalService.getAdminVodiTicket(payload).subscribe((res: any) => {
+    this.generalService.getAdminVoidTicket(payload).subscribe((res: any) => {
       if (res !== null) {
         this.datas = res.data;
         this.loading = false;

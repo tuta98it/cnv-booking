@@ -37,6 +37,8 @@ import { MViewPdfComponent } from './component/m-view-pdf/m-view-pdf.component';
 import { NzImageModule } from 'ng-zorro-antd/image';
 import { NzMessageModule } from 'ng-zorro-antd/message';
 import { AngularEditorModule } from '@kolkov/angular-editor';
+import { BookingHotelStatusPipe } from './pipe/booking-hotel-status.pipe';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -106,7 +108,8 @@ import { AngularEditorModule } from '@kolkov/angular-editor';
     MViewPdfComponent,
     NzImageModule,
     NzMessageModule,
-    AngularEditorModule
+    AngularEditorModule,
+    BookingHotelStatusPipe
   ],
   declarations: [
     DateFormatPipe,
@@ -116,6 +119,7 @@ import { AngularEditorModule } from '@kolkov/angular-editor';
     FullNameFormatPipe,
     OrderStatusFormatPipe,
     IsEmptyPipe,
+    BookingHotelStatusPipe,
     MViewPdfComponent
   ],
   providers: [NotificationService],
