@@ -31,7 +31,6 @@ import { AdminTicketComponent } from './pages/admin-ticket/admin-ticket.componen
 import { AdminHistoryHoldingTicketComponent } from './pages/admin-history-holding-ticket/admin-history-holding-ticket.component';
 import { HotelComponent } from './pages/hotel/hotel.component';
 import { NewsComponent } from './pages/news/news.component';
-import { DxDateBoxModule } from 'devextreme-angular';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
 import { BookingHotelComponent } from './pages/booking-hotel/booking-hotel.component';
 const antDesignIcons = AllIcons as {
@@ -65,7 +64,6 @@ const icons: IconDefinition[] = Object.keys(antDesignIcons).map(key => antDesign
     DxNumberBoxModule,
     NzAvatarModule,
     NzTabsModule,
-    DxDateBoxModule,
     NzSwitchModule,
   ],
   providers: [GeneralService, FileManagerService, MenuService, SignalRService, DateFormatPipe,]

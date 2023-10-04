@@ -22,14 +22,11 @@ import { Router } from '@angular/router';
 })
 export class EditHotelComponent implements OnInit {
   formAddHotel: FormGroup;
-  // item: any;
-  // isVisibleAddHotel: boolean = true;
   submitted = false;
   isUpdate: boolean;
   titleFormHotel = '';
   fileList: NzUploadFile[] = [];
   listURLFiles: any[] = [];
-  htmlContent = '';
   uploadUrl = '';
   listUtilityHotel = [];
   uploadHeader: any;
@@ -110,11 +107,7 @@ export class EditHotelComponent implements OnInit {
 
   ngOnInit(): void {
     this.getListUtilityHotels();
-
     this.receivedData = this.dataService.getData();
-    console.log('receivedData: ', this.receivedData);
-    //    console.log('Received Data : ', JSON.stringify(this.receivedData));
-
     if (this.receivedData != null && Object.keys(this.receivedData).length > 0) {
       this.isUpdate = this.receivedData.isUpdateHotel;
       // console.log('item: ',item);

@@ -10,7 +10,8 @@
       [(ngModel)]="searchText" (keyup)="onSearch()" placeholder="Tìm kiếm theo tiêu đề, nội dung ...">
 
     <!-- Nút thêm -->
-    <button nz-button nzType="primary" class="ant-btn-primary" type="button" (click)="showModalAdd()" *ngIf="checkAdd">
+    <button nz-button nzType="primary" class="ant-btn-primary" type="button" (click)="routingPageNewsAdd()"
+      *ngIf="checkAdd">
       <em class="fas fa-plus fa-fw" style="margin-right: 4px;"></em> Thêm</button>
 
     <!-- Nút xuất Excel -->
@@ -20,8 +21,6 @@
     </button>
   </div>
 </div>
-
-
 <dx-data-grid id="gridContainer" [dataSource]="filteredDatas" #ListNews [showColumnLines]="true" [showRowLines]="true"
   [height]="dxGridHeight" [rowAlternationEnabled]="true" [showBorders]="true" [allowColumnResizing]="true"
   columnResizingMode="widget" [columnMinWidth]="50" [columnAutoWidth]="true" (onExporting)="onExporting($event)">
@@ -29,33 +28,28 @@
   <dxo-sorting mode="multiple"></dxo-sorting>
   <dxo-header-filter [visible]="true"></dxo-header-filter>
   <dxo-filter-row [visible]="true" [applyFilter]="currentFilter"></dxo-filter-row>
-
   <dxi-column cssClass="text-center" caption="Action" [fixed]="true" [width]="100" fixedPosition="right"
     cellTemplate="cellBtnTemplate"></dxi-column>
   <dxi-column cssClass="text-center" caption="STT" [width]="55" dataField="stt" [fixed]="true" [allowFiltering]="false"
     [allowSorting]="false"></dxi-column>
   <dxi-column caption="Tiêu đề" [width]="200" dataField="title" [fixed]="true"></dxi-column>
-  <dxi-column caption="Nội dung HTML" [width]="200" dataField="content"></dxi-column>
   <dxi-column caption="Ngày phát hành" [width]="200" dataField="datePosted" dataType="date"></dxi-column>
   <dxi-column caption="Tóm tắt" dataField="summary"></dxi-column>
   <dxi-column caption="Hình ảnh" [width]="200" dataField="imageUrl" cellTemplate="cellImages"></dxi-column>
-
   <div *dxTemplate="let item of 'cellBtnTemplate'">
     <button title="Xóa tài khoản" nz-button nzSize="small" nzType="default" class="btn-right button-update ant-btn-red"
       (click)="showDeleteConfirm(item.data.id)" *ngIf="checkUpdate">
       <span class="fa fa-times fa-fw"></span>
     </button>
     <button title="Chỉnh sửa thông tin tài khoản" nz-button nzSize="small" nzType="default"
-      class="btn-right button-update" (click)="showModalUpdate(item.data)" *ngIf="checkUpdate">
+      class="btn-right button-update" (click)="routingPageNewsUpdate(item.data)" *ngIf="checkUpdate">
       <span class="fa fa-edit fa-fw"></span>
     </button>
   </div>
-
   <div *dxTemplate="let images of 'cellImages'">
     <button *ngIf="images" nz-button nzSize="small" nzType="dashed" (click)="previewImagesNews(images.value)">Xem
       ảnh</button>
   </div>
-
   <dxo-summary>
     <dxi-total-item column="name" displayFormat="Số bản ghi: {0}" summaryType="count">
     </dxi-total-item>
@@ -70,7 +64,6 @@
         <em (click)="handleCancel()" nz-icon nzType="close" nzTheme="outline"></em>
       </div>
     </ng-template>
-
     <div>
       <div class="input-wrap" nz-row>
         <label class="title-detail" nz-col [nzSpan]="8">Tiêu đề<em class="fas fa-asterisk required"></em></label>
@@ -79,8 +72,6 @@
             [ngClass]="{ 'is-invalid': submitted && f.title.errors?.required }" />
         </div>
       </div>
-
-
       <div class="input-wrap" nz-row>
         <label class="title-detail" nz-col [nzSpan]="8">Ngày phát hành<em class="fa fa-asterisk required"></em></label>
         <div nz-col [nzSpan]="16">
@@ -88,8 +79,6 @@
             [useMaskBehavior]="true" displayFormat="dd/MM/yyyy"></dx-date-box>
         </div>
       </div>
-
-
       <div class="input-wrap" nz-row>
         <label class="title-detail" nz-col [nzSpan]="8">Tóm tắt<em class="fas fa-asterisk required"></em></label>
         <div nz-col [nzSpan]="16">
@@ -108,7 +97,6 @@
       </div>
     </div>
 
-
     <div class="input-wrap" nz-row>
       <label class="title-detail" nz-col [nzSpan]="8">Link ảnh<em class="fas fa-asterisk required"></em></label>
       <!-- <div nz-col [nzSpan]="16">
@@ -117,7 +105,8 @@
       </div> -->
 
       <div nz-col [nzSpan]="16">
-        <nz-upload [nzAction]="uploadUrl" nzName="postedFile" [nzHeaders]="uploadHeader" (nzChange)="handleChange($event)" [nzFileList]="fileList">
+        <nz-upload [nzAction]="uploadUrl" nzName="postedFile" [nzHeaders]="uploadHeader"
+          (nzChange)="handleChange($event)" [nzFileList]="fileList">
           <button nz-button>
             <span nz-icon nzType="upload"></span>
             Nhấn để tải ảnh

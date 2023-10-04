@@ -135,7 +135,7 @@ const routes: Routes = [
       },
       {
         path: 'news',
-        component: NewsComponent,
+        loadChildren: () => import('./pages/news/news.module').then(m => m.NewsModule),
         data: {
           pagename: 'Tin tức',
           breadcrumb: 'Tin tức'

@@ -58,17 +58,14 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
   formAddRoom: FormGroup;
   filteredDatas: any[] = [];
   searchText = '';
-  userInfor: any;
   titleFormHotel = '';
   titleFormRoom = '';
   isVisibleDetailUtility: boolean = false;
   listDetailUtility: any[];
   uploadHeader: any;
-  baseImageurl = '';
   uploadUrl = '';
   fileList: NzUploadFile[] = [];
   listURLFiles: any[] = [];
-  htmlContent = '';
   configDescriptionHotel: AngularEditorConfig = {
     editable: true,
     spellcheck: true,
@@ -166,7 +163,6 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
   }
 
   ngOnInit(): void {
-    this.getUserInfo();
     this.getListUtilityHotels();
     this.getListUtilityRooms();
     this.getListData();
@@ -174,11 +170,6 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
 
   ngOnDestroy(): void {
 
-  }
-
-  getUserInfo() {
-    this.userInfor = JSON.parse(localStorage.getItem(Constant.USER_INFO));
-    // console.log('this.userInfor: ', this.userInfor);
   }
 
   getListData() {
@@ -203,7 +194,6 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
   getListUtilityHotels() {
     this.generalService.getListUtilityHotel().subscribe((res: any) => {
       this.listUtilityHotel = res.data;
-      // console.log("this.listUtilityHotel: ", this.listUtilityHotel);
     });
   }
 
@@ -291,7 +281,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
       item: {}
     };
     this.dataService.setData(data);
-    this.router.navigate(['hotel/edit-hotel']);
+    this.router.navigate(['news/edit-news']);
   }
 
   showModalUpdateHotel(data: any) {
@@ -422,8 +412,6 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
 
     )
   }
-
-
 
   saveHotel() {
     this.submitted = true;

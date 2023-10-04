@@ -38,6 +38,7 @@ import { NzImageModule } from 'ng-zorro-antd/image';
 import { NzMessageModule } from 'ng-zorro-antd/message';
 import { AngularEditorModule } from '@kolkov/angular-editor';
 import { BookingHotelStatusPipe } from './pipe/booking-hotel-status.pipe';
+import { DxDateBoxModule } from 'devextreme-angular';
 
 @NgModule({
   imports: [
@@ -70,6 +71,7 @@ import { BookingHotelStatusPipe } from './pipe/booking-hotel-status.pipe';
     NzAlertModule,
     NzImageModule,
     NzMessageModule,
+    DxDateBoxModule,
     AngularEditorModule
   ],
   exports: [
@@ -109,6 +111,7 @@ import { BookingHotelStatusPipe } from './pipe/booking-hotel-status.pipe';
     NzImageModule,
     NzMessageModule,
     AngularEditorModule,
+    DxDateBoxModule,
     BookingHotelStatusPipe
   ],
   declarations: [

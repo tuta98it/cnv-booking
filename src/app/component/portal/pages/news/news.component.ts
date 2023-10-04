@@ -26,6 +26,8 @@ import { filter } from 'rxjs/operators';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzUploadChangeParam } from 'ng-zorro-antd/upload';
 import { StringUtils } from 'src/app/shared/utils/string-utils.class';
+import { Router } from '@angular/router';
+import { DataService } from 'src/app/service/data.service';
 @Component({
   selector: 'app-news',
   templateUrl: './news.component.html',
@@ -46,7 +48,6 @@ export class NewsComponent extends TableSelectionAbstract implements OnInit, OnD
   formAdd: FormGroup;
   filteredDatas: any[] = [];
   searchText = '';
-  userInfor: any;
   titleFormUser = '';
   isVisibleDetailUtility: boolean = false;
   listDetailUtility: any[];
@@ -55,6 +56,7 @@ export class NewsComponent extends TableSelectionAbstract implements OnInit, OnD
   uploadUrl = '';
   fileList: NzUploadFile[] = [];
   constructor(
+    private router: Router,
     public translate: TranslateService,
     private modalService: NzModalService,
     private notificationService: NotificationService,
@@ -64,6 +66,7 @@ export class NewsComponent extends TableSelectionAbstract implements OnInit, OnD
     private nzImageService: NzImageService,
     private msg: NzMessageService,
     private configService: AppConfigService,
+    private dataService: DataService,
   ) {
     super('id');
     this.formAdd = this.fb.group({
@@ -84,17 +87,10 @@ export class NewsComponent extends TableSelectionAbstract implements OnInit, OnD
   }
 
   ngOnInit(): void {
-    this.getUserInfo();
     this.getListData();
   }
 
   ngOnDestroy(): void {
-
-  }
-
-  getUserInfo() {
-    this.userInfor = JSON.parse(localStorage.getItem(Constant.USER_INFO));
-    console.log('this.userInfor: ', this.userInfor);
   }
 
   getListData() {
@@ -109,19 +105,9 @@ export class NewsComponent extends TableSelectionAbstract implements OnInit, OnD
     });
   }
 
-  validateEmail(mail: any) {
-    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail) || !mail) {
-      return (true);
-    }
-    alert('Chưa đúng định dạng email!');
-    return (false);
-  }
-
   get f() {
     return this.formAdd.controls;
   }
-
-
 
   showDeleteConfirm(id: any): void {
     this.modalService.confirm({
@@ -134,7 +120,7 @@ export class NewsComponent extends TableSelectionAbstract implements OnInit, OnD
     });
   }
 
-  deleteItem(id) {
+  deleteItem(id: any) {
     // Delete workspace here
     this.generalService.deleteNewsByID(id).subscribe((res: any) => {
       // Do some logic and close the popup
@@ -156,6 +142,7 @@ export class NewsComponent extends TableSelectionAbstract implements OnInit, OnD
     this.titleFormUser = 'Thêm mới tin tức';
     this.formAdd.reset();
     this.formAdd.patchValue({
+      id: 0,
       title: '',
       imageUrl: '',
       content: '',
@@ -164,6 +151,16 @@ export class NewsComponent extends TableSelectionAbstract implements OnInit, OnD
     });
     this.fileList = [];
   }
+
+  routingPageNewsAdd() {
+    const data = {
+      isUpdateNews: false,
+      item: {}
+    };
+    this.dataService.setData(data);
+    this.router.navigate(['hotel/edit-hotel']);
+  }
+
 
   showModalUpdate(data: any) {
     this.isVisibleAdd = true;
@@ -191,6 +188,14 @@ export class NewsComponent extends TableSelectionAbstract implements OnInit, OnD
     ];
   }
 
+  routingPageNewsUpdate(item: any) {
+    const data = {
+      isUpdateNews: true,
+      item: item,
+    };
+    this.dataService.setData(data);
+    this.router.navigate(['news/edit-news']);
+  }
 
   handleCancel() {
     this.isVisibleAdd = false;
@@ -202,11 +207,7 @@ export class NewsComponent extends TableSelectionAbstract implements OnInit, OnD
   handleOk() {
     this.submitted = true;
     let formValue = this.formAdd.value;
-    const checkEmail = this.validateEmail(formValue.contactEmail);
-    if (!checkEmail) {
-      this.notificationService.showNotification(Constant.ERROR, 'Email không đúng định dạng!');
-      return;
-    }
+
     if (this.formAdd.invalid) {
       this.notificationService.showNotification(Constant.ERROR, 'Tồn tại mục tin tức chưa nhập!');
       return;
@@ -243,35 +244,6 @@ export class NewsComponent extends TableSelectionAbstract implements OnInit, OnD
   }
 
 
-
-  onDeleteClick(id: any): void {
-    // alert(id)
-    const c = confirm('Bạn có chắc muốn xóa bài đăng này?');
-    // this.modalService.confirm({
-    //   nzTitle: 'Confirm',
-    //   nzContent: 'Bạn có muốn xóa hay không?',
-    //   nzOkText: 'Đồng ý',
-    //   nzCancelText: 'Bỏ qua',
-    //   nzOnOk: () => this.deleteItem(id)
-    // });
-    if (c === true) {
-      // Delete workspace here
-      this.generalService.deleteTaikhoan(id).subscribe(res => {
-        // Do some logic and close the popup
-        if (res && res.ret && res.ret[0].code !== 0) {
-          this.notificationService.showNotification(Constant.ERROR, 'Không thể xóa.');
-        } else {
-          this.notificationService.showNotification(Constant.SUCCESS, 'Xóa thành công');
-          this.getListData();
-        }
-      }, error => {
-        // Error handling and close the popup
-        this.notificationService.showNotification(Constant.ERROR, 'Đã có lỗi xảy ra!');
-      });
-    } else {
-    }
-  }
-
   exportData() {
     this.dataGridDetail.instance.exportToExcel(false);
   }
@@ -306,8 +278,6 @@ export class NewsComponent extends TableSelectionAbstract implements OnInit, OnD
       removeAccents(en.summary?.trim()).toLowerCase().includes(keyword)
     );
   }
-
-
   previewImagesNews(image: any) {
     console.log('image: ', image);
     let arrImage: any[] = [];
@@ -322,7 +292,6 @@ export class NewsComponent extends TableSelectionAbstract implements OnInit, OnD
     }
     this.nzImageService.preview(arrImage, { nzZoom: 1.5, nzRotate: 0 });
   }
-
   handleChange(info: NzUploadChangeParam): void {
     if (info.file.status === 'done') {
       this.msg.success(`${info.file.name} file uploaded successfully`);
@@ -337,21 +306,9 @@ export class NewsComponent extends TableSelectionAbstract implements OnInit, OnD
       this.msg.error(`${info.file.name} file upload failed.`);
     }
   }
-
-
-
   previewDetailUtilityNews(utilityNews: any) {
     this.isVisibleDetailUtility = true;
     this.listDetailUtility = utilityNews;
-    let stt = 0;
-    this.listDetailUtility.forEach(en => {
-      en.stt = ++stt;
-    });
-  }
-
-  previewDetailUtilityRooms(utilityRooms: any) {
-    this.isVisibleDetailUtility = true;
-    this.listDetailUtility = utilityRooms;
     let stt = 0;
     this.listDetailUtility.forEach(en => {
       en.stt = ++stt;

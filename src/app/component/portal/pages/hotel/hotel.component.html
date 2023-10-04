@@ -40,12 +40,12 @@
   <dxi-column caption="Địa chỉ" [width]="200" dataField="address"></dxi-column>
   <dxi-column caption="Số điện thoại" [width]="200" dataField="phoneNo"></dxi-column>
   <dxi-column caption="Email" [width]="300" dataField="contactEmail"></dxi-column>
-  <dxi-column caption="Mô tả" [width]="400" dataField="description"></dxi-column>
+  <dxi-column caption="Mô tả" [width]="400" dataField="description" cellTemplate="cellDescription"></dxi-column>
   <dxi-column caption="Website" [width]="200" dataField="websiteUrl" cellTemplate="cellWebsite"></dxi-column>
   <dxi-column caption="Facebook" [width]="200" dataField="facebook" cellTemplate="cellFacebook"
     [visible]="false"></dxi-column>
-  <dxi-column caption="Hạng" [width]="150" dataField="ratingStar"></dxi-column>
-  <dxi-column caption="Số phòng" [width]="150" dataField="numRooms"></dxi-column>
+  <dxi-column caption="Hạng" cssClass="text-left" [width]="150" dataField="ratingStar"></dxi-column>
+  <dxi-column caption="Số phòng" cssClass="text-left" [width]="150" dataField="numRooms"></dxi-column>
   <dxi-column caption="Hình ảnh khách sạn" [width]="250" dataField="hotelFile" cellTemplate="cellImages"></dxi-column>
   <dxi-column caption="Tiện ích khách sạn" cssClass="text-center" [width]="200"
     cellTemplate="cellUtilityHotels"></dxi-column>
@@ -58,6 +58,10 @@
       class="btn-right button-update" (click)="routingPageHotelUpdate(item.data)" *ngIf="checkUpdate">
       <span class="fa fa-edit fa-fw"></span>
     </button>
+  </div>
+  <div *dxTemplate="let description of 'cellDescription'">
+    <div [innerHTML]="description.value">
+    </div>
   </div>
   <div *dxTemplate="let linkWebsite of 'cellWebsite'">
     <a *ngIf="linkWebsite.value" href='{{linkWebsite.value}}' target="_blank">Website

@@ -1,0 +1,66 @@
+<form [formGroup]="formAddNews">
+  <div class="edit-news">
+    <div class="header">
+      <div class="header-title">
+        {{titleFormNews? titleFormNews : 'Thêm mới tin tức'}}
+      </div>
+    </div>
+    <div class="content">
+      <div>
+        <div class="input-wrap" nz-row>
+          <label class="title-detail" nz-col [nzSpan]="2">Tiêu đề<em class="fas fa-asterisk required"></em></label>
+          <div nz-col [nzSpan]="22">
+            <input nz-input formControlName="title" placeholder="tiêu đề ..."
+              [ngClass]="{ 'is-invalid': submitted && formControlNews.title.errors?.required }" />
+          </div>
+        </div>
+        <div class="input-wrap" nz-row>
+          <label class="title-detail" nz-col [nzSpan]="2">Ngày phát hành<em
+              class="fa fa-asterisk required"></em></label>
+          <div nz-col [nzSpan]="22">
+            <dx-date-box formControlName="datePosted" placeholder="dd/MM/yyyy" type="date" [showClearButton]="true"
+              [useMaskBehavior]="true" displayFormat="dd/MM/yyyy"
+              [ngClass]="{ 'is-invalid': submitted && formControlNews.datePosted.errors?.required }"></dx-date-box>
+          </div>
+        </div>
+        <div class="input-wrap" nz-row>
+          <label class="title-detail" nz-col [nzSpan]="2">Tóm tắt<em class="fas fa-asterisk required"></em></label>
+          <div nz-col [nzSpan]="22">
+            <input nz-input formControlName="summary" placeholder="Tóm tắt ...."
+              [ngClass]="{ 'is-invalid': submitted && formControlNews.summary.errors?.required }" />
+          </div>
+        </div>
+      </div>
+      <div class="input-wrap" nz-row>
+        <label class="title-detail" nz-col [nzSpan]="2">Nội dung<em class="fa fa-asterisk required"></em></label>
+        <div nz-col [nzSpan]="22">
+          <angular-editor [placeholder]="'Nội dung bài đăng ...'" formControlName="content"
+            [config]="configDescriptionNews"
+            [ngClass]="{ 'is-invalid': submitted && formControlNews.content.errors?.required }"></angular-editor>
+          <!-- <textarea nz-input formControlName="content" placeholder="Nội dung bài đăng ..."
+            [nzAutosize]="{ minRows: 2, maxRows: 6 }"
+            [ngClass]="{ 'is-invalid': submitted && formControlNews.content.errors?.required }"></textarea> -->
+        </div>
+      </div>
+      <div class="input-wrap" nz-row>
+        <label class="title-detail" nz-col [nzSpan]="2">Tải ảnh<em class="fas fa-asterisk required"></em></label>
+        <div nz-col [nzSpan]="22">
+          <nz-upload [nzAction]="uploadUrl" nzName="postedFile" [nzHeaders]="uploadHeader"
+            (nzChange)="handleChange($event)" [nzFileList]="fileList">
+            <button nz-button>
+              <span nz-icon nzType="upload"></span>
+              Nhấn để tải ảnh
+            </button>
+          </nz-upload>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div class="footer-btn-buttons">
+        <button nz-button (click)="handleCancel()">{{'cancel' | translate }}</button>
+        <button nz-button nzType="primary" (click)="saveNews()" class="button-submit">{{'save' | translate }}</button>
+      </div>
+    </div>
+  </div>
+</form>
