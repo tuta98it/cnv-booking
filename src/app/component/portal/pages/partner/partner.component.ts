@@ -13,7 +13,7 @@ import { Workbook } from 'exceljs';
 import { DateFormatPipe } from 'src/app/shared/pipe/format-date.pipe';
 import { exportDataGrid } from 'devextreme/excel_exporter';
 import { saveAs } from 'file-saver-es';
-import {NzUploadChangeParam, NzUploadFile} from 'ng-zorro-antd/upload';
+import { NzUploadChangeParam, NzUploadFile } from 'ng-zorro-antd/upload';
 import {
   DxDataGridComponent,
   DxTemplateDirective,
@@ -63,7 +63,6 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
   isVisibleAddAccount: boolean = false;
   isEnableUsername: boolean = false;
   titleFormPartner = '';
-
   uploadHeader: any;
   baseImageurl = '';
   uploadUrl = '';
@@ -93,7 +92,6 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
       phone: [null],
       email: [null, [Validators.required]],
       address: [null, [Validators.required]],
-      numberOfStaff: [null],
       debtMax: [null],
       debtUsed: [null],
       debtRemain: [null],
@@ -120,9 +118,10 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
     this.getAllRole();
 
     this.formAccount = this.fb.group({
-      // userId: [null, [Validators.required]],
+      userId: [null, [Validators.required]],
       partnerId: [null, [Validators.required]],
       username: [null, [Validators.required]],
+      email: [null, [Validators.required]],
       password: [null, [Validators.required]],
       repeatPassword: [null, [Validators.required]],
       fullname: [null, [Validators.required]],
@@ -155,7 +154,6 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
 
   getUserInfo() {
     this.userInfor = JSON.parse(localStorage.getItem(Constant.USER_INFO));
-    console.log('this.userInfor: ', this.userInfor);
   }
 
   getListData() {
@@ -284,7 +282,6 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
       phone: this.item.phone,
       email: this.item.email,
       address: this.item.address,
-      numberOfStaff: this.item.numberOfStaff,
       debtMax: this.item.debtMax,
       debtUsed: this.item.debtUsed,
       debtRemain: this.item.debtRemain,
@@ -344,8 +341,6 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
     const formValue = this.formAdd.value;
     const checkEmail = this.validateEmail(formValue.email);
     this.submitted = true;
-
-
     if (this.formAdd.invalid) {
       return;
     } else {
@@ -353,9 +348,12 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
         return;
       }
       if (formValue.id === 0) {
+        // Tạo mới tài khoản đối tác
         delete formValue.id;
+        delete formValue.username;
+        delete formValue.password;
+        delete formValue.repeatPassword;
         // formValue.status = 1;
-
         this.generalService.addPartner(formValue).subscribe((res: any) => {
           if (res.ret && res.ret[0].code !== 0) {
             this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
@@ -366,9 +364,12 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
             this.notificationService.showNotification(Constant.SUCCESS, Constant.MESSAGE_ADD_SUCCESS);
           }
         }, error => {
-
+          this.notificationService.showNotification(Constant.ERROR, 'Tạo mới thông tin đối tác thất bại!');
         });
       } else {
+        delete formValue.username;
+        delete formValue.password;
+        delete formValue.repeatPassword;
         this.generalService.updatePartner(formValue).subscribe((res: any) => {
           if (res.ret && res.ret[0].code !== 0) {
             this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
@@ -378,7 +379,7 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
             this.notificationService.showNotification(Constant.SUCCESS, Constant.MESSAGE_UPDATE_SUCCESS);
           }
         }, error => {
-
+          this.notificationService.showNotification(Constant.ERROR, 'Sửa thông tin đối tác thất bại!');
         });
       }
     }
@@ -538,41 +539,34 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
     );
   }
 
-  showModalAccount(data) {
+  showModalAccount(data: any) {
+    console.log('data: ', data);
     this.isVisibleAddAccount = true;
-    // this.formAccount.patchValue({
-    //   id: data.userId,
-    //   // id: 0,
-    //   fullname: data.name,
-    //   staffCode: data.code,
-    //   email: data.email,
-    //   phoneNo: data.phone,
-    //   userType: this.userInfor.userType === 0 ? 1 : this.userInfor.userType === 1 ? 3 : null,
-    //   partnerId: this.userInfor.userType === 0 ? null : this.userInfor.userType === 1 ? this.userInfor.id : null,
-    //   // username: data.username,
-    //   username: '',
-    //   password: "",
-    //   repeatPassword: "",
-    // });
-
     this.formAccount.patchValue({
-      // userId: data.userId,
+      userId: data.userId,
       partnerId: data.id,
       fullname: data.name,
+      email: data.email,
       username: data.username,
       password: "",
       repeatPassword: "",
     });
+    console.log("this.formAccount.value: ", this.formAccount.value);
+
     if (data.username) this.isEnableUsername = true
     else this.isEnableUsername = false;
-    console.log(this.formAccount.value);
   }
 
   handleOkAddAccount() {
     const formValue = this.formAccount.value;
-    if (formValue.userId == null) {
-      // delete formValue.id;
-      this.generalService.postAccountForPartner(formValue).subscribe((res: any) => {
+    if (!this.isEnableUsername) {
+      let payloadPostAccountForPartner = {
+        partnerId: formValue.partnerId,
+        username: formValue.username,
+        password: formValue.password,
+        repeatPassword: formValue.repeatPassword,
+      }
+      this.generalService.postAccountForPartner(payloadPostAccountForPartner).subscribe((res: any) => {
         if (!res.isValid) {
           this.notificationService.showNotification(
             Constant.ERROR,
@@ -580,31 +574,37 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
           );
         } else {
           this.isVisibleAddAccount = false;
-          // this.getPartners();
           this.notificationService.showNotification(
             Constant.SUCCESS,
             Constant.MESSAGE_ADD_SUCCESS
           );
           this.formAccount.reset();
         }
-      });
+      }).add(() => { this.getListData() });
     } else {
-      this.generalService.changeUserPassword(formValue.userId, formValue).subscribe((res: any) => {
-        if (!res.isValid) {
-          this.notificationService.showNotification(
-            Constant.ERROR,
-            res.errors[0].errorMessage
-          );
-        } else {
-          this.isVisibleAddAccount = false;
-          // this.getPartners();
-          this.notificationService.showNotification(
-            Constant.SUCCESS,
-            Constant.MESSAGE_UPDATE_SUCCESS
-          );
-          this.formAccount.reset();
-        }
-      });
+      let userId = formValue.userId;
+      let payloadChangeUserPassword = {
+        password: formValue.password,
+        repeatPassword: formValue.repeatPassword,
+      }
+      this.generalService.changeUserPassword(userId, payloadChangeUserPassword).subscribe(
+        (res: any) => {
+          res.ret.forEach((element: any) => {
+            if (element.code != 0) {
+              this.notificationService.showNotification(
+                Constant.ERROR,
+                element.message
+              );
+            } else {
+              this.isVisibleAddAccount = false;
+              this.notificationService.showNotification(
+                Constant.SUCCESS,
+                'Đổi mật khẩu thành công!'
+              );
+              this.formAccount.reset();
+            }
+          });
+        }).add(() => { this.getListData() });;
     }
   }
 

@@ -439,8 +439,8 @@ export class GeneralService extends BaseService {
   // }
 
 
-  changeUserPassword(id: any, newData: any): Observable<any> {
-    return this.post(UrlConstant.LIST_USER + `/ChangeUserPassword/${id}`, newData);
+  changeUserPassword(id: any, newPass: any): Observable<any> {
+    return this.post(UrlConstant.LIST_USER + `/ChangeUserPassword/${id}`, newPass);
   }
 
 
