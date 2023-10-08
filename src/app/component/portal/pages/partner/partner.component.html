@@ -81,7 +81,7 @@
 
   <div *dxTemplate="let item of 'cellBtnTemplate'">
     <button title="Xóa tài khoản" nz-button nzSize="small" nzType="default" class="btn-right button-update ant-btn-red"
-      (click)="showDeleteConfirm(item.data.id)" *ngIf="checkUpdate">
+      (click)="showDeleteConfirm(item.data)" *ngIf="checkUpdate">
       <span class="fa fa-times fa-fw"></span>
     </button>
     <button title="Sửa thông tin tài khoản" nz-button nzSize="small" nzType="default" class="btn-right button-update"
@@ -93,15 +93,18 @@
       <span class="fa fa-user fa-fw"></span>
     </button> -->
 
-    <button title="Tạo tài khoản" nz-button nzSize="small" nzType="default" class="btn-right button-update"
+    <button *ngIf="!item.data.userId" title="Tạo tài khoản" nz-button nzSize="small" nzType="default" class="btn-right button-update"
       (click)="showModalAccount(item.data)">
       <span class="fa fa-user fa-fw"></span>
     </button>
 
-    <!-- <button title="Đổi mật khẩu" nz-button nzSize="small" nzType="default" class="btn-right button-update"
-      (click)="showModalPassword(item.data)" *ngIf="checkUpdate">
+    <button *ngIf="item.data.userId" title="Đổi mật khẩu" nz-button nzSize="small" nzType="default" class="btn-right button-update"
+      (click)="showModalAccount(item.data)">
+
+      <!-- <button *ngIf="item.data.userId" title="Đổi mật khẩu" nz-button nzSize="small" nzType="default" class="btn-right button-update"
+      (click)="showModalPassword(item.data)"> -->
       <span class="fa fa-key fa-fw"></span>
-    </button> -->
+    </button>
   </div>
 
 
@@ -292,7 +295,7 @@
 <!--Thêm tài khoản đối tác con-->
 <nz-modal (nzOnCancel)="handleCancel()" [(nzVisible)]="isVisibleAddAccount" [nzTitle]="titleaccount2"
   [nzContent]="contentaccount2" [nzFooter]="footeraccount2">
-  <ng-template #titleaccount2>Thông tin tài khoản</ng-template>
+  <ng-template #titleaccount2>{{ !isEnableUsername ? 'Thêm tài khoản':'Đổi mật khẩu'}}</ng-template>
   <ng-template #contentaccount2>
     <form nz-form [formGroup]="formAccount">
       <div nz-row class="input-wrap nz-row">

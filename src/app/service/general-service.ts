@@ -411,6 +411,11 @@ export class GeneralService extends BaseService {
   }
 
 
+  deleteUserByID(idUser: any): Observable<any> {
+    return this.delete(UrlConstant.LIST_USER + `/${idUser}`, idUser);
+  }
+
+
   updateUser(newData: any): Observable<any> {
     return this.put(UrlConstant.LIST_USER + `/${newData.id}`, newData);
   }
@@ -473,8 +478,8 @@ export class GeneralService extends BaseService {
     return this.put(UrlConstant.LIST_PARTNERS + "/" + item.id, item);
   }
 
-  deletePartner(id: number): any {
-    return this.delete(UrlConstant.LIST_PARTNERS + "/" + id, null);
+  deletePartner(idPartner: number): any {
+    return this.delete(UrlConstant.LIST_PARTNERS + "/" + idPartner, idPartner);
   }
 
   savePartnerRate(item: any): any {

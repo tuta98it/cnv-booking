@@ -14,6 +14,7 @@ import { DateFormatPipe } from 'src/app/shared/pipe/format-date.pipe';
 import { exportDataGrid } from 'devextreme/excel_exporter';
 import { saveAs } from 'file-saver-es';
 import { NzUploadChangeParam, NzUploadFile } from 'ng-zorro-antd/upload';
+import { UserService } from 'src/app/service/user-service';
 import {
   DxDataGridComponent,
   DxTemplateDirective,
@@ -78,6 +79,7 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
     private modalService: NzModalService,
     private notificationService: NotificationService,
     private generalService: GeneralService,
+    private userService: UserService,
     private actionsSubject$: ActionsSubject,
     private configService: AppConfigService,
     private fb: FormBuilder,
@@ -86,6 +88,7 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
     super('id');
     this.formAdd = this.fb.group({
       id: [null],
+      userId: [null],
       name: [null, [Validators.required]],
       companyName: [null, [Validators.required]],
       taxCode: [null, [Validators.required]],
@@ -221,7 +224,7 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
     });
   }
 
-  showDeleteConfirm(id): void {
+  showDeleteConfirm(partner: any): void {
     this.get();
     this.modalService.confirm({
       nzTitle: 'Bạn có chắc muốn xóa tài khoản này?',
@@ -229,18 +232,37 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
       nzOkDanger: true,
       nzOkText: 'Đồng ý',
       nzCancelText: 'Không',
-      nzOnOk: () => this.deleteItem(id)
+      nzOnOk: () => this.deleteItem(partner)
     });
   }
 
-  deleteItem(id) {
+  deleteItem(partner: any) {
+
+    this.generalService.deleteUserByID(partner.userId).subscribe({
+      next: (res: any) => {
+        if (res && res.ret && res.ret[0].code !== 0) {
+          this.notificationService.showNotification(Constant.ERROR, 'Xoá tài khoản đối tác thất bại');
+        } else {
+          this.notificationService.showNotification(Constant.SUCCESS, 'Xoá tài khoản đối tác thành công');
+          this.getListData();
+        }
+      },
+      error: (error: any) => {
+        this.notificationService.showNotification(Constant.SUCCESS, 'Xoá tài khoản đối tác thành công');
+      },
+      complete: () => {
+
+      },
+    })
+
+
     // Delete workspace here
-    this.generalService.deletePartner(id).subscribe(res => {
+    this.generalService.deletePartner(partner.id).subscribe(res => {
       // Do some logic and close the popup
       if (res && res.ret && res.ret[0].code !== 0) {
-        this.notificationService.showNotification(Constant.ERROR, 'Không thể xóa.');
+        this.notificationService.showNotification(Constant.ERROR, 'Xoá thông tin đối tác thất bại');
       } else {
-        this.notificationService.showNotification(Constant.SUCCESS, 'Xóa thành công');
+        this.notificationService.showNotification(Constant.SUCCESS, 'Xóa thông tin đối tác thành công');
         this.getListData();
       }
     }, error => {
@@ -256,6 +278,7 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
     this.formAdd.reset();
     this.formAdd.patchValue({
       id: 0,
+      userId: 0,
       companyName: '',
       name: '',
       phone: '',
@@ -268,14 +291,15 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
     });
   }
 
-  showModalUpdate(data) {
+  showModalUpdate(data: any) {
     this.isVisibleAdd = true;
     this.submitted = false;
     this.item = data;
     this.updated = true;
-    this.titleFormPartner = 'Sủa thông tin đối tác';
+    this.titleFormPartner = 'Sửa thông tin đối tác';
     this.formAdd.patchValue({
       id: this.item.id,
+      userId: this.item.userId,
       companyName: this.item.companyName,
       taxCode: this.item.taxCode,
       name: this.item.name,
@@ -353,6 +377,7 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
         delete formValue.username;
         delete formValue.password;
         delete formValue.repeatPassword;
+        delete formValue.userId;
         // formValue.status = 1;
         this.generalService.addPartner(formValue).subscribe((res: any) => {
           if (res.ret && res.ret[0].code !== 0) {
@@ -367,6 +392,21 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
           this.notificationService.showNotification(Constant.ERROR, 'Tạo mới thông tin đối tác thất bại!');
         });
       } else {
+        let payload = {
+          id: formValue.userId,
+          fullname: formValue.name,
+          username: formValue.username,
+          email: formValue.email,
+          phoneNo: formValue.phone,
+        }
+        this.generalService.updateUser(payload).subscribe(res => {
+          if (res && res.ret && res.ret[0].code !== 0) {
+            this.notificationService.showNotification(Constant.ERROR, 'Sửa tài khoản đối tác thất bại');
+          } else {
+            this.notificationService.showNotification(Constant.SUCCESS, 'Sửa tài khoản đối tác thành công');
+          }
+        });
+        delete formValue.userId;
         delete formValue.username;
         delete formValue.password;
         delete formValue.repeatPassword;
@@ -547,12 +587,10 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
       partnerId: data.id,
       fullname: data.name,
       email: data.email,
-      username: data.username,
+      username: data.email,
       password: "",
       repeatPassword: "",
     });
-    console.log("this.formAccount.value: ", this.formAccount.value);
-
     if (data.username) this.isEnableUsername = true
     else this.isEnableUsername = false;
   }
@@ -580,7 +618,7 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
           );
           this.formAccount.reset();
         }
-      }).add(() => { this.getListData() });
+      }).add(() => { this.getListData(); });
     } else {
       let userId = formValue.userId;
       let payloadChangeUserPassword = {
@@ -604,7 +642,7 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
               this.formAccount.reset();
             }
           });
-        }).add(() => { this.getListData() });;
+        }).add(() => { this.getListData(); });;
     }
   }
 
