@@ -237,25 +237,6 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
   }
 
   deleteItem(partner: any) {
-
-    this.generalService.deleteUserByID(partner.userId).subscribe({
-      next: (res: any) => {
-        if (res && res.ret && res.ret[0].code !== 0) {
-          this.notificationService.showNotification(Constant.ERROR, 'Xoá tài khoản đối tác thất bại');
-        } else {
-          this.notificationService.showNotification(Constant.SUCCESS, 'Xoá tài khoản đối tác thành công');
-          this.getListData();
-        }
-      },
-      error: (error: any) => {
-        this.notificationService.showNotification(Constant.SUCCESS, 'Xoá tài khoản đối tác thành công');
-      },
-      complete: () => {
-
-      },
-    })
-
-
     // Delete workspace here
     this.generalService.deletePartner(partner.id).subscribe(res => {
       // Do some logic and close the popup
@@ -269,6 +250,24 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
       // Error handling and close the popup
 
     });
+    if (partner.userId) {
+      this.generalService.deleteUserByID(partner.userId).subscribe({
+        next: (res: any) => {
+          if (res && res.ret && res.ret[0].code !== 0) {
+            this.notificationService.showNotification(Constant.ERROR, 'Xoá tài khoản đối tác thất bại');
+          } else {
+            this.notificationService.showNotification(Constant.SUCCESS, 'Xoá tài khoản đối tác thành công');
+            this.getListData();
+          }
+        },
+        error: (error: any) => {
+          this.notificationService.showNotification(Constant.SUCCESS, 'Xoá tài khoản đối tác thành công');
+        },
+        complete: () => {
+
+        },
+      })
+    }
   }
 
   showModalAdd() {
@@ -399,13 +398,16 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
           email: formValue.email,
           phoneNo: formValue.phone,
         }
-        this.generalService.updateUser(payload).subscribe(res => {
-          if (res && res.ret && res.ret[0].code !== 0) {
-            this.notificationService.showNotification(Constant.ERROR, 'Sửa tài khoản đối tác thất bại');
-          } else {
-            this.notificationService.showNotification(Constant.SUCCESS, 'Sửa tài khoản đối tác thành công');
-          }
-        });
+        if (formValue.userId) {
+          this.generalService.updateUser(payload).subscribe(res => {
+            if (res && res.ret && res.ret[0].code !== 0) {
+              this.notificationService.showNotification(Constant.ERROR, 'Sửa tài khoản đối tác thất bại');
+            } else {
+              this.notificationService.showNotification(Constant.SUCCESS, 'Sửa tài khoản đối tác thành công');
+            }
+          });
+        }
+
         delete formValue.userId;
         delete formValue.username;
         delete formValue.password;
@@ -416,7 +418,7 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
           } else {
             this.getListData();
             this.isVisibleAdd = false;
-            this.notificationService.showNotification(Constant.SUCCESS, Constant.MESSAGE_UPDATE_SUCCESS);
+            this.notificationService.showNotification(Constant.SUCCESS, 'Sửa thông tin đối tác thành công');
           }
         }, error => {
           this.notificationService.showNotification(Constant.ERROR, 'Sửa thông tin đối tác thất bại!');
