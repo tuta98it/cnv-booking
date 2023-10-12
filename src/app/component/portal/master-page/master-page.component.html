@@ -55,6 +55,12 @@
               <li nz-menu-item [nzSelected]="url === '/admin-void-ticket'"><a routerLink="/admin-void-ticket">Quản lý huỷ vé</a></li>
             </ul>
           </li>
+          <li nz-submenu nzTitle="Thông kê dữ liệu">
+            <ul>
+              <!-- <li nz-menu-item [nzSelected]="url === '/data-statistics'"><a routerLink="/data-statistics">Tổng hợp dữ liệu</a></li> -->
+              <li nz-menu-item [nzSelected]="url === '/data-airline-tickets'"><a routerLink="/data-airline-tickets">Bảng kê chi tiết vé máy bay</a></li>
+            </ul>
+          </li>
         </ul>
       </li>
     </ul>

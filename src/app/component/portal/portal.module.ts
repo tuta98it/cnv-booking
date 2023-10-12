@@ -19,7 +19,6 @@ import { RoleComponent } from './pages/role/role.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { SignalRService } from '../../service/signal-r.service';
-import { DxDataGridModule, DxNumberBoxModule } from 'devextreme-angular';
 import { DateFormatPipe } from '../../shared/pipe/format-date.pipe';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
@@ -33,6 +32,11 @@ import { HotelComponent } from './pages/hotel/hotel.component';
 import { NewsComponent } from './pages/news/news.component';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
 import { BookingHotelComponent } from './pages/booking-hotel/booking-hotel.component';
+import { DataStatisticsComponent } from './pages/data-statistics/data-statistics.component';
+import { DataAirlineTicketsComponent } from './pages/data-airline-tickets/data-airline-tickets.component';
+import {
+  DxButtonModule, DxTabPanelModule, DxDataGridModule, DxDataGridComponent,DxNumberBoxModule
+} from 'devextreme-angular';
 const antDesignIcons = AllIcons as {
   [key: string]: IconDefinition;
 };
@@ -51,6 +55,8 @@ const icons: IconDefinition[] = Object.keys(antDesignIcons).map(key => antDesign
     HotelComponent,
     BookingHotelComponent,
     NewsComponent,
+    DataStatisticsComponent,
+    DataAirlineTicketsComponent
   ],
   imports: [
     RouterModule.forChild([]),
@@ -60,10 +66,12 @@ const icons: IconDefinition[] = Object.keys(antDesignIcons).map(key => antDesign
     NzBreadCrumbModule,
     ColorPickerModule,
     NgApexchartsModule,
-    DxDataGridModule,
     DxNumberBoxModule,
     NzAvatarModule,
     NzTabsModule,
+    DxButtonModule,
+    DxTabPanelModule,
+    DxDataGridModule,
     NzSwitchModule,
   ],
   providers: [GeneralService, FileManagerService, MenuService, SignalRService, DateFormatPipe,]

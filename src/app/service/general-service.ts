@@ -542,6 +542,11 @@ export class GeneralService extends BaseService {
   }
 
 
+  ReportDebtStatistics(payload: any): Observable<any> {
+    return this.post(`/api${UrlConstant.BOOKING}/ReportDebtStatistics`, payload);
+  }
+
+
   //TestResult
   updateTestResult(item: any): any {
     return this.put(UrlConstant.LIST_TEST_RESULT + "/" + item.id, item);
@@ -610,6 +615,8 @@ export class GeneralService extends BaseService {
   refuseBooking(payload: any): Observable<any> {
     return this.post(`/api${UrlConstant.BOOKING_HOTEL}/refuseBooking`, payload);
   }
+
+
 
   // News
   getNews(): Observable<any> {

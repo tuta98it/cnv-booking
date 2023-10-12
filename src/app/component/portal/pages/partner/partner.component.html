@@ -238,59 +238,6 @@
   </nz-modal>
 </form>
 
-<nz-modal [(nzVisible)]="isVisibleUserGroup" nzClosable="false" [nzTitle]="titleUserGroup" nzMaskClosable="false">
-  <ng-template #titleUserGroup>
-    Danh sách nhóm
-    <div class="pull-right icon-close">
-      <em (click)="handleCancelUserGroup()" nz-icon nzType="close" nzTheme="outline"></em>
-    </div>
-  </ng-template>
-  <div class="row">
-    <div class="col-md-9">
-      <nz-select style="width: 100%" nzShowSearch [(ngModel)]="chooseGroup" nzPlaceHolder="Chọn nhóm tài khoản"
-        class="input-search" [nzShowArrow]="true">
-        <nz-option *ngFor="let o of groups" [nzLabel]="o.name" [nzValue]="o">
-        </nz-option>
-      </nz-select>
-    </div>
-    <div class="col-md-3">
-      <button nz-button nzType="primary" (click)="addGroup2User()" class="button-submit right">Thêm mới</button>
-    </div>
-  </div>
-  <br>
-  <div class="data-table">
-    <nz-table #basicTable [nzData]="usergroups" [nzPageSizeOptions]="pageSize" [nzPageSize]="defaultPage"
-      nzShowSizeChanger [nzShowTotal]="rangeTemplate" [nzLoading]="loading">
-      <thead>
-        <tr>
-          <th class="text-nowrap" width="50px">#</th>
-          <th class="text-nowrap">Tên nhóm</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let data of usergroups;let i = index;">
-          <td class="text-nowrap">{{i + 1}}</td>
-          <td class="text-nowrap">{{ data.name }}</td>
-          <td class="text-nowrap">
-            <button title="Xóa nhóm" nz-button nzSize="small" nzType="default" class="btn-right button-update"
-              (click)="showConfirmRemoveGroup(data.id)">
-              <span class="fa fa-times fa-fw"></span>
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </nz-table>
-    <ng-template #rangeTemplate let-range="range" let-total>
-      {{ range[0] }}-{{ range[1] }} {{'of' | translate }} {{ total }} {{'items' | translate }}
-    </ng-template>
-  </div>
-  <!-- Footer -->
-  <div *nzModalFooter>
-    <button nz-button (click)="handleCancelUserGroup()">{{'cancel' | translate }}</button>
-  </div>
-</nz-modal>
-
 
 <!--Thêm tài khoản đối tác con-->
 <nz-modal (nzOnCancel)="handleCancel()" [(nzVisible)]="isVisibleAddAccount" [nzTitle]="titleaccount2"

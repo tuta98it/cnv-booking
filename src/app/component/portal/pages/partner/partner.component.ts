@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ActionsSubject, select, Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { GeneralService } from 'src/app/service/general-service';
@@ -14,7 +13,6 @@ import { DateFormatPipe } from 'src/app/shared/pipe/format-date.pipe';
 import { exportDataGrid } from 'devextreme/excel_exporter';
 import { saveAs } from 'file-saver-es';
 import { NzUploadChangeParam, NzUploadFile } from 'ng-zorro-antd/upload';
-import { UserService } from 'src/app/service/user-service';
 import {
   DxDataGridComponent,
   DxTemplateDirective,
@@ -29,13 +27,11 @@ import {
 export class PartnerComponent extends TableSelectionAbstract implements OnInit, OnDestroy {
   @ViewChild("ListAccount") dataGridDetail: DxDataGridComponent;
   datas: any[] = [];
-  data: any;
   passwordVisible: boolean;
   repeatpasswordVisible: boolean;
   isVisibleAdd: boolean;
   isVisibleUpdate: boolean;
   isVisiblePassword: boolean;
-  isVisibleUserGroup: boolean;
   item: any;
   loading: boolean;
   checkDelete = true;
@@ -49,14 +45,9 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
   formAdd: FormGroup;
   formPassword: FormGroup;
   allRoles: any[];
-  usergroups: any[];
   baseUrl: any;
   signature: any = {};
   urlServiceSignature = '';
-  groups = [];
-  chooseGroup: any;
-  tinhThanhs = [];
-  quanHuyens = [];
   filteredDatas: any[] = [];
   searchText = '';
   userInfor: any;
@@ -79,8 +70,6 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
     private modalService: NzModalService,
     private notificationService: NotificationService,
     private generalService: GeneralService,
-    private userService: UserService,
-    private actionsSubject$: ActionsSubject,
     private configService: AppConfigService,
     private fb: FormBuilder,
     private dateFormatPipe: DateFormatPipe,
@@ -142,10 +131,6 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
     this.page = this.configService.getConfig().page;
     this.defaultPage = this.configService.getConfig().defaultPage;
     this.baseUrl = this.configService.getConfig().api.baseUrl;
-
-    this.get();
-    this.getGroups();
-    // this.getTinhThanh();
     this.getListData();
     this.getUserInfo();
   }
@@ -168,7 +153,6 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
         let stt = 0;
         this.datas.forEach(en => {
           en.stt = ++stt;
-          // en.roleStr = this.getQuyen(en.userroles);
         });
         this.filteredDatas = this.datas;
         console.log(this.datas);
@@ -191,18 +175,10 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
     return this.formAdd.controls;
   }
 
-  get() {
-    this.translate.use(this.translate.currentLang).subscribe(data => {
-      this.data = data;
-
-    });
-  }
-
   handlePreview = async (file: NzUploadFile): Promise<void> => {
     if (!file.url && !file.preview) {
 
     }
-    console.log('file: ', file);
     this.previewUrl = this.configService.getConfig().api.url + '/' + file.response[0].path;
     this.previewFileResult = true;
   }
@@ -225,7 +201,6 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
   }
 
   showDeleteConfirm(partner: any): void {
-    this.get();
     this.modalService.confirm({
       nzTitle: 'Bạn có chắc muốn xóa tài khoản này?',
       nzContent: '<b style="color: red;">Tài khoản sẽ thể hoàn tác sau khi xoá. Ấn đồng ý để xoá</b>',
@@ -324,34 +299,7 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
     });
   }
 
-  // @ts-ignore
-  showModalUserGroup(data) {
-    this.usergroups = [];
-    this.item = data;
-    this.isVisibleUserGroup = true;
-    this.getGroupByUser();
-  }
-  getGroupByUser() {
-    this.generalService.getTaikhoanById(this.item.id).subscribe(res => {
-      if (res !== null) {
-        this.usergroups = res.usergroups.map(en => en.group);
-        const userGroupIds = res.usergroups.map(en => en.groupId);
-        this.generalService.getGroup().subscribe(res2 => {
-          if (res2 !== null) {
-            this.groups = res2.filter(en => !userGroupIds.includes(en.id));
-          }
-        }, error => {
 
-        });
-      }
-    }, error => {
-
-    });
-  }
-
-  handleCancelUserGroup() {
-    this.isVisibleUserGroup = false;
-  }
 
   handleCancel() {
     this.isVisibleAdd = false;
@@ -431,11 +379,6 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
     this.isVisiblePassword = false;
   }
 
-  getGroups() {
-    this.loading = true;
-
-  }
-
   handleOkPassword() {
     const formValue = this.formPassword.value;
     this.generalService.updateUserPassword(formValue).subscribe(res => {
@@ -449,26 +392,6 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
     }, error => {
 
     });
-  }
-
-  getRowIndex = (index, pageIndex, pageSize) => index + 1 + pageSize * (pageIndex - 1);
-  getHoTen = (ho, ten) => ho + ' ' + ten;
-
-  getQuyen(roles) {
-    if (this.allRoles) {
-      // console.log(roles, this.allRoles);
-      const userRoleIds = roles.map(en => en.roleId);
-      const userRoles = this.allRoles.filter(en => userRoleIds.includes(en.id));
-      return userRoles.map(en => en.name).join(', ');
-    }
-  }
-
-  getRoles(userRole) {
-    const s = [];
-    for (let i = 0; i < userRole.length; i++) {
-      s[i] = userRole[i].roleId;
-    }
-    return s;
   }
 
   onDeleteClick(id: any): void {
@@ -492,51 +415,9 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
     }
   }
 
-  showConfirmRemoveGroup(groupId): void {
-    this.modalService.confirm({
-      nzTitle: 'Confirm',
-      nzContent: 'Bạn có muốn xóa hay không.',
-      nzOkText: 'Đồng ý',
-      nzCancelText: 'Bỏ qua',
-      nzOnOk: () => this.removeUserFromGroup(this.item.id, groupId)
-    });
-  }
-  removeUserFromGroup(userId, groupId) {
-    const params = { userId, groupId };
-    this.generalService.removeUserFromGroup(params).subscribe(res => {
-      this.notificationService.showNotification(Constant.SUCCESS, 'Xóa nhóm thành công');
-      this.getGroupByUser();
-    }, error => {
 
-    });
-  }
-  addGroup2User() {
-    const payload = { userId: this.item.id, groupId: this.chooseGroup.id };
-    this.generalService.addUserToGroup(payload).subscribe(res => {
-      this.notificationService.showNotification(Constant.SUCCESS, 'Thêm nhóm tài khoản thành công');
-      this.getGroupByUser();
-    }, error => {
 
-    });
-  }
-  getTinhThanh() {
-    this.generalService.getTinhThanh(null).subscribe(res => {
-      if (res !== null) {
-        this.tinhThanhs = res;
-      }
-    }, error => {
 
-    });
-  }
-  getQuanHuyen(tinhthanhId) {
-    this.generalService.getTinhThanh(tinhthanhId).subscribe(res => {
-      if (res !== null) {
-        this.quanHuyens = res;
-      }
-    }, error => {
-
-    });
-  }
 
   exportData() {
     this.dataGridDetail.instance.exportToExcel(false);
@@ -582,7 +463,6 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
   }
 
   showModalAccount(data: any) {
-    console.log('data: ', data);
     this.isVisibleAddAccount = true;
     this.formAccount.patchValue({
       userId: data.userId,

@@ -141,6 +141,22 @@ const routes: Routes = [
           breadcrumb: 'Tin tức'
         }
       },
+      {
+        path: 'data-statistics',
+        loadChildren: () => import('./pages/data-statistics/data-statistics.module').then(m => m.DataStatisticsModule),
+        data: {
+          pagename: 'Thông kê dữ liệu',
+          breadcrumb: 'Thông kê dữ liệu'
+        }
+      },
+      {
+        path: 'data-airline-tickets',
+        loadChildren: () => import('./pages/data-airline-tickets/data-airline-tickets.module').then(m => m.DataAirlineTicketsModule),
+        data: {
+          pagename: 'Bảng kê chi tiết vé máy bay',
+          breadcrumb: 'Bảng kê chi tiết vé máy bay'
+        }
+      }
     ]
   },
 ];

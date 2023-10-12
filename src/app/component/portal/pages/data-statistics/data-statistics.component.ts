@@ -31,12 +31,12 @@ import { AngularEditorConfig } from '@kolkov/angular-editor';
 import { DataService } from 'src/app/service/data.service';
 import { Router } from '@angular/router';
 @Component({
-  selector: 'app-hotel',
-  templateUrl: './hotel.component.html',
-  styleUrls: ['./hotel.component.scss']
+  selector: 'app-data-statistics',
+  templateUrl: './data-statistics.component.html',
+  styleUrls: ['./data-statistics.component.scss']
 })
-export class HotelComponent extends TableSelectionAbstract implements OnInit, OnDestroy {
-  @ViewChild("ListHotels") dataGridDetail: DxDataGridComponent;
+export class DataStatisticsComponent extends TableSelectionAbstract implements OnInit, OnDestroy {
+  @ViewChild("DataStatistics") dataGridDetail: DxDataGridComponent;
   datas: any[] = [];
   data: any;
   listUtilityHotel = [];
@@ -49,6 +49,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
   isVisiblePassword: boolean;
   item: any;
   loading: boolean;
+  total = 0;
   checkDelete = true;
   checkAdd = true;
   checkUpdate = true;
@@ -58,14 +59,26 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
   formAddRoom: FormGroup;
   filteredDatas: any[] = [];
   searchText = '';
+  userInfor: any;
   titleFormHotel = '';
   titleFormRoom = '';
-  isVisibleDetailUtility: boolean = false;
-  listDetailUtility: any[];
+  isVisibleDetailBookingHotelPassengers: boolean = false;
+  isVisibleConfirm: boolean = false;
+  isConfirmLoading: boolean = false;
+  textValueNoteConfirm = '';
+
+  textValueNoteRefuse = '';
+  isVisibleRefuse: boolean = false;
+  isRefuseLoading: boolean = false;
+
+  listBookingHotelPassengers: any[];
   uploadHeader: any;
+  baseImageurl = '';
   uploadUrl = '';
   fileList: NzUploadFile[] = [];
   listURLFiles: any[] = [];
+  htmlContent = '';
+
   configDescriptionHotel: AngularEditorConfig = {
     editable: true,
     spellcheck: true,
@@ -161,8 +174,13 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
 
     this.uploadUrl = `${this.configService.getConfig().api.baseUrl}/Upload`;
   }
+  payload = {
+    page: 1,
+    pageSize: 1000
+  };
 
   ngOnInit(): void {
+    this.getUserInfo();
     this.getListUtilityHotels();
     this.getListUtilityRooms();
     this.getListData();
@@ -172,39 +190,45 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
 
   }
 
-  phoneNumberFormat(value: any) {
-    let phoneNo = value;
-    if (value) {
-      const USNumber = value.match(/(\d{3})(\d{3})(\d{4})/);
-      if (USNumber) {
-        phoneNo = `(${USNumber[1]}) ${USNumber[2]}-${USNumber[3]}`;
-      }
-    }
-    return phoneNo;
+  getUserInfo() {
+    this.userInfor = JSON.parse(localStorage.getItem(Constant.USER_INFO));
+    // console.log('this.userInfor: ', this.userInfor);
   }
 
   getListData() {
     this.loading = true;
-    this.generalService.getHotels().subscribe((res: any) => {
-      this.datas = res;
-      let stt = 0;
-      this.datas.forEach((en: any) => {
-        en.stt = ++stt;
+    this.generalService.getAdminBookingHotels(this.payload).subscribe(
+      {
+        next: (res: any) => {
+          this.datas = res.data;
+          let stt = 0;
+          this.datas.forEach((en: any) => {
+            en.stt = ++stt;
+            let sttx = 0;
+            en.bookingHotelDetails.forEach(element => {
+              element.stt = ++sttx;
+            });
+          });
+          this.total = res.total;
+          this.filteredDatas = this.datas;
+        },
 
-        let sttx = 0;
-        en.roomHotels.forEach((enx: any) => {
-          enx.stt = ++sttx;
-        });
-      });
+        error: (error) => {
+          this.notificationService.showNotification(Constant.ERROR, 'Dữ liệu trả về đã gặp lỗi');
+        },
 
-      this.filteredDatas = this.datas;
-    });
+        complete: () => {
+
+        }
+      }
+    );
   }
 
 
   getListUtilityHotels() {
     this.generalService.getListUtilityHotel().subscribe((res: any) => {
       this.listUtilityHotel = res.data;
+      // console.log("this.listUtilityHotel: ", this.listUtilityHotel);
     });
   }
 
@@ -292,7 +316,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
       item: {}
     };
     this.dataService.setData(data);
-    this.router.navigate(['news/edit-news']);
+    this.router.navigate(['hotel/edit-hotel']);
   }
 
   showModalUpdateHotel(data: any) {
@@ -339,6 +363,18 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
     this.router.navigate(['hotel/edit-hotel']);
   }
 
+  onConfirmBookingHotel(booking: any) {
+    this.item = booking;
+    this.isVisibleConfirm = true;
+  }
+
+
+  onRefuseBookingHotel(booking: any) {
+    this.item = booking;
+    this.isVisibleRefuse = true;
+  }
+
+
   getIDUtilityHotels(utilityHotel: any) {
     const s = [];
     for (var i = 0; i < utilityHotel.length; i++) {
@@ -352,7 +388,9 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
     this.isVisibleAddHotel = false;
     this.isVisibleAddRoom = false;
     this.updated = false;
-    this.isVisibleDetailUtility = false;
+    this.isVisibleDetailBookingHotelPassengers = false;
+    this.isVisibleConfirm = false;
+    this.isVisibleRefuse = false;
     this.formAddHotel.reset();
     this.formAddRoom.reset();
   }
@@ -423,6 +461,8 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
 
     )
   }
+
+
 
   saveHotel() {
     this.submitted = true;
@@ -512,15 +552,104 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
 
   onExporting(e) {
     const workbook = new Workbook();
-    const worksheet = workbook.addWorksheet('Sheet1');
+    const worksheet = workbook.addWorksheet('Thông kê dữ liệu');
 
     const from = this.dateFormatPipe.transformFull(new Date(), Constant.DATE_FMT_STR);
     const dateStr = from;
-    const fileName = `DS_Khach_san_${dateStr}`;
+    const fileName = `Thong_ke_du_lieu_${dateStr}`;
     exportDataGrid({
       component: e.component,
       worksheet,
       autoFilterEnabled: true,
+      topLeftCell: { row: 13, column: 1 },
+    }).then((cellRange) => {
+
+
+      // Tên công ty
+      const headerRowNameCompany = worksheet.getRow(1);
+      headerRowNameCompany.getCell(2).value = 'CTY TNHH TMDV DU LỊCH CAO NGUYÊN VIỆT';
+      headerRowNameCompany.getCell(2).font = { name: 'Times New Roman', size: 10, bold: true };
+      headerRowNameCompany.getCell(2).alignment = { horizontal: 'left' };
+
+      // Địa chỉ công ty
+      const headerRowAdress = worksheet.getRow(2);
+      headerRowAdress.getCell(2).value = '105H/15 Hồ Thị Kỷ, phường 1, quận 10, TP. HCM';
+      headerRowAdress.getCell(2).font = { name: 'Times New Roman', size: 10 };
+      headerRowAdress.getCell(2).alignment = { horizontal: 'left' };
+
+      // Mã số thuế
+      const headerTextNumber = worksheet.getRow(3);
+      headerTextNumber.getCell(2).value = 'MST: 0 3 1 0 4 0 4 1 1 5';
+      headerTextNumber.getCell(2).font = { name: 'Times New Roman', size: 10, bold: true };
+      headerTextNumber.getCell(2).alignment = { horizontal: 'left' };
+
+
+      // Tiêu đề
+      const headerRowTitle = worksheet.getRow(5);
+      headerRowTitle.height = 28;
+      worksheet.mergeCells(5, 1, 5, 8);
+      headerRowTitle.getCell(1).value = 'BẢNG KÊ CHI TIẾT VÉ MÁY BAY';
+      headerRowTitle.getCell(1).font = { name: 'Times New Roman', size: 16, bold: true };
+      headerRowTitle.getCell(1).alignment = { horizontal: 'center' };
+
+      // Thời gian
+      const headerTimes = worksheet.getRow(6);
+      headerTimes.height = 25;
+      worksheet.mergeCells(6, 1, 6, 8);
+      headerTimes.getCell(1).value = 'Tháng năm';
+      headerTimes.getCell(1).font = { name: 'Times New Roman', size: 14, bold: true, italic: true };
+      headerTimes.getCell(1).alignment = { horizontal: 'center' };
+
+      // Số hiệu hơp động
+      const headerContract = worksheet.getRow(7);
+      headerContract.height = 25;
+      worksheet.mergeCells(7, 1, 7, 8);
+      headerContract.getCell(1).value = '(Kèm theo hóa đơn số_ký hiệu 1C22TCN_ngày)_Hợp đồng số (nếu có)';
+      headerContract.getCell(1).font = { name: 'Times New Roman', size: 11, italic: true };
+      headerContract.getCell(1).alignment = { horizontal: 'center' };
+
+
+      // Mã số thuế
+      const headerClientNameTitle = worksheet.getRow(9);
+      headerClientNameTitle.getCell(2).value = 'Tên khách hàng:';
+      headerClientNameTitle.getCell(2).font = { name: 'Times New Roman', size: 11 };
+      headerClientNameTitle.getCell(2).alignment = { horizontal: 'left' }
+
+      const headerClientNameValue = worksheet.getRow(9);
+      headerClientNameValue.getCell(3).value = 'CÔNG TY TNHH Y TẾ VIỆT TIẾN';
+      headerClientNameValue.getCell(3).font = { name: 'Times New Roman', size: 11, bold: true };
+      headerClientNameValue.getCell(3).alignment = { horizontal: 'left', }
+
+      // Địa chỉ khách hàng
+      const headerClientAdressTitle = worksheet.getRow(10);
+      headerClientAdressTitle.getCell(2).value = 'Địa chỉ:';
+      headerClientAdressTitle.getCell(2).font = { name: 'Times New Roman', size: 11 };
+      headerClientAdressTitle.getCell(2).alignment = { horizontal: 'left' }
+
+      const headerClientAdressValue = worksheet.getRow(10);
+      headerClientAdressValue.getCell(3).value = '6/1 Đường số 6, Phường 15, Quận Gò Vấp, TP.HCM';
+      headerClientAdressValue.getCell(3).font = { name: 'Times New Roman', size: 11 };
+      headerClientAdressValue.getCell(3).alignment = { horizontal: 'left', }
+
+      // Mã số thuế khách hàng
+      const headerClientMSTTitle = worksheet.getRow(11);
+      headerClientMSTTitle.getCell(2).value = 'MST:';
+      headerClientMSTTitle.getCell(2).font = { name: 'Times New Roman', size: 11 };
+      headerClientMSTTitle.getCell(2).alignment = { horizontal: 'left' }
+
+      const headerClientMSTValue = worksheet.getRow(11);
+      headerClientMSTValue.getCell(3).value = '0 3 0 1 4 4 5 7 3 2';
+      headerClientMSTValue.getCell(3).font = { name: 'Times New Roman', size: 11, bold: true };
+      headerClientMSTValue.getCell(3).alignment = { horizontal: 'left', }
+
+      // footer
+      const footerRowIndex = cellRange.to.row + 2;
+      const footerRow = worksheet.getRow(footerRowIndex);
+      worksheet.mergeCells(footerRowIndex, 1, footerRowIndex, 8);
+
+      footerRow.getCell(1).value = 'www.wikipedia.org';
+      footerRow.getCell(1).font = { color: { argb: 'BFBFBF' }, italic: true };
+      footerRow.getCell(1).alignment = { horizontal: 'right' };
     }).then(() => {
       workbook.xlsx.writeBuffer().then((buffer) => {
         saveAs(new Blob([buffer], { type: 'application/octet-stream' }), fileName + '.xlsx');
@@ -544,21 +673,11 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
   }
 
 
-
-  previewDetailUtilityHotels(utilityHotels: any) {
-    this.isVisibleDetailUtility = true;
-    this.listDetailUtility = utilityHotels;
+  previewDetailBookingHotelPassengers(bookingHotelPassengers: any) {
+    this.isVisibleDetailBookingHotelPassengers = true;
+    this.listBookingHotelPassengers = bookingHotelPassengers;
     let stt = 0;
-    this.listDetailUtility.forEach(en => {
-      en.stt = ++stt;
-    });
-  }
-
-  previewDetailUtilityRooms(utilityRooms: any) {
-    this.isVisibleDetailUtility = true;
-    this.listDetailUtility = utilityRooms;
-    let stt = 0;
-    this.listDetailUtility.forEach(en => {
+    this.listBookingHotelPassengers.forEach(en => {
       en.stt = ++stt;
     });
   }
@@ -770,5 +889,58 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
       ids[i] = utilityRooms[i].id;
     }
     return ids;
+  }
+
+  handleOkConfirmBookingHotel() {
+    this.isConfirmLoading = true;
+    this.generalService
+      .confirmBooking({ id: this.item.id, note: this.textValueNoteConfirm })
+      .subscribe({
+        next: (res) => {
+          if (res.isValid) {
+            this.notificationService.showNotification(Constant.SUCCESS, 'Xác nhận đặt phòng thành công');
+          } else {
+            if (res.errors && res.errors.length > 0) {
+              res.errors.forEach((el: any) => {
+                this.notificationService.showNotification(Constant.ERROR, 'Xác nhận đặt phòng thật bại');
+              });
+            } else {
+              this.notificationService.showNotification(Constant.ERROR, 'Xác nhận đặt phòng thật bại');
+            }
+          }
+        },
+      })
+      .add(() => {
+        this.isConfirmLoading = false;
+        this.isVisibleConfirm = false;
+        this.getListData();
+
+      });
+  }
+
+  handleOkRefuse() {
+    this.isRefuseLoading = true;
+    this.generalService
+      .refuseBooking({ id: this.item.id, note: this.textValueNoteRefuse })
+      .subscribe({
+        next: (res) => {
+          if (res.isValid) {
+            this.notificationService.showNotification(Constant.SUCCESS, 'Từ chối đặt phòng thành công');
+          } else {
+            if (res.errors && res.errors.length > 0) {
+              res.errors.forEach((el: any) => {
+                this.notificationService.showNotification(Constant.ERROR, 'Từ chối đặt phòng thật bại');
+              });
+            } else {
+              this.notificationService.showNotification(Constant.ERROR, 'Từ chối đặt phòng thật bại');
+            }
+          }
+        },
+      })
+      .add(() => {
+        this.isRefuseLoading = false;
+        this.isVisibleRefuse = false;
+        this.getListData();
+      });
   }
 }
