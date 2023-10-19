@@ -635,7 +635,7 @@ export class DataAirlineTicketsComponent extends TableSelectionAbstract implemen
       headerClientNameTitle.getCell(2).alignment = { horizontal: 'left' }
 
       const headerClientNameValue = worksheet.getRow(9);
-      headerClientNameValue.getCell(3).value = `${this.partnerInfo.partnerName? this.partnerInfo.partnerName : ''}`;
+      headerClientNameValue.getCell(3).value = `${this.partnerInfo.partnerName ? this.partnerInfo.partnerName : ''}`;
       headerClientNameValue.getCell(3).font = { name: 'Times New Roman', size: 11, bold: true };
       headerClientNameValue.getCell(3).alignment = { horizontal: 'left', }
 
@@ -646,7 +646,7 @@ export class DataAirlineTicketsComponent extends TableSelectionAbstract implemen
       headerClientAdressTitle.getCell(2).alignment = { horizontal: 'left' }
 
       const headerClientAdressValue = worksheet.getRow(10);
-      headerClientAdressValue.getCell(3).value = `${this.partnerInfo.partnerAddress? this.partnerInfo.partnerAddress : ''}`;
+      headerClientAdressValue.getCell(3).value = `${this.partnerInfo.partnerAddress ? this.partnerInfo.partnerAddress : ''}`;
       headerClientAdressValue.getCell(3).font = { name: 'Times New Roman', size: 11 };
       headerClientAdressValue.getCell(3).alignment = { horizontal: 'left', }
 
@@ -714,7 +714,6 @@ export class DataAirlineTicketsComponent extends TableSelectionAbstract implemen
       removeAccents(en.ratingStar?.trim()).toLowerCase().includes(keyword)
     );
   }
-
 
   previewDetailBookingHotelPassengers(bookingHotelPassengers: any) {
     this.isVisibleDetailBookingHotelPassengers = true;
@@ -999,6 +998,29 @@ export class DataAirlineTicketsComponent extends TableSelectionAbstract implemen
       partnerId: this.userInfor.partnerId,
     };
     this.getListData();
+  }
+
+  calculateSelectedRowPrice(options) {
+    if (options.name === 'SelectedRowsVAT') {
+      if (options.summaryProcess === 'start') {
+        options.totalValue = 0;
+      } else if (options.summaryProcess === 'calculate') {
+        options.totalValue += options.value.totalNetPrice * 0.08;
+      }
+    } else if (options.name === 'SelectedRowsTotalPrice') {
+      if (options.summaryProcess === 'start') {
+        options.totalValue = 0;
+      } else if (options.summaryProcess === 'calculate') {
+        options.totalValue += options.value.totalNetPrice * 1.08;
+      }
+    }
+  }
+
+  formatCurrencyVND(value) {
+    if (!value) {
+      return '0 đ';
+    }
+    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' đ';
   }
 
 }
