@@ -1,42 +1,44 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ActionsSubject, select, Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
-import { NzModalService } from 'ng-zorro-antd/modal';
-import { GeneralService } from 'src/app/service/general-service';
-import { TableSelectionAbstract } from 'src/app/shared/component/table/table-selection.abstract';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Constant } from 'src/app/shared/constants/constant.class';
-import { AppConfigService } from 'src/app-config.service';
-import { NotificationService } from 'src/app/service/notification.service';
-import { Workbook } from 'exceljs';
-import { DateFormatPipe } from 'src/app/shared/pipe/format-date.pipe';
-import { exportDataGrid } from 'devextreme/excel_exporter';
-import { saveAs } from 'file-saver-es';
-import { NzImageService } from 'ng-zorro-antd/image';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {ActionsSubject, select, Store} from '@ngrx/store';
+import {TranslateService} from '@ngx-translate/core';
+import {NzModalService} from 'ng-zorro-antd/modal';
+import {GeneralService} from 'src/app/service/general-service';
+import {TableSelectionAbstract} from 'src/app/shared/component/table/table-selection.abstract';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Constant} from 'src/app/shared/constants/constant.class';
+import {AppConfigService} from 'src/app-config.service';
+import {NotificationService} from 'src/app/service/notification.service';
+import {Workbook} from 'exceljs';
+import {DateFormatPipe} from 'src/app/shared/pipe/format-date.pipe';
+import {exportDataGrid} from 'devextreme/excel_exporter';
+import {saveAs} from 'file-saver-es';
+import {NzImageService} from 'ng-zorro-antd/image';
 // import { removeAccents } from ;
-import { removeAccents } from 'src/app/shared/utils/filters/remove-accents';
+import {removeAccents} from 'src/app/shared/utils/filters/remove-accents';
 import {
   DxDataGridComponent,
   DxTemplateDirective,
   DxTooltipComponent,
   DxTooltipModule,
-} from "devextreme-angular";
-import { IsEmptyPipe } from 'src/app/shared/pipe/is-empty.pipe';
-import { filter } from 'rxjs/operators';
-import { NzMessageService } from 'ng-zorro-antd/message';
-import { NzUploadChangeParam } from 'ng-zorro-antd/upload';
-import { NzUploadFile } from 'ng-zorro-antd/upload';
-import { StringUtils } from 'src/app/shared/utils/string-utils.class';
-import { AngularEditorConfig } from '@kolkov/angular-editor';
-import { DataService } from 'src/app/service/data.service';
-import { Router } from '@angular/router';
+} from 'devextreme-angular';
+import {IsEmptyPipe} from 'src/app/shared/pipe/is-empty.pipe';
+import {filter} from 'rxjs/operators';
+import {NzMessageService} from 'ng-zorro-antd/message';
+import {NzUploadChangeParam} from 'ng-zorro-antd/upload';
+import {NzUploadFile} from 'ng-zorro-antd/upload';
+import {StringUtils} from 'src/app/shared/utils/string-utils.class';
+// @ts-ignore
+import {AngularEditorConfig} from '@kolkov/angular-editor';
+import {DataService} from 'src/app/service/data.service';
+import {Router} from '@angular/router';
+
 @Component({
   selector: 'app-hotel',
   templateUrl: './hotel.component.html',
   styleUrls: ['./hotel.component.scss']
 })
 export class HotelComponent extends TableSelectionAbstract implements OnInit, OnDestroy {
-  @ViewChild("ListHotels") dataGridDetail: DxDataGridComponent;
+  @ViewChild('ListHotels') dataGridDetail: DxDataGridComponent;
   datas: any[] = [];
   data: any;
   listUtilityHotel = [];
@@ -82,10 +84,10 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
     defaultFontName: '',
     defaultFontSize: '',
     fonts: [
-      { class: 'arial', name: 'Arial' },
-      { class: 'times-new-roman', name: 'Times New Roman' },
-      { class: 'calibri', name: 'Calibri' },
-      { class: 'comic-sans-ms', name: 'Comic Sans MS' }
+      {class: 'arial', name: 'Arial'},
+      {class: 'times-new-roman', name: 'Times New Roman'},
+      {class: 'calibri', name: 'Calibri'},
+      {class: 'comic-sans-ms', name: 'Comic Sans MS'}
     ],
     customClasses: [
       {
@@ -107,6 +109,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
     toolbarPosition: 'top',
     toolbarHiddenButtons: []
   };
+
   constructor(
     private router: Router,
     private modalService: NzModalService,
@@ -143,8 +146,8 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
       hotelId: [null],
       name: [null, [Validators.required]],
       description: [null],
-      roomNumber: [null, [Validators.required]],
-      floorNumber: [null, [Validators.required]],
+      roomNumber: [0],
+      floorNumber: [0],
       price: [null, [Validators.required]],
       extraBed: [null],
       extraBedPrice: [null],
@@ -230,7 +233,6 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
   get formControlRoom() {
     return this.formAddRoom.controls;
   }
-
 
 
   showDeleteConfirm(id: any): void {
@@ -324,8 +326,8 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
         uid: hotel.id.toString(),
         name: hotel.fileName,
         url: `${this.configService.getConfig().api.baseUrl}/${hotel.filePath}`,
-      }
-      this.fileList.push(objHotel)
+      };
+      this.fileList.push(objHotel);
     }
     this.uploadUrl = `${this.configService.getConfig().api.baseUrl}/Upload/UploadHotelImage?hotelId=${this.item.id}`;
   }
@@ -386,9 +388,8 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
         },
 
       }
-
-    )
-  }
+    );
+  };
 
   handleRemoveImageRoom = async (file: NzUploadFile): Promise<void> => {
     console.log('xoá file: ', file);
@@ -420,9 +421,8 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
         },
 
       }
-
-    )
-  }
+    );
+  };
 
   saveHotel() {
     this.submitted = true;
@@ -471,22 +471,14 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
         }
       }, error => {
 
-      })
+      });
     }
   }
-
 
 
   onDeleteClick(id: any): void {
     // alert(id)
     const c = confirm('Bạn có chắc muốn xóa khách sạn này?');
-    // this.modalService.confirm({
-    //   nzTitle: 'Confirm',
-    //   nzContent: 'Bạn có muốn xóa hay không?',
-    //   nzOkText: 'Đồng ý',
-    //   nzCancelText: 'Bỏ qua',
-    //   nzOnOk: () => this.deleteItem(id)
-    // });
     if (c === true) {
       // Delete workspace here
       this.generalService.deleteTaikhoan(id).subscribe(res => {
@@ -523,7 +515,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
       autoFilterEnabled: true,
     }).then(() => {
       workbook.xlsx.writeBuffer().then((buffer) => {
-        saveAs(new Blob([buffer], { type: 'application/octet-stream' }), fileName + '.xlsx');
+        saveAs(new Blob([buffer], {type: 'application/octet-stream'}), fileName + '.xlsx');
       });
     });
     e.cancel = true;
@@ -542,7 +534,6 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
       removeAccents(en.ratingStar?.trim()).toLowerCase().includes(keyword)
     );
   }
-
 
 
   previewDetailUtilityHotels(utilityHotels: any) {
@@ -574,8 +565,8 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
       description: '',
       hotelId: idHotel,
       hotelName: '',
-      roomNumber: '',
-      floorNumber: '',
+      roomNumber: 0,
+      floorNumber: 0,
       price: '',
       extraBed: '',
       extraBedPrice: '',
@@ -602,8 +593,8 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
       hotelId: idHotel,
       name: this.item.name,
       description: this.item.description,
-      roomNumber: this.item.roomNumber,
-      floorNumber: this.item.floorNumber,
+      roomNumber: 0,
+      floorNumber: 0,
       price: this.item.price,
       extraBed: this.item.extraBed,
       extraBedPrice: this.item.extraBedPrice,
@@ -620,15 +611,15 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
         uid: room.id.toString(),
         name: room.fileName,
         url: `${this.configService.getConfig().api.baseUrl}/${room.filePath}`,
-      }
-      this.fileList.push(objRoom)
+      };
+      this.fileList.push(objRoom);
     }
     this.uploadUrl = `${this.configService.getConfig().api.baseUrl}/Upload/UploadRoomImage?roomId=${this.item.id}`;
   }
 
   saveRoom() {
     this.submitted = true;
-    let formValue = this.formAddRoom.value;
+    const formValue = this.formAddRoom.value;
 
     if (this.formAddRoom.invalid) {
       this.notificationService.showNotification(Constant.ERROR, 'Tồn tại thông tin khách sạn chưa điền!');
@@ -668,7 +659,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
         }
       }, error => {
 
-      })
+      });
     }
   }
 
@@ -681,23 +672,23 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
         width: '50%',
         height: '50%',
         alt: 'Ảnh trực quan'
-      }
+      };
       arrImage.push(objImage);
     } else {
       images.forEach((objImage: any) => {
-        let objImageView = {
+        const objImageView = {
           src: `${this.configService.getConfig().api.baseUrl}/${objImage.filePath}`,
           width: '50%',
           height: '50%',
           alt: 'Ảnh trực quan'
-        }
+        };
         arrImage.push(objImageView);
       });
     }
-    this.nzImageService.preview(arrImage, { nzZoom: 1.5, nzRotate: 0 });
+    this.nzImageService.preview(arrImage, {nzZoom: 1.5, nzRotate: 0});
   }
 
-  handleChangeImages({ file, fileList }: NzUploadChangeParam, form: any): void {
+  handleChangeImages({file, fileList}: NzUploadChangeParam, form: any): void {
     const status = file.status;
     if (status === 'done') {
       this.msg.success(`file ${file.name} tải lên thành công.`);
@@ -740,7 +731,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
 
   // switchValueIsAvaliable = false;
   clickSwitchIsAvaliable(isAvaliableUpdate: boolean, roomID: any): void {
-    this.generalService.SetAvailableRoom({ roomId: roomID, isAvailable: isAvaliableUpdate }).subscribe(
+    this.generalService.SetAvailableRoom({roomId: roomID, isAvailable: isAvaliableUpdate}).subscribe(
       {
         next: (res) => {
           if (res.ret && res.ret[0].code !== 0) {

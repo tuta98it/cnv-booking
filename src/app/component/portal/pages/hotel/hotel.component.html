@@ -41,7 +41,6 @@
   <dxi-column caption="Tỉnh thành" [width]="200" dataField="province.name"></dxi-column>
   <dxi-column caption="Số điện thoại" [width]="200" dataField="phoneNo" [format]="phoneNumberFormat"></dxi-column>
   <dxi-column caption="Email" [width]="300" dataField="contactEmail"></dxi-column>
-  <dxi-column caption="Mô tả" [width]="400" dataField="description" cellTemplate="cellDescription"></dxi-column>
   <dxi-column caption="Website" [width]="200" dataField="websiteUrl" cellTemplate="cellWebsite"></dxi-column>
   <dxi-column caption="Facebook" [width]="200" dataField="facebook" cellTemplate="cellFacebook"
     [visible]="false"></dxi-column>
@@ -102,9 +101,9 @@
       <dxi-column cssClass="text-center" caption="STT" [width]="55" dataField="stt" [fixed]="true"
         [allowFiltering]="false" [allowSorting]="false"></dxi-column>
       <dxi-column caption="Loại phòng" [width]="200" dataField="name" dataType="string"></dxi-column>
-      <dxi-column caption="Miêu tả phòng" [width]="400" dataField="description" dataType="string"></dxi-column>
-      <dxi-column caption="Phòng số" cssClass="text-left" [width]="200" dataField="roomNumber"
-      ></dxi-column>
+      <dxi-column caption="Mô tả phòng" [width]="400" dataField="description" dataType="string"></dxi-column>
+      <!--<dxi-column caption="Phòng số" cssClass="text-left" [width]="200" dataField="roomNumber"
+      ></dxi-column>-->
       <dxi-column caption="Giá phòng" cssClass="text-left" [width]="200" dataField="price"
         cellTemplate="cellPrice"></dxi-column>
       <dxi-column caption="Giường phụ" cssClass="text-left" [width]="200" dataField="extraBed"
@@ -339,7 +338,7 @@
               <!-- <input nz-input formControlName="description" /> -->
             </div>
           </div>
-          <div class="input-wrap" nz-row>
+          <!--<div class="input-wrap" nz-row>
             <label class="title-detail" nz-col [nzSpan]="8">Phòng số<em class="fas fa-asterisk required"></em></label>
             <div nz-col [nzSpan]="16">
               <input nz-input formControlName="roomNumber"
@@ -352,12 +351,16 @@
               <input nz-input formControlName="floorNumber"
                 [ngClass]="{ 'is-invalid': submitted && formControlRoom.floorNumber.errors?.required }" />
             </div>
-          </div>
+          </div>-->
           <div class="input-wrap" nz-row>
             <label class="title-detail" nz-col [nzSpan]="8">Giá phòng<em class="fas fa-asterisk required"></em></label>
             <div nz-col [nzSpan]="16">
-              <input nz-input formControlName="price"
-                [ngClass]="{ 'is-invalid': submitted && formControlRoom.price.errors?.required }" />
+
+              <dx-number-box formControlName="price" [ngClass]="{ 'is-invalid': submitted && formControlRoom.price.errors?.required }"
+                             format="#,##0"></dx-number-box>
+
+             <!-- <input nz-input formControlName="price"
+                [ngClass]="{ 'is-invalid': submitted && formControlRoom.price.errors?.required }" />-->
             </div>
           </div>
 
@@ -372,7 +375,7 @@
           <div class="input-wrap" nz-row>
             <label class="title-detail" nz-col [nzSpan]="8">Giá giường phụ</label>
             <div nz-col [nzSpan]="16">
-              <input nz-input formControlName="extraBedPrice" />
+              <dx-number-box formControlName="extraBedPrice" format="#,##0"></dx-number-box>
             </div>
           </div>
 
@@ -380,7 +383,7 @@
           <div class="input-wrap" nz-row>
             <label class="title-detail" nz-col [nzSpan]="8">Phụ phí người lớn</label>
             <div nz-col [nzSpan]="16">
-              <input nz-input formControlName="adultSurcharge" />
+              <dx-number-box formControlName="extraBedadultSurchargePrice" format="#,##0"></dx-number-box>
             </div>
           </div>
 
@@ -388,7 +391,7 @@
           <div class="input-wrap" nz-row>
             <label class="title-detail" nz-col [nzSpan]="8">Phụ phí trẻ em</label>
             <div nz-col [nzSpan]="16">
-              <input nz-input formControlName="childSurcharge" />
+              <dx-number-box formControlName="childSurcharge" format="#,##0"></dx-number-box>
             </div>
           </div>
 
