@@ -1,21 +1,32 @@
 <div class="action-button" style="clear: bottom;overflow: hidden;">
   <div class="form-group" style="float: left; display: flex;">
     <h1>Bảng kê chi tiết vé máy bay</h1>
-    <div style="display: flex; margin-left: 2rem;">
+    <div style="display: flex; margin-left: 2rem; align-items: baseline;">
       <div>
-        <dx-date-box placeholder="Từ ngày..." type="date" style="width: 200px;" [showClearButton]="true"
-          [useMaskBehavior]="true" displayFormat="dd/MM/yyyy" [(ngModel)]="searchData.fromDate"></dx-date-box>
+        <nz-select nzShowSearch nzMode="default" nzPlaceHolder="--Đối tác--" style="width: 200px;"
+          [(ngModel)]="searchData.partnerId">
+          <nz-option *ngFor="let partner of partners" nzLabel="{{partner.name}}" [nzValue]="partner.id"></nz-option>
+          <nz-option nzLabel="--Tất cả--" [nzValue]="0"></nz-option>
+        </nz-select>
       </div>
-      <div style="margin-left: 1rem;">
-        <dx-date-box placeholder="Đến ngày..." type="date" style="width: 200px;" [showClearButton]="true"
-          [useMaskBehavior]="true" displayFormat="dd/MM/yyyy" [(ngModel)]="searchData.toDate"></dx-date-box>
+      <div style="display: flex; align-items: center; margin-left: 1.5rem;">
+        <div>
+          <dx-date-box placeholder="Từ ngày..." type="date" style="width: 200px;" [showClearButton]="true"
+            [useMaskBehavior]="true" displayFormat="dd/MM/yyyy" [(ngModel)]="searchData.fromDate"></dx-date-box>
+        </div>
+        <div style="margin-left: 1rem;">
+          <dx-date-box placeholder="Đến ngày..." type="date" style="width: 200px;" [showClearButton]="true"
+            [useMaskBehavior]="true" displayFormat="dd/MM/yyyy" [(ngModel)]="searchData.toDate"></dx-date-box>
+        </div>
       </div>
-      <div>
-        <button style="margin-right: 10px" nz-button nzSize="default" nzType="primary" (click)="doSearch()">Tìm
-          kiếm</button>
-      </div>
-      <div>
-        <button nz-button nzSize="default" nzType="dashed" (click)="clearSearch()">Bỏ lọc</button>
+      <div style="display: flex; margin-left: 1.5rem;">
+        <div>
+          <button nz-button nzSize="default" nzType="primary" (click)="doSearch()">Tìm
+            kiếm</button>
+        </div>
+        <div>
+          <button nz-button nzSize="default" nzType="dashed" (click)="clearSearch()">Bỏ lọc</button>
+        </div>
       </div>
     </div>
   </div>
@@ -61,7 +72,8 @@
   <dxi-column caption="Mục đích" [width]="120" dataField="" dataType="string"></dxi-column>
   <dxi-column caption="Người đặt" [width]="150" dataField="contactName" dataType="string"></dxi-column>
   <dxo-summary [calculateCustomSummary]="calculateSelectedRowPrice">
-    <dxi-total-item column="totalNetPrice" displayFormat="Tổng: {0}" [valueFormat]="formatCurrencyVND" summaryType="sum">
+    <dxi-total-item column="totalNetPrice" displayFormat="Tổng: {0}" [valueFormat]="formatCurrencyVND"
+      summaryType="sum">
     </dxi-total-item>
     <dxi-total-item name="SelectedRowsVAT" summaryType="custom" [valueFormat]="formatCurrencyVND"
       displayFormat="VAT: {0}" showInColumn="totalNetPrice">

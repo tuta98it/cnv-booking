@@ -39,6 +39,7 @@ import { stringify } from 'querystring';
 export class DataAirlineTicketsComponent extends TableSelectionAbstract implements OnInit, OnDestroy {
   @ViewChild("DataAirlineTicket") dataGridDetail: DxDataGridComponent;
   datas: any[] = [];
+  partners: any[] = [];
   data: any;
   listUtilityHotel = [];
   listUtilityRoom = [];
@@ -197,11 +198,7 @@ export class DataAirlineTicketsComponent extends TableSelectionAbstract implemen
   }
   ngOnInit(): void {
     this.getUserInfo();
-    this.searchData = {
-      fromDate: "",
-      toDate: "",
-      partnerId: this.userInfor.partnerId,
-    };
+    this.getPartners();
     this.getListUtilityHotels();
     this.getListUtilityRooms();
     this.getListData();
@@ -243,7 +240,17 @@ export class DataAirlineTicketsComponent extends TableSelectionAbstract implemen
     );
   }
 
+  getPartners() {
+    this.generalService.getListPartner().subscribe(res => {
+      if (res !== null) {
+        this.partners = res;
+      } else {
 
+      }
+    }, error => {
+
+    });
+  }
   getListUtilityHotels() {
     this.generalService.getListUtilityHotel().subscribe((res: any) => {
       this.listUtilityHotel = res.data;
@@ -987,7 +994,6 @@ export class DataAirlineTicketsComponent extends TableSelectionAbstract implemen
   }
 
   doSearch() {
-    console.log('searchData', this.searchData);
     this.getListData();
   }
 
