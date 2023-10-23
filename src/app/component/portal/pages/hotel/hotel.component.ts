@@ -292,7 +292,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
       item: {}
     };
     this.dataService.setData(data);
-    this.router.navigate(['news/edit-news']);
+    this.router.navigate(['hotel/edit-hotel']);
   }
 
   showModalUpdateHotel(data: any) {

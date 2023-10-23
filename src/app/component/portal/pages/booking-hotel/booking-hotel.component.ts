@@ -36,7 +36,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./booking-hotel.component.scss']
 })
 export class BookingHotelComponent extends TableSelectionAbstract implements OnInit, OnDestroy {
-  @ViewChild("ListHotels") dataGridDetail: DxDataGridComponent;
+  @ViewChild("ListBookingHotels") dataGridDetail: DxDataGridComponent;
   datas: any[] = [];
   data: any;
   listUtilityHotel = [];
