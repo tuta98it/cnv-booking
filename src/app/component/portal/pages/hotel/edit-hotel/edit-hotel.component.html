@@ -48,6 +48,15 @@
             </div>
           </div>
           <div class="input-wrap" nz-row>
+            <label class="title-detail" nz-col [nzSpan]="8">Tình thành<em class="fas fa-asterisk required"></em></label>
+            <div nz-col [nzSpan]="16">
+              <nz-select nzShowSearch nzMode="default" nzPlaceHolder="--Tỉnh thành phố--" formControlName="provinceId">
+                <nz-option *ngFor="let pro of provinces" nzLabel="{{pro.name}}"
+                           [nzValue]="pro.id"></nz-option>
+              </nz-select>
+            </div>
+          </div>
+          <div class="input-wrap" nz-row>
             <label class="title-detail" nz-col [nzSpan]="8">Website<em class="fas fa-asterisk required"></em></label>
             <div nz-col [nzSpan]="16">
               <input nz-input formControlName="websiteUrl" type="text"

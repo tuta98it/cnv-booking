@@ -708,5 +708,7 @@ export class GeneralService extends BaseService {
     return this.post(`/api${UrlConstant.ROOM}/SetAvailable`, obdjIsAvaliable);
   }
 
-
+  getProvinces(): Observable<any[]> {
+    return this.get(`/api/Province`);
+  }
 }

@@ -1,19 +1,20 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { GeneralService } from 'src/app/service/general-service';
-import { NzUploadFile } from 'ng-zorro-antd/upload';
-import { AppConfigService } from 'src/app-config.service';
-import { NzModalService } from 'ng-zorro-antd/modal';
-import { Constant } from 'src/app/shared/constants/constant.class';
-import { NotificationService } from 'src/app/service/notification.service';
-import { NzImageService } from 'ng-zorro-antd/image';
-import { DateFormatPipe } from 'src/app/shared/pipe/format-date.pipe';
-import { NzMessageService } from 'ng-zorro-antd/message';
-import { NzUploadChangeParam } from 'ng-zorro-antd/upload';
-import { StringUtils } from 'src/app/shared/utils/string-utils.class';
-import { AngularEditorConfig } from '@kolkov/angular-editor';
-import { DataService } from 'src/app/service/data.service';
-import { Router } from '@angular/router';
+import {Component, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {GeneralService} from 'src/app/service/general-service';
+import {NzUploadFile} from 'ng-zorro-antd/upload';
+import {AppConfigService} from 'src/app-config.service';
+import {NzModalService} from 'ng-zorro-antd/modal';
+import {Constant} from 'src/app/shared/constants/constant.class';
+import {NotificationService} from 'src/app/service/notification.service';
+import {NzImageService} from 'ng-zorro-antd/image';
+import {DateFormatPipe} from 'src/app/shared/pipe/format-date.pipe';
+import {NzMessageService} from 'ng-zorro-antd/message';
+import {NzUploadChangeParam} from 'ng-zorro-antd/upload';
+import {StringUtils} from 'src/app/shared/utils/string-utils.class';
+// @ts-ignore
+import {AngularEditorConfig} from '@kolkov/angular-editor';
+import {DataService} from 'src/app/service/data.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-edit-hotel',
@@ -46,10 +47,10 @@ export class EditHotelComponent implements OnInit {
     defaultFontName: '',
     defaultFontSize: '',
     fonts: [
-      { class: 'arial', name: 'Arial' },
-      { class: 'times-new-roman', name: 'Times New Roman' },
-      { class: 'calibri', name: 'Calibri' },
-      { class: 'comic-sans-ms', name: 'Comic Sans MS' }
+      {class: 'arial', name: 'Arial'},
+      {class: 'times-new-roman', name: 'Times New Roman'},
+      {class: 'calibri', name: 'Calibri'},
+      {class: 'comic-sans-ms', name: 'Comic Sans MS'}
     ],
     customClasses: [
       {
@@ -71,7 +72,9 @@ export class EditHotelComponent implements OnInit {
     toolbarPosition: 'top',
     toolbarHiddenButtons: [],
   };
+  provinces: any[];
   receivedData: any;
+
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -81,7 +84,7 @@ export class EditHotelComponent implements OnInit {
     private dateFormatPipe: DateFormatPipe,
     private nzImageService: NzImageService,
     private msg: NzMessageService,
-    private dataService: DataService,) {
+    private dataService: DataService) {
     this.formAddHotel = this.fb.group({
       id: [null],
       name: [null, [Validators.required]],
@@ -89,6 +92,7 @@ export class EditHotelComponent implements OnInit {
       phoneNo: [null, [Validators.required]],
       contactEmail: [null, [Validators.required]],
       address: [null, [Validators.required]],
+      provinceId: [null, [Validators.required]],
       description: [null],
       websiteUrl: [null, [Validators.required]],
       utilitieIds: [null],
@@ -107,6 +111,7 @@ export class EditHotelComponent implements OnInit {
 
   ngOnInit(): void {
     this.getListUtilityHotels();
+    this.getProvinces();
     this.receivedData = this.dataService.getData();
     if (this.receivedData != null && Object.keys(this.receivedData).length > 0) {
       this.isUpdate = this.receivedData.isUpdateHotel;
@@ -125,7 +130,12 @@ export class EditHotelComponent implements OnInit {
       this.listUtilityHotel = res.data;
     });
   }
-
+  getProvinces() {
+    this.generalService.getProvinces().subscribe((res: any) => {
+      console.log(res);
+      this.provinces = res;
+    });
+  }
   get formControlHotel() {
     return this.formAddHotel.controls;
   }
@@ -149,7 +159,8 @@ export class EditHotelComponent implements OnInit {
       ratingStar: '',
       numRooms: '',
       hotelFile: [],
-      hotelFileIds: []
+      hotelFileIds: [],
+      provinceId: null
     });
     this.fileList = [];
     this.listURLFiles = [];
@@ -176,7 +187,8 @@ export class EditHotelComponent implements OnInit {
       ratingStar: item.ratingStar,
       numRooms: item.numRooms,
       hotelFile: item.hotelFile,
-      hotelFileIds: []
+      hotelFileIds: [],
+      provinceId: item.province?.id
     });
 
     this.fileList = [];
@@ -185,8 +197,8 @@ export class EditHotelComponent implements OnInit {
         uid: hotel.id.toString(),
         name: hotel.fileName,
         url: `${this.configService.getConfig().api.baseUrl}/${hotel.filePath}`,
-      }
-      this.fileList.push(objHotel)
+      };
+      this.fileList.push(objHotel);
     }
     this.uploadUrl = `${this.configService.getConfig().api.baseUrl}/Upload/UploadHotelImage?hotelId=${item.id}`;
   }
@@ -246,7 +258,7 @@ export class EditHotelComponent implements OnInit {
         }
       }, error => {
 
-      })
+      });
     }
   }
 
@@ -264,7 +276,7 @@ export class EditHotelComponent implements OnInit {
     this.router.navigate(['hotel']);
   }
 
-  handleChangeImages({ file, fileList }: NzUploadChangeParam, form: any): void {
+  handleChangeImages({file, fileList}: NzUploadChangeParam, form: any): void {
     const status = file.status;
     if (status === 'done') {
       this.msg.success(`file ${file.name} tải lên thành công.`);
@@ -335,7 +347,6 @@ export class EditHotelComponent implements OnInit {
         },
 
       }
-
-    )
-  }
+    );
+  };
 }
