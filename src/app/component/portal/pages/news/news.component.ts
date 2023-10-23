@@ -158,7 +158,7 @@ export class NewsComponent extends TableSelectionAbstract implements OnInit, OnD
       item: {}
     };
     this.dataService.setData(data);
-    this.router.navigate(['hotel/edit-hotel']);
+    this.router.navigate(['news/edit-news']);
   }
 
 
