@@ -546,6 +546,10 @@ export class GeneralService extends BaseService {
     return this.post(`/api${UrlConstant.BOOKING}/ReportDebtStatistics`, payload);
   }
 
+  getBookingByID(idBooking: any): Observable<any> {
+    return this.get(`/api${UrlConstant.BOOKING}/getbookingbyid/${idBooking}`);
+  }
+
 
   //TestResult
   updateTestResult(item: any): any {
@@ -710,5 +714,23 @@ export class GeneralService extends BaseService {
 
   getProvinces(): Observable<any[]> {
     return this.get(`/api/Province`);
+  }
+
+
+  // Airport
+  getAirport(): Observable<any> {
+    return this.get(`/api${UrlConstant.AIRPORT}`);
+  }
+
+  getAirportByID(idAirport: any): Observable<any> {
+    return this.get(`/api${UrlConstant.AIRPORT}/${idAirport}`);
+  }
+
+  addAirport(Airport: any): Observable<any> {
+    return this.post(`/api${UrlConstant.AIRPORT}`, Airport);
+  }
+
+  updateAirportByID(idAirport: any, Airport: any): Observable<any> {
+    return this.put(`/api${UrlConstant.AIRPORT}/${idAirport}`, Airport);
   }
 }

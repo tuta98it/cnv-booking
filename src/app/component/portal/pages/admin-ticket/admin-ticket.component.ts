@@ -23,10 +23,13 @@ import {
 export class AdminTicketComponent extends TableSelectionAbstract implements OnInit, OnDestroy {
   @ViewChild("ListAccount") dataGridDetail: DxDataGridComponent;
   datas: any[] = [];
+  airports: any[] = [];
+  bookingTicketDetail: any = {};
   data: any;
   loading: boolean;
   filteredDatas: any[] = [];
   searchText = '';
+  isVisibleTicketDetail: boolean = false;
   constructor(
     public translate: TranslateService,
     private notificationService: NotificationService,
@@ -38,6 +41,7 @@ export class AdminTicketComponent extends TableSelectionAbstract implements OnIn
 
   ngOnInit(): void {
     this.getListData();
+    this.getAirport();
   }
 
   ngOnDestroy(): void {
@@ -65,6 +69,15 @@ export class AdminTicketComponent extends TableSelectionAbstract implements OnIn
       }
     }, error => {
       this.notificationService.showNotification(Constant.ERROR, 'Đã xảy ra lỗi khi tải dữ liệu');
+    });
+  }
+
+  getAirport() {
+    this.generalService.getAirport().subscribe((res: any) => {
+      if (res !== null) {
+        this.airports = res;
+      }
+    }, error => {
     });
   }
 
@@ -103,4 +116,55 @@ export class AdminTicketComponent extends TableSelectionAbstract implements OnIn
       removeAccents(en.dateCreated?.trim()).toLowerCase().includes(keyword)
     );
   }
+
+  onOpenPopupTicketDetail(bookingID: number) {
+    console.log('bookingID: ', bookingID);
+
+    this.generalService.getBookingByID(bookingID).subscribe({
+      next: (res: any) => {
+        this.bookingTicketDetail = res;
+        let bookingFlightTotalPrice = 0;
+        this.bookingTicketDetail.bookingFlights.forEach((bookingFlight: any) => {
+          bookingFlightTotalPrice += bookingFlight.totalPrice;
+        });
+        this.bookingTicketDetail.totalPricebookingFlight = bookingFlightTotalPrice;
+      },
+
+      error: (error) => {
+        this.notificationService.showNotification(Constant.ERROR, 'Dữ liệu vé máy bay trả về đã gặp lỗi');
+      },
+
+      complete: () => {
+        this.isVisibleTicketDetail = true;
+      }
+    })
+  }
+  handleCancelPopup() {
+    this.isVisibleTicketDetail = false;
+  }
+  toNameAirportByCode(code: String) {
+    let mameAirport = '';
+    if (code) {
+      let airport = this.airports.find((objAirports: any) => objAirports.code === code);
+      if (airport) {
+        mameAirport =  airport.name;
+      }
+    }
+    return mameAirport;
+  }
+
+  toAirlineNameByCode(codeAirline: string) {
+    switch (codeAirline) {
+        case "VN":
+            return "Vietnam Airlines";
+        case "QH":
+            return "Bamboo Airways";
+        case "VJ":
+            return "VietJet Air";
+        default:
+            return "";
+    }
+  }
+
 }
+

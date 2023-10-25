@@ -65,4 +65,7 @@ export class UrlConstant {
 
   // Room
   public static readonly ROOM = "/Room";
+
+  // Airport
+  public static readonly AIRPORT = "/Airport";
 }

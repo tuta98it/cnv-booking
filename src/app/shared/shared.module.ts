@@ -39,7 +39,6 @@ import { NzMessageModule } from 'ng-zorro-antd/message';
 import { AngularEditorModule } from '@kolkov/angular-editor';
 import { BookingHotelStatusPipe } from './pipe/booking-hotel-status.pipe';
 import { DxDateBoxModule } from 'devextreme-angular';
-
 @NgModule({
   imports: [
     CommonModule,
