@@ -107,8 +107,6 @@
                       <th>Số lượng</th>
                       <th>Giá vé</th>
                       <th>Thuế phí</th>
-                      <th>Hành lý ký gửi</th>
-                      <th>Hành lý xách tay</th>
                       <th>Tổng giá</th>
                     </tr>
                     <tr>
@@ -116,13 +114,57 @@
                       <td>{{bookingFlight.adt}}</td>
                       <td>{{bookingFlight.priceAdult | currencyFormat }} VND</td>
                       <td>{{bookingFlight.taxAdult + bookingFlight.feeAdult | currencyFormat}} VND</td>
-                      <td>{{bookingFlight.freebag}}</td>
-                      <td>{{bookingFlight.carryon}}</td>
                       <td>{{bookingFlight.totalPrice | currencyFormat}} VND</td>
                     </tr>
                     <tr>
                       <td></td>
                       <td></td>
+                      <td></td>
+                      <td>Tổng giá</td>
+                      <td>{{bookingTicketDetail.totalPricebookingFlight| currencyFormat}} VND</td>
+                    </tr>
+                  </table>
+
+                  <table *ngIf="bookingFlight.chd > 0">
+                    <tr>
+                      <th>Loại vé</th>
+                      <th>Số lượng</th>
+                      <th>Giá vé</th>
+                      <th>Thuế phí</th>
+                      <th>Tổng giá</th>
+                    </tr>
+                    <tr>
+                      <td>Trẻ em 2 - 11 tuổi</td>
+                      <td>{{bookingFlight.chd}}</td>
+                      <td>{{bookingFlight.priceChild | currencyFormat }} VND</td>
+                      <td>{{bookingFlight.taxChild + bookingFlight.feeChild | currencyFormat}} VND</td>
+                      <td>{{bookingFlight.totalPrice | currencyFormat}} VND</td>
+                    </tr>
+                    <tr>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td>Tổng giá</td>
+                      <td>{{bookingTicketDetail.totalPricebookingFlight| currencyFormat}} VND</td>
+                    </tr>
+                  </table>
+
+                  <table *ngIf="bookingFlight.inf > 0">
+                    <tr>
+                      <th>Loại vé</th>
+                      <th>Số lượng</th>
+                      <th>Giá vé</th>
+                      <th>Thuế phí</th>
+                      <th>Tổng giá</th>
+                    </tr>
+                    <tr>
+                      <td>Người lớn</td>
+                      <td>{{bookingFlight.inf}}</td>
+                      <td>{{bookingFlight.priceInfant | currencyFormat }} VND</td>
+                      <td>{{bookingFlight.taxInfant + bookingFlight.feeInfant | currencyFormat}} VND</td>
+                      <td>{{bookingFlight.totalPrice | currencyFormat}} VND</td>
+                    </tr>
+                    <tr>
                       <td></td>
                       <td></td>
                       <td></td>
@@ -131,7 +173,6 @@
                     </tr>
                   </table>
                 </div>
-
               </div>
             </div>
           </div>
