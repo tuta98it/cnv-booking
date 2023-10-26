@@ -14,7 +14,7 @@ import { exportDataGrid } from 'devextreme/excel_exporter';
 import { saveAs } from 'file-saver-es';
 import { NzUploadChangeParam, NzUploadFile } from 'ng-zorro-antd/upload';
 import {
-DxDataGridComponent,
+  DxDataGridComponent,
   DxTemplateDirective,
   DxTooltipComponent,
   DxTooltipModule,
@@ -623,4 +623,10 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
     });
   }
 
+  formatCurrencyVND(value) {
+    if (!value) {
+      return '0 đ';
+    }
+    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' đ';
+  }
 }

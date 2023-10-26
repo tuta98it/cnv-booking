@@ -42,9 +42,9 @@
   <dxi-column caption="Số điện thoại" [width]="150" dataField="phone"></dxi-column>
   <dxi-column caption="Email" dataField="email" [width]="200"></dxi-column>
   <dxi-column caption="Địa chỉ" [width]="200" dataField="address"></dxi-column>
-  <dxi-column caption="Công nợ tối đa" [width]="200" dataField="debtMax"></dxi-column>
-  <dxi-column caption="Công nợ đã sử dụng" [width]="200" dataField="debtUsed"></dxi-column>
-  <dxi-column caption="Công nợ còn lại" [width]="200" dataField="debtRemain"></dxi-column>
+  <dxi-column caption="Công nợ tối đa" [width]="200" dataField="debtMax" [format]="formatCurrencyVND"></dxi-column>
+  <dxi-column caption="Công nợ đã sử dụng" [width]="200" dataField="debtUsed" [format]="formatCurrencyVND"></dxi-column>
+  <dxi-column caption="Công nợ còn lại" [width]="200" dataField="debtRemain" [format]="formatCurrencyVND"></dxi-column>
   <dxi-column caption="Giấy phép kinh doanh" [width]="450" cellTemplate="cellBusinessLicenses"></dxi-column>
   <dxi-column caption="Hợp đồng" [width]="450" cellTemplate="cellContract"></dxi-column>
   <dxi-column caption="Ghi chú" [width]="500" dataField="note"></dxi-column>
@@ -64,7 +64,6 @@
       </div>
     </ng-container>
   </div>
-
   <div *dxTemplate="let partner of 'cellContract'" (click)="openModalUpload(partner.data, 2)">
     <ng-container *ngIf="partner.data.partnerFile">
       <div style="display: flex; flex-direction: column;">
@@ -79,8 +78,6 @@
       </div>
     </ng-container>
   </div>
-
-
   <div *dxTemplate="let item of 'cellBtnTemplate'">
     <button title="Xóa tài khoản" nz-button nzSize="small" nzType="default" class="btn-right button-update ant-btn-red"
       (click)="showDeleteConfirm(item.data)" *ngIf="checkUpdate">
@@ -106,7 +103,6 @@
     </button>
 
   </div>
-
 
   <dxo-summary>
     <dxi-total-item column="name" displayFormat="Số bản ghi: {0}" summaryType="count">
