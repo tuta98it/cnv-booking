@@ -46,7 +46,7 @@
   <dxi-column caption="Xuất vé" cssClass="text-center" cellTemplate="cellBillet"></dxi-column>
 
   <div *dxTemplate="let ticketFlightExport of 'cellSystemCancelled'">
-    <nz-switch [ngModel]="!ticketFlightExport.data.systemCancelled" nzCheckedChildren="Tính công nợ" nzUnCheckedChildren="Không tính công nợ" [nzLoading]="loadingSystemStatus" (ngModelChange)="onChangeSystemStatusTicketExport($event, ticketFlightExport.data)" [nzDisabled]="ticketFlightExport.data.systemCancelled"></nz-switch>
+    <nz-switch [ngModel]="!ticketFlightExport.data.systemCancelled" [nzControl]="true" nzCheckedChildren="Tính công nợ" nzUnCheckedChildren="Không tính công nợ" [nzLoading]="loadingSystemStatus" (click)="onChangeStatusSystemTicketExport(ticketFlightExport.data)" [nzDisabled]="ticketFlightExport.data.systemCancelled"></nz-switch>
   </div>
 
   <div *dxTemplate="let item of 'cellBillet'">
@@ -104,8 +104,7 @@
                   <strong>{{bookingPassenger.lastName}} {{bookingPassenger.firstName}}</strong></label>
                 <label *ngIf="bookingPassenger.typeCode === 'CHD'">Hành khách: {{bookingPassenger.gender? 'Bé trai' :
                   'Bé gái'}} <strong>{{bookingPassenger.lastName}} {{bookingPassenger.firstName}}</strong></label>
-                <label *ngIf="bookingPassenger.typeCode === 'INF'">Hành khách: {{bookingPassenger.gender? 'Trẻ sơ sinh
-                  trai' : 'Trẻ sơ sinh gái'}} <strong>{{bookingPassenger.lastName}}
+                <label *ngIf="bookingPassenger.typeCode === 'INF'">Hành khách: {{bookingPassenger.gender? 'Trẻ sơ sinh trai' : 'Trẻ sơ sinh gái'}} <strong>{{bookingPassenger.lastName}}
                     {{bookingPassenger.firstName}}</strong></label>
               </div>
               <div class="passenger-ticket-info-content">
@@ -208,8 +207,7 @@
 
                 <div *ngFor="let bookingFlight of bookingTicketDetail.bookingFlights; let i = index;">
                   <div>
-                    <label for="">Ngày bay: <strong>{{bookingFlight.startTime | date:"HH:MM
-                        dd-MM-yyyy"}}</strong></label>
+                    <label for="">Ngày bay: <strong>{{bookingFlight.startTime | date:"HH:MM dd-MM-yyyy"}}</strong></label>
                   </div>
                   <div>
                     <label for="">Ngày đến:</label> <strong>{{bookingFlight.endTime | date:"HH:MM dd-MM-yyyy"}}</strong>
