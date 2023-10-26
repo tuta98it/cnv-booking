@@ -50,7 +50,7 @@
   <dxi-column caption="Ghi chú" [width]="500" dataField="note"></dxi-column>
 
 
-  <div *dxTemplate="let partner of 'cellBusinessLicenses'" >
+  <div *dxTemplate="let partner of 'cellBusinessLicenses'">
     <ng-container *ngIf="partner.data.partnerFile">
       <div style="display: flex; flex-direction: column;">
         <div *ngFor="let file of partner.data.partnerFile; let i = index">
@@ -59,7 +59,8 @@
         </div>
       </div>
       <div style="margin-top: 0.5rem; display: flex; justify-content: end;">
-        <button nz-button nzSize="small" nzType="dashed" (click)="openModalUpload(partner.data, 1)"><span nz-icon nzType="sync" nzTheme="outline"></span>Cập nhật GPKD cho {{partner.data.companyName}}</button>
+        <button nz-button nzSize="small" nzType="dashed" (click)="openModalUpload(partner.data, 1)"><span nz-icon
+            nzType="sync" nzTheme="outline"></span>Cập nhật GPKD cho {{partner.data.companyName}}</button>
       </div>
     </ng-container>
   </div>
@@ -73,7 +74,8 @@
         </div>
       </div>
       <div style="margin-top: 0.5rem; display: flex; justify-content: end;">
-        <button nz-button nzSize="small" nzType="dashed" (click)="openModalUpload(partner.data, 2)"><span nz-icon nzType="sync" nzTheme="outline"></span>Cập nhật HĐ cho {{partner.data.companyName}}</button>
+        <button nz-button nzSize="small" nzType="dashed" (click)="openModalUpload(partner.data, 2)"><span nz-icon
+            nzType="sync" nzTheme="outline"></span>Cập nhật HĐ cho {{partner.data.companyName}}</button>
       </div>
     </ng-container>
   </div>
@@ -84,27 +86,25 @@
       (click)="showDeleteConfirm(item.data)" *ngIf="checkUpdate">
       <span class="fa fa-times fa-fw"></span>
     </button>
+    <button title="Thiết lập lại công nợ" nz-button nzSize="small" nzType="default" class="btn-right button-update"
+      (click)="onResetDebtForPartnerByID(item.data)">
+      <span class='fas fa-undo'></span>
+    </button>
     <button title="Sửa thông tin tài khoản" nz-button nzSize="small" nzType="default" class="btn-right button-update"
       (click)="showModalUpdate(item.data)" *ngIf="checkUpdate">
       <span class="fa fa-edit fa-fw"></span>
     </button>
-    <!-- <button title="Danh sách nhóm" nz-button nzSize="small" nzType="default" class="btn-right button-update"
-      (click)="showModalUserGroup(item.data)" *ngIf="checkUpdate">
-      <span class="fa fa-user fa-fw"></span>
-    </button> -->
-
-    <button *ngIf="!item.data.userId" title="Tạo tài khoản" nz-button nzSize="small" nzType="default" class="btn-right button-update"
-      (click)="showModalAccount(item.data)">
+    <button *ngIf="!item.data.userId" title="Tạo tài khoản" nz-button nzSize="small" nzType="default"
+      class="btn-right button-update" (click)="showModalAccount(item.data)">
       <span class="fa fa-user fa-fw"></span>
     </button>
-
-    <button *ngIf="item.data.userId" title="Đổi mật khẩu" nz-button nzSize="small" nzType="default" class="btn-right button-update"
-      (click)="showModalAccount(item.data)">
-
+    <button *ngIf="item.data.userId" title="Đổi mật khẩu" nz-button nzSize="small" nzType="default"
+      class="btn-right button-update" (click)="showModalAccount(item.data)">
       <!-- <button *ngIf="item.data.userId" title="Đổi mật khẩu" nz-button nzSize="small" nzType="default" class="btn-right button-update"
       (click)="showModalPassword(item.data)"> -->
       <span class="fa fa-key fa-fw"></span>
     </button>
+
   </div>
 
 
@@ -172,18 +172,18 @@
           <input nz-input formControlName="debtMax" />
         </div>
       </div>
-      <div class="input-wrap" nz-row>
+      <!-- <div class="input-wrap" nz-row>
         <label class="title-detail" nz-col [nzSpan]="8">Công nợ đã sử dụng</label>
         <div nz-col [nzSpan]="16">
           <input nz-input formControlName="debtUsed" />
         </div>
-      </div>
-      <div class="input-wrap" nz-row>
+      </div> -->
+      <!-- <div class="input-wrap" nz-row>
         <label class="title-detail" nz-col [nzSpan]="8">Công nợ còn lại</label>
         <div nz-col [nzSpan]="16">
           <input nz-input formControlName="debtRemain" />
         </div>
-      </div>
+      </div> -->
       <div class="input-wrap" nz-row>
         <label class="title-detail" nz-col [nzSpan]="8">Ghi chú</label>
         <div nz-col [nzSpan]="16">
@@ -254,7 +254,7 @@
       <div nz-row class="input-wrap nz-row">
         <label class="title-detail" nz-col [nzSpan]="8" nzRequired>Email</label>
         <div nz-col [nzSpan]="16">
-          <input [readonly]="true" nz-input placeholder="Email" formControlName="email"/>
+          <input [readonly]="true" nz-input placeholder="Email" formControlName="email" />
         </div>
       </div>
       <div nz-row class="input-wrap nz-row">
@@ -323,7 +323,8 @@
         </div>
       </div>
     </div>
-    <nz-upload [nzAction]="uploadUrl" nzName="postedFile" [nzHeaders]="uploadHeader" [nzPreview]="handlePreview" [nzRemove]="handleRemove"
+    <nz-upload [nzAction]="uploadUrl" nzName="postedFile" [nzHeaders]="uploadHeader" [nzPreview]="handlePreview"
+      [nzRemove]="handleRemove"
       [nzShowUploadList]="{showPreviewIcon:true, showRemoveIcon:true, showDownloadIcon: false}"
       (nzChange)="handleChange($event)">
       <button nz-button>

@@ -14,7 +14,7 @@ import { exportDataGrid } from 'devextreme/excel_exporter';
 import { saveAs } from 'file-saver-es';
 import { NzUploadChangeParam, NzUploadFile } from 'ng-zorro-antd/upload';
 import {
-  DxDataGridComponent,
+DxDataGridComponent,
   DxTemplateDirective,
   DxTooltipComponent,
   DxTooltipModule,
@@ -589,6 +589,38 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
 
   closePdf() {
     this.previewFileResult = false;
+  }
+
+  onResetDebtForPartnerByID(partner: any) {
+    this.modalService.confirm({
+      nzTitle: `Bạn có chắc muốn thiết lập lại công nợ cho đối tác ${partner.name}?`,
+      nzContent: `<b style="color: red;">Công nợ đối tác ${partner.name} sẽ không thể hoàn tác sau khi thiết lập lại. Ấn đồng ý để tiếp tục</b>`,
+      nzOkDanger: true,
+      nzOkText: 'Đồng ý',
+      nzCancelText: 'Không',
+      nzOnOk: () => this.resetDebtForPartnerByID(partner.id),
+    });
+  }
+
+
+  resetDebtForPartnerByID(idPartner: any) {
+    this.generalService.resetDebtForPartnerByID(idPartner).subscribe({
+      next: (res) => {
+        if (res.ret && res.ret[0].code !== 0) {
+          this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
+        } else {
+          this.notificationService.showNotification(Constant.SUCCESS, 'Công nợ thiết lập lại thành công');
+        }
+      },
+
+      error: (error) => {
+        this.notificationService.showNotification(Constant.ERROR, 'Công nợ thiết lập lại không thành công');
+      },
+
+      complete: () => {
+        this.getListData();
+      }
+    });
   }
 
 }

@@ -502,14 +502,15 @@ export class GeneralService extends BaseService {
     return this.post(UrlConstant.LIST_PARTNERS, newData);
   }
 
-
   updatePartner(newData: any): Observable<any> {
     return this.put(UrlConstant.LIST_PARTNERS + `/${newData.id}`, newData);
   }
 
+  resetDebtForPartnerByID(idPartner: any): Observable<any> {
+    return this.post(UrlConstant.LIST_PARTNERS + `/ResetDebt/${idPartner}`, idPartner);
+  }
+
   // Booking
-
-
 
   // Xuất vé
   getMyTicket(payload: any): any {
