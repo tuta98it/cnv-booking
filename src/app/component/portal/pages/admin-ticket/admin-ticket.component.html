@@ -39,12 +39,19 @@
   <dxi-column caption="Hãng bay" dataField="airlineName" [width]="200"></dxi-column>
   <dxi-column caption="Mã đặt chỗ" [width]="200" dataField="bookingNumber"></dxi-column>
   <dxi-column caption="Số vé" [width]="200" dataField="ticketNumber"></dxi-column>
-  <dxi-column caption="Ngày đặt vé" dataField="dateCreated" dataType="date" format="HH:mm dd/MM/yy"></dxi-column>
-  <dxi-column caption="Xuất vé" cssClass="text-center" [width]="200" cellTemplate="cellBillet"></dxi-column>
-  <div *dxTemplate="let item of 'cellBillet'">
+  <dxi-column caption="Ngày đặt vé" [width]="200" dataField="dateCreated" dataType="date"
+    format="HH:mm dd/MM/yyyy"></dxi-column>
+  <dxi-column caption="Trạng thái hệ thống" cssClass="text-center" [width]="400"
+    cellTemplate="cellSystemCancelled"></dxi-column>
+  <dxi-column caption="Xuất vé" cssClass="text-center" cellTemplate="cellBillet"></dxi-column>
 
-    <div *ngIf="item.data.status === 'OK'" (click)="onOpenPopupTicketDetail(item.data.bookingId)">
-      <a nz-button nzType="link" nzBlock>Xem vé</a>
+  <div *dxTemplate="let ticketFlightExport of 'cellSystemCancelled'">
+    <nz-switch [ngModel]="!ticketFlightExport.data.systemCancelled" nzCheckedChildren="Tính công nợ" nzUnCheckedChildren="Không tính công nợ" [nzLoading]="loadingSystemStatus" (ngModelChange)="onChangeSystemStatusTicketExport($event, ticketFlightExport.data)" [nzDisabled]="ticketFlightExport.data.systemCancelled"></nz-switch>
+  </div>
+
+  <div *dxTemplate="let item of 'cellBillet'">
+    <div *ngIf="item.data.status === 'OK'" (click)="onOpenPopupTicketDetail(item.data)">
+      <a nz-button nzType="link" nzBlock>Xem vé <span *ngIf="item.data.isLoadingViewTicket" nz-icon nzType="loading" nzTheme="outline"></span></a>
     </div>
 
     <div *ngIf="item.data.status === 'FAIL'">
@@ -90,11 +97,16 @@
                 <strong>Thông tin hành khách</strong>
               </div>
             </div>
-            <div class="passenger-ticket-info-detail" *ngFor="let bookingPassenger of bookingTicketDetail.bookingPassengers">
+            <div class="passenger-ticket-info-detail"
+              *ngFor="let bookingPassenger of bookingTicketDetail.bookingPassengers">
               <div class="passenger-ticket-name">
-                <label *ngIf="bookingPassenger.typeCode === 'ADT'">Hành khách: {{bookingPassenger.gender? 'Ông' : 'Bà'}} <strong>{{bookingPassenger.lastName}} {{bookingPassenger.firstName}}</strong></label>
-                <label *ngIf="bookingPassenger.typeCode === 'CHD'">Hành khách: {{bookingPassenger.gender? 'Bé trai' : 'Bé gái'}} <strong>{{bookingPassenger.lastName}} {{bookingPassenger.firstName}}</strong></label>
-                <label *ngIf="bookingPassenger.typeCode === 'INF'">Hành khách: {{bookingPassenger.gender? 'Trẻ sơ sinh trai' : 'Trẻ sơ sinh gái'}} <strong>{{bookingPassenger.lastName}} {{bookingPassenger.firstName}}</strong></label>
+                <label *ngIf="bookingPassenger.typeCode === 'ADT'">Hành khách: {{bookingPassenger.gender? 'Ông' : 'Bà'}}
+                  <strong>{{bookingPassenger.lastName}} {{bookingPassenger.firstName}}</strong></label>
+                <label *ngIf="bookingPassenger.typeCode === 'CHD'">Hành khách: {{bookingPassenger.gender? 'Bé trai' :
+                  'Bé gái'}} <strong>{{bookingPassenger.lastName}} {{bookingPassenger.firstName}}</strong></label>
+                <label *ngIf="bookingPassenger.typeCode === 'INF'">Hành khách: {{bookingPassenger.gender? 'Trẻ sơ sinh
+                  trai' : 'Trẻ sơ sinh gái'}} <strong>{{bookingPassenger.lastName}}
+                    {{bookingPassenger.firstName}}</strong></label>
               </div>
               <div class="passenger-ticket-info-content">
                 <div>
@@ -186,32 +198,38 @@
               </div>
 
               <div class="flight-info-content">
-                <div class="flight-schedule" *ngFor="let bookingReservation of bookingTicketDetail.bookingReservations; let i = index;">
+                <div class="flight-schedule"
+                  *ngFor="let bookingReservation of bookingTicketDetail.bookingReservations; let i = index;">
                   <label>
-                    Hành trình : <strong>{{toNameAirportByCode(bookingReservation.startPoint)}} - {{toNameAirportByCode(bookingReservation.endPoint)}}</strong>
+                    Hành trình : <strong>{{toNameAirportByCode(bookingReservation.startPoint)}} -
+                      {{toNameAirportByCode(bookingReservation.endPoint)}}</strong>
                   </label>
                 </div>
 
                 <div *ngFor="let bookingFlight of bookingTicketDetail.bookingFlights; let i = index;">
                   <div>
-                    <label for="">Ngày bay: <strong>{{bookingFlight.startTime | date:"HH:MM dd-MM-yyyy"}}</strong></label>
+                    <label for="">Ngày bay: <strong>{{bookingFlight.startTime | date:"HH:MM
+                        dd-MM-yyyy"}}</strong></label>
                   </div>
                   <div>
                     <label for="">Ngày đến:</label> <strong>{{bookingFlight.endTime | date:"HH:MM dd-MM-yyyy"}}</strong>
                   </div>
                   <div>
-                    <label for="">Hãng hàng không: <strong>{{toAirlineNameByCode(bookingFlight.airlineCode)}}</strong></label>
+                    <label for="">Hãng hàng không:
+                      <strong>{{toAirlineNameByCode(bookingFlight.airlineCode)}}</strong></label>
                   </div>
                   <div>
-                    <label for="">Hãng đặt chỗ: <strong>{{bookingFlight.groupClass}}</strong>. Số hiệu chuyến bay: <strong>{{bookingFlight.flightNumber}}</strong></label>
+                    <label for="">Hãng đặt chỗ: <strong>{{bookingFlight.groupClass}}</strong>. Số hiệu chuyến bay:
+                      <strong>{{bookingFlight.flightNumber}}</strong></label>
                   </div>
                   <div>
-                    <label for="">Hành lý xách tay: <strong>{{bookingFlight.carryon}}</strong>. Hành lý ký gửi: <strong>{{bookingFlight.freebag}}</strong></label>
+                    <label for="">Hành lý xách tay: <strong>{{bookingFlight.carryon}}</strong>. Hành lý ký gửi:
+                      <strong>{{bookingFlight.freebag}}</strong></label>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="contact-info" >
+            <div class="contact-info">
               <div class="contact-info-title">
                 <strong>
                   Thông tin liên hệ

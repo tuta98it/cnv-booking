@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { NzModalService } from 'ng-zorro-antd/modal';
 import { GeneralService } from 'src/app/service/general-service';
 import { TableSelectionAbstract } from 'src/app/shared/component/table/table-selection.abstract';
 import { Constant } from 'src/app/shared/constants/constant.class';
@@ -27,14 +28,17 @@ export class AdminTicketComponent extends TableSelectionAbstract implements OnIn
   bookingTicketDetail: any = {};
   data: any;
   loading: boolean;
+  loadingSystemStatus: boolean = false;
   filteredDatas: any[] = [];
   searchText = '';
   isVisibleTicketDetail: boolean = false;
+
   constructor(
     public translate: TranslateService,
     private notificationService: NotificationService,
     private generalService: GeneralService,
     private dateFormatPipe: DateFormatPipe,
+    private modalService: NzModalService,
   ) {
     super('id');
   }
@@ -62,6 +66,7 @@ export class AdminTicketComponent extends TableSelectionAbstract implements OnIn
         let stt = 0;
         this.datas.forEach(en => {
           en.stt = ++stt;
+          en.isLoadingViewTicket = false;
         });
         this.filteredDatas = this.datas;
         // console.log(this.datas);
@@ -117,17 +122,21 @@ export class AdminTicketComponent extends TableSelectionAbstract implements OnIn
     );
   }
 
-  onOpenPopupTicketDetail(bookingID: number) {
-    console.log('bookingID: ', bookingID);
-
-    this.generalService.getBookingByID(bookingID).subscribe({
+  onOpenPopupTicketDetail(booking: any) {
+    booking.isLoadingViewTicket = true;
+    this.generalService.getBookingByID(booking.id).subscribe({
       next: (res: any) => {
-        this.bookingTicketDetail = res;
-        let bookingFlightTotalPrice = 0;
-        this.bookingTicketDetail.bookingFlights.forEach((bookingFlight: any) => {
-          bookingFlightTotalPrice += bookingFlight.totalPrice;
-        });
-        this.bookingTicketDetail.totalPricebookingFlight = bookingFlightTotalPrice;
+        if (res) {
+          this.bookingTicketDetail = res;
+          let bookingFlightTotalPrice = 0;
+          this.bookingTicketDetail.bookingFlights.forEach((bookingFlight: any) => {
+            bookingFlightTotalPrice += bookingFlight.totalPrice;
+          });
+          this.bookingTicketDetail.totalPricebookingFlight = bookingFlightTotalPrice;
+          this.isVisibleTicketDetail = true;
+        } else {
+          this.notificationService.showNotification(Constant.ERROR, `Dữ liệu vé máy bay của khách hàng <strong>${booking.passengerName}</strong> không tồn tại`);
+        }
       },
 
       error: (error) => {
@@ -135,19 +144,56 @@ export class AdminTicketComponent extends TableSelectionAbstract implements OnIn
       },
 
       complete: () => {
-        this.isVisibleTicketDetail = true;
+        booking.isLoadingViewTicket = false;
       }
     })
   }
   handleCancelPopup() {
     this.isVisibleTicketDetail = false;
   }
+
+
+  onChangeSystemStatusTicketExport(statusSysTicketExp: any, ticketFlightExp: any) {
+    console.log('statusSysTicketExp: ', statusSysTicketExp);
+    if (statusSysTicketExp === false) {
+      this.modalService.confirm({
+        nzTitle: `Bạn có chắc KHÔNG tính chi phí vé máy bay của khách hàng <strong>${ticketFlightExp.passengerName}</strong> vào công nợ`,
+        nzContent: `<b style="color: red;">Việc KHÔNG tính chi phí vé máy bay của khách hàng <strong>${ticketFlightExp.passengerName} vào công nợ sẽ không thể hoàn tác. Ấn đồng ý để tiếp tục</b>`,
+        nzOkDanger: true,
+        nzOkText: 'Đồng ý',
+        nzCancelText: 'Không',
+        nzOnOk: () => this.changeSystemStatusTicketExport(ticketFlightExp.bookingId),
+      });
+    }
+
+  }
+
+  changeSystemStatusTicketExport(idBookingTicketFlightExp: any) {
+    this.generalService.markCanceledSystemTicketFlightExport(idBookingTicketFlightExp).subscribe({
+      next: (res) => {
+        if (res.ret && res.ret[0].code !== 0) {
+          this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
+        } else {
+          this.notificationService.showNotification(Constant.SUCCESS, 'Thiết lập không tính công nợ thành công');
+        }
+      },
+
+      error: (error) => {
+        this.notificationService.showNotification(Constant.ERROR, 'Thiết lập không tính công nợ không thành công');
+      },
+
+      complete: () => {
+        this.getListData();
+      }
+    });
+  }
+
   toNameAirportByCode(code: String) {
     let mameAirport = '';
     if (code) {
       let airport = this.airports.find((objAirports: any) => objAirports.code === code);
       if (airport) {
-        mameAirport =  airport.name;
+        mameAirport = airport.name;
       }
     }
     return mameAirport;
@@ -155,16 +201,15 @@ export class AdminTicketComponent extends TableSelectionAbstract implements OnIn
 
   toAirlineNameByCode(codeAirline: string) {
     switch (codeAirline) {
-        case "VN":
-            return "Vietnam Airlines";
-        case "QH":
-            return "Bamboo Airways";
-        case "VJ":
-            return "VietJet Air";
-        default:
-            return "";
+      case "VN":
+        return "Vietnam Airlines";
+      case "QH":
+        return "Bamboo Airways";
+      case "VJ":
+        return "VietJet Air";
+      default:
+        return "";
     }
   }
-
 }
 
