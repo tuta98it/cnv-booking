@@ -59,22 +59,26 @@ export class AdminTicketComponent extends TableSelectionAbstract implements OnIn
       "page": 1,
       "pageSize": 100
     }
-    this.generalService.getAdminTicket(payload).subscribe((res: any) => {
-      if (res !== null) {
-        this.datas = res.data;
-        this.loading = false;
-        let stt = 0;
-        this.datas.forEach(en => {
-          en.stt = ++stt;
-          en.isLoadingViewTicket = false;
-        });
-        this.filteredDatas = this.datas;
-        // console.log(this.datas);
-        super.setListOfAllData(this.datas);
+    this.generalService.getAdminTicket(payload).subscribe(
+      (res: any) => {
+        if (res !== null) {
+          this.datas = res.data;
+          this.loading = false;
+          let stt = 0;
+          this.datas.forEach(en => {
+            en.stt = ++stt;
+            en.isLoadingViewTicket = false;
+          });
+          this.filteredDatas = this.datas;
+          // console.log(this.datas);
+          super.setListOfAllData(this.datas);
+        }
+      },
+      (error: any) => {
+        this.notificationService.showNotification(Constant.ERROR, 'Đã xảy ra lỗi khi tải dữ liệu');
       }
-    }, error => {
-      this.notificationService.showNotification(Constant.ERROR, 'Đã xảy ra lỗi khi tải dữ liệu');
-    });
+
+    );
   }
 
   getAirport() {
@@ -124,16 +128,23 @@ export class AdminTicketComponent extends TableSelectionAbstract implements OnIn
 
   onOpenPopupTicketDetail(booking: any) {
     booking.isLoadingViewTicket = true;
-    this.generalService.getBookingByID(booking.id).subscribe({
+    this.generalService.getBookingByID(booking.bookingId).subscribe({
       next: (res: any) => {
         if (res) {
           this.bookingTicketDetail = res;
+
           let bookingFlightTotalPrice = 0;
+          let i = 0;
           this.bookingTicketDetail.bookingFlights.forEach((bookingFlight: any) => {
             bookingFlightTotalPrice += bookingFlight.totalPrice;
+            bookingFlight.startPoint = this.convertRotueBookingReservations(this.bookingTicketDetail.bookingReservations[0].route)[i].startPoint;
+            bookingFlight.endPoint = this.convertRotueBookingReservations(this.bookingTicketDetail.bookingReservations[0].route)[i].endPoint;
+            i++;
           });
           this.bookingTicketDetail.totalPricebookingFlight = bookingFlightTotalPrice;
-          this.isVisibleTicketDetail = true;
+
+          console.log('this.bookingTicketDetail.bookingFlights: ', this.bookingTicketDetail.bookingFlights);
+
         } else {
           this.notificationService.showNotification(Constant.ERROR, `Dữ liệu vé máy bay của khách hàng <strong>${booking.passengerName}</strong> không tồn tại`);
         }
@@ -145,9 +156,33 @@ export class AdminTicketComponent extends TableSelectionAbstract implements OnIn
 
       complete: () => {
         booking.isLoadingViewTicket = false;
+        this.isVisibleTicketDetail = true;
       }
     })
   }
+
+
+  private convertRotueBookingReservations(route: string): any {
+    // Tách chuỗi theo dấu "|"
+    const parts = route.trim().split("|");
+    // Khởi tạo mảng để lưu kết quả
+    const result = [];
+    // Lặp qua từng phần tử
+    parts.forEach(part => {
+      // Sử dụng regex để tìm các cặp từ
+      const matches = part.trim().match(/([A-Z]{3})([A-Z]{3})/);
+      if (matches && matches.length === 3) {
+        // Lấy các match và tạo đối tượng
+        const startPoint = matches[1];
+        const endPoint = matches[2];
+        result.push({ startPoint, endPoint });
+      }
+    });
+    return result;
+  }
+
+
+
   handleCancelPopup() {
     this.isVisibleTicketDetail = false;
   }
@@ -213,4 +248,8 @@ export class AdminTicketComponent extends TableSelectionAbstract implements OnIn
     }
   }
 }
+
+
+
+
 
