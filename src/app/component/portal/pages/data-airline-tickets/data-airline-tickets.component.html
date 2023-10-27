@@ -58,28 +58,30 @@
   <dxi-column cssClass="text-center" caption="STT" [width]="55" dataField="stt" [fixed]="true" [allowFiltering]="false"
     [allowSorting]="false"></dxi-column>
   <dxi-column caption="Mã Base" [width]="100" dataField="baseCode" dataType="string"></dxi-column>
-  <dxi-column caption="Số vé/Code" [width]="200" dataField="ticketNumber" dataType="string"></dxi-column>
-  <dxi-column caption="Mã đặt chỗ" [width]="150" dataField="bookingNumber" dataType="string"></dxi-column>
-  <dxi-column caption="Ngày xuất vé" [width]="200" dataField="issueTicketDate" dataType="date"
+  <dxi-column caption="Số vé/Code" [width]="150" dataField="ticketNumber" dataType="string"></dxi-column>
+  <dxi-column caption="Mã đặt chỗ" [width]="120" dataField="bookingNumber" dataType="string"></dxi-column>
+  <dxi-column caption="Ngày xuất vé" [width]="150" dataField="issueTicketDate" dataType="date"
     format="HH:mm dd/MM/yy"></dxi-column>
   <dxi-column caption="Ngày khởi hành" [width]="200" dataField="startDate" dataType="date"
     format="HH:mm dd/MM/yy"></dxi-column>
-  <dxi-column caption="Ngày về" [width]="200" dataField="returnDate" dataType="date"
+  <dxi-column caption="Ngày về" [width]="150" dataField="returnDate" dataType="date"
     format="HH:mm dd/MM/yy"></dxi-column>
   <dxi-column caption="Họ tên người đi" [width]="200" dataField="passengerName" dataType="string"></dxi-column>
   <dxi-column caption="Hành trình" [width]="130" dataField="flightRoute" dataType="string"></dxi-column>
-  <dxi-column caption="Giá vé" [width]="180" dataField="totalNetPrice" [format]="formatCurrencyVND"></dxi-column>
-  <dxi-column caption="Mục đích" [width]="120" dataField="" dataType="string"></dxi-column>
+  <dxi-column caption="Giá vé" [width]="200" dataField="totalNetPriceFormat" dataType="string"></dxi-column>
+  <dxi-column caption="VAT" [width]="100" dataField="totalNetPriceVATFormat" dataType="string"></dxi-column>
+  <dxi-column caption="Phân loại khách hàng" [width]="180" dataField="" dataType="string"></dxi-column>
   <dxi-column caption="Người đặt" [width]="150" dataField="contactName" dataType="string"></dxi-column>
   <dxo-summary [calculateCustomSummary]="calculateSelectedRowPrice">
-    <dxi-total-item column="totalNetPrice" displayFormat="Tổng: {0}" [valueFormat]="formatCurrencyVND"
-      summaryType="sum">
+
+    <dxi-total-item name="SelectedRowsSumPrice" showInColumn="totalNetPriceFormat" displayFormat="Tổng: {0}" [valueFormat]="formatCurrencyVND"
+      summaryType="custom">
     </dxi-total-item>
     <dxi-total-item name="SelectedRowsVAT" summaryType="custom" [valueFormat]="formatCurrencyVND"
-      displayFormat="VAT: {0}" showInColumn="totalNetPrice">
+      displayFormat="VAT: {0}" showInColumn="totalNetPriceFormat">
     </dxi-total-item>
     <dxi-total-item name="SelectedRowsTotalPrice" summaryType="custom" [valueFormat]="formatCurrencyVND"
-      displayFormat="Tổng tiền: {0}" showInColumn="totalNetPrice">
+      displayFormat="Tổng tiền: {0}" showInColumn="totalNetPriceFormat">
     </dxi-total-item>
   </dxo-summary>
 </dx-data-grid>
