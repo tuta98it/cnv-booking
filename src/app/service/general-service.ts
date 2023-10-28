@@ -739,7 +739,7 @@ export class GeneralService extends BaseService {
 
 
   removeRoomPriceDetail(idItemPriceDetail: any): Observable<any> {
-    return this.delete(`/api${UrlConstant.ROOM}/RemoveRoomPriceDetail/${idItemPriceDetail}`, idItemPriceDetail);
+    return this.post(`/api${UrlConstant.ROOM}/RemoveRoomPriceDetail/${idItemPriceDetail}`, idItemPriceDetail);
   }
 
   // Airport
