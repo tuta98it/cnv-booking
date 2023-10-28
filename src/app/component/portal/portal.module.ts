@@ -35,7 +35,7 @@ import { BookingHotelComponent } from './pages/booking-hotel/booking-hotel.compo
 import { DataStatisticsComponent } from './pages/data-statistics/data-statistics.component';
 import { DataAirlineTicketsComponent } from './pages/data-airline-tickets/data-airline-tickets.component';
 import {
-  DxButtonModule, DxTabPanelModule, DxDataGridModule, DxDataGridComponent,DxNumberBoxModule
+  DxButtonModule, DxTabPanelModule, DxDataGridModule, DxDataGridComponent, DxNumberBoxModule
 } from 'devextreme-angular';
 const antDesignIcons = AllIcons as {
   [key: string]: IconDefinition;

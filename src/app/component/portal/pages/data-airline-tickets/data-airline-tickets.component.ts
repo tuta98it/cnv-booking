@@ -1015,7 +1015,7 @@ export class DataAirlineTicketsComponent extends TableSelectionAbstract implemen
       } else if (options.summaryProcess === 'calculate') {
         options.totalValue += options.value.totalNetPrice;
       }
-    }else if (options.name === 'SelectedRowsVAT') {
+    } else if (options.name === 'SelectedRowsVAT') {
       if (options.summaryProcess === 'start') {
         options.totalValue = 0;
       } else if (options.summaryProcess === 'calculate') {
@@ -1037,4 +1037,4 @@ export class DataAirlineTicketsComponent extends TableSelectionAbstract implemen
     return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' đ';
   }
 
-  }
+}

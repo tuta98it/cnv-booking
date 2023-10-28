@@ -725,6 +725,23 @@ export class GeneralService extends BaseService {
   }
 
 
+  createRoomPriceDetail(newItemPriceDetail: any): Observable<any> {
+    if(newItemPriceDetail.id === 0){
+      return this.post(`/api${UrlConstant.ROOM}/UpdateRoomPriceDetail`, newItemPriceDetail);
+    }
+  }
+
+  updateRoomPriceDetailByID(editItemPriceDetail: any): Observable<any> {
+    if(editItemPriceDetail.id !== 0){
+      return this.post(`/api${UrlConstant.ROOM}/UpdateRoomPriceDetail`, editItemPriceDetail);
+    }
+  }
+
+
+  removeRoomPriceDetail(idItemPriceDetail: any): Observable<any> {
+    return this.delete(`/api${UrlConstant.ROOM}/RemoveRoomPriceDetail/${idItemPriceDetail}`, idItemPriceDetail);
+  }
+
   // Airport
   getAirport(): Observable<any> {
     return this.get(`/api${UrlConstant.AIRPORT}`);
