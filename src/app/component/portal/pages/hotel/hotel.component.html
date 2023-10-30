@@ -315,17 +315,17 @@
 
     <ng-template nzModalContent #contelRoom>
       <div style="display: flex; justify-content: space-between;">
-        <div style="width: 42%;">
+        <div style="width: 39%;">
           <div class="input-wrap" nz-row>
-            <label class="title-detail" nz-col [nzSpan]="6">Loại phòng<em class="fas fa-asterisk required"></em></label>
-            <div nz-col [nzSpan]="18">
+            <label class="title-detail" nz-col [nzSpan]="4">Loại phòng<em class="fas fa-asterisk required"></em></label>
+            <div nz-col [nzSpan]="19">
               <input nz-input formControlName="name"
                 [ngClass]="{ 'is-invalid': submitted && formControlRoom.name.errors?.required }" />
             </div>
           </div>
           <div class="input-wrap" nz-row>
-            <label class="title-detail" nz-col [nzSpan]="6">Mô tả</label>
-            <div nz-col [nzSpan]="18">
+            <label class="title-detail" nz-col [nzSpan]="4">Mô tả</label>
+            <div nz-col [nzSpan]="19">
 
               <textarea nz-input formControlName="description" placeholder="Mô tả khách sạn ..."
                 [nzAutosize]="{ minRows: 6, maxRows: 8 }"></textarea>
@@ -334,15 +334,15 @@
             </div>
           </div>
           <!--<div class="input-wrap" nz-row>
-            <label class="title-detail" nz-col [nzSpan]="6">Phòng số<em class="fas fa-asterisk required"></em></label>
-            <div nz-col [nzSpan]="18">
+            <label class="title-detail" nz-col [nzSpan]="4">Phòng số<em class="fas fa-asterisk required"></em></label>
+            <div nz-col [nzSpan]="19">
               <input nz-input formControlName="roomNumber"
                 [ngClass]="{ 'is-invalid': submitted && formControlRoom.roomNumber.errors?.required }" />
             </div>
           </div>
           <div class="input-wrap" nz-row>
-            <label class="title-detail" nz-col [nzSpan]="6">Tầng số<em class="fas fa-asterisk required"></em></label>
-            <div nz-col [nzSpan]="18">
+            <label class="title-detail" nz-col [nzSpan]="4">Tầng số<em class="fas fa-asterisk required"></em></label>
+            <div nz-col [nzSpan]="19">
               <input nz-input formControlName="floorNumber"
                 [ngClass]="{ 'is-invalid': submitted && formControlRoom.floorNumber.errors?.required }" />
             </div>
@@ -350,49 +350,49 @@
 
 
           <div class="input-wrap" nz-row>
-            <label class="title-detail" nz-col [nzSpan]="6">Giường phụ</label>
-            <div nz-col [nzSpan]="18">
+            <label class="title-detail" nz-col [nzSpan]="4">Giường phụ</label>
+            <div nz-col [nzSpan]="19">
               <input nz-input formControlName="extraBed" />
             </div>
           </div>
 
 
           <div class="input-wrap" nz-row>
-            <label class="title-detail" nz-col [nzSpan]="6">Giá giường phụ</label>
-            <div nz-col [nzSpan]="18">
+            <label class="title-detail" nz-col [nzSpan]="4">Giá giường phụ</label>
+            <div nz-col [nzSpan]="19">
               <dx-number-box formControlName="extraBedPrice" format="#,##0"></dx-number-box>
             </div>
           </div>
 
 
           <div class="input-wrap" nz-row>
-            <label class="title-detail" nz-col [nzSpan]="6">Phụ phí người lớn</label>
-            <div nz-col [nzSpan]="18">
+            <label class="title-detail" nz-col [nzSpan]="4">Phụ phí người lớn</label>
+            <div nz-col [nzSpan]="19">
               <dx-number-box formControlName="adultSurcharge" format="#,##0"></dx-number-box>
             </div>
           </div>
 
 
           <div class="input-wrap" nz-row>
-            <label class="title-detail" nz-col [nzSpan]="6">Phụ phí trẻ em</label>
-            <div nz-col [nzSpan]="18">
+            <label class="title-detail" nz-col [nzSpan]="4">Phụ phí trẻ em</label>
+            <div nz-col [nzSpan]="19">
               <dx-number-box formControlName="childSurcharge" format="#,##0"></dx-number-box>
             </div>
           </div>
 
           <div class="input-wrap" nz-row>
-            <label class="title-detail" nz-col [nzSpan]="6">Tiện ích phòng:<em
+            <label class="title-detail" nz-col [nzSpan]="4">Tiện ích phòng:<em
                 class="fas fa-asterisk required"></em></label>
-            <div nz-col [nzSpan]="18">
+            <div nz-col [nzSpan]="19">
               <nz-select nzMode="multiple" nzPlaceHolder="--Tiện ích phòng--" formControlName="utilitieIds">
                 <nz-option *ngFor="let room of listUtilityRoom" nzLabel="{{room.name}}" [nzValue]="room.id"></nz-option>
               </nz-select>
             </div>
           </div>
         </div>
-        <div style="width: 40%;  max-height: 32rem; overflow: auto;">
+        <div style="width: 48%;  max-height: 32rem; overflow: auto;">
           <div class="input-wrap" nz-row>
-            <label class="title-detail" nz-col [nzSpan]="18">Giá phòng mặc định<em
+            <label class="title-detail" nz-col [nzSpan]="5">Giá phòng mặc định<em
                 class="fas fa-asterisk required"></em></label>
             <div nz-col [nzSpan]="18">
               <dx-number-box formControlName="price"
@@ -404,6 +404,7 @@
             </div>
           </div>
           <div>
+
             <dx-data-grid id="gridContainerPriceRoomDetail" [dataSource]="formAddRoom.value.prices" keyExpr="id"
               [allowColumnReordering]="true" [showBorders]="true" (onEditingStart)="logEvent('EditingStart')"
               (onInitNewRow)="onInitNewRowPriceDetail($event)"

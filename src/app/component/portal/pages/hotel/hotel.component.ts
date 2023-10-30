@@ -186,25 +186,30 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
 
 
   getListData() {
-    this.loading = true;
-    this.generalService.getHotels().subscribe((res: any) => {
-      this.datas = res;
-      let stt = 0;
-      this.datas.forEach((en: any) => {
-        en.stt = ++stt;
-
-        let sttx = 0;
-        en.roomHotels.forEach((roomHotel: any) => {
-          roomHotel.stt = ++sttx;
-          let sttp = 0;
-          roomHotel.prices.forEach((priceCustom: any) => {
-            priceCustom.stt = ++sttp;
+    return new Promise((resolve, reject) => {
+      this.loading = true;
+      this.generalService.getHotels().subscribe((res: any) => {
+        this.datas = res;
+        let stt = 0;
+        this.datas.forEach((en: any) => {
+          en.stt = ++stt;
+          let sttx = 0;
+          en.roomHotels.forEach((roomHotel: any) => {
+            roomHotel.stt = ++sttx;
+            let sttp = 0;
+            roomHotel.prices.forEach((priceCustom: any) => {
+              priceCustom.stt = ++sttp;
+            });
           });
         });
+        this.filteredDatas = this.datas;
+      }).add(() => {
+        this.loading = false;
+        resolve(true);
       });
-
-      this.filteredDatas = this.datas;
     });
+
+
   }
 
 
@@ -245,23 +250,25 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
       nzOkDanger: true,
       nzOkText: 'Đồng ý',
       nzCancelText: 'Không',
-      nzOnOk: () => this.deleteItem(id)
+      nzOnOk: () => this.deleteItemHotelByID(id).then(() => this.getListData()),
     });
   }
 
-  deleteItem(id) {
+  deleteItemHotelByID(id: any) {
     // Delete workspace here
-    this.generalService.deleteHotelByID(id).subscribe((res: any) => {
-      // Do some logic and close the popup
-      if (res && res.ret && res.ret[0].code !== 0) {
-        this.notificationService.showNotification(Constant.ERROR, 'Không thể xóa.');
-      } else {
-        this.notificationService.showNotification(Constant.SUCCESS, 'Xóa thành công');
-        this.getListData();
-      }
-    }, error => {
-      // Error handling and close the popup
-      this.notificationService.showNotification(Constant.ERROR, 'Đã có lỗi xảy ra!');
+    return new Promise((resolve, reject) => {
+      this.generalService.deleteHotelByID(id).subscribe((res: any) => {
+        // Do some logic and close the popup
+        if (res && res.ret && res.ret[0].code !== 0) {
+          this.notificationService.showNotification(Constant.ERROR, 'Không thể xóa khách sạn');
+        } else {
+          this.notificationService.showNotification(Constant.SUCCESS, 'Xóa khách sạn thành công');
+          resolve(true);
+        }
+      }, error => {
+        // Error handling and close the popup
+        this.notificationService.showNotification(Constant.ERROR, 'Đã có lỗi xảy ra khi xoá khách sạn!');
+      });
     });
   }
 
@@ -424,7 +431,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
         },
 
       }
-    );
+    )
   };
 
   saveHotel() {
@@ -478,27 +485,6 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
     }
   }
 
-
-  onDeleteClick(id: any): void {
-    // alert(id)
-    const c = confirm('Bạn có chắc muốn xóa khách sạn này?');
-    if (c === true) {
-      // Delete workspace here
-      this.generalService.deleteTaikhoan(id).subscribe(res => {
-        // Do some logic and close the popup
-        if (res && res.ret && res.ret[0].code !== 0) {
-          this.notificationService.showNotification(Constant.ERROR, 'Không thể xóa.');
-        } else {
-          this.notificationService.showNotification(Constant.SUCCESS, 'Xóa thành công');
-          this.getListData();
-        }
-      }, error => {
-        // Error handling and close the popup
-        this.notificationService.showNotification(Constant.ERROR, 'Đã có lỗi xảy ra!');
-      });
-    } else {
-    }
-  }
 
   exportData() {
     this.dataGridDetail.instance.exportToExcel(false);
@@ -811,8 +797,37 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
       },
 
       complete: () => {
-
       }
+    }).add(() => {
+      this.getListData().then((r) => {
+        if (this.item) {
+          let findHotel = this.filteredDatas.find((objHotel: any) => objHotel.id === this.item.hotelId);
+          if (findHotel) {
+            let findRoom = findHotel.roomHotels.find((objRoom: any) => objRoom.id === this.item.id);
+            if (findRoom) {
+              this.item = findRoom;
+            }
+          }
+        }
+
+        this.formAddRoom.patchValue({
+          id: this.item.id,
+          hotelId: this.item.hotelId,
+          name: this.item.name,
+          description: this.item.description,
+          roomNumber: 0,
+          floorNumber: 0,
+          price: this.item.price,
+          extraBed: this.item.extraBed,
+          extraBedPrice: this.item.extraBedPrice,
+          adultSurcharge: this.item.adultSurcharge,
+          childSurcharge: this.item.childSurcharge,
+          roomFiles: this.item.roomFiles,
+          roomFileIds: [],
+          prices: this.item.prices,
+          utilitieIds: this.getIDUtilityRooms(this.item.utilityRooms),
+        });
+      });
     });
   }
 
@@ -856,7 +871,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
       complete: () => {
 
       }
-    });
+    }).add(() => this.getListData());;
   }
 
   onRowUpdatedPriceDetail(event: any) {
@@ -891,12 +906,11 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
       complete: () => {
 
       }
-    });
+    }).add(() => this.getListData());
   }
 
   onSavingPriceDetail(event: any) {
     console.log('onSavingPriceDetail: ', event);
-    this.getListData();
   }
 
   phoneNumberFormat(value: any) {
