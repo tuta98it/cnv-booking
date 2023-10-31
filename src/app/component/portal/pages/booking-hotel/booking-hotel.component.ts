@@ -66,6 +66,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   isVisibleConfirm: boolean = false;
   isConfirmLoading: boolean = false;
   textValueNoteConfirm = '';
+  approvalCodeConfirm = '';
 
   textValueNoteRefuse = '';
   isVisibleRefuse: boolean = false;
@@ -804,28 +805,34 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
 
   handleOkConfirmBookingHotel() {
     this.isConfirmLoading = true;
+    this.submitted = true;
     this.generalService
-      .confirmBooking({ id: this.item.id, note: this.textValueNoteConfirm })
+      .confirmBooking({ id: this.item.id, note: this.textValueNoteConfirm, approvalCode: this.approvalCodeConfirm})
       .subscribe({
         next: (res) => {
           if (res.isValid) {
             this.notificationService.showNotification(Constant.SUCCESS, 'Xác nhận đặt phòng thành công');
+            this.isVisibleConfirm = false;
+            this.getListData();
           } else {
             if (res.errors && res.errors.length > 0) {
               res.errors.forEach((el: any) => {
-                this.notificationService.showNotification(Constant.ERROR, 'Xác nhận đặt phòng thật bại');
+                this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
               });
             } else {
               this.notificationService.showNotification(Constant.ERROR, 'Xác nhận đặt phòng thật bại');
             }
           }
         },
+        error: (error) => {
+          this.notificationService.showNotification(Constant.ERROR, 'Xác nhận đặt phòng thật bại');
+        },
+
+        complete: () => {
+        }
       })
       .add(() => {
         this.isConfirmLoading = false;
-        this.isVisibleConfirm = false;
-        this.getListData();
-
       });
   }
 

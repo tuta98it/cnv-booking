@@ -3,9 +3,10 @@
     <h1>Danh sách lượt đặt khách sạn</h1>
   </div>
 </div>
-<dx-data-grid id="gridContainer" [dataSource]="filteredDatas" #ListBookingHotels [showColumnLines]="true" [showRowLines]="true"
-  [height]="dxGridHeight" [rowAlternationEnabled]="true" [showBorders]="true" [allowColumnResizing]="true"
-  columnResizingMode="widget" [columnMinWidth]="50" [columnAutoWidth]="true" (onExporting)="onExporting($event)">
+<dx-data-grid id="gridContainer" [dataSource]="filteredDatas" #ListBookingHotels [showColumnLines]="true"
+  [showRowLines]="true" [height]="dxGridHeight" [rowAlternationEnabled]="true" [showBorders]="true"
+  [allowColumnResizing]="true" columnResizingMode="widget" [columnMinWidth]="50" [columnAutoWidth]="true"
+  (onExporting)="onExporting($event)">
   <dxo-scrolling mode="virtual"></dxo-scrolling>
   <dxo-sorting mode="multiple"></dxo-sorting>
   <dxo-header-filter [visible]="true"></dxo-header-filter>
@@ -152,11 +153,29 @@
     Xác nhận yêu cầu đặt khách sạn
   </div>
   <ng-template #contentConfirm>
-    <nz-input-group [nzSuffix]="textAreaClearConfirm" [nzPrefix]=""
-      class="ant-input-affix-wrapper-textarea-with-clear-btn">
-      <textarea nz-input [(ngModel)]="textValueNoteConfirm" [nzAutosize]="{ minRows: 5, maxRows: 10 }"
-        placeholder="Nội dung ghi chú ..."></textarea>
-    </nz-input-group>
+
+    <div class="input-wrap" nz-row>
+      <label class="title-detail" nz-col [nzSpan]="6">Mã xác nhận<em class="fas fa-asterisk required"></em></label>
+      <div nz-col [nzSpan]="18">
+        <nz-input-group [nzSuffix]="inputClearTpl" [ngClass]="{ 'is-invalid': (submitted && !approvalCodeConfirm)}">
+          <input nz-input type="text" [(ngModel)]="approvalCodeConfirm" placeholder="Mã xác nhận đặt khách sạn..."/>
+        </nz-input-group>
+        <ng-template #inputClearTpl>
+          <span nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="approvalCodeConfirm"
+            (click)="approvalCodeConfirm = null"></span> </ng-template>
+      </div>
+    </div>
+
+
+    <div style="margin-top: 1rem;">
+      <label for="">Ghi chú:</label>
+      <nz-input-group [nzSuffix]="textAreaClearConfirm" [nzPrefix]=""
+        class="ant-input-affix-wrapper-textarea-with-clear-btn">
+        <textarea nz-input [(ngModel)]="textValueNoteConfirm" [nzAutosize]="{ minRows: 5, maxRows: 10 }"
+          placeholder="Nội dung ghi chú ..."></textarea>
+      </nz-input-group>
+    </div>
+
     <!-- <ng-template #prefixTemplateNote><span nz-icon nzType="info-circle" nzTheme="outline"></span></ng-template> -->
     <ng-template #textAreaClearConfirm>
       <span nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="textValueNoteConfirm"
