@@ -156,7 +156,23 @@ const routes: Routes = [
           pagename: 'Bảng kê chi tiết vé máy bay',
           breadcrumb: 'Bảng kê chi tiết vé máy bay'
         }
-      }
+      },
+      {
+        path: 'utility-hotel',
+        loadChildren: () => import('./pages/utility/utility-hotel/utility-hotel.module').then(m => m.UtilityHotelModule),
+        data: {
+          pagename: 'Tiện ích',
+          breadcrumb: 'Tiện ích khách sạn'
+        }
+      },
+      {
+        path: 'utility-room',
+        loadChildren: () => import('./pages/utility/utility-room/utility-room.module').then(m => m.UtilityRoomModule),
+        data: {
+          pagename: 'Tiện ích',
+          breadcrumb: 'Tiện ích phòng'
+        }
+      },
     ]
   },
 ];

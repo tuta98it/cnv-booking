@@ -203,7 +203,7 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
   showDeleteConfirm(partner: any): void {
     this.modalService.confirm({
       nzTitle: 'Bạn có chắc muốn xóa tài khoản này?',
-      nzContent: '<b style="color: red;">Tài khoản sẽ thể hoàn tác sau khi xoá. Ấn đồng ý để xoá</b>',
+      nzContent: '<b style="color: red;">Tài khoản sẽ không thể hoàn tác sau khi xoá. Ấn đồng ý để xoá</b>',
       nzOkDanger: true,
       nzOkText: 'Đồng ý',
       nzCancelText: 'Không',

@@ -112,7 +112,7 @@ export class NewsComponent extends TableSelectionAbstract implements OnInit, OnD
   showDeleteConfirm(id: any): void {
     this.modalService.confirm({
       nzTitle: 'Bạn có chắc muốn xóa bài đăng này?',
-      nzContent: '<b style="color: red;">bài đăng sẽ thể hoàn tác sau khi xoá. Ấn đồng ý để xoá</b>',
+      nzContent: '<b style="color: red;">bài đăng sẽ không thể hoàn tác sau khi xoá. Ấn đồng ý để xoá</b>',
       nzOkDanger: true,
       nzOkText: 'Đồng ý',
       nzCancelText: 'Không',

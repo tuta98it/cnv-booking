@@ -246,7 +246,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
   showDeleteConfirm(id: any): void {
     this.modalService.confirm({
       nzTitle: 'Bạn có chắc muốn xóa khách sạn này?',
-      nzContent: '<b style="color: red;">khách sạn sẽ thể hoàn tác sau khi xoá. Ấn đồng ý để xoá</b>',
+      nzContent: '<b style="color: red;">khách sạn sẽ không thể hoàn tác sau khi xoá. Ấn đồng ý để xoá</b>',
       nzOkDanger: true,
       nzOkText: 'Đồng ý',
       nzCancelText: 'Không',

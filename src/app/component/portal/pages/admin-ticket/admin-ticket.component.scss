@@ -56,6 +56,8 @@
         .passenger-info-title {}
 
         .passenger-ticket-info-detail {
+          margin: 0.5rem 0 0.5rem 0;
+
           .passenger-ticket-info-name {}
 
           .passenger-ticket-info-content {
@@ -85,9 +87,9 @@
 
           .flight-info-content {
             .flight-schedule {
-              margin-top: 0.75rem;
-              margin-left: 0.75rem;
-
+              margin: 0.5rem 0 0.5rem 0.5rem;
+              padding-left: 0.5rem;
+              // border-left: 1px solid #000 ;
               .flight-schedule-title {
                 color: green;
               }

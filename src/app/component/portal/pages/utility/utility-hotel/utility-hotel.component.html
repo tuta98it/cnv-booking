@@ -1,0 +1,81 @@
+<div class="action-button" style="clear: bottom;overflow: hidden;">
+  <div class="form-group" style="float: left">
+    <h1>Danh sách tiện ích khách sạn</h1>
+
+  </div>
+  <div class="form-group" style="float: right; display: flex; align-items: center;">
+    <!-- Tìm kiếm -->
+    <!-- [(ngModel)]="searchText" (keyup.enter)="onSearch()"-->
+    <input style="width: 200px; border-radius: 4px; height: 32px;" class="mgr10" nzSize="small" nz-input type="text"
+      [(ngModel)]="searchText" (keyup)="onSearch()" placeholder="Tìm kiếm theo tên tiện ích ...">
+
+    <!-- Nút thêm -->
+    <button nz-button nzType="primary" class="ant-btn-primary" type="button" (click)="showModalAddUtilityHotel()">
+      <em class="fas fa-plus fa-fw" style="margin-right: 4px;"></em>Thêm tiện tích</button>
+
+    <!-- Nút xuất Excel -->
+    <!-- <button nz-button nzType="primary" class="btn-green mgr10" (click)="exportData()">
+      <span class="fa fa-fw fa-file-excel" style="margin-right: 4px;"></span>
+      Xuất Excel
+    </button> -->
+  </div>
+</div>
+<dx-data-grid id="gridContainer" [dataSource]="filteredDatas" #ListUtilityHotels [showColumnLines]="true"
+  [showRowLines]="true" [height]="dxGridHeight" [rowAlternationEnabled]="true" [showBorders]="true"
+  [allowColumnResizing]="true" columnResizingMode="widget" [columnMinWidth]="50" [columnAutoWidth]="true"
+  (onExporting)="onExporting($event)">
+  <dxo-scrolling mode="virtual"></dxo-scrolling>
+  <dxo-sorting mode="multiple"></dxo-sorting>
+  <dxo-header-filter [visible]="true"></dxo-header-filter>
+  <dxo-filter-row [visible]="true" [applyFilter]="currentFilter"></dxo-filter-row>
+
+  <dxi-column cssClass="text-center" caption="Action" [fixed]="true" [width]="50" fixedPosition="right"
+    cssClass="text-center" cellTemplate="cellBtnTemplate"></dxi-column>
+
+  <dxi-column cssClass="text-center" caption="STT" [width]="55" dataField="stt" [fixed]="true" [allowFiltering]="false"
+    [allowSorting]="false"></dxi-column>
+
+  <dxi-column caption="Tên tiện ích khách sạn" [width]="200" dataField="name" [fixed]="true"></dxi-column>
+
+  <div *dxTemplate="let item of 'cellBtnTemplate'" style="display: flex; justify-content: center;">
+    <button title="Chỉnh sửa thông tin khách sạn" nz-button nzSize="small" nzType="default"
+      class="btn-right button-update" (click)="showModalUpdateUtilityHotel(item.data)">
+      <span class="fa fa-edit fa-fw"></span>
+    </button>
+    <button title="Xóa tiện ích khách sạn" nz-button nzSize="small" nzType="default"
+      class="btn-right button-update ant-btn-red" (click)="showDeleteUtilityHotelConfirm(item.data.id)">
+      <span class="fa fa-times fa-fw"></span>
+    </button>
+  </div>
+
+  <dxo-summary>
+    <dxi-total-item column="name" displayFormat="Số bản ghi: {0}" summaryType="count">
+    </dxi-total-item>
+  </dxo-summary>
+</dx-data-grid>
+
+<form [formGroup]="formUtilityHotel" (ngSubmit)="saveUtilityHotel()">
+  <nz-modal [(nzVisible)]="isVisibleUtilityHotel" nzClosable="false" [nzTitle]="titleHotel" [nzContent]="contelHotel"
+    nzMaskClosable="false">
+    <ng-template #titleHotel>
+      {{titleFormUtilityHotel}}
+      <div class="pull-right icon-close">
+        <em (click)="handleCancel()" nz-icon nzType="close" nzTheme="outline"></em>
+      </div>
+    </ng-template>
+    <ng-template nzModalContent #contelHotel>
+      <div class="input-wrap" nz-row>
+        <label class="title-detail" nz-col [nzSpan]="8">Tên tiện ích khách sạn<em class="fas fa-asterisk required"></em></label>
+        <div nz-col [nzSpan]="16">
+          <input nz-input formControlName="name" type="text"
+            [ngClass]="{ 'is-invalid': submitted && formControlUtilityHotel.name.errors?.required }" />
+        </div>
+      </div>
+    </ng-template>
+    <div *nzModalFooter>
+      <button nz-button (click)="handleCancel()">{{'cancel' | translate }}</button>
+      <button nz-button nzType="primary" (click)="saveUtilityHotel()" class="button-submit">{{'save' | translate
+        }}</button>
+    </div>
+  </nz-modal>
+</form>
