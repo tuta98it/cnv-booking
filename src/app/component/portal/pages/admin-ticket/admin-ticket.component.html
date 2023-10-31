@@ -80,7 +80,10 @@
         <div class="ticket-general-info">
           <div *ngFor="let ticket of bookingTicketDetail.tickets; let i = index;">
             <div class="ticket-code">
-              <label for="">Code vé: <strong>{{ticket.bookingNumber}}</strong></label>
+              <label for="">Mã đặt vé: <strong>{{ticket.bookingNumber}}</strong></label>
+            </div>
+            <div class="ticket-code">
+              <label for="">Số vé: <strong>{{ticket.ticketNumber}}</strong></label>
             </div>
             <div class="ticket-holding-period">
               <label for="">Mã base: <strong>{{ticket.approvalCode}}</strong></label>

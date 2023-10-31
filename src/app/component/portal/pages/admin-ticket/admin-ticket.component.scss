@@ -25,11 +25,18 @@
         margin-top: 0.25rem;
         padding: 0.25rem;
         width: 59%;
-        .ticket-code {}
 
-        .ticket-status {}
+        .ticket-code {
+          width: fit-content;
+        }
 
-        .ticket-holding-period {}
+        .ticket-status {
+          width: fit-content;
+        }
+
+        .ticket-holding-period {
+          width: fit-content;
+        }
       }
 
 
@@ -38,7 +45,7 @@
 
     .ticket-main-info {
       display: flex;
-      justify-content: space-around;
+      justify-content: space-between;
 
       .passenger-info {
         border: solid 1px forestgreen;
@@ -80,7 +87,8 @@
             .flight-schedule {
               margin-top: 0.75rem;
               margin-left: 0.75rem;
-              .flight-schedule-title{
+
+              .flight-schedule-title {
                 color: green;
               }
             }
@@ -89,6 +97,7 @@
 
         .contact-info {
           margin-top: 2rem;
+
           .contact-info-title {}
 
           .contact-info-content {}
