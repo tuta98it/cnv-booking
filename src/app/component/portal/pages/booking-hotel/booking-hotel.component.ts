@@ -65,8 +65,11 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   isVisibleDetailBookingHotelPassengers: boolean = false;
   isVisibleConfirm: boolean = false;
   isConfirmLoading: boolean = false;
-  textValueNoteConfirm = '';
-  approvalCodeConfirm = '';
+  confirmBookingHotel = {
+    textValueNoteConfirm: '',
+    approvalCodeConfirm: '',
+
+  }
 
   textValueNoteRefuse = '';
   isVisibleRefuse: boolean = false;
@@ -367,6 +370,13 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   onConfirmBookingHotel(booking: any) {
     this.item = booking;
     this.isVisibleConfirm = true;
+    this.submitted = false;
+    this.resetConfirmBookingHotel();
+  }
+
+  private resetConfirmBookingHotel(){
+    this.confirmBookingHotel.approvalCodeConfirm = '',
+    this.confirmBookingHotel.textValueNoteConfirm = ''
   }
 
 
@@ -807,7 +817,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
     this.isConfirmLoading = true;
     this.submitted = true;
     this.generalService
-      .confirmBooking({ id: this.item.id, note: this.textValueNoteConfirm, approvalCode: this.approvalCodeConfirm})
+      .confirmBooking({ id: this.item.id, note: this.confirmBookingHotel.textValueNoteConfirm, approvalCode: this.confirmBookingHotel.approvalCodeConfirm })
       .subscribe({
         next: (res) => {
           if (res.isValid) {

@@ -157,12 +157,12 @@
     <div class="input-wrap" nz-row>
       <label class="title-detail" nz-col [nzSpan]="6">Mã xác nhận<em class="fas fa-asterisk required"></em></label>
       <div nz-col [nzSpan]="18">
-        <nz-input-group [nzSuffix]="inputClearTpl" [ngClass]="{ 'is-invalid': (submitted && !approvalCodeConfirm)}">
-          <input nz-input type="text" [(ngModel)]="approvalCodeConfirm" placeholder="Mã xác nhận đặt khách sạn..."/>
+        <nz-input-group [nzSuffix]="inputClearTpl" [ngClass]="{ 'is-invalid': (submitted && !confirmBookingHotel.approvalCodeConfirm)}">
+          <input nz-input type="text" [(ngModel)]="confirmBookingHotel.approvalCodeConfirm" placeholder="Mã xác nhận đặt khách sạn..."/>
         </nz-input-group>
         <ng-template #inputClearTpl>
-          <span nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="approvalCodeConfirm"
-            (click)="approvalCodeConfirm = null"></span> </ng-template>
+          <span nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="confirmBookingHotel.approvalCodeConfirm"
+            (click)="confirmBookingHotel.approvalCodeConfirm = null"></span> </ng-template>
       </div>
     </div>
 
@@ -171,15 +171,15 @@
       <label for="">Ghi chú:</label>
       <nz-input-group [nzSuffix]="textAreaClearConfirm" [nzPrefix]=""
         class="ant-input-affix-wrapper-textarea-with-clear-btn">
-        <textarea nz-input [(ngModel)]="textValueNoteConfirm" [nzAutosize]="{ minRows: 5, maxRows: 10 }"
+        <textarea nz-input [(ngModel)]="confirmBookingHotel.textValueNoteConfirm" [nzAutosize]="{ minRows: 5, maxRows: 10 }"
           placeholder="Nội dung ghi chú ..."></textarea>
       </nz-input-group>
     </div>
 
     <!-- <ng-template #prefixTemplateNote><span nz-icon nzType="info-circle" nzTheme="outline"></span></ng-template> -->
     <ng-template #textAreaClearConfirm>
-      <span nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="textValueNoteConfirm"
-        (click)="textValueNoteConfirm = null"></span>
+      <span nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="confirmBookingHotel.textValueNoteConfirm"
+        (click)="confirmBookingHotel.textValueNoteConfirm = null"></span>
     </ng-template>
   </ng-template>
   <div *nzModalFooter>
