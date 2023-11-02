@@ -153,8 +153,16 @@ const routes: Routes = [
         path: 'data-airline-tickets',
         loadChildren: () => import('./pages/data-airline-tickets/data-airline-tickets.module').then(m => m.DataAirlineTicketsModule),
         data: {
-          pagename: 'Bảng kê chi tiết vé máy bay',
+          pagename: 'Bảng kê chi tiết',
           breadcrumb: 'Bảng kê chi tiết vé máy bay'
+        }
+      },
+      {
+        path: 'data-hotels',
+        loadChildren: () => import('./pages/data-hotels/data-hotels.module').then(m => m.DataHotelsModule),
+        data: {
+          pagename: 'Bảng kê chi tiết',
+          breadcrumb: 'Bảng kê chi tiết khách sạn'
         }
       },
       {

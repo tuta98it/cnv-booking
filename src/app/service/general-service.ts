@@ -547,6 +547,9 @@ export class GeneralService extends BaseService {
     return this.post(`/api${UrlConstant.BOOKING}/ReportDebtStatistics`, payload);
   }
 
+
+
+
   getBookingByID(idBooking: any): Observable<any> {
     return this.get(`/api${UrlConstant.BOOKING}/getbookingbyid/${idBooking}`);
   }
@@ -628,6 +631,10 @@ export class GeneralService extends BaseService {
     return this.post(`/api${UrlConstant.BOOKING_HOTEL}/refuseBooking`, payload);
   }
 
+
+  reportHotelDebtStatistics(payload: any): Observable<any> {
+    return this.post(`/api${UrlConstant.BOOKING_HOTEL}/ReportHotelDebtStatistics`, payload);
+  }
 
 
   // News
