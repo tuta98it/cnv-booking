@@ -144,11 +144,11 @@ export class DataHotelsComponent extends TableSelectionAbstract implements OnIni
 
   onExporting(e) {
     const workbook = new Workbook();
-    const worksheet = workbook.addWorksheet('Bảng kê chi tiết vé khách sạn');
+    const worksheet = workbook.addWorksheet('Bảng kê chi tiết khách sạn');
 
     const from = this.dateFormatPipe.transformFull(new Date(), Constant.DATE_FMT_STR);
     const dateStr = from;
-    const fileName = `Bang_ve_khach_san_${dateStr}`;
+    const fileName = `Bang_phong_khach_san_${dateStr}`;
     exportDataGrid({
       component: e.component,
       worksheet,
@@ -180,7 +180,7 @@ export class DataHotelsComponent extends TableSelectionAbstract implements OnIni
       const headerRowTitle = worksheet.getRow(5);
       headerRowTitle.height = 28;
       worksheet.mergeCells(5, 1, 5, 8);
-      headerRowTitle.getCell(1).value = 'BẢNG KÊ CHI TIẾT VÉ KHÁCH SẠN';
+      headerRowTitle.getCell(1).value = 'BẢNG KÊ CHI TIẾT PHÒNG KHÁCH SẠN';
       headerRowTitle.getCell(1).font = { name: 'Times New Roman', size: 16, bold: true };
       headerRowTitle.getCell(1).alignment = { horizontal: 'center' };
 
