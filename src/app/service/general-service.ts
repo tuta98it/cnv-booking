@@ -636,6 +636,15 @@ export class GeneralService extends BaseService {
     return this.post(`/api${UrlConstant.BOOKING_HOTEL}/ReportHotelDebtStatistics`, payload);
   }
 
+  getBookingHotelById(idBoooking: any): Observable<any> {
+    return this.get(`/api${UrlConstant.BOOKING_HOTEL}/GetBookingHotelById/${idBoooking}`);
+  }
+
+  // Email
+  // /api/Email/SendEmailConfirmedBookingHotel
+  sendEmailConfirmedBookingHotel(payload: any): Observable<any> {
+    return this.post(`/api${UrlConstant.EMAIL}/sendEmailConfirmedBookingHotel`, payload);
+  }
 
   // News
   getNews(): Observable<any> {

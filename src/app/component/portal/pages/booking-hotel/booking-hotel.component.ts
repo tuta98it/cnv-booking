@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { ActionsSubject, select, Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { NzModalService } from 'ng-zorro-antd/modal';
@@ -27,6 +28,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzUploadChangeParam } from 'ng-zorro-antd/upload';
 import { NzUploadFile } from 'ng-zorro-antd/upload';
 import { StringUtils } from 'src/app/shared/utils/string-utils.class';
+import { MoneyUtils } from 'src/app/shared/utils/money-utils.class';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 import { DataService } from 'src/app/service/data.service';
 import { Router } from '@angular/router';
@@ -63,8 +65,11 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   titleFormHotel = '';
   titleFormRoom = '';
   isVisibleDetailBookingHotelPassengers: boolean = false;
-  isVisibleConfirm: boolean = false;
+  isVisibleConfirmBooking: boolean = false;
+  isVisibleConfirmSendEmaiBooking: boolean = false;
   isConfirmLoading: boolean = false;
+  // isOnSendEmailLoading: boolean = false;
+  isConfirmSendEmailLoading: boolean = false;
   confirmBookingHotel = {
     textValueNoteConfirm: '',
     approvalCodeConfirm: '',
@@ -72,8 +77,10 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   }
 
   textValueNoteRefuse = '';
-  isVisibleRefuse: boolean = false;
+  isVisibleRefuseBooking: boolean = false;
   isRefuseLoading: boolean = false;
+
+  contentFileConfirmBookingRoonHotel = ''
 
   listBookingHotelPassengers: any[];
   uploadHeader: any;
@@ -86,8 +93,8 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   configDescriptionHotel: AngularEditorConfig = {
     editable: true,
     spellcheck: true,
-    height: '10rem',
-    minHeight: '5rem',
+    height: '60vh',
+    minHeight: '50vh',
     maxHeight: 'auto',
     width: 'auto',
     minWidth: '0',
@@ -136,6 +143,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
     private nzImageService: NzImageService,
     private msg: NzMessageService,
     private dataService: DataService,
+    private datePipe: DatePipe,
   ) {
     super('id');
     this.formAddHotel = this.fb.group({
@@ -177,6 +185,351 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
     };
 
     this.uploadUrl = `${this.configService.getConfig().api.baseUrl}/Upload`;
+
+
+    this.contentFileConfirmBookingRoonHotel = `
+    <html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xác nhận đặt phòng khách sạn</title>
+</head>
+<style>
+    body {
+        margin: 8px;
+        padding: 8px 8px 8px 16px;
+    }
+
+    .title-and-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%;
+    }
+
+    .title-document-confirm {
+        font-size: 14px;
+        line-height: 150%;
+        color: #00B050;
+    }
+
+    .document-confirm-content {
+        margin-bottom: 8.0pt;
+        font-size: 14px;
+        font-family: "Arial", sans-serif;
+    }
+
+    .document-confirm-content-table {
+        width: 100.0%;
+        border-collapse: collapse;
+        border: none;
+    }
+
+    .document-confirm-content-table-cell {
+        padding: 0in 5.4pt;
+        vertical-align: top
+    }
+
+    .document-confirm-content-cell-text {
+        font-size: 14px;
+        line-height: 175%;
+    }
+
+    .customer-info-title {
+        border: 1pt solid #000;
+        background: rgb(197, 224, 179);
+        padding: 0in 5.4pt;
+        vertical-align: center;
+    }
+
+    .customer-info-title-text {
+        margin-bottom: 0in;
+        font-size: 14px;
+        text-align: center;
+        line-height: 150%;
+    }
+
+    .customer-info-content {
+        border: 1pt solid #000;
+        padding: 0in 5.4pt;
+    }
+
+    .customer-info-content-text {
+        text-align: center;
+        line-height: 150%;
+    }
+
+    .thanks-text {
+      margin-top: 3pt;
+      line-height: 150%;
+    }
+</style>
+
+<body>
+    <div class="title-and-content">
+        <div>
+            <!-- Title -->
+            <div>
+                <p style='text-align:center;' class="document-confirm-content">
+                    <strong><u><span class="title-document-confirm">BẢNG XÁC NHẬN PHÒNG Ở KHÁCH SẠN</span></u></strong>
+                </p>
+            </div>
+
+            <!-- Content -->
+            <div>
+                <p style='text-align:right;' class="document-confirm-content">
+                    <em>Ngày 30/10/2023</em>
+                </p>
+                <p class="document-confirm-content"> Kính gửi:<strong> Anh NGUYÊN TRƯỜNG GIANG </strong></p>
+                <p class="document-confirm-content">
+                    Cảm ơn anh đã chọn CAO NGUYÊN VIỆT làm đối tác dịch vụ đặt phòng khách sạn cho chuyến đi Thừa Thiên
+                    Huế
+                    sắp tới. Chúng tôi gửi báo giá lại thông tin đặt phòng như sau:</p>
+                <table class="document-confirm-content-table">
+                    <tbody>
+                        <tr>
+                            <td colspan="2" style="width: 17.48%;" class="document-confirm-content-table-cell">
+                                <p class="document-confirm-content-cell-text">Tên khách sạn</p>
+                            </td>
+                            <td colspan="6" style="width: 54.48%;" class="document-confirm-content-table-cell">
+                                <p class="document-confirm-content-cell-text">: AD 41 HOTEL</p>
+                            </td>
+                            <td colspan="3" style="width: 28.04%;" class="document-confirm-content-table-cell">
+                                <p class="document-confirm-content-cell-text" style="text-align: left;">
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="width: 17.48%;" class="document-confirm-content-table-cell">
+                                <span class="document-confirm-content-cell-text">Địa chỉ</span>
+                            </td>
+                            <td colspan="6" style="width: 54.48%;" class="document-confirm-content-table-cell">
+                                <p class="document-confirm-content-cell-text">: 38 Trần Cao Vân, phường Phú Hội,
+                                    Thành
+                                    Phố
+                                    Huế</p>
+                            </td>
+                            <td colspan="3" style="width: 28.04%;" class="document-confirm-content-table-cell">
+                                <p class="document-confirm-content-cell-text" style="text-align: left;">
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+
+                            <td colspan="2" style="width: 17.48%;" class="document-confirm-content-table-cell">
+                                <span class="document-confirm-content-cell-text">Số điện thoại</span>
+                            </td>
+                            <td colspan="6" style="width: 54.48%;" class="document-confirm-content-table-cell">
+                                <p class="document-confirm-content-cell-text">: 0392485895</p>
+                            </td>
+                            <td colspan="3" style="width: 28.04%;" class="document-confirm-content-table-cell">
+                                <p class="document-confirm-content-cell-text" style="text-align: left;">
+                                <p class="document-confirm-content-cell-text" style="text-align: left;">
+                                    <span>Website : <span style="color:#5B9BD5;"></span><a
+                                            href="http://www.add41hotel.com">www.add41hotel.com</a></span>
+                                </p>
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="width: 17.48%;" class="document-confirm-content-table-cell">
+                                <span class="document-confirm-content-cell-text">Mã xác nhận</span>
+                            </td>
+                            <td colspan="6" style="width: 54.48%;" class="document-confirm-content-table-cell">
+                                <p class="document-confirm-content-cell-text">: <span
+                                        style="color:red;"><strong>H105</strong></span></p>
+                            </td>
+                            <td colspan="3" style="width: 28.04%;" class="document-confirm-content-table-cell">
+                                <p class="document-confirm-content-cell-text" style="text-align: left;">
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="11" class="document-confirm-content-table-cell">
+                                <p class="document-confirm-content-cell-text" style="text-align: left;">Thông tin quý
+                                    khách:
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:5.2%;" class="customer-info-title">
+                                <p class="customer-info-title-text">
+                                    <strong>STT</strong>
+                                </p>
+                            </td>
+                            <td colspan="2" style="width: 23.22%;" class="customer-info-title">
+                                <p class="customer-info-title-text">
+                                    <strong>Tên khách</strong>
+                                </p>
+                            </td>
+                            <td style="width: 11.84%;" class="customer-info-title">
+                                <p class="customer-info-title-text">
+                                    <strong>Loại phòng</strong>
+                                </p>
+                            </td>
+                            <td style="width: 9.88%;" class="customer-info-title">
+                                <p class="customer-info-title-text">
+                                    <strong>SL Phòng</strong>
+                                </p>
+                            </td>
+                            <td style="width: 10.42%;" class="customer-info-title">
+                                <p class="customer-info-title-text">
+                                    <strong>Check-in</strong>
+                                </p>
+                            </td>
+                            <td style="width: 10.42%;" class="customer-info-title">
+                                <p class="customer-info-title-text">
+                                    <strong>Check-out</strong>
+                                </p>
+                            </td>
+                            <td colspan="2" style="width: 8.1%;" class="customer-info-title">
+                                <p class="customer-info-title-text">
+                                    <strong>Số đêm</strong>
+                                </p>
+                            </td>
+                            <td style="width: 10.34%;" class="customer-info-title">
+                                <p class="customer-info-title-text">
+                                    <strong>Giá phòng</strong>
+                                </p>
+                            </td>
+                            <td style="width: 10.58%;" class="customer-info-title">
+                                <p class="customer-info-title-text">
+                                    <strong>Thành tiền</strong>
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:5.2%;" class="customer-info-content">
+                                <p class="customer-info-content-text">
+                                    <span>1</span>
+                                </p>
+                            </td>
+                            <td colspan="2" class="customer-info-content">
+                                <div class="customer-info-content-text" style="text-align: left;">
+                                    NGUYỄN TRƯỜNG GIANG
+                                </div>
+                                <div class="customer-info-content-text" style="text-align: left;">
+                                    ĐỖ NHẬT TRƯỜNG
+                                </div>
+                            </td>
+                            <td style="width:11.84%;" class="customer-info-content">
+                                <p class="customer-info-content-text">
+                                    <span>Superior/twin</span>
+                                </p>
+                            </td>
+                            <td style="width:9.88%;" class="customer-info-content">
+                                <p class="customer-info-content-text">
+                                    <span>1</span>
+                                </p>
+                            </td>
+                            <td style="width:10.42%;" class="customer-info-content">
+                                <p class="customer-info-content-text">
+                                    <span>31/10/2023</span>
+                                </p>
+                            </td>
+                            <td style="width:10.42%;" class="customer-info-content">
+                                <p class="customer-info-content-text">
+                                    <span>01/11/2023</span>
+                                </p>
+                            </td>
+                            <td colspan="2" style="width:8.1%;" class="customer-info-content">
+                                <p class="customer-info-content-text">
+                                    <span>1</span>
+                                </p>
+                            </td>
+                            <td style="width:10.34%;" class="customer-info-content">
+                                <p class="customer-info-content-text">
+                                    <span>575.000</span>
+                                </p>
+                            </td>
+                            <td style="width:10.58%;" class="customer-info-content">
+                                <p class="customer-info-content-text">
+                                    <span>575.000</span>
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="7" style="width: 70.98%;" class="customer-info-content">
+                                <p class="customer-info-content-text">
+                                </p>
+                            </td>
+                            <td colspan="3" style="width: 18.44%;" class="customer-info-content">
+                                <p class="customer-info-content-text" style="text-align: center;">
+                                    <strong><span>Tổng cộng</span></strong>
+                                </p>
+                            </td>
+                            <td style="width: 10.58%;" class="customer-info-content">
+                                <p class="customer-info-content-text">
+                                    <strong><span>575.000</span></strong>
+                                </p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class=""> Bằng chữ: <em>Năm trăm bảy lăm nghìn đồng</em></p>
+
+                <div>
+                    <dl>
+                        <dt><strong>1. Tiền phòng bao gồm:</strong></dt>
+                        <dd style="margin-top: 4px;">- Ăn sáng tự chọn</dd>
+                        <dd style="margin-top: 4px;">- Nước uống chào đón khi nhận phòng</dd>
+                        <dd style="margin-top: 4px;">- Trà, café và nước suối mỗi ngày</dd>
+                        <dd style="margin-top: 4px;">- Miễn phí truy cập wifi, bãi đậu xe</dd>
+                        <dd style="margin-top: 4px;">- Thuế VAT và phí phục vụ</dd>
+                        <dt style="margin-top: 8px;"><strong>2. Thời gian nhận và trả phòng:</strong></dt>
+                        <dd style="margin-top: 4px;">- Giờ nhận phòng từ sau 14:00</dd>
+                        <dd style="margin-top: 4px;">- Nhận phòng trước 6:00 : tính 100% tiền phòng đêm đầu tiên</dd>
+                        <dd style="margin-top: 4px;">- Nhận phòng sớm từ 6:00 đến 9:00 : tính 50% tiền phòng đêm đầu
+                            tiên
+                        </dd>
+                        <dd style="margin-top: 4px;">- Nhận phòng sớm từ 9:00 đến 14:00 : tính 30% tiền phòng đêm đầu
+                            tiên
+                        </dd>
+                        <dd style="margin-top: 4px;">- Giờ trả phòng trước 12:00</dd>
+                        <dd style="margin-top: 4px;">- Trả phòng muộn từ 12:00 đến 15:00 : tính 30% tiền phòng</dd>
+                        <dd style="margin-top: 4px;">- Trả phòng muộn từ 15:00 đến 18:00 : tính 50% tiền phòng</dd>
+                        <dd style="margin-top: 4px;">- Trả phòng muộn sau 18:00 : tính 100% tiền phòng</dd>
+                        <dt style="margin-top: 8px;"><strong>3. Hình thức thanh toán: chuyển khoản:</strong></dt>
+                        <dd style="margin-top: 4px;">- Thanh toán 100% khi nhận được xác nhận đặt phòng để đảm bảo cho
+                            việc
+                            giữ
+                            phòng</dd>
+                        <dd style="margin-top: 4px;">- Đơn vị thụ hưởng: Cty TNHH TM DV DL CAO NGUYÊN VIỆT</dd>
+                        <dd style="margin-top: 4px;">- Số tài khoản: 878978999999 tại NH Quân đội (MB Bank)</dd>
+                    </dl>
+                </div>
+                <p class="thanks-text">
+                    Xin cảm ơn và chúc anh có chuyến nghỉ dưỡng vui vẻ</p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div>
+            <div style='margin-bottom:8.0pt;border-bottom:solid 1.0pt;'>
+            </div>
+            <p>
+                Cty TNHH Du lịch CAO NGUYÊN VIỆT - VIET HIGHLAND TRAVEL</strong></p>
+            <p>
+                105H/15 Hồ Thị Kỷ, phường 1, quận 10, Tp. HCM</p>
+            <div style="display: inline-block;">
+                <sapn style="margin-right: 8px;">
+                    Số điện thoại: 0868 456 9
+                </sapn>
+                <sapn style="margin-left: 8px; margin-right: 8px;">
+                    Email: <a href="mailto:happy@vhl.vn">happy@vhl.vn</a>
+                </sapn>
+                <sapn style="margin-left: 8px;">
+                    Website: <a href="www.vhl.vn">www.vhl.vn</a>
+                </sapn>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+`
   }
   payload = {
     page: 1,
@@ -210,6 +563,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
             en.stt = ++stt;
             let sttx = 0;
             en.bookingHotelDetails.forEach(element => {
+              en.isOnSendEmailLoading = false;
               element.stt = ++sttx;
             });
           });
@@ -243,11 +597,10 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
     });
   }
 
-  validateEmail(mail: any) {
+  private validateEmail(mail: any) {
     if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail) || !mail) {
       return (true);
     }
-    alert('Chưa đúng định dạng email!');
     return (false);
   }
 
@@ -369,20 +722,494 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
 
   onConfirmBookingHotel(booking: any) {
     this.item = booking;
-    this.isVisibleConfirm = true;
+    this.isVisibleConfirmBooking = true;
     this.submitted = false;
     this.resetConfirmBookingHotel();
   }
 
-  private resetConfirmBookingHotel(){
+
+  onConfirmSendEmailBookingHotel(booking: any) {
+    this.item = booking;
+    booking.isOnSendEmailLoading = true;
+    this.generalService.getBookingHotelById(booking.id)
+      .subscribe({
+        next: (res) => {
+          if (res) {
+            if (res.id === 0) {
+              this.notificationService.showNotification(Constant.ERROR, 'Dữ liệu đặt phòng không tồn tại');
+            } else {
+              this.item = res;
+              this.findDataBookingHotelInFormEditor(this.item).then((r) => {
+                booking.isOnSendEmailLoading = false;
+                this.isVisibleConfirmSendEmaiBooking = true;
+              });
+
+
+            }
+          } else {
+            this.notificationService.showNotification(Constant.ERROR, 'Không tồn tại dữ liệu');
+          }
+        },
+        error: (error) => {
+          this.notificationService.showNotification(Constant.ERROR, 'Hệ thống gặp lỗi');
+        },
+
+        complete: () => {
+        }
+      })
+      .add(() => {
+      });
+  }
+  private findDataBookingHotelInFormEditor(dataBookingHotel: any) {
+
+    return new Promise((resolve, reject) => {
+      this.contentFileConfirmBookingRoonHotel = `
+      <html lang="vi">
+
+  <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Xác nhận đặt phòng khách sạn</title>
+  </head>
+  <style>
+      body {
+          margin: 8px;
+          padding: 8px 8px 8px 16px;
+      }
+
+      .title-and-content {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          height: 100%;
+      }
+
+      .title-document-confirm {
+          font-size: 14px;
+          line-height: 150%;
+          color: #00B050;
+      }
+
+      .document-confirm-content {
+          margin-bottom: 8.0pt;
+          font-size: 14px;
+          font-family: "Arial", sans-serif;
+      }
+
+      .document-confirm-content-table {
+          width: 100.0%;
+          border-collapse: collapse;
+          border: none;
+      }
+
+      .document-confirm-content-table-cell {
+          padding: 0in 5.4pt;
+          vertical-align: top
+      }
+
+      .document-confirm-content-cell-text {
+          font-size: 14px;
+          line-height: 175%;
+      }
+
+      .customer-info-title {
+          border: 1pt solid #000;
+          background: rgb(197, 224, 179);
+          padding: 0in 5.4pt;
+          vertical-align: center;
+      }
+
+      .customer-info-title-text {
+          margin-bottom: 0in;
+          font-size: 14px;
+          text-align: center;
+          line-height: 150%;
+      }
+
+      .customer-info-content {
+          border: 1pt solid #000;
+          padding: 0in 5.4pt;
+
+          .customer-info-content-name {
+              line-height: 200%;
+              text-align: left;
+          }
+      }
+
+      .customer-info-content-text {
+          text-align: center;
+          line-height: 150%;
+      }
+
+      .thanks-text {
+        margin-top: 3pt;
+        line-height: 150%;
+      }
+  </style>
+
+  <body>
+      <div class="title-and-content">
+          <div>
+              <!-- Title -->
+              <div>
+                  <p style='text-align:center;' class="document-confirm-content">
+                      <strong><u><span class="title-document-confirm">BẢNG XÁC NHẬN PHÒNG Ở KHÁCH SẠN</span></u></strong>
+                  </p>
+              </div>
+
+              <!-- Content -->
+              <div>
+                  <p style='text-align:right;' class="document-confirm-content">
+                      <em>Ngày ${this.datePipe.transform(new Date(), 'dd/MM/yyyy')}</em>
+                  </p>
+                  <p class="document-confirm-content"> Kính gửi: <strong>Anh/Chị ${dataBookingHotel.contactName} </strong></p>
+                  <p class="document-confirm-content">
+                      Cảm ơn anh/chị đã chọn CAO NGUYÊN VIỆT làm đối tác dịch vụ đặt phòng khách sạn cho chuyến đi sắp tới. Chúng tôi gửi báo giá lại thông tin đặt phòng như sau:</p>
+                  <table class="document-confirm-content-table">
+                      <tbody>
+                          <tr>
+                              <td colspan="2" style="width: 17.48%;" class="document-confirm-content-table-cell">
+                                  <p class="document-confirm-content-cell-text">Tên khách sạn</p>
+                              </td>
+                              <td colspan="6" style="width: 54.48%;" class="document-confirm-content-table-cell">
+                                  <p class="document-confirm-content-cell-text">: ${dataBookingHotel.bookingHotelDetails[0].hotelName}</p>
+                              </td>
+                              <td colspan="3" style="width: 28.04%;" class="document-confirm-content-table-cell">
+                                  <p class="document-confirm-content-cell-text" style="text-align: left;">
+                                  </p>
+                              </td>
+                          </tr>
+                          <tr>
+                              <td colspan="2" style="width: 17.48%;" class="document-confirm-content-table-cell">
+                                  <span class="document-confirm-content-cell-text">Địa chỉ</span>
+                              </td>
+                              <td colspan="6" style="width: 54.48%;" class="document-confirm-content-table-cell">
+                                  <p class="document-confirm-content-cell-text">: ${dataBookingHotel.bookingHotelDetails[0].hotelAddress}</p>
+                              </td>
+                              <td colspan="3" style="width: 28.04%;" class="document-confirm-content-table-cell">
+                                  <p class="document-confirm-content-cell-text" style="text-align: left;">
+                                  </p>
+                              </td>
+                          </tr>
+                          <tr>
+
+                              <td colspan="2" style="width: 17.48%;" class="document-confirm-content-table-cell">
+                                  <span class="document-confirm-content-cell-text">Số điện thoại</span>
+                              </td>
+                              <td colspan="6" style="width: 54.48%;" class="document-confirm-content-table-cell">
+                                  <p class="document-confirm-content-cell-text">: ${dataBookingHotel.bookingHotelDetails[0].hotelPhone}</p>
+                              </td>
+                              <td colspan="3" style="width: 28.04%;" class="document-confirm-content-table-cell">
+                                  <p class="document-confirm-content-cell-text" style="text-align: left;">
+                                  <p class="document-confirm-content-cell-text" style="text-align: left;">
+                                      <span>Website : <span style="color:#5B9BD5;"></span><a
+                                              href="http://www.add41hotel.com">www.add41hotel.com</a></span>
+                                  </p>
+                                  </p>
+                              </td>
+                          </tr>
+                          <tr>
+                              <td colspan="2" style="width: 17.48%;" class="document-confirm-content-table-cell">
+                                  <span class="document-confirm-content-cell-text">Mã xác nhận</span>
+                              </td>
+                              <td colspan="6" style="width: 54.48%;" class="document-confirm-content-table-cell">
+                                  <p class="document-confirm-content-cell-text">: <span
+                                          style="color:red;"><strong> ${dataBookingHotel.approvalCode ? dataBookingHotel.approvalCode : ''}</strong></span></p>
+                              </td>
+                              <td colspan="3" style="width: 28.04%;" class="document-confirm-content-table-cell">
+                                  <p class="document-confirm-content-cell-text" style="text-align: left;">
+                                  </p>
+                              </td>
+                          </tr>
+                          <tr>
+                              <td colspan="11" class="document-confirm-content-table-cell">
+                                  <p class="document-confirm-content-cell-text" style="text-align: left;">Thông tin quý
+                                      khách:
+                                  </p>
+                              </td>
+                          </tr>
+                          <tr>
+                              <td style="width:5.2%;" class="customer-info-title">
+                                  <p class="customer-info-title-text">
+                                      <strong>STT</strong>
+                                  </p>
+                              </td>
+                              <td colspan="2" style="width: 23.22%;" class="customer-info-title">
+                                  <p class="customer-info-title-text">
+                                      <strong>Tên khách</strong>
+                                  </p>
+                              </td>
+                              <td style="width: 11.84%;" class="customer-info-title">
+                                  <p class="customer-info-title-text">
+                                      <strong>Loại phòng</strong>
+                                  </p>
+                              </td>
+                              <td style="width: 9.88%;" class="customer-info-title">
+                                  <p class="customer-info-title-text">
+                                      <strong>SL Phòng</strong>
+                                  </p>
+                              </td>
+                              <td style="width: 10.42%;" class="customer-info-title">
+                                  <p class="customer-info-title-text">
+                                      <strong>Check-in</strong>
+                                  </p>
+                              </td>
+                              <td style="width: 10.42%;" class="customer-info-title">
+                                  <p class="customer-info-title-text">
+                                      <strong>Check-out</strong>
+                                  </p>
+                              </td>
+                              <td colspan="2" style="width: 8.1%;" class="customer-info-title">
+                                  <p class="customer-info-title-text">
+                                      <strong>Số đêm</strong>
+                                  </p>
+                              </td>
+                              <td style="width: 10.34%;" class="customer-info-title">
+                                  <p class="customer-info-title-text">
+                                      <strong>Giá phòng</strong>
+                                  </p>
+                              </td>
+                              <td style="width: 10.58%;" class="customer-info-title">
+                                  <p class="customer-info-title-text">
+                                      <strong>Thành tiền</strong>
+                                  </p>
+                              </td>
+                          </tr>
+                          <tr>
+                              <td style="width:5.2%;" class="customer-info-content">
+                                  <p class="customer-info-content-text">
+                                      <span>1</span>
+                                  </p>
+                              </td>
+                              <td colspan="2" class="customer-info-content">
+                                  ${this.getListInerHTMLCustomerInfoContentName(dataBookingHotel.bookingHotelDetails[0].bookingHotelPassengers)}
+                              </td>
+                              <td style="width:11.84%;" class="customer-info-content">
+                                  <p class="customer-info-content-text">
+                                      <span>${dataBookingHotel.bookingHotelDetails[0].roomName}</span>
+                                  </p>
+                              </td>
+                              <td style="width:9.88%;" class="customer-info-content">
+                                  <p class="customer-info-content-text">
+                                      <span>${dataBookingHotel.bookingHotelDetails[0].amount}</span>
+                                  </p>
+                              </td>
+                              <td style="width:10.42%;" class="customer-info-content">
+                                  <p class="customer-info-content-text">
+                                      <span>${dataBookingHotel.bookingHotelDetails[0].checkinDate ? this.datePipe.transform(dataBookingHotel.bookingHotelDetails[0].checkinDate, 'dd/MM/yyyy') : ''}</span>
+                                  </p>
+                              </td>
+                              <td style="width:10.42%;" class="customer-info-content">
+                                  <p class="customer-info-content-text">
+                                      <span>${dataBookingHotel.bookingHotelDetails[0].checkoutDate ? this.datePipe.transform(dataBookingHotel.bookingHotelDetails[0].checkoutDate, 'dd/MM/yyyy') : ''}</span>
+                                  </p>
+                              </td>
+                              <td colspan="2" style="width:8.1%;" class="customer-info-content">
+                                  <p class="customer-info-content-text">
+                                      <span>${dataBookingHotel.bookingHotelDetails[0].numberOfNights}</span>
+                                  </p>
+                              </td>
+                              <td style="width:10.34%;" class="customer-info-content">
+                                  <p class="customer-info-content-text">
+                                      <span>${MoneyUtils.formatCurrencyVND(dataBookingHotel.bookingHotelDetails[0].price)}</span>
+                                  </p>
+                              </td>
+                              <td style="width:10.58%;" class="customer-info-content">
+                                  <p class="customer-info-content-text">
+                                      <span>${MoneyUtils.formatCurrencyVND(dataBookingHotel.bookingHotelDetails[0].totalPrice)}</span>
+                                  </p>
+                              </td>
+                          </tr>
+                          <tr>
+                              <td colspan="7" style="width: 70.98%;" class="customer-info-content">
+                                  <p class="customer-info-content-text">
+                                  </p>
+                              </td>
+                              <td colspan="3" style="width: 18.44%;" class="customer-info-content">
+                                  <p class="customer-info-content-text" style="text-align: center;">
+                                      <strong><span>Tổng cộng</span></strong>
+                                  </p>
+                              </td>
+                              <td style="width: 10.58%;" class="customer-info-content">
+                                  <p class="customer-info-content-text">
+                                      <strong><span>${MoneyUtils.formatCurrencyVND(dataBookingHotel.totalPrice)}</span></strong>
+                                  </p>
+                              </td>
+                          </tr>
+                      </tbody>
+                  </table>
+                  <p class=""> Bằng chữ: <em>${this.to_vietnamese(dataBookingHotel.totalPrice)}</em></p>
+
+                  <div>
+                      <dl>
+                          <dt><strong>1. Tiền phòng bao gồm:</strong></dt>
+                          <dd style="margin-top: 4px;">- Ăn sáng tự chọn</dd>
+                          <dd style="margin-top: 4px;">- Nước uống chào đón khi nhận phòng</dd>
+                          <dd style="margin-top: 4px;">- Trà, café và nước suối mỗi ngày</dd>
+                          <dd style="margin-top: 4px;">- Miễn phí truy cập wifi, bãi đậu xe</dd>
+                          <dd style="margin-top: 4px;">- Thuế VAT và phí phục vụ</dd>
+                          <dt style="margin-top: 8px;"><strong>2. Thời gian nhận và trả phòng:</strong></dt>
+                          <dd style="margin-top: 4px;">- Giờ nhận phòng từ sau 14:00</dd>
+                          <dd style="margin-top: 4px;">- Nhận phòng trước 6:00 : tính 100% tiền phòng đêm đầu tiên</dd>
+                          <dd style="margin-top: 4px;">- Nhận phòng sớm từ 6:00 đến 9:00 : tính 50% tiền phòng đêm đầu
+                              tiên
+                          </dd>
+                          <dd style="margin-top: 4px;">- Nhận phòng sớm từ 9:00 đến 14:00 : tính 30% tiền phòng đêm đầu
+                              tiên
+                          </dd>
+                          <dd style="margin-top: 4px;">- Giờ trả phòng trước 12:00</dd>
+                          <dd style="margin-top: 4px;">- Trả phòng muộn từ 12:00 đến 15:00 : tính 30% tiền phòng</dd>
+                          <dd style="margin-top: 4px;">- Trả phòng muộn từ 15:00 đến 18:00 : tính 50% tiền phòng</dd>
+                          <dd style="margin-top: 4px;">- Trả phòng muộn sau 18:00 : tính 100% tiền phòng</dd>
+                          <dt style="margin-top: 8px;"><strong>3. Hình thức thanh toán: chuyển khoản:</strong></dt>
+                          <dd style="margin-top: 4px;">- Thanh toán 100% khi nhận được xác nhận đặt phòng để đảm bảo cho
+                              việc
+                              giữ
+                              phòng</dd>
+                          <dd style="margin-top: 4px;">- Đơn vị thụ hưởng: Cty TNHH TM DV DL CAO NGUYÊN VIỆT</dd>
+                          <dd style="margin-top: 4px;">- Số tài khoản: 878978999999 tại NH Quân đội (MB Bank)</dd>
+                      </dl>
+                  </div>
+                  <p class="thanks-text">
+                      Xin cảm ơn và chúc anh có chuyến nghỉ dưỡng vui vẻ</p>
+              </div>
+          </div>
+
+          <!-- Footer -->
+          <div>
+              <div style='margin-bottom:8.0pt;border-bottom:solid 1.0pt;'>
+              </div>
+              <p>
+                  Cty TNHH Du lịch CAO NGUYÊN VIỆT - VIET HIGHLAND TRAVEL</strong></p>
+              <p>
+                  105H/15 Hồ Thị Kỷ, phường 1, quận 10, Tp. HCM</p>
+              <div style="display: inline-block;">
+                  <sapn style="margin-right: 8px;">
+                      Số điện thoại: 0868 456 9
+                  </sapn>
+                  <sapn style="margin-left: 8px; margin-right: 8px;">
+                      Email: <a href="mailto:happy@vhl.vn">happy@vhl.vn</a>
+                  </sapn>
+                  <sapn style="margin-left: 8px;">
+                      Website: <a href="www.vhl.vn">www.vhl.vn</a>
+                  </sapn>
+              </div>
+          </div>
+      </div>
+
+  </body>
+
+  </html>`
+      resolve(true);
+    });
+  }
+  //   this.isVisibleConfirmSendEmaiBooking = true;
+  // }
+  private getListInerHTMLCustomerInfoContentName(bookingHotelPassengers: any) {
+    let inerHTMLCustomerInfoVontentName = '';
+    bookingHotelPassengers.forEach((objPassenger: any) => {
+      inerHTMLCustomerInfoVontentName += `<div class="customer-info-content-name">${objPassenger.fullName}</div>`
+    });
+    return inerHTMLCustomerInfoVontentName;
+  }
+  private resetConfirmBookingHotel() {
     this.confirmBookingHotel.approvalCodeConfirm = '',
-    this.confirmBookingHotel.textValueNoteConfirm = ''
+      this.confirmBookingHotel.textValueNoteConfirm = ''
+  }
+
+  private defaultNumbers = ' hai ba bốn năm sáu bảy tám chín';
+  private chuHangDonVi = ('1 một' + this.defaultNumbers).split(' ');
+  private chuHangChuc = ('lẻ mười' + this.defaultNumbers).split(' ');
+  private chuHangTram = ('không một' + this.defaultNumbers).split(' ');
+
+  private convert_block_three(number: any) {
+    if (number == '000') return '';
+    var _a = number + ''; //Convert biến 'number' thành kiểu string
+
+    //Kiểm tra độ dài của khối
+    switch (_a.length) {
+      case 0: return '';
+      case 1: return this.chuHangDonVi[_a];
+      case 2: return this.convert_block_two(_a);
+      case 3:
+        var chuc_dv = '';
+        if (_a.slice(1, 3) != '00') {
+          chuc_dv = this.convert_block_two(_a.slice(1, 3));
+        }
+        var tram = this.chuHangTram[_a[0]] + ' trăm';
+        return tram + ' ' + chuc_dv;
+    }
+  }
+
+  private convert_block_two(number: any) {
+    var dv = this.chuHangDonVi[number[1]];
+    var chuc = this.chuHangChuc[number[0]];
+    var append = '';
+
+    // Nếu chữ số hàng đơn vị là 5
+    if (number[0] > 0 && number[1] == 5) {
+      dv = 'lăm'
+    }
+
+    // Nếu số hàng chục lớn hơn 1
+    if (number[0] > 1) {
+      append = ' mươi';
+
+      if (number[1] == 1) {
+        dv = ' mốt';
+      }
+    }
+
+    return chuc + '' + append + ' ' + dv;
+  }
+
+  private dvBlock = '1 nghìn triệu tỷ'.split(' ');
+
+  private to_vietnamese(number: any) {
+    var str = parseInt(number) + '';
+    var i = 0;
+    var arr = [];
+    var index = str.length;
+    var result = [];
+    var rsString = '';
+
+    if (index == 0 || str == 'NaN') {
+      return '';
+    }
+
+    // Chia chuỗi số thành một mảng từng khối có 3 chữ số
+    while (index >= 0) {
+      arr.push(str.substring(index, Math.max(index - 3, 0)));
+      index -= 3;
+    }
+
+    // Lặp từng khối trong mảng trên và convert từng khối đấy ra chữ Việt Nam
+    for (i = arr.length - 1; i >= 0; i--) {
+      if (arr[i] != '' && arr[i] != '000') {
+        result.push(this.convert_block_three(arr[i]));
+
+        // Thêm đuôi của mỗi khối
+        if (this.dvBlock[i]) {
+          result.push(this.dvBlock[i]);
+        }
+      }
+    }
+
+    // Join mảng kết quả lại thành chuỗi string
+    rsString = result.join(' ');
+
+    // Trả về kết quả kèm xóa những ký tự thừa
+    return rsString.replace(/[0-9]/g, '').replace(/ /g, ' ').replace(/ $/, '');
+  }
+
+  convertMoneyText(number: any) {
+    return this.to_vietnamese(number) + ' đồng'
   }
 
 
   onRefuseBookingHotel(booking: any) {
     this.item = booking;
-    this.isVisibleRefuse = true;
+    this.isVisibleRefuseBooking = true;
   }
 
 
@@ -400,8 +1227,10 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
     this.isVisibleAddRoom = false;
     this.updated = false;
     this.isVisibleDetailBookingHotelPassengers = false;
-    this.isVisibleConfirm = false;
-    this.isVisibleRefuse = false;
+    this.isVisibleConfirmBooking = false;
+    this.isVisibleRefuseBooking = false;
+    this.isVisibleConfirmSendEmaiBooking = false;
+    this.isConfirmSendEmailLoading = false;
     this.formAddHotel.reset();
     this.formAddRoom.reset();
   }
@@ -822,7 +1651,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
         next: (res) => {
           if (res.isValid) {
             this.notificationService.showNotification(Constant.SUCCESS, 'Xác nhận đặt phòng thành công');
-            this.isVisibleConfirm = false;
+            this.isVisibleConfirmBooking = false;
             this.getListData();
           } else {
             if (res.errors && res.errors.length > 0) {
@@ -867,8 +1696,54 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
       })
       .add(() => {
         this.isRefuseLoading = false;
-        this.isVisibleRefuse = false;
+        this.isVisibleRefuseBooking = false;
         this.getListData();
+      });
+  }
+
+
+  handleOkConfirmSendEmailBookingHotel() {
+    this.isConfirmSendEmailLoading = true;
+    let emailContact = this.item.contactEmail;
+    if (!StringUtils.validateEmail(emailContact)) {
+      this.notificationService.showNotification(Constant.ERROR, 'Email người gửi chưa đúng định dạng');
+      return;
+    }
+    let bookingHotelId = this.item.id;
+    let payloadSendEmailConfirmedBookingHotel = {
+      toEmail: emailContact,
+      subject: 'Xác nhận đặt phòng khách sạn',
+      content: this.contentFileConfirmBookingRoonHotel,
+      bookingHotelId: bookingHotelId
+    }
+    this.generalService
+      .sendEmailConfirmedBookingHotel(payloadSendEmailConfirmedBookingHotel)
+      .subscribe({
+        next: (res) => {
+          if (res.isValid) {
+            this.notificationService.showNotification(Constant.SUCCESS, 'Xác nhận gửi Email đặt phòng thành công');
+            this.isVisibleConfirmBooking = false;
+            this.isConfirmSendEmailLoading = false;
+            // this.getListData();
+          } else {
+            if (res.errors && res.errors.length > 0) {
+              res.errors.forEach((el: any) => {
+                this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+              });
+            } else {
+              this.notificationService.showNotification(Constant.ERROR, 'Gửi Email đặt phòng thật bại');
+            }
+          }
+        },
+        error: (error) => {
+          this.notificationService.showNotification(Constant.ERROR, 'Gửi Email đặt phòng gặp lỗi');
+        },
+
+        complete: () => {
+        }
+      })
+      .add(() => {
+
       });
   }
 }
