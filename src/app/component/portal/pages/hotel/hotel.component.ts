@@ -234,6 +234,23 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
     return this.formAddRoom.controls;
   }
 
+  deleteRoom(id: any) {
+    const c = confirm('Bạn có chắc muốn xóa phòng này');
+    if (c) {
+      this.generalService.deleteRoomByID(id).subscribe((res: any) => {
+        // Do some logic and close the popup
+        if (res && res.ret && res.ret[0].code !== 0) {
+          this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
+        } else {
+          this.notificationService.showNotification(Constant.SUCCESS, 'Xóa phòng thành công');
+          this.getListData();
+        }
+      }, error => {
+        // Error handling and close the popup
+        this.notificationService.showNotification(Constant.ERROR, 'Đã có lỗi xảy ra!');
+      });
+    }
+  }
 
   showDeleteConfirm(id: any): void {
     this.modalService.confirm({
@@ -251,7 +268,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
     this.generalService.deleteHotelByID(id).subscribe((res: any) => {
       // Do some logic and close the popup
       if (res && res.ret && res.ret[0].code !== 0) {
-        this.notificationService.showNotification(Constant.ERROR, 'Không thể xóa.');
+        this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
       } else {
         this.notificationService.showNotification(Constant.SUCCESS, 'Xóa thành công');
         this.getListData();

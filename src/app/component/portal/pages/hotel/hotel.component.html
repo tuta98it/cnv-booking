@@ -150,7 +150,7 @@
       </div>
       <div *dxTemplate="let room of 'cellBtnDetailTemplate'">
         <button title="Xóa phòng" nz-button nzSize="small" nzType="default" class="btn-right button-update ant-btn-red"
-          (click)="showDeleteConfirm(room.data.id)" *ngIf="checkUpdate">
+          (click)="deleteRoom(room.data.id)" *ngIf="checkUpdate">
           <span class="fa fa-times fa-fw"></span>
         </button>
         <button title="Chỉnh sửa thông tin phòng" nz-button nzSize="small" nzType="default"
@@ -383,7 +383,7 @@
           <div class="input-wrap" nz-row>
             <label class="title-detail" nz-col [nzSpan]="8">Phụ phí người lớn</label>
             <div nz-col [nzSpan]="16">
-              <dx-number-box formControlName="extraBedadultSurchargePrice" format="#,##0"></dx-number-box>
+              <dx-number-box formControlName="adultSurcharge" format="#,##0"></dx-number-box>
             </div>
           </div>
 
