@@ -132,7 +132,6 @@ export class EditHotelComponent implements OnInit {
   }
   getProvinces() {
     this.generalService.getProvinces().subscribe((res: any) => {
-      console.log(res);
       this.provinces = res;
     });
   }

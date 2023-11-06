@@ -3,15 +3,16 @@
     <h1>Danh sách lượt đặt khách sạn</h1>
   </div>
 </div>
-<dx-data-grid id="gridContainer" [dataSource]="filteredDatas" #ListBookingHotels [showColumnLines]="true" [showRowLines]="true"
-  [height]="dxGridHeight" [rowAlternationEnabled]="true" [showBorders]="true" [allowColumnResizing]="true"
-  columnResizingMode="widget" [columnMinWidth]="50" [columnAutoWidth]="true" (onExporting)="onExporting($event)">
+<dx-data-grid id="gridContainer" [dataSource]="filteredDatas" #ListBookingHotels [showColumnLines]="true"
+  [showRowLines]="true" [height]="dxGridHeight" [rowAlternationEnabled]="true" [showBorders]="true"
+  [allowColumnResizing]="true" columnResizingMode="widget" [columnMinWidth]="50" [columnAutoWidth]="true"
+  (onExporting)="onExporting($event)">
   <dxo-scrolling mode="virtual"></dxo-scrolling>
   <dxo-sorting mode="multiple"></dxo-sorting>
   <dxo-header-filter [visible]="true"></dxo-header-filter>
   <dxo-filter-row [visible]="true" [applyFilter]="currentFilter"></dxo-filter-row>
   <dxo-master-detail [enabled]="true" template="detailBookingHotel"></dxo-master-detail>
-  <dxi-column cssClass="text-center" caption="Action" [fixed]="true" [width]="100" fixedPosition="right"
+  <dxi-column cssClass="text-center" caption="Action" [fixed]="true" [width]="175" fixedPosition="right"
     cellTemplate="cellBtnTemplate"></dxi-column>
 
   <dxi-column cssClass="text-center" caption="STT" [width]="55" dataField="stt" [fixed]="true" [allowFiltering]="false"
@@ -41,12 +42,17 @@
   </div>
   <div *dxTemplate="let item of 'cellBtnTemplate'">
     <button title="Từ chối yêu cầu" nz-button nzSize="small" nzType="default"
-      class="btn-right button-update ant-btn-red" (click)="onRefuseBookingHotel(item.data)" *ngIf="checkUpdate">
+      class="btn-right button-update ant-btn-red" (click)="onRefuseBookingHotel(item.data)">
       <span class="fa fa-times fa-fw"></span>
     </button>
+
     <button title="Xác nhận yêu cầu" nz-button nzSize="small" nzType="default" class="btn-right button-update"
-      (click)="onConfirmBookingHotel(item.data)" *ngIf="checkUpdate">
+      (click)="onConfirmBookingHotel(item.data)">
       <span class="fa fa-check fa-fw"></span>
+    </button>
+    <button  *ngIf="item.data.bookingStatus === 1" [nzLoading]="item.data.isOnSendEmailLoading" title="Gửi mail xác nhận đặt khách sạn" nz-button nzSize="small"
+      nzType="default" class="btn-right button-update" (click)="onConfirmSendEmailBookingHotel(item.data)">
+      <span class="fa fa-paper-plane fa-fw"></span>
     </button>
   </div>
   <div *dxTemplate="let bookingHotel of 'detailBookingHotel'">
@@ -147,20 +153,41 @@
 </nz-modal>
 
 <!-- Confirm agreement booking hotel -->
-<nz-modal [(nzVisible)]="isVisibleConfirm" [nzContent]="contentConfirm" nzWidth="500px" (nzOnCancel)="handleCancel()">
+<nz-modal [(nzVisible)]="isVisibleConfirmBooking" [nzContent]="contentConfirm" nzWidth="500px" (nzOnCancel)="handleCancel()">
   <div *nzModalTitle>
     Xác nhận yêu cầu đặt khách sạn
   </div>
   <ng-template #contentConfirm>
-    <nz-input-group [nzSuffix]="textAreaClearConfirm" [nzPrefix]=""
-      class="ant-input-affix-wrapper-textarea-with-clear-btn">
-      <textarea nz-input [(ngModel)]="textValueNoteConfirm" [nzAutosize]="{ minRows: 5, maxRows: 10 }"
-        placeholder="Nội dung ghi chú ..."></textarea>
-    </nz-input-group>
+    <div class="input-wrap" nz-row>
+      <label class="title-detail" nz-col [nzSpan]="6">Mã xác nhận<em class="fas fa-asterisk required"></em></label>
+      <div nz-col [nzSpan]="18">
+        <nz-input-group [nzSuffix]="inputClearTpl"
+          [ngClass]="{ 'is-invalid': (submitted && !confirmBookingHotel.approvalCodeConfirm)}">
+          <input nz-input type="text" [(ngModel)]="confirmBookingHotel.approvalCodeConfirm"
+            placeholder="Mã xác nhận đặt khách sạn..." />
+        </nz-input-group>
+        <ng-template #inputClearTpl>
+          <span nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle"
+            *ngIf="confirmBookingHotel.approvalCodeConfirm"
+            (click)="confirmBookingHotel.approvalCodeConfirm = null"></span> </ng-template>
+      </div>
+    </div>
+
+
+    <div style="margin-top: 1rem;">
+      <label for="">Ghi chú:</label>
+      <nz-input-group [nzSuffix]="textAreaClearConfirm" [nzPrefix]=""
+        class="ant-input-affix-wrapper-textarea-with-clear-btn">
+        <textarea nz-input [(ngModel)]="confirmBookingHotel.textValueNoteConfirm"
+          [nzAutosize]="{ minRows: 5, maxRows: 10 }" placeholder="Nội dung ghi chú ..."></textarea>
+      </nz-input-group>
+    </div>
+
     <!-- <ng-template #prefixTemplateNote><span nz-icon nzType="info-circle" nzTheme="outline"></span></ng-template> -->
     <ng-template #textAreaClearConfirm>
-      <span nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="textValueNoteConfirm"
-        (click)="textValueNoteConfirm = null"></span>
+      <span nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle"
+        *ngIf="confirmBookingHotel.textValueNoteConfirm"
+        (click)="confirmBookingHotel.textValueNoteConfirm = null"></span>
     </ng-template>
   </ng-template>
   <div *nzModalFooter>
@@ -171,7 +198,7 @@
 </nz-modal>
 
 <!-- Refuse booking hotel request -->
-<nz-modal [(nzVisible)]="isVisibleRefuse" [nzContent]="contentRefuse" nzWidth="450px" (nzOnCancel)="handleCancel()">
+<nz-modal [(nzVisible)]="isVisibleRefuseBooking" [nzContent]="contentRefuse" nzWidth="450px" (nzOnCancel)="handleCancel()">
   <div *nzModalTitle>
     Từ chối yêu cầu đặt khách sạn
   </div>
@@ -189,5 +216,23 @@
   <div *nzModalFooter>
     <button nz-button nzType="default" (click)="handleCancel()">Huỷ</button>
     <button nz-button nzType="dashed" nzDanger (click)="handleOkRefuse()" [nzLoading]="isRefuseLoading">Từ chối</button>
+  </div>
+</nz-modal>
+
+<!-- Confirm agreement send email booking hotel -->
+<nz-modal [(nzVisible)]="isVisibleConfirmSendEmaiBooking" [nzContent]="contentConfirmSendEmailBookingHotel" nzWidth="120vh" (nzOnCancel)="handleCancel()">
+  <div *nzModalTitle>
+    Xác nhận phòng ở khách sạn
+  </div>
+  <ng-template #contentConfirmSendEmailBookingHotel>
+
+    <div>
+      <angular-editor [placeholder]="'Nội dung thông tin xác nhận đặt phòng khách sạn...'"  [(ngModel)]="contentFileConfirmBookingRoonHotel"
+      [config]="configDescriptionHotel" ></angular-editor>
+    </div>
+  </ng-template>
+  <div *nzModalFooter>
+    <button nz-button nzType="default" (click)="handleCancel()">Huỷ</button>
+    <button nz-button nzType="primary" (click)="handleOkConfirmSendEmailBookingHotel()" [nzLoading]="isConfirmSendEmailLoading">Xác nhận và gửi Email</button>
   </div>
 </nz-modal>

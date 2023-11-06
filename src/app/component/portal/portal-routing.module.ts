@@ -153,10 +153,34 @@ const routes: Routes = [
         path: 'data-airline-tickets',
         loadChildren: () => import('./pages/data-airline-tickets/data-airline-tickets.module').then(m => m.DataAirlineTicketsModule),
         data: {
-          pagename: 'Bảng kê chi tiết vé máy bay',
+          pagename: 'Bảng kê chi tiết',
           breadcrumb: 'Bảng kê chi tiết vé máy bay'
         }
-      }
+      },
+      {
+        path: 'data-hotels',
+        loadChildren: () => import('./pages/data-hotels/data-hotels.module').then(m => m.DataHotelsModule),
+        data: {
+          pagename: 'Bảng kê chi tiết',
+          breadcrumb: 'Bảng kê chi tiết khách sạn'
+        }
+      },
+      {
+        path: 'utility-hotel',
+        loadChildren: () => import('./pages/utility/utility-hotel/utility-hotel.module').then(m => m.UtilityHotelModule),
+        data: {
+          pagename: 'Tiện ích',
+          breadcrumb: 'Tiện ích khách sạn'
+        }
+      },
+      {
+        path: 'utility-room',
+        loadChildren: () => import('./pages/utility/utility-room/utility-room.module').then(m => m.UtilityRoomModule),
+        data: {
+          pagename: 'Tiện ích',
+          breadcrumb: 'Tiện ích phòng'
+        }
+      },
     ]
   },
 ];

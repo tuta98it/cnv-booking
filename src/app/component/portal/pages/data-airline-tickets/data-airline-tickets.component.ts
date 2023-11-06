@@ -224,6 +224,8 @@ export class DataAirlineTicketsComponent extends TableSelectionAbstract implemen
           let stt = 0;
           this.datas.forEach((en: any) => {
             en.stt = ++stt;
+            en.totalNetPriceVATFormat = this.formatCurrencyVND(en.totalNetPrice * 0.08);
+            en.totalNetPriceFormat = this.formatCurrencyVND(en.totalNetPrice);
           });
           this.total = res.total;
           this.filteredDatas = this.datas;
@@ -286,7 +288,7 @@ export class DataAirlineTicketsComponent extends TableSelectionAbstract implemen
   showDeleteConfirm(id: any): void {
     this.modalService.confirm({
       nzTitle: 'Bạn có chắc muốn xóa khách sạn này?',
-      nzContent: '<b style="color: red;">khách sạn sẽ thể hoàn tác sau khi xoá. Ấn đồng ý để xoá</b>',
+      nzContent: '<b style="color: red;">khách sạn sẽ không thể hoàn tác sau khi xoá. Ấn đồng ý để xoá</b>',
       nzOkDanger: true,
       nzOkText: 'Đồng ý',
       nzCancelText: 'Không',
@@ -1007,7 +1009,13 @@ export class DataAirlineTicketsComponent extends TableSelectionAbstract implemen
   }
 
   calculateSelectedRowPrice(options) {
-    if (options.name === 'SelectedRowsVAT') {
+    if (options.name === 'SelectedRowsSumPrice') {
+      if (options.summaryProcess === 'start') {
+        options.totalValue = 0;
+      } else if (options.summaryProcess === 'calculate') {
+        options.totalValue += options.value.totalNetPrice;
+      }
+    } else if (options.name === 'SelectedRowsVAT') {
       if (options.summaryProcess === 'start') {
         options.totalValue = 0;
       } else if (options.summaryProcess === 'calculate') {

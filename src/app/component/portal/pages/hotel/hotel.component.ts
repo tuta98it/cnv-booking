@@ -1,36 +1,36 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {ActionsSubject, select, Store} from '@ngrx/store';
-import {TranslateService} from '@ngx-translate/core';
-import {NzModalService} from 'ng-zorro-antd/modal';
-import {GeneralService} from 'src/app/service/general-service';
-import {TableSelectionAbstract} from 'src/app/shared/component/table/table-selection.abstract';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Constant} from 'src/app/shared/constants/constant.class';
-import {AppConfigService} from 'src/app-config.service';
-import {NotificationService} from 'src/app/service/notification.service';
-import {Workbook} from 'exceljs';
-import {DateFormatPipe} from 'src/app/shared/pipe/format-date.pipe';
-import {exportDataGrid} from 'devextreme/excel_exporter';
-import {saveAs} from 'file-saver-es';
-import {NzImageService} from 'ng-zorro-antd/image';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ActionsSubject, select, Store } from '@ngrx/store';
+import { TranslateService } from '@ngx-translate/core';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { GeneralService } from 'src/app/service/general-service';
+import { TableSelectionAbstract } from 'src/app/shared/component/table/table-selection.abstract';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Constant } from 'src/app/shared/constants/constant.class';
+import { AppConfigService } from 'src/app-config.service';
+import { NotificationService } from 'src/app/service/notification.service';
+import { Workbook } from 'exceljs';
+import { DateFormatPipe } from 'src/app/shared/pipe/format-date.pipe';
+import { exportDataGrid } from 'devextreme/excel_exporter';
+import { saveAs } from 'file-saver-es';
+import { NzImageService } from 'ng-zorro-antd/image';
 // import { removeAccents } from ;
-import {removeAccents} from 'src/app/shared/utils/filters/remove-accents';
+import { removeAccents } from 'src/app/shared/utils/filters/remove-accents';
 import {
   DxDataGridComponent,
   DxTemplateDirective,
   DxTooltipComponent,
   DxTooltipModule,
 } from 'devextreme-angular';
-import {IsEmptyPipe} from 'src/app/shared/pipe/is-empty.pipe';
-import {filter} from 'rxjs/operators';
-import {NzMessageService} from 'ng-zorro-antd/message';
-import {NzUploadChangeParam} from 'ng-zorro-antd/upload';
-import {NzUploadFile} from 'ng-zorro-antd/upload';
-import {StringUtils} from 'src/app/shared/utils/string-utils.class';
+import { IsEmptyPipe } from 'src/app/shared/pipe/is-empty.pipe';
+import { filter } from 'rxjs/operators';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzUploadChangeParam } from 'ng-zorro-antd/upload';
+import { NzUploadFile } from 'ng-zorro-antd/upload';
+import { StringUtils } from 'src/app/shared/utils/string-utils.class';
 // @ts-ignore
-import {AngularEditorConfig} from '@kolkov/angular-editor';
-import {DataService} from 'src/app/service/data.service';
-import {Router} from '@angular/router';
+import { AngularEditorConfig } from '@kolkov/angular-editor';
+import { DataService } from 'src/app/service/data.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-hotel',
@@ -40,6 +40,8 @@ import {Router} from '@angular/router';
 export class HotelComponent extends TableSelectionAbstract implements OnInit, OnDestroy {
   @ViewChild('ListHotels') dataGridDetail: DxDataGridComponent;
   datas: any[] = [];
+  listPriceRoomDetail: any[] = [];
+  statusPriceDetail: any[] = [];
   data: any;
   listUtilityHotel = [];
   listUtilityRoom = [];
@@ -84,10 +86,10 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
     defaultFontName: '',
     defaultFontSize: '',
     fonts: [
-      {class: 'arial', name: 'Arial'},
-      {class: 'times-new-roman', name: 'Times New Roman'},
-      {class: 'calibri', name: 'Calibri'},
-      {class: 'comic-sans-ms', name: 'Comic Sans MS'}
+      { class: 'arial', name: 'Arial' },
+      { class: 'times-new-roman', name: 'Times New Roman' },
+      { class: 'calibri', name: 'Calibri' },
+      { class: 'comic-sans-ms', name: 'Comic Sans MS' }
     ],
     customClasses: [
       {
@@ -155,6 +157,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
       childSurcharge: [null],
       roomFiles: [[]],
       roomFileIds: [[]],
+      prices: [[]],
       utilitieIds: [null],
     });
 
@@ -163,6 +166,11 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
     };
 
     this.uploadUrl = `${this.configService.getConfig().api.baseUrl}/Upload`;
+
+    this.statusPriceDetail = [
+      { name: 'Kích hoạt', value: true },
+      { name: 'Vô hiệu hoá', value: false },
+    ]
   }
 
   ngOnInit(): void {
@@ -175,33 +183,33 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
 
   }
 
-  phoneNumberFormat(value: any) {
-    let phoneNo = value;
-    if (value) {
-      const USNumber = value.match(/(\d{3})(\d{3})(\d{4})/);
-      if (USNumber) {
-        phoneNo = `(${USNumber[1]}) ${USNumber[2]}-${USNumber[3]}`;
-      }
-    }
-    return phoneNo;
-  }
+
 
   getListData() {
-    this.loading = true;
-    this.generalService.getHotels().subscribe((res: any) => {
-      this.datas = res;
-      let stt = 0;
-      this.datas.forEach((en: any) => {
-        en.stt = ++stt;
-
-        let sttx = 0;
-        en.roomHotels.forEach((enx: any) => {
-          enx.stt = ++sttx;
+    return new Promise((resolve, reject) => {
+      this.loading = true;
+      this.generalService.getHotels().subscribe((res: any) => {
+        this.datas = res;
+        let stt = 0;
+        this.datas.forEach((en: any) => {
+          en.stt = ++stt;
+          let sttx = 0;
+          en.roomHotels.forEach((roomHotel: any) => {
+            roomHotel.stt = ++sttx;
+            let sttp = 0;
+            roomHotel.prices.forEach((priceCustom: any) => {
+              priceCustom.stt = ++sttp;
+            });
+          });
         });
+        this.filteredDatas = this.datas;
+      }).add(() => {
+        this.loading = false;
+        resolve(true);
       });
-
-      this.filteredDatas = this.datas;
     });
+
+
   }
 
 
@@ -234,48 +242,33 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
     return this.formAddRoom.controls;
   }
 
-  deleteRoom(id: any) {
-    const c = confirm('Bạn có chắc muốn xóa phòng này');
-    if (c) {
-      this.generalService.deleteRoomByID(id).subscribe((res: any) => {
-        // Do some logic and close the popup
-        if (res && res.ret && res.ret[0].code !== 0) {
-          this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
-        } else {
-          this.notificationService.showNotification(Constant.SUCCESS, 'Xóa phòng thành công');
-          this.getListData();
-        }
-      }, error => {
-        // Error handling and close the popup
-        this.notificationService.showNotification(Constant.ERROR, 'Đã có lỗi xảy ra!');
-      });
-    }
-  }
 
   showDeleteConfirm(id: any): void {
     this.modalService.confirm({
       nzTitle: 'Bạn có chắc muốn xóa khách sạn này?',
-      nzContent: '<b style="color: red;">khách sạn sẽ thể hoàn tác sau khi xoá. Ấn đồng ý để xoá</b>',
+      nzContent: '<b style="color: red;">khách sạn sẽ không thể hoàn tác sau khi xoá. Ấn đồng ý để xoá</b>',
       nzOkDanger: true,
       nzOkText: 'Đồng ý',
       nzCancelText: 'Không',
-      nzOnOk: () => this.deleteItem(id)
+      nzOnOk: () => this.deleteItemHotelByID(id).then(() => this.getListData()),
     });
   }
 
-  deleteItem(id) {
+  deleteItemHotelByID(id: any) {
     // Delete workspace here
-    this.generalService.deleteHotelByID(id).subscribe((res: any) => {
-      // Do some logic and close the popup
-      if (res && res.ret && res.ret[0].code !== 0) {
-        this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
-      } else {
-        this.notificationService.showNotification(Constant.SUCCESS, 'Xóa thành công');
-        this.getListData();
-      }
-    }, error => {
-      // Error handling and close the popup
-      this.notificationService.showNotification(Constant.ERROR, 'Đã có lỗi xảy ra!');
+    return new Promise((resolve, reject) => {
+      this.generalService.deleteHotelByID(id).subscribe((res: any) => {
+        // Do some logic and close the popup
+        if (res && res.ret && res.ret[0].code !== 0) {
+          this.notificationService.showNotification(Constant.ERROR, 'Không thể xóa khách sạn');
+        } else {
+          this.notificationService.showNotification(Constant.SUCCESS, 'Xóa khách sạn thành công');
+          resolve(true);
+        }
+      }, error => {
+        // Error handling and close the popup
+        this.notificationService.showNotification(Constant.ERROR, 'Đã có lỗi xảy ra khi xoá khách sạn!');
+      });
     });
   }
 
@@ -438,7 +431,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
         },
 
       }
-    );
+    )
   };
 
   saveHotel() {
@@ -493,27 +486,6 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
   }
 
 
-  onDeleteClick(id: any): void {
-    // alert(id)
-    const c = confirm('Bạn có chắc muốn xóa khách sạn này?');
-    if (c === true) {
-      // Delete workspace here
-      this.generalService.deleteTaikhoan(id).subscribe(res => {
-        // Do some logic and close the popup
-        if (res && res.ret && res.ret[0].code !== 0) {
-          this.notificationService.showNotification(Constant.ERROR, 'Không thể xóa.');
-        } else {
-          this.notificationService.showNotification(Constant.SUCCESS, 'Xóa thành công');
-          this.getListData();
-        }
-      }, error => {
-        // Error handling and close the popup
-        this.notificationService.showNotification(Constant.ERROR, 'Đã có lỗi xảy ra!');
-      });
-    } else {
-    }
-  }
-
   exportData() {
     this.dataGridDetail.instance.exportToExcel(false);
   }
@@ -532,7 +504,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
       autoFilterEnabled: true,
     }).then(() => {
       workbook.xlsx.writeBuffer().then((buffer) => {
-        saveAs(new Blob([buffer], {type: 'application/octet-stream'}), fileName + '.xlsx');
+        saveAs(new Blob([buffer], { type: 'application/octet-stream' }), fileName + '.xlsx');
       });
     });
     e.cancel = true;
@@ -602,7 +574,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
     this.isVisibleAddRoom = true;
     this.submitted = false;
     this.item = data;
-    this.titleFormRoom = 'Sủa thông tin phòng';
+    this.titleFormRoom = 'Sửa thông tin phòng';
     this.updated = true;
 
     this.formAddRoom.patchValue({
@@ -619,6 +591,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
       childSurcharge: this.item.childSurcharge,
       roomFiles: this.item.roomFiles,
       roomFileIds: [],
+      prices: this.item.prices,
       utilitieIds: this.getIDUtilityRooms(this.item.utilityRooms),
     });
 
@@ -651,6 +624,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
       // add
       delete formValue.id;
       delete formValue.roomFiles;
+      delete formValue.prices;
       this.generalService.addRoom(formValue).subscribe((res: any) => {
         if (res.ret && res.ret[0].code !== 0) {
           this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
@@ -666,6 +640,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
       // / update
       delete formValue.roomFiles;
       delete formValue.roomFileIds;
+      delete formValue.prices;
       this.generalService.updateRoomByID(formValue.id, formValue).subscribe((res: any) => {
         if (res.ret && res.ret[0].code !== 0) {
           this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
@@ -702,10 +677,10 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
         arrImage.push(objImageView);
       });
     }
-    this.nzImageService.preview(arrImage, {nzZoom: 1.5, nzRotate: 0});
+    this.nzImageService.preview(arrImage, { nzZoom: 1.5, nzRotate: 0 });
   }
 
-  handleChangeImages({file, fileList}: NzUploadChangeParam, form: any): void {
+  handleChangeImages({ file, fileList }: NzUploadChangeParam, form: any): void {
     const status = file.status;
     if (status === 'done') {
       this.msg.success(`file ${file.name} tải lên thành công.`);
@@ -748,7 +723,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
 
   // switchValueIsAvaliable = false;
   clickSwitchIsAvaliable(isAvaliableUpdate: boolean, roomID: any): void {
-    this.generalService.SetAvailableRoom({roomId: roomID, isAvailable: isAvaliableUpdate}).subscribe(
+    this.generalService.SetAvailableRoom({ roomId: roomID, isAvailable: isAvaliableUpdate }).subscribe(
       {
         next: (res) => {
           if (res.ret && res.ret[0].code !== 0) {
@@ -778,5 +753,181 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
       ids[i] = utilityRooms[i].id;
     }
     return ids;
+  }
+
+  logEvent(eventName: any) {
+    // this.events.unshift(eventName);
+    console.log('eventName: ', eventName);
+  }
+
+  onInitNewRowPriceDetail(event: any) {
+    console.log('onInitNewRowPriceDetail: ', event);
+  }
+
+  onRowInsertingPriceDetail(event: any, roomId: any) {
+    console.log('onRowInsertingPriceDetail: ', event);
+    console.log('onRowInsertingPriceDetail id: ', roomId);
+    let newData = event.data;
+    let newPriceDetail = {
+      id: 0,
+      roomId: roomId,
+      title: newData.title,
+      price: newData.price,
+      fromDate: newData.fromDate,
+      toDate: newData.toDate,
+      isUse: true
+    }
+    this.generalService.createRoomPriceDetail(newPriceDetail).subscribe({
+      next: (res) => {
+        if (res.isValid) {
+          this.notificationService.showNotification(Constant.SUCCESS, 'Tạo giá phòng thành công');
+        } else {
+          if (res.errors && res.errors.length > 0) {
+            res.errors.forEach((error: any) => {
+              this.notificationService.showNotification(Constant.ERROR, error.errorMessage);
+            });
+          } else {
+            this.notificationService.showNotification(Constant.ERROR, 'Tạo giá phòng thật bại');
+          }
+        }
+      },
+
+      error: (error) => {
+        this.notificationService.showNotification(Constant.ERROR, 'Dữ liệu trả về đã gặp lỗi');
+      },
+
+      complete: () => {
+      }
+    }).add(() => {
+      this.getListData().then((r) => {
+        if (this.item) {
+          let findHotel = this.filteredDatas.find((objHotel: any) => objHotel.id === this.item.hotelId);
+          if (findHotel) {
+            let findRoom = findHotel.roomHotels.find((objRoom: any) => objRoom.id === this.item.id);
+            if (findRoom) {
+              this.item = findRoom;
+            }
+          }
+        }
+
+        this.formAddRoom.patchValue({
+          id: this.item.id,
+          hotelId: this.item.hotelId,
+          name: this.item.name,
+          description: this.item.description,
+          roomNumber: 0,
+          floorNumber: 0,
+          price: this.item.price,
+          extraBed: this.item.extraBed,
+          extraBedPrice: this.item.extraBedPrice,
+          adultSurcharge: this.item.adultSurcharge,
+          childSurcharge: this.item.childSurcharge,
+          roomFiles: this.item.roomFiles,
+          roomFileIds: [],
+          prices: this.item.prices,
+          utilitieIds: this.getIDUtilityRooms(this.item.utilityRooms),
+        });
+      });
+    });
+  }
+
+  onRowInsertedPriceDetail(event: any) {
+    console.log('onRowInsertedPriceDetail: ', event);
+  }
+
+  onRowUpdatingPriceDetail(event: any) {
+    console.log('onRowUpdatingPriceDetail: ', event);
+    let oldData = event.oldData;
+    let newData = event.newData;
+    let updateData = {
+
+    };
+
+    Object.assign(updateData, oldData, newData);
+
+    console.log('oldData: ', oldData);
+    console.log('updateData: ', updateData);
+
+
+    this.generalService.updateRoomPriceDetailByID(updateData).subscribe({
+      next: (res) => {
+        if (res.isValid) {
+          this.notificationService.showNotification(Constant.SUCCESS, 'Cập nhật giá phòng thành công');
+        } else {
+          if (res.errors && res.errors.length > 0) {
+            res.errors.forEach((error: any) => {
+              this.notificationService.showNotification(Constant.ERROR, error.errorMessage);
+            });
+          } else {
+            this.notificationService.showNotification(Constant.ERROR, 'Cập nhật giá phòng thật bại');
+          }
+        }
+      },
+
+      error: (error) => {
+        this.notificationService.showNotification(Constant.ERROR, 'Cập nhật giá phòng đã gặp lỗi');
+      },
+
+      complete: () => {
+
+      }
+    }).add(() => this.getListData());;
+  }
+
+  onRowUpdatedPriceDetail(event: any) {
+    console.log('onRowUpdatedPriceDetail: ', event);
+    let newPriceDetail = {
+
+    }
+  }
+
+  onRowRemovingdPriceDetail(event: any) {
+    console.log('onRowRemovingdPriceDetail: ', event);
+    let idRecordPriceDetail = event.data.id;
+    this.generalService.removeRoomPriceDetail(idRecordPriceDetail).subscribe({
+      next: (res) => {
+        if (res.isValid) {
+          this.notificationService.showNotification(Constant.SUCCESS, 'Xoá giá phòng thành công');
+        } else {
+          if (res.errors && res.errors.length > 0) {
+            res.errors.forEach((error: any) => {
+              this.notificationService.showNotification(Constant.ERROR, error.errorMessage);
+            });
+          } else {
+            this.notificationService.showNotification(Constant.ERROR, 'Xoá giá phòng thật bại');
+          }
+        }
+      },
+
+      error: (error) => {
+        this.notificationService.showNotification(Constant.ERROR, 'Xoá giá phòng đã gặp lỗi');
+      },
+
+      complete: () => {
+
+      }
+    }).add(() => this.getListData());
+  }
+
+  onSavingPriceDetail(event: any) {
+    console.log('onSavingPriceDetail: ', event);
+  }
+
+  phoneNumberFormat(value: any) {
+    let phoneNo = value;
+    if (value) {
+      const USNumber = value.match(/(\d{3})(\d{3})(\d{4})/);
+      if (USNumber) {
+        phoneNo = `(${USNumber[1]}) ${USNumber[2]}-${USNumber[3]}`;
+      }
+    }
+    return phoneNo;
+  }
+
+  formatCurrencyVND(value) {
+    if (!value) {
+      return '0 đ';
+    }
+    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' đ';
   }
 }

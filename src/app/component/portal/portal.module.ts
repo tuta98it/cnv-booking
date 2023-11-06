@@ -34,9 +34,13 @@ import { NzSwitchModule } from 'ng-zorro-antd/switch';
 import { BookingHotelComponent } from './pages/booking-hotel/booking-hotel.component';
 import { DataStatisticsComponent } from './pages/data-statistics/data-statistics.component';
 import { DataAirlineTicketsComponent } from './pages/data-airline-tickets/data-airline-tickets.component';
+import { DataHotelsComponent } from './pages/data-hotels/data-hotels.component';
+
 import {
-  DxButtonModule, DxTabPanelModule, DxDataGridModule, DxDataGridComponent,DxNumberBoxModule
+  DxButtonModule, DxTabPanelModule, DxDataGridModule, DxDataGridComponent, DxNumberBoxModule
 } from 'devextreme-angular';
+import { UtilitHotelComponent } from './pages/utility/utility-hotel/utility-hotel.component';
+import { UtilitRoomComponent } from './pages/utility/utility-room/utility-room.component';
 const antDesignIcons = AllIcons as {
   [key: string]: IconDefinition;
 };
@@ -56,7 +60,10 @@ const icons: IconDefinition[] = Object.keys(antDesignIcons).map(key => antDesign
     BookingHotelComponent,
     NewsComponent,
     DataStatisticsComponent,
-    DataAirlineTicketsComponent
+    DataAirlineTicketsComponent,
+    UtilitHotelComponent,
+    UtilitRoomComponent,
+    DataHotelsComponent
   ],
   imports: [
     RouterModule.forChild([]),

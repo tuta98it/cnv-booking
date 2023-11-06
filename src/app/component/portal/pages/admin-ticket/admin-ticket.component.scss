@@ -6,3 +6,106 @@
 ::ng-deep .text-blue {
   color: blue;
 }
+
+
+.ticket-detail {
+  .ticket-title {
+    color: #fff;
+    background-color: forestgreen;
+    padding: 0.25rem;
+    font-weight: 600;
+    font-size: larger;
+  }
+
+  .ticket-content {
+    .ticket-general-info {
+      div {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 0.25rem;
+        padding: 0.25rem;
+        width: 59%;
+
+        .ticket-code {
+          width: fit-content;
+        }
+
+        .ticket-status {
+          width: fit-content;
+        }
+
+        .ticket-holding-period {
+          width: fit-content;
+        }
+      }
+
+
+
+    }
+
+    .ticket-main-info {
+      display: flex;
+      justify-content: space-between;
+
+      .passenger-info {
+        border: solid 1px forestgreen;
+        padding: 0.25rem;
+        border-radius: 0.25rem;
+        width: 59%;
+
+        .passenger-info-title {}
+
+        .passenger-ticket-info-detail {
+          margin: 0.5rem 0 0.5rem 0;
+
+          .passenger-ticket-info-name {}
+
+          .passenger-ticket-info-content {
+            table {
+              border-collapse: collapse;
+              width: 100%;
+            }
+
+            th,
+            td {
+              padding: 8px;
+              text-align: left;
+              border-bottom: 1px solid #ddd;
+            }
+          }
+        }
+      }
+
+      .flight-contact-info {
+        border: solid 1px forestgreen;
+        padding: 0.25rem;
+        border-radius: 0.25rem;
+        width: 39%;
+
+        .flight-info {
+          .flight-info-title {}
+
+          .flight-info-content {
+            .flight-schedule {
+              margin: 0.5rem 0 0.5rem 0.5rem;
+              padding-left: 0.5rem;
+              // border-left: 1px solid #000 ;
+              .flight-schedule-title {
+                color: green;
+              }
+            }
+          }
+        }
+
+        .contact-info {
+          margin-top: 2rem;
+
+          .contact-info-title {}
+
+          .contact-info-content {}
+        }
+      }
+    }
+  }
+
+}

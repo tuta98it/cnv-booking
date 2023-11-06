@@ -35,16 +35,23 @@
 
   <dxi-column cssClass="text-center" caption="STT" [width]="55" dataField="stt" [fixed]="true" [allowFiltering]="false"
     [allowSorting]="false"></dxi-column>
-  <dxi-column caption="Tên khách hàng" [width]="200" dataField="passengerName"></dxi-column>
+  <dxi-column caption="Tên khách hàng" [width]="300" dataField="passengerName"></dxi-column>
   <dxi-column caption="Hãng bay" dataField="airlineName" [width]="200"></dxi-column>
   <dxi-column caption="Mã đặt chỗ" [width]="200" dataField="bookingNumber"></dxi-column>
   <dxi-column caption="Số vé" [width]="200" dataField="ticketNumber"></dxi-column>
-  <dxi-column caption="Ngày đặt vé" dataField="dateCreated" dataType="date" format="HH:mm dd/MM/yy"></dxi-column>
-  <dxi-column caption="Xuất vé" cssClass="text-center" [width]="200" cellTemplate="cellBillet"></dxi-column>
-  <div *dxTemplate="let item of 'cellBillet'">
+  <dxi-column caption="Ngày đặt vé" [width]="200" dataField="dateCreated" dataType="date"
+    format="HH:mm dd/MM/yyyy"></dxi-column>
+  <dxi-column caption="Trạng thái hệ thống" cssClass="text-center" [width]="300"
+    cellTemplate="cellSystemCancelled"></dxi-column>
+  <dxi-column caption="Xuất vé" cssClass="text-center" cellTemplate="cellBillet"></dxi-column>
 
-    <div *ngIf="item.data.status === 'OK'">
-      <a nz-button nzType="link" nzBlock>Xem vé</a>
+  <div *dxTemplate="let ticketFlightExport of 'cellSystemCancelled'">
+    <nz-switch [ngModel]="!ticketFlightExport.data.systemCancelled" [nzControl]="true" nzCheckedChildren="Tính công nợ" nzUnCheckedChildren="Không tính công nợ" [nzLoading]="loadingSystemStatus" (click)="onChangeStatusSystemTicketExport(ticketFlightExport.data)" [nzDisabled]="ticketFlightExport.data.systemCancelled"></nz-switch>
+  </div>
+
+  <div *dxTemplate="let item of 'cellBillet'">
+    <div *ngIf="item.data.status === 'OK'" (click)="onOpenPopupTicketDetail(item.data)">
+      <a nz-button nzType="link" nzBlock>Xem vé <span *ngIf="item.data.isLoadingViewTicket" nz-icon nzType="loading" nzTheme="outline"></span></a>
     </div>
 
     <div *ngIf="item.data.status === 'FAIL'">
@@ -57,3 +64,165 @@
     </dxi-total-item>
   </dxo-summary>
 </dx-data-grid>
+
+<!-- Confirm agreement booking hotel -->
+<nz-modal [(nzVisible)]="isVisibleTicketDetail" [nzContent]="contentConfirm" nzWidth="1500px"
+  (nzOnCancel)="handleCancelPopup()">
+  <div *nzModalTitle>
+    Chi tiết vé máy bay
+  </div>
+  <ng-template #contentConfirm>
+    <div class="ticket-detail">
+      <div class="ticket-title">
+        <span>Thông tin vé</span>
+      </div>
+      <div class="ticket-content">
+        <div class="ticket-general-info">
+          <div *ngFor="let ticket of bookingTicketDetail.tickets; let i = index;">
+            <div class="ticket-code">
+              <label for="">Mã đặt vé: <strong>{{ticket.bookingNumber}}</strong></label>
+            </div>
+            <div class="ticket-code">
+              <label for="">Số vé: <strong>{{ticket.ticketNumber}}</strong></label>
+            </div>
+            <div class="ticket-holding-period">
+              <label for="">Mã base: <strong>{{ticket.approvalCode}}</strong></label>
+            </div>
+            <div class="ticket-status">
+              <label for="">Tình trạng: <strong>{{ticket.status === 'OK'? 'Đã xuất vé' : 'Lỗi xuất vé'}}</strong></label>
+            </div>
+          </div>
+        </div>
+        <div class="ticket-main-info">
+          <div class="passenger-info">
+            <div class="passenger-info-title">
+              <div>
+                <strong>Thông tin hành khách</strong>
+              </div>
+            </div>
+            <div class="passenger-ticket-info-detail"
+              *ngFor="let bookingPassenger of bookingTicketDetail.bookingPassengers">
+              <div class="passenger-ticket-name">
+                <label *ngIf="bookingPassenger.typeCode === 'ADT'">Hành khách: {{bookingPassenger.gender? 'Ông' : 'Bà'}}
+                  <strong>{{bookingPassenger.lastName}} {{bookingPassenger.firstName}}</strong></label>
+                <label *ngIf="bookingPassenger.typeCode === 'CHD'">Hành khách: {{bookingPassenger.gender? 'Bé trai' :
+                  'Bé gái'}} <strong>{{bookingPassenger.lastName}} {{bookingPassenger.firstName}}</strong></label>
+                <label *ngIf="bookingPassenger.typeCode === 'INF'">Hành khách: {{bookingPassenger.gender? 'Trẻ sơ sinh trai' : 'Trẻ sơ sinh gái'}} <strong>{{bookingPassenger.lastName}}
+                    {{bookingPassenger.firstName}}</strong></label>
+              </div>
+              <div class="passenger-ticket-info-content">
+                <div>
+                  <strong>Chi tiết vé</strong>
+                </div>
+                <div >
+                  <table >
+                    <tr>
+                      <th>Loại vé</th>
+                      <th>Số lượng</th>
+                      <th>Hành trình</th>
+                      <th>Giá vé</th>
+                      <th>Thuế phí</th>
+                      <th>Tổng giá</th>
+                    </tr>
+                    <tr *ngFor="let bookingFlight of bookingTicketDetail.bookingFlights; let i = index;">
+                      <td *ngIf="bookingFlight.adt > 0">Người lớn</td>
+                      <td *ngIf="bookingFlight.adt > 0">{{bookingFlight.adt}}</td>
+                      <td *ngIf="bookingFlight.adt > 0">{{bookingFlight.startPoint}} - {{bookingFlight.endPoint}}</td>
+                      <td *ngIf="bookingFlight.adt > 0">{{bookingFlight.priceAdult | currencyFormat }} VND</td>
+                      <td *ngIf="bookingFlight.adt > 0">{{bookingFlight.taxAdult + bookingFlight.feeAdult | currencyFormat}} VND</td>
+                      <td *ngIf="bookingFlight.adt > 0">{{bookingFlight.totalPrice | currencyFormat}} VND</td>
+
+                      <td *ngIf="bookingFlight.chd > 0">Trẻ em 2 - 11 tuổi</td>
+                      <td *ngIf="bookingFlight.chd > 0">{{bookingFlight.chd}}</td>
+                      <td *ngIf="bookingFlight.chd > 0">{{bookingFlight.startPoint}} - {{bookingFlight.endPoint}}</td>
+                      <td *ngIf="bookingFlight.chd > 0">{{bookingFlight.priceChild | currencyFormat }} VND</td>
+                      <td *ngIf="bookingFlight.chd > 0">{{bookingFlight.taxChild + bookingFlight.feeChild | currencyFormat}} VND</td>
+                      <td *ngIf="bookingFlight.chd > 0">{{bookingFlight.totalPrice | currencyFormat}} VND</td>
+
+
+                      <td  *ngIf="bookingFlight.inf > 0">Trẻ sơ sinh</td>
+                      <td  *ngIf="bookingFlight.inf > 0">{{bookingFlight.inf}}</td>
+                      <td   *ngIf="bookingFlight.inf > 0">{{bookingFlight.startPoint}} - {{bookingFlight.endPoint}}</td>
+                      <td  *ngIf="bookingFlight.inf > 0">{{bookingFlight.priceInfant | currencyFormat }} VND</td>
+                      <td  *ngIf="bookingFlight.inf > 0">{{bookingFlight.taxInfant + bookingFlight.feeInfant | currencyFormat}} VND</td>
+                      <td  *ngIf="bookingFlight.inf > 0">{{bookingFlight.totalPrice | currencyFormat}} VND</td>
+                    </tr>
+                    <tr>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td><strong>Tổng giá vé</strong></td>
+                      <td>{{bookingTicketDetail.totalPricebookingFlight| currencyFormat}} VND</td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="flight-contact-info">
+            <div class="flight-info">
+              <div class="flight-info-title">
+                <strong>
+                  Thông tin chuyến bay
+                </strong>
+
+              </div>
+
+              <div class="flight-info-content">
+                <div class="flight-schedule"  *ngFor="let bookingFlight of bookingTicketDetail.bookingFlights; let i = index;">
+                  <div class="flight-schedule-title">
+                    <label>
+                      Hành trình : <strong>{{toNameAirportByCode(bookingFlight.startPoint)}} -
+                        {{toNameAirportByCode(bookingFlight.endPoint)}}</strong>
+                    </label>
+                  </div>
+                  <div>
+                    <label for="">Ngày bay: <strong>{{bookingFlight.startTime | date:"HH:MM dd-MM-yyyy"}}</strong></label>
+                  </div>
+                  <div>
+                    <label for="">Ngày đến:</label> <strong>{{bookingFlight.endTime | date:"HH:MM dd-MM-yyyy"}}</strong>
+                  </div>
+                  <div>
+                    <label for="">Hãng hàng không:
+                      <strong>{{toAirlineNameByCode(bookingFlight.airlineCode)}}</strong></label>
+                  </div>
+                  <div>
+                    <label for="">Hãng đặt chỗ: <strong>{{bookingFlight.groupClass}}</strong>. Số hiệu chuyến bay:
+                      <strong>{{bookingFlight.flightNumber}}</strong></label>
+                  </div>
+                  <div>
+                    <label for="">Hành lý xách tay: <strong>{{bookingFlight.carryon}}</strong>. Hành lý ký gửi:
+                      <strong>{{bookingFlight.freebag}}</strong></label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="contact-info">
+              <div class="contact-info-title">
+                <strong>
+                  Thông tin liên hệ
+                </strong>
+              </div>
+              <div class="contact-info-content">
+                <div>
+                  <label for="">Người liên hệ: <strong>{{bookingTicketDetail.contactName}}</strong></label>
+                </div>
+                <div>
+                  <label for="">Số điện thoại: <strong>{{bookingTicketDetail.contactPhone}}</strong></label>
+
+                </div>
+                <div>
+                  <label for="">Email: <strong>{{bookingTicketDetail.contactEmail}}</strong></label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <div *nzModalFooter>
+    <button nz-button nzType="default" (click)="handleCancelPopup()">Huỷ</button>
+  </div>
+</nz-modal>

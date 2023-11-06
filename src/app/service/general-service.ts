@@ -502,14 +502,15 @@ export class GeneralService extends BaseService {
     return this.post(UrlConstant.LIST_PARTNERS, newData);
   }
 
-
   updatePartner(newData: any): Observable<any> {
     return this.put(UrlConstant.LIST_PARTNERS + `/${newData.id}`, newData);
   }
 
+  resetDebtForPartnerByID(idPartner: any): Observable<any> {
+    return this.post(UrlConstant.LIST_PARTNERS + `/ResetDebt/${idPartner}`, idPartner);
+  }
+
   // Booking
-
-
 
   // Xuất vé
   getMyTicket(payload: any): any {
@@ -544,6 +545,20 @@ export class GeneralService extends BaseService {
 
   ReportDebtStatistics(payload: any): Observable<any> {
     return this.post(`/api${UrlConstant.BOOKING}/ReportDebtStatistics`, payload);
+  }
+
+
+
+
+  getBookingByID(idBooking: any): Observable<any> {
+    return this.get(`/api${UrlConstant.BOOKING}/getbookingbyid/${idBooking}`);
+  }
+
+
+  markCanceledSystemTicketFlightExport​(idTicket: any): Observable<any> {
+    console.log('idTicket: ', idTicket);
+
+    return this.post(`/api${UrlConstant.BOOKING}/MarkCanceled/${idTicket}`, idTicket);
   }
 
 
@@ -617,6 +632,19 @@ export class GeneralService extends BaseService {
   }
 
 
+  reportHotelDebtStatistics(payload: any): Observable<any> {
+    return this.post(`/api${UrlConstant.BOOKING_HOTEL}/ReportHotelDebtStatistics`, payload);
+  }
+
+  getBookingHotelById(idBoooking: any): Observable<any> {
+    return this.get(`/api${UrlConstant.BOOKING_HOTEL}/GetBookingHotelById/${idBoooking}`);
+  }
+
+  // Email
+  // /api/Email/SendEmailConfirmedBookingHotel
+  sendEmailConfirmedBookingHotel(payload: any): Observable<any> {
+    return this.post(`/api${UrlConstant.EMAIL}/sendEmailConfirmedBookingHotel`, payload);
+  }
 
   // News
   getNews(): Observable<any> {
@@ -710,5 +738,40 @@ export class GeneralService extends BaseService {
 
   getProvinces(): Observable<any[]> {
     return this.get(`/api/Province`);
+  }
+
+
+  createRoomPriceDetail(newItemPriceDetail: any): Observable<any> {
+    if(newItemPriceDetail.id === 0){
+      return this.post(`/api${UrlConstant.ROOM}/UpdateRoomPriceDetail`, newItemPriceDetail);
+    }
+  }
+
+  updateRoomPriceDetailByID(editItemPriceDetail: any): Observable<any> {
+    if(editItemPriceDetail.id !== 0){
+      return this.post(`/api${UrlConstant.ROOM}/UpdateRoomPriceDetail`, editItemPriceDetail);
+    }
+  }
+
+
+  removeRoomPriceDetail(idItemPriceDetail: any): Observable<any> {
+    return this.post(`/api${UrlConstant.ROOM}/RemoveRoomPriceDetail/${idItemPriceDetail}`, idItemPriceDetail);
+  }
+
+  // Airport
+  getAirport(): Observable<any> {
+    return this.get(`/api${UrlConstant.AIRPORT}`);
+  }
+
+  getAirportByID(idAirport: any): Observable<any> {
+    return this.get(`/api${UrlConstant.AIRPORT}/${idAirport}`);
+  }
+
+  addAirport(Airport: any): Observable<any> {
+    return this.post(`/api${UrlConstant.AIRPORT}`, Airport);
+  }
+
+  updateAirportByID(idAirport: any, Airport: any): Observable<any> {
+    return this.put(`/api${UrlConstant.AIRPORT}/${idAirport}`, Airport);
   }
 }

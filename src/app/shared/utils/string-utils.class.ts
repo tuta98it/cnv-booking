@@ -7,4 +7,12 @@ export class StringUtils {
     var fileName = parts[parts.length - 1];
     return fileName;
   }
+
+  static validateEmail(mail: any) {
+    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail) || !mail) {
+      return (true);
+    }
+    // alert('Chưa đúng định dạng email!');
+    return (false);
+  }
 }
