@@ -445,53 +445,50 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
                       <p style=" margin-bottom: 8.0pt; font-size: 14px; font-family: Arial, sans-serif; text-align:right;">
                           <em>Ngày ${this.datePipe.transform(new Date(), 'dd/MM/yyyy')}</em>
                       </p>
-                      <p style="margin-bottom: 8.0p; font-size: 14px; font-family: Arial, sans-serif;"> Kính gửi:
+                      <p style="margin-bottom: 8.0p; font-size: 14px; font-family: Arial, sans-serif; line-height: 175%;"> Kính gửi:
                           <strong>Anh/Chị ${dataBookingHotel.contactName}
                           </strong>
                       </p>
-                      <p style=" margin-bottom: 8.0p; font-size: 14px; font-family: Arial, sans-serif;">
+                      <p style=" margin-bottom: 8.0p; font-size: 14px; font-family: Arial, sans-serif; line-height: 175%;">
                           Cảm ơn anh/chị đã chọn CAO NGUYÊN VIỆT làm đối tác dịch vụ đặt phòng khách sạn cho chuyến đi sắp
                           tới. Chúng tôi gửi báo giá lại thông tin đặt phòng như sau:</p>
                       <table style="width: 100.0%; border-collapse: collapse; border: none;">
                           <tbody>
                               <tr>
-                                  <td colspan="2" style="width: 17.48%;" style="padding: 0in 5.4pt; vertical-align: top">
-                                      <p style="font-size: 14px; line-height: 100%;">Tên khách sạn</p>
+                                  <td colspan="2" style="width: 17.48%; padding: 0in 5.4pt; vertical-align: top">
+                                      <p style="font-size: 14px; line-height: 175%;">Tên khách sạn :</p>
                                   </td>
-                                  <td colspan="6" style="width: 54.48%;" style="padding: 0in 5.4pt; vertical-align: top">
-                                      <p style="font-size: 14px; line-height: 100%;">:
-                                          ${dataBookingHotel.bookingHotelDetails[0].hotelName}</p>
+                                  <td colspan="6" style="width: 54.48%; padding: 0in 5.4pt; vertical-align: top">
+                                      <p style="font-size: 14px; line-height: 175%;">${dataBookingHotel.bookingHotelDetails[0].hotelName}</p>
                                   </td>
-                                  <td colspan="3" style="width: 28.04%;" style="padding: 0in 5.4pt; vertical-align: top">
-                                      <p style="font-size: 14px; line-height: 100%;" style="text-align: left;">
+                                  <td colspan="3" style="width: 28.04%; padding: 0in 5.4pt; vertical-align: top">
+                                      <p style="font-size: 14px; line-height: 175%;" style="text-align: left;">
                                       </p>
                                   </td>
                               </tr>
                               <tr>
-                                  <td colspan="2" style="width: 17.48%;" style="padding: 0in 5.4pt; vertical-align: top">
-                                      <span style="font-size: 14px; line-height: 100%;">Địa chỉ</span>
+                                  <td colspan="2" style="width: 17.48%; padding: 0in 5.4pt; vertical-align: top">
+                                      <span style="font-size: 14px; line-height: 175%;">Địa chỉ :</span>
                                   </td>
-                                  <td colspan="6" style="width: 54.48%;" style="padding: 0in 5.4pt; vertical-align: top">
-                                      <p style="font-size: 14px; line-height: 100%;">:
-                                          ${dataBookingHotel.bookingHotelDetails[0].hotelAddress}</p>
+                                  <td colspan="6" style="width: 54.48%; padding: 0in 5.4pt; vertical-align: top">
+                                      <p style="font-size: 14px; line-height: 175%;">${dataBookingHotel.bookingHotelDetails[0].hotelAddress}</p>
                                   </td>
-                                  <td colspan="3" style="width: 28.04%;" style="padding: 0in 5.4pt; vertical-align: top">
-                                      <p style="font-size: 14px; line-height: 100%;" style="text-align: left;">
+                                  <td colspan="3" style="width: 28.04%; padding: 0in 5.4pt; vertical-align: top">
+                                      <p style="font-size: 14px; line-height: 175%;" style="text-align: left;">
                                       </p>
                                   </td>
                               </tr>
                               <tr>
 
-                                  <td colspan="2" style="width: 17.48%;" style="padding: 0in 5.4pt; vertical-align: top">
-                                      <span style="font-size: 14px; line-height: 100%;">Số điện thoại</span>
+                                  <td colspan="2" style="width: 17.48%; padding: 0in 5.4pt; vertical-align: top">
+                                      <span style="font-size: 14px; line-height: 175%;">Số điện thoại :</span>
                                   </td>
-                                  <td colspan="6" style="width: 54.48%;" style="padding: 0in 5.4pt; vertical-align: top">
-                                      <p style="font-size: 14px; line-height: 100%;">:
-                                          ${dataBookingHotel.bookingHotelDetails[0].hotelPhone}</p>
+                                  <td colspan="6" style="width: 54.48%; padding: 0in 5.4pt; vertical-align: top">
+                                      <p style="font-size: 14px; line-height: 175%;">${dataBookingHotel.bookingHotelDetails[0].hotelPhone}</p>
                                   </td>
-                                  <td colspan="3" style="width: 28.04%;" style="padding: 0in 5.4pt; vertical-align: top">
-                                      <p style="font-size: 14px; line-height: 100%;" style="text-align: left;">
-                                      <p style="font-size: 14px; line-height: 100%;" style="text-align: left;">
+                                  <td colspan="3" style="width: 28.04%; padding: 0in 5.4pt; vertical-align: top">
+                                      <p style="font-size: 14px; line-height: 175%; text-align: left;">
+                                      <p style="font-size: 14px; line-height: 175%; text-align: left;">
                                           <span>Website : <span style="color:#5B9BD5;"></span><a
                                                   href="http://www.add41hotel.com">www.add41hotel.com</a></span>
                                       </p>
@@ -499,21 +496,20 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
                                   </td>
                               </tr>
                               <tr>
-                                  <td colspan="2" style="width: 17.48%;" style="padding: 0in 5.4pt; vertical-align: top">
-                                      <span style="font-size: 14px; line-height: 100%;">Mã xác nhận</span>
+                                  <td colspan="2" style="width: 17.48%; padding: 0in 5.4pt; vertical-align: top">
+                                      <span style="font-size: 14px; line-height: 175%;">Mã xác nhận :</span>
                                   </td>
-                                  <td colspan="6" style="width: 54.48%;" style="padding: 0in 5.4pt; vertical-align: top">
-                                      <p style="font-size: 14px; line-height: 100%;">: <span style="color:red;"><strong>
-                                                  ${dataBookingHotel.approvalCode ? dataBookingHotel.approvalCode : ''}</strong></span></p>
+                                  <td colspan="6" style="width: 54.48%; padding: 0in 5.4pt; vertical-align: top">
+                                      <p style="font-size: 14px; line-height: 175%;"><span style="color:red;"><strong>${dataBookingHotel.approvalCode ? dataBookingHotel.approvalCode : ''}</strong></span></p>
                                   </td>
-                                  <td colspan="3" style="width: 28.04%;" style="padding: 0in 5.4pt; vertical-align: top">
-                                      <p style="font-size: 14px; line-height: 100%;" style="text-align: left;">
+                                  <td colspan="3" style="width: 28.04%; padding: 0in 5.4pt; vertical-align: top">
+                                      <p style="font-size: 14px; line-height: 175%; text-align: left;">
                                       </p>
                                   </td>
                               </tr>
                               <tr>
                                   <td colspan="11" style="padding: 0in 5.4pt; vertical-align: top">
-                                      <p style="font-size: 14px; line-height: 100%;" style="text-align: left;">Thông tin quý khách:
+                                      <p style="font-size: 14px; line-height: 175%; text-align: left;">Thông tin quý khách:
                                       </p>
                                   </td>
                               </tr>
@@ -628,7 +624,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
                                       </p>
                                   </td>
                                   <td colspan="3" style="width: 18.44%; border: 1pt solid #000; padding: 0in 5.4pt;">
-                                      <p style="text-align: center; line-height: 150%;" style="text-align: center;">
+                                      <p style="text-align: center; line-height: 150%; text-align: center;">
                                           <strong><span>Tổng cộng</span></strong>
                                       </p>
                                   </td>
@@ -640,7 +636,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
                               </tr>
                           </tbody>
                       </table>
-                      <p class=""> Bằng chữ: <em>${this.convertMoneyText(dataBookingHotel.totalPrice)}</em></p>
+                      <p style="padding: 4px;"> Bằng chữ: <em>${this.convertMoneyText(dataBookingHotel.totalPrice)}</em></p>
 
                       <div>
                           <dl>
