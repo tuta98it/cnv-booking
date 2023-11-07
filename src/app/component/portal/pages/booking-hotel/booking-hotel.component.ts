@@ -640,7 +640,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
                               </tr>
                           </tbody>
                       </table>
-                      <p class=""> Bằng chữ: <em>${this.to_vietnamese(dataBookingHotel.totalPrice)}</em></p>
+                      <p class=""> Bằng chữ: <em>${this.convertMoneyText(dataBookingHotel.totalPrice)}</em></p>
 
                       <div>
                           <dl>
