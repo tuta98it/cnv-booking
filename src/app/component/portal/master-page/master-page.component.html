@@ -39,35 +39,50 @@
       <li *ngIf="PHAN_QUYEN_TAI_KHOAN" nz-submenu nzTitle="Quản trị hệ thống">
         <ul>
           <li nz-menu-item [nzSelected]="url === '/tai-khoan'"><a routerLink="/tai-khoan">Danh sách tài khoản</a></li>
-          <li nz-menu-item [nzSelected]="url === '/user-register'"><a routerLink="/user-register">Danh sách đăng kí</a></li>
-          <li *ngIf='userInfo.userType == 0' nz-menu-item [nzSelected]="url === '/doi-tac'"><a routerLink="/doi-tac">Danh sách đối tác</a></li>
-          <li nz-menu-item [nzSelected]="url === '/news'"><a routerLink="/news">Tin tức</a></li>
-          <li nz-submenu nzTitle="Khách sạn">
+          <li nz-menu-item [nzSelected]="url === '/user-register'"><a routerLink="/user-register">Danh sách đăng kí</a>
+          </li>
+          <li *ngIf='userInfo.userType == 0' nz-menu-item [nzSelected]="url === '/doi-tac'"><a
+              routerLink="/doi-tac">Danh sách đối tác</a></li>
+        </ul>
+      </li>
+
+      <li nz-menu-item [nzSelected]="url === '/news'"><a routerLink="/news">Tin tức</a></li>
+
+
+      <li *ngIf="PHAN_QUYEN_TAI_KHOAN" nz-submenu nzTitle="Khách sạn">
+        <ul>
+          <li nz-menu-item [nzSelected]="url === '/hotel'"><a routerLink="/hotel">DS khách sạn</a></li>
+          <li nz-menu-item [nzSelected]="url === '/booking-hotel'"><a routerLink="/booking-hotel">QL đặt khách sạn</a>
+          </li>
+          <li nz-submenu nzTitle="Tiện ích">
             <ul>
-              <li nz-menu-item [nzSelected]="url === '/hotel'"><a routerLink="/hotel">DS khách sạn</a></li>
-              <li nz-menu-item [nzSelected]="url === '/booking-hotel'"><a routerLink="/booking-hotel">QL đặt khách sạn</a></li>
-              <li nz-submenu nzTitle="Tiện ích">
-                <ul>
-                  <li nz-menu-item [nzSelected]="url === '/utility-hotel'"><a routerLink="/utility-hotel">Tiện ích khách sạn</a></li>
-                  <li nz-menu-item [nzSelected]="url === '/utility-room'"><a routerLink="/utility-room">Tiện ích phòng</a></li>
-                </ul>
+              <li nz-menu-item [nzSelected]="url === '/utility-hotel'"><a routerLink="/utility-hotel">Tiện ích khách
+                  sạn</a></li>
+              <li nz-menu-item [nzSelected]="url === '/utility-room'"><a routerLink="/utility-room">Tiện ích phòng</a>
               </li>
             </ul>
           </li>
-          <li nz-submenu nzTitle="Vé máy bay">
-            <ul>
-              <li nz-menu-item [nzSelected]="url === '/admin-history-holding-ticket'"><a routerLink="/admin-history-holding-ticket">Quản lý giữ vé</a></li>
-              <li nz-menu-item [nzSelected]="url === '/admin-ticket'"><a routerLink="/admin-ticket">Quản lý xuất vé</a></li>
-              <li nz-menu-item [nzSelected]="url === '/admin-void-ticket'"><a routerLink="/admin-void-ticket">Quản lý huỷ vé</a></li>
-            </ul>
-          </li>
-          <li nz-submenu nzTitle="Thông kê dữ liệu">
-            <ul>
-              <!-- <li nz-menu-item [nzSelected]="url === '/data-statistics'"><a routerLink="/data-statistics">Tổng hợp dữ liệu</a></li> -->
-              <li nz-menu-item [nzSelected]="url === '/data-airline-tickets'"><a routerLink="/data-airline-tickets">Bảng kê chi tiết vé máy bay</a></li>
-              <li nz-menu-item [nzSelected]="url === '/data-hotels'"><a routerLink="/data-hotels">Bảng kê chi tiết khách sạn</a></li>
-            </ul>
-          </li>
+        </ul>
+      </li>
+
+      <li *ngIf="PHAN_QUYEN_TAI_KHOAN" nz-submenu nzTitle="Vé máy bay">
+        <ul>
+          <li nz-menu-item [nzSelected]="url === '/admin-history-holding-ticket'"><a
+              routerLink="/admin-history-holding-ticket">Quản lý giữ vé</a></li>
+          <li nz-menu-item [nzSelected]="url === '/admin-ticket'"><a routerLink="/admin-ticket">Quản lý xuất vé</a></li>
+          <li nz-menu-item [nzSelected]="url === '/admin-void-ticket'"><a routerLink="/admin-void-ticket">Quản lý huỷ
+              vé</a></li>
+        </ul>
+      </li>
+
+
+      <li *ngIf="PHAN_QUYEN_TAI_KHOAN" nz-submenu nzTitle="Thông kê dữ liệu">
+        <ul>
+          <!-- <li nz-menu-item [nzSelected]="url === '/data-statistics'"><a routerLink="/data-statistics">Tổng hợp dữ liệu</a></li> -->
+          <li nz-menu-item [nzSelected]="url === '/data-airline-tickets'"><a routerLink="/data-airline-tickets">Bảng kê
+              chi tiết vé máy bay</a></li>
+          <li nz-menu-item [nzSelected]="url === '/data-hotels'"><a routerLink="/data-hotels">Bảng kê chi tiết khách
+              sạn</a></li>
         </ul>
       </li>
     </ul>
