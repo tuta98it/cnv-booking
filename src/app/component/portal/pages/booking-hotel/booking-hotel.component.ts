@@ -456,14 +456,14 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
                           <tbody>
                               <tr>
                                   <td colspan="2" style="width: 17.48%; padding: 0in 5.4pt; vertical-align: top">
-                                      <p style="font-size: 14px; line-height: 175%;">Tên khách sạn :</p>
+                                      <span style="font-size: 14px; line-height: 175%;">Tên khách sạn :</ư>
                                   </td>
                                   <td colspan="6" style="width: 54.48%; padding: 0in 5.4pt; vertical-align: top">
-                                      <p style="font-size: 14px; line-height: 175%;">${dataBookingHotel.bookingHotelDetails[0].hotelName}</p>
+                                      <span style="font-size: 14px; line-height: 175%;">${dataBookingHotel.bookingHotelDetails[0].hotelName}</ư>
                                   </td>
                                   <td colspan="3" style="width: 28.04%; padding: 0in 5.4pt; vertical-align: top">
-                                      <p style="font-size: 14px; line-height: 175%;" style="text-align: left;">
-                                      </p>
+                                      <span style="font-size: 14px; line-height: 175%;" style="text-align: left;">
+                                      </ư>
                                   </td>
                               </tr>
                               <tr>
@@ -471,11 +471,11 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
                                       <span style="font-size: 14px; line-height: 175%;">Địa chỉ :</span>
                                   </td>
                                   <td colspan="6" style="width: 54.48%; padding: 0in 5.4pt; vertical-align: top">
-                                      <p style="font-size: 14px; line-height: 175%;">${dataBookingHotel.bookingHotelDetails[0].hotelAddress}</p>
+                                      <span style="font-size: 14px; line-height: 175%;">${dataBookingHotel.bookingHotelDetails[0].hotelAddress}</ư>
                                   </td>
                                   <td colspan="3" style="width: 28.04%; padding: 0in 5.4pt; vertical-align: top">
-                                      <p style="font-size: 14px; line-height: 175%;" style="text-align: left;">
-                                      </p>
+                                      <span style="font-size: 14px; line-height: 175%;" style="text-align: left;">
+                                      </ư>
                                   </td>
                               </tr>
                               <tr>
@@ -484,14 +484,14 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
                                       <span style="font-size: 14px; line-height: 175%;">Số điện thoại :</span>
                                   </td>
                                   <td colspan="6" style="width: 54.48%; padding: 0in 5.4pt; vertical-align: top">
-                                      <p style="font-size: 14px; line-height: 175%;">${dataBookingHotel.bookingHotelDetails[0].hotelPhone}</p>
+                                      <span style="font-size: 14px; line-height: 175%;">${dataBookingHotel.bookingHotelDetails[0].hotelPhone}</ư>
                                   </td>
                                   <td colspan="3" style="width: 28.04%; padding: 0in 5.4pt; vertical-align: top">
-                                      <p style="font-size: 14px; line-height: 175%; text-align: left;">
-                                      <p style="font-size: 14px; line-height: 175%; text-align: left;">
+                                      <span style="font-size: 14px; line-height: 175%; text-align: left;">
+                                      <span style="font-size: 14px; line-height: 175%; text-align: left;">
                                           <span>Website : <span style="color:#5B9BD5;"></span><a
                                                   href="http://www.add41hotel.com">www.add41hotel.com</a></span>
-                                      </p>
+                                      </ư>
                                       </p>
                                   </td>
                               </tr>
@@ -500,17 +500,17 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
                                       <span style="font-size: 14px; line-height: 175%;">Mã xác nhận :</span>
                                   </td>
                                   <td colspan="6" style="width: 54.48%; padding: 0in 5.4pt; vertical-align: top">
-                                      <p style="font-size: 14px; line-height: 175%;"><span style="color:red;"><strong>${dataBookingHotel.approvalCode ? dataBookingHotel.approvalCode : ''}</strong></span></p>
+                                      <span style="font-size: 14px; line-height: 175%;"><span style="color:red;"><strong>${dataBookingHotel.approvalCode ? dataBookingHotel.approvalCode : ''}</strong></span></ư>
                                   </td>
                                   <td colspan="3" style="width: 28.04%; padding: 0in 5.4pt; vertical-align: top">
-                                      <p style="font-size: 14px; line-height: 175%; text-align: left;">
-                                      </p>
+                                      <span style="font-size: 14px; line-height: 175%; text-align: left;">
+                                      </span>
                                   </td>
                               </tr>
                               <tr>
                                   <td colspan="11" style="padding: 0in 5.4pt; vertical-align: top">
-                                      <p style="font-size: 14px; line-height: 175%; text-align: left;">Thông tin quý khách:
-                                      </p>
+                                      <span style="font-size: 14px; line-height: 175%; text-align: left;">Thông tin quý khách:
+                                      </span>
                                   </td>
                               </tr>
                               <tr>
@@ -634,9 +634,14 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
                                       </p>
                                   </td>
                               </tr>
+                              <tr>
+                                  <td colspan="11" style="padding: 0in 5.4pt;">
+                                      <p style="text-align: left; line-height: 150%;"> Bằng chữ: <em>${this.convertMoneyText(dataBookingHotel.totalPrice)}</em></p>
+                                  </td>
+                              </tr>
                           </tbody>
                       </table>
-                      <p style="padding: 4px;"> Bằng chữ: <em>${this.convertMoneyText(dataBookingHotel.totalPrice)}</em></p>
+
 
                       <div>
                           <dl>
@@ -660,10 +665,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
                               <dd style="margin-top: 4px;">- Trả phòng muộn từ 15:00 đến 18:00 : tính 50% tiền phòng</dd>
                               <dd style="margin-top: 4px;">- Trả phòng muộn sau 18:00 : tính 100% tiền phòng</dd>
                               <dt style="margin-top: 8px;"><strong>3. Hình thức thanh toán: chuyển khoản:</strong></dt>
-                              <dd style="margin-top: 4px;">- Thanh toán 100% khi nhận được xác nhận đặt phòng để đảm bảo cho
-                                  việc
-                                  giữ
-                                  phòng</dd>
+                              <dd style="margin-top: 4px;">- Thanh toán 100% khi nhận được xác nhận đặt phòng để đảm bảo cho việc giữ phòng</dd>
                               <dd style="margin-top: 4px;">- Đơn vị thụ hưởng: Cty TNHH TM DV DL CAO NGUYÊN VIỆT</dd>
                               <dd style="margin-top: 4px;">- Số tài khoản: 878978999999 tại NH Quân đội (MB Bank)</dd>
                           </dl>
