@@ -36,18 +36,7 @@
       <!--<li *ngIf="DANH_MUC_TB" nz-menu-item [nzSelected]="url === '/thiet-bi' || url.includes('thiet-bi/')">
         <a routerLink="/thiet-bi">Danh mục Thiết bị</a>
       </li>-->
-      <li *ngIf="PHAN_QUYEN_TAI_KHOAN" nz-submenu nzTitle="Quản trị hệ thống">
-        <ul>
-          <li nz-menu-item [nzSelected]="url === '/tai-khoan'"><a routerLink="/tai-khoan">Danh sách tài khoản</a></li>
-          <li nz-menu-item [nzSelected]="url === '/user-register'"><a routerLink="/user-register">Danh sách đăng kí</a>
-          </li>
-          <li *ngIf='userInfo.userType == 0' nz-menu-item [nzSelected]="url === '/doi-tac'"><a
-              routerLink="/doi-tac">Danh sách đối tác</a></li>
-        </ul>
-      </li>
-
       <li nz-menu-item [nzSelected]="url === '/news'"><a routerLink="/news">Tin tức</a></li>
-
 
       <li *ngIf="PHAN_QUYEN_TAI_KHOAN" nz-submenu nzTitle="Khách sạn">
         <ul>
@@ -75,7 +64,6 @@
         </ul>
       </li>
 
-
       <li *ngIf="PHAN_QUYEN_TAI_KHOAN" nz-submenu nzTitle="Thông kê dữ liệu">
         <ul>
           <!-- <li nz-menu-item [nzSelected]="url === '/data-statistics'"><a routerLink="/data-statistics">Tổng hợp dữ liệu</a></li> -->
@@ -83,6 +71,16 @@
               chi tiết vé máy bay</a></li>
           <li nz-menu-item [nzSelected]="url === '/data-hotels'"><a routerLink="/data-hotels">Bảng kê chi tiết khách
               sạn</a></li>
+        </ul>
+      </li>
+
+      <li *ngIf="PHAN_QUYEN_TAI_KHOAN" nz-submenu nzTitle="Quản trị hệ thống">
+        <ul>
+          <li nz-menu-item [nzSelected]="url === '/tai-khoan'"><a routerLink="/tai-khoan">Danh sách tài khoản</a></li>
+          <li nz-menu-item [nzSelected]="url === '/user-register'"><a routerLink="/user-register">Danh sách đăng kí</a>
+          </li>
+          <li *ngIf='userInfo.userType == 0' nz-menu-item [nzSelected]="url === '/doi-tac'"><a
+              routerLink="/doi-tac">Danh sách đối tác</a></li>
         </ul>
       </li>
     </ul>
