@@ -243,7 +243,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
   }
 
 
-  showDeleteConfirm(id: any): void {
+  showConfirmDeleteHotel(id: any): void {
     this.modalService.confirm({
       nzTitle: 'Bạn có chắc muốn xóa khách sạn này?',
       nzContent: '<b style="color: red;">khách sạn sẽ không thể hoàn tác sau khi xoá. Ấn đồng ý để xoá</b>',
@@ -251,6 +251,17 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
       nzOkText: 'Đồng ý',
       nzCancelText: 'Không',
       nzOnOk: () => this.deleteItemHotelByID(id).then(() => this.getListData()),
+    });
+  }
+
+  showConfirmDeleteRoom(id: any): void {
+    this.modalService.confirm({
+      nzTitle: 'Bạn có chắc muốn xóa phòng này?',
+      nzContent: '<b style="color: red;">Phòng sẽ không thể hoàn tác sau khi xoá. Ấn đồng ý để xoá</b>',
+      nzOkDanger: true,
+      nzOkText: 'Đồng ý',
+      nzCancelText: 'Không',
+      nzOnOk: () => this.deleteItemRoomByID(id).then(() => this.getListData()),
     });
   }
 
@@ -268,6 +279,24 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
       }, error => {
         // Error handling and close the popup
         this.notificationService.showNotification(Constant.ERROR, 'Đã có lỗi xảy ra khi xoá khách sạn!');
+      });
+    });
+  }
+
+  deleteItemRoomByID(id: any) {
+    // Delete workspace here
+    return new Promise((resolve, reject) => {
+      this.generalService.deleteRoomByID(id).subscribe((res: any) => {
+        // Do some logic and close the popup
+        if (res && res.ret && res.ret[0].code !== 0) {
+          this.notificationService.showNotification(Constant.ERROR, 'Không thể xóa phòng');
+        } else {
+          this.notificationService.showNotification(Constant.SUCCESS, 'Xóa phòng thành công');
+          resolve(true);
+        }
+      }, error => {
+        // Error handling and close the popup
+        this.notificationService.showNotification(Constant.ERROR, 'Đã có lỗi xảy ra khi xoá phòng!');
       });
     });
   }

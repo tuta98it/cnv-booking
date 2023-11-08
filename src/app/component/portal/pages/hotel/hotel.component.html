@@ -51,7 +51,7 @@
     cellTemplate="cellUtilityHotels"></dxi-column>
   <div *dxTemplate="let item of 'cellBtnTemplate'">
     <button title="Xóa khách sạn" nz-button nzSize="small" nzType="default" class="btn-right button-update ant-btn-red"
-      (click)="showDeleteConfirm(item.data.id)" *ngIf="checkUpdate">
+      (click)="showConfirmDeleteHotel(item.data.id)" *ngIf="checkUpdate">
       <span class="fa fa-times fa-fw"></span>
     </button>
     <button title="Chỉnh sửa thông tin khách sạn" nz-button nzSize="small" nzType="default"
@@ -101,7 +101,7 @@
       <dxi-column cssClass="text-center" caption="STT" [width]="55" dataField="stt" [fixed]="true"
         [allowFiltering]="false" [allowSorting]="false"></dxi-column>
       <dxi-column caption="Loại phòng" [width]="200" dataField="name" dataType="string"></dxi-column>
-      <dxi-column caption="Mô tả phòng" [width]="400" dataField="description" dataType="string"></dxi-column>
+      <dxi-column caption="Mô tả phòng" [width]="400" dataField="description" dataType="string" [visible]="false"></dxi-column>
       <!--<dxi-column caption="Phòng số" cssClass="text-left" [width]="200" dataField="roomNumber"
       ></dxi-column>-->
       <dxi-column caption="Giá phòng" cssClass="text-left" [width]="200" dataField="price"
@@ -145,7 +145,7 @@
       </div>
       <div *dxTemplate="let room of 'cellBtnDetailTemplate'">
         <button title="Xóa phòng" nz-button nzSize="small" nzType="default" class="btn-right button-update ant-btn-red"
-          (click)="showDeleteConfirm(room.data.id)" *ngIf="checkUpdate">
+          (click)="showConfirmDeleteRoom(room.data.id)" *ngIf="checkUpdate">
           <span class="fa fa-times fa-fw"></span>
         </button>
         <button title="Chỉnh sửa thông tin phòng" nz-button nzSize="small" nzType="default"
@@ -323,16 +323,14 @@
                 [ngClass]="{ 'is-invalid': submitted && formControlRoom.name.errors?.required }" />
             </div>
           </div>
-          <div class="input-wrap" nz-row>
+          <!-- <div class="input-wrap" nz-row>
             <label class="title-detail" nz-col [nzSpan]="4">Mô tả</label>
             <div nz-col [nzSpan]="19">
-
-              <textarea nz-input formControlName="description" placeholder="Mô tả khách sạn ..."
+              <textarea nz-input formControlName="description" placeholder="Mô tả phòng khách sạn ..."
                 [nzAutosize]="{ minRows: 6, maxRows: 8 }"></textarea>
-
-              <!-- <input nz-input formControlName="description" /> -->
             </div>
-          </div>
+          </div> -->
+
           <!--<div class="input-wrap" nz-row>
             <label class="title-detail" nz-col [nzSpan]="4">Phòng số<em class="fas fa-asterisk required"></em></label>
             <div nz-col [nzSpan]="19">
@@ -347,8 +345,6 @@
                 [ngClass]="{ 'is-invalid': submitted && formControlRoom.floorNumber.errors?.required }" />
             </div>
           </div>-->
-
-
           <div class="input-wrap" nz-row>
             <label class="title-detail" nz-col [nzSpan]="4">Giường phụ</label>
             <div nz-col [nzSpan]="19">

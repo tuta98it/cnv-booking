@@ -50,7 +50,7 @@
       (click)="onConfirmBookingHotel(item.data)">
       <span class="fa fa-check fa-fw"></span>
     </button>
-    <button  *ngIf="item.data.bookingStatus === 1" [nzLoading]="item.data.isOnSendEmailLoading" title="Gửi mail xác nhận đặt khách sạn" nz-button nzSize="small"
+    <button  *ngIf="item.data.bookingStatus === 1" [nzLoading]="item.data.isOnSendEmailLoading" title="Gửi Email xác nhận đặt phòng khách sạn" nz-button nzSize="small"
       nzType="default" class="btn-right button-update" (click)="onConfirmSendEmailBookingHotel(item.data)">
       <span class="fa fa-paper-plane fa-fw"></span>
     </button>
@@ -155,7 +155,10 @@
 <!-- Confirm agreement booking hotel -->
 <nz-modal [(nzVisible)]="isVisibleConfirmBooking" [nzContent]="contentConfirm" nzWidth="500px" (nzOnCancel)="handleCancel()">
   <div *nzModalTitle>
-    Xác nhận yêu cầu đặt khách sạn
+    <div>
+      Xác nhận yêu cầu đặt khách sạn
+    </div>
+    <span><i style="font-size: x-small; opacity: 0.8;">(*Lưu vào hệ thống)</i></span>
   </div>
   <ng-template #contentConfirm>
     <div class="input-wrap" nz-row>
@@ -222,7 +225,7 @@
 <!-- Confirm agreement send email booking hotel -->
 <nz-modal [(nzVisible)]="isVisibleConfirmSendEmaiBooking" [nzContent]="contentConfirmSendEmailBookingHotel" nzWidth="120vh" (nzOnCancel)="handleCancel()">
   <div *nzModalTitle>
-    Xác nhận phòng ở khách sạn
+    Gửi Email xác nhận đặt phòng khách sạn tới khách hàng
   </div>
   <ng-template #contentConfirmSendEmailBookingHotel>
 
@@ -233,6 +236,6 @@
   </ng-template>
   <div *nzModalFooter>
     <button nz-button nzType="default" (click)="handleCancel()">Huỷ</button>
-    <button nz-button nzType="primary" (click)="handleOkConfirmSendEmailBookingHotel()" [nzLoading]="isConfirmSendEmailLoading">Xác nhận và gửi Email</button>
+    <button nz-button nzType="primary" (click)="handleOkConfirmSendEmailBookingHotel()" [nzLoading]="isConfirmSendEmailLoading">Gửi Email</button>
   </div>
 </nz-modal>
