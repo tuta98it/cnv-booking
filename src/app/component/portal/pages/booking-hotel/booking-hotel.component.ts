@@ -7,6 +7,7 @@ import { GeneralService } from 'src/app/service/general-service';
 import { TableSelectionAbstract } from 'src/app/shared/component/table/table-selection.abstract';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Constant } from 'src/app/shared/constants/constant.class';
+import { PhoneUtils } from 'src/app/shared/utils/phone-utils.class';
 import { AppConfigService } from 'src/app-config.service';
 import { NotificationService } from 'src/app/service/notification.service';
 import { Workbook } from 'exceljs';
@@ -32,7 +33,6 @@ import { MoneyUtils } from 'src/app/shared/utils/money-utils.class';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 import { DataService } from 'src/app/service/data.service';
 import { Router } from '@angular/router';
-import { stringify } from 'querystring';
 @Component({
   selector: 'app-hotel',
   templateUrl: './booking-hotel.component.html',
@@ -145,6 +145,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
     private msg: NzMessageService,
     private dataService: DataService,
     private datePipe: DatePipe,
+    public phoneUtils: PhoneUtils
   ) {
     super('id');
     this.formAddHotel = this.fb.group({
@@ -382,8 +383,10 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   onConfirmBookingHotel(booking: any) {
     this.item = booking;
     this.isVisibleConfirmBooking = true;
+    this.confirmBookingHotel.approvalCodeConfirm = booking.approvalCode;
+    this.confirmBookingHotel.textValueNoteConfirm = booking.bookingNote;
     this.submitted = false;
-    this.resetConfirmBookingHotel();
+    // this.resetConfirmBookingHotel();
   }
 
 
@@ -715,7 +718,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   }
   private resetConfirmBookingHotel() {
     this.confirmBookingHotel.approvalCodeConfirm = '',
-    this.confirmBookingHotel.textValueNoteConfirm = ''
+      this.confirmBookingHotel.textValueNoteConfirm = ''
   }
 
   onRefuseBookingHotel(booking: any) {
@@ -744,6 +747,11 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
     this.isConfirmSendEmailLoading = false;
     this.formAddHotel.reset();
     this.formAddRoom.reset();
+  }
+
+  handleCancelConfirmBooking(){
+    this.isVisibleConfirmBooking = false;
+    this.resetConfirmBookingHotel();
   }
 
   handleRemoveImageHotel = async (file: NzUploadFile): Promise<void> => {
@@ -1154,36 +1162,40 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   }
 
   handleOkConfirmBookingHotel() {
-    this.isConfirmLoading = true;
-    this.submitted = true;
-    this.generalService
-      .confirmBooking({ id: this.item.id, note: this.confirmBookingHotel.textValueNoteConfirm, approvalCode: this.confirmBookingHotel.approvalCodeConfirm })
-      .subscribe({
-        next: (res) => {
-          if (res.isValid) {
-            this.notificationService.showNotification(Constant.SUCCESS, 'Xác nhận đặt phòng thành công');
-            this.isVisibleConfirmBooking = false;
-            this.getListData();
-          } else {
-            if (res.errors && res.errors.length > 0) {
-              res.errors.forEach((el: any) => {
-                this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
-              });
+    return new Promise((resolve, reject) => {
+      this.isConfirmLoading = true;
+      this.submitted = true;
+      this.generalService
+        .confirmBooking({ id: this.item.id, note: this.confirmBookingHotel.textValueNoteConfirm, approvalCode: this.confirmBookingHotel.approvalCodeConfirm })
+        .subscribe({
+          next: (res) => {
+            if (res.isValid) {
+              this.notificationService.showNotification(Constant.SUCCESS, 'Xác nhận đặt phòng thành công');
+              resolve(true);
+              this.isVisibleConfirmBooking = false;
+              this.getListData();
             } else {
-              this.notificationService.showNotification(Constant.ERROR, 'Xác nhận đặt phòng thật bại');
+              if (res.errors && res.errors.length > 0) {
+                res.errors.forEach((el: any) => {
+                  this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+                });
+              } else {
+                this.notificationService.showNotification(Constant.ERROR, 'Xác nhận đặt phòng thật bại');
+              }
             }
-          }
-        },
-        error: (error) => {
-          this.notificationService.showNotification(Constant.ERROR, 'Xác nhận đặt phòng thật bại');
-        },
+          },
+          error: (error) => {
+            this.notificationService.showNotification(Constant.ERROR, 'Xác nhận đặt phòng thật bại');
+          },
 
-        complete: () => {
-        }
-      })
-      .add(() => {
-        this.isConfirmLoading = false;
-      });
+          complete: () => {
+          }
+        })
+        .add(() => {
+          this.isConfirmLoading = false;
+        });
+    });
+
   }
 
   handleOkRefuse() {
@@ -1264,5 +1276,9 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
       .add(() => {
 
       });
+  }
+
+  handleConfirmAndSendBookingHotel() {
+    this.handleOkConfirmBookingHotel().then(() => this.onConfirmSendEmailBookingHotel(this.item));
   }
 }

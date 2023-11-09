@@ -24,13 +24,11 @@
 <dx-data-grid id="gridContainer" [dataSource]="filteredDatas" #ListHotels [showColumnLines]="true" [showRowLines]="true"
   [height]="dxGridHeight" [rowAlternationEnabled]="true" [showBorders]="true" [allowColumnResizing]="true"
   columnResizingMode="widget" [columnMinWidth]="50" [columnAutoWidth]="true" (onExporting)="onExporting($event)">
-  <dxo-scrolling mode="virtual"></dxo-scrolling>
+  <dxo-scrolling mode="virtual" rowRenderingMode="virtual" columnRenderingMode="virtual"></dxo-scrolling>
   <dxo-sorting mode="multiple"></dxo-sorting>
   <dxo-header-filter [visible]="true"></dxo-header-filter>
   <dxo-filter-row [visible]="true" [applyFilter]="currentFilter"></dxo-filter-row>
   <dxo-master-detail [enabled]="true" template="detail"></dxo-master-detail>
-
-
   <dxi-column cssClass="text-center" caption="Action" [fixed]="true" [width]="100" fixedPosition="right"
     cellTemplate="cellBtnTemplate"></dxi-column>
   <dxi-column cssClass="text-center" caption="STT" [width]="55" dataField="stt" [fixed]="true" [allowFiltering]="false"
