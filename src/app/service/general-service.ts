@@ -6,6 +6,13 @@ import { Role } from '../model/role.class';
 
 @Injectable()
 export class GeneralService extends BaseService {
+
+  // LOGIN
+  // Forgot passowrd
+  forgotPassword(email: any): any {
+    return this.post('/identify', email);
+  }
+
   //phong
   getPhong(): Observable<any[]> {
     return this.get(UrlConstant.LIST_PHONG);

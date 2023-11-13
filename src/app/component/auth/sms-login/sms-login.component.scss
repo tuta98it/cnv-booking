@@ -1,8 +1,8 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box
-}
+// * {
+//   margin: 0;
+//   padding: 0;
+//   box-sizing: border-box
+// }
 
 body, html {
   height: 100%;
@@ -125,15 +125,15 @@ textarea:-ms-input-placeholder {
   color: #acacac
 }
 
-button {
-  outline: none !important;
-  border: none;
-  background: 0 0
-}
+// button {
+//   outline: none !important;
+//   border: none;
+//   background: 0 0
+// }
 
-button:hover {
-  cursor: pointer
-}
+// button:hover {
+//   cursor: pointer
+// }
 
 iframe {
   border: none !important

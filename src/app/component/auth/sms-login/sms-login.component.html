@@ -44,16 +44,23 @@
             <span class="lnr lnr-lock"></span>
           </span>
         </div>
-        <div class="contact100-form-checkbox m-l-4">
-          <input class="input-checkbox100" id="ckb1" type="checkbox" name="remember-me">
-          <label class="label-checkbox100" for="ckb1">
-            Nhớ lần truy cập
-          </label>
+        <div style="display: flex; justify-content: space-between; width: inherit;">
+          <div class="contact100-form-checkbox m-l-4">
+            <input class="input-checkbox100" id="ckb1" type="checkbox" name="remember-me">
+            <label class="label-checkbox100" for="ckb1">
+              Nhớ lần truy cập
+            </label>
+          </div>
+          <div>
+            <a nz-button nzType="link" nzBlock (click)="openModalForgotPassowrd()">Bạn quên mật khẩu?</a>
+          </div>
         </div>
+
         <div class="container-login100-form-btn p-t-25">
-          <button class="login100-form-btn">
+          <button nz-button nzType="primary" nzSize="large"  nzBlock>Đăng nhập</button>
+          <!-- <button class="login100-form-btn">
             Đăng nhập
-          </button>
+          </button> -->
         </div>
         <!-- <div class="text-center w-full p-t-115">
           <div style="text-align: center;font-size: 12px;">©Bộ Công an, Cục Khoa học, Chiến lược và Lịch sử Công an
@@ -67,5 +74,27 @@
       </form>
     </div>
   </div>
-
 </div>
+
+
+<nz-modal [(nzVisible)]="isVisibleForgotPassowrd" [nzContent]="contentModalForgorPassword" nzWidth="512px"
+  (nzOnCancel)="cancelModalForgotPassowrd()">
+  <div *nzModalTitle>
+    Đặt lại mật khẩu
+  </div>
+  <ng-template #contentModalForgorPassword>
+    <div>
+      <nz-input-group [nzSuffix]="suffixTemplateInfo" [nzPrefix]="prefixTemplateUser">
+        <input id="email" type="email" nz-input placeholder="Nhập địa chỉ email đăng ký" [(ngModel)]="emaillForgotPassowrd"/>
+      </nz-input-group>
+      <ng-template #prefixTemplateUser><span nz-icon nzType="mail"></span></ng-template>
+      <ng-template #suffixTemplateInfo>
+        <span nz-icon nz-tooltip nzTooltipTitle="Nhập" nzType="info-circle"></span>
+      </ng-template>
+    </div>
+  </ng-template>
+  <div *nzModalFooter>
+    <button nz-button nzType="default" (click)="cancelModalForgotPassowrd()">Huỷ</button>
+    <button nz-button nzType="primary" (click)="sendLinkForgotPassowrd()">Gửi link</button>
+  </div>
+</nz-modal>
