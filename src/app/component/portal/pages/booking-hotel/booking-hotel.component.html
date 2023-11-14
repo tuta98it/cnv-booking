@@ -2,6 +2,13 @@
   <div class="form-group" style="float: left">
     <h1>Danh sách lượt đặt khách sạn</h1>
   </div>
+  <div class="form-group" style="float: right; display: flex; align-items: center;">
+    <!-- Nút xuất Excel -->
+    <button nz-button nzType="primary" class="btn-green mgr10" (click)="exportData()">
+      <span class="fa fa-fw fa-file-excel" style="margin-right: 4px;"></span>
+      Xuất Excel
+    </button>
+  </div>
 </div>
 <dx-data-grid id="gridContainer" [dataSource]="filteredDatas" #ListBookingHotels [showColumnLines]="true"
   [showRowLines]="true" [height]="dxGridHeight" [rowAlternationEnabled]="true" [showBorders]="true"
@@ -17,7 +24,7 @@
   <dxi-column cssClass="text-center" caption="STT" [width]="55" dataField="stt" [fixed]="true" [allowFiltering]="false"   [allowSorting]="false"></dxi-column>
   <dxi-column cssClass="text-center" caption="Action" [fixed]="true" [width]="175" fixedPosition="right"
   cellTemplate="cellBtnTemplate"></dxi-column>
-  <dxi-column caption="Trạng thái" cssClass="text-center" [width]="200" dataField="bookingStatus" fixedPosition="left" cellTemplate="cellBookingStatus"></dxi-column>
+  <dxi-column caption="Trạng thái" cssClass="text-center" [width]="200" dataField="bookingStatusText" fixedPosition="left" cellTemplate="cellBookingStatus"></dxi-column>
   <dxi-column caption="Họ tên người đặt" dataField="contactName" fixedPosition="left"></dxi-column>
   <dxi-column caption="Số điện thoại" [width]="200" dataField="contactPhone" [format]="phoneUtils.phoneNumberFormat"></dxi-column>
   <dxi-column caption="Email" [width]="300" dataField="contactEmail"></dxi-column>
@@ -32,11 +39,11 @@
     flex-direction: row;
     justify-content: start;
     margin-left: 1rem">
-      <span *ngIf="bookingStatus.value === 0" nz-icon nzType="issues-close" style="color: #000" nzTheme="outline"></span>
-      <span *ngIf="bookingStatus.value === 1" nz-icon nzType="check-circle" style="color: #52c41a" nzTheme="outline"></span>
-      <span *ngIf="bookingStatus.value === 2" nz-icon nzType="close-circle" style="color: #dc3545" nzTheme="outline"></span>
-      <div style="margin-left: 0.25rem;" [style.color]="(bookingStatus.value === 0) ? '#000': ((bookingStatus.value === 1) ? '#52c41a': (bookingStatus.value === 2) ? '#dc3545': '') ">
-        {{bookingStatus.value | bookingHotelStatus}}
+      <span *ngIf="bookingStatus.data.bookingStatus === 0" nz-icon nzType="issues-close" style="color: #000" nzTheme="outline"></span>
+      <span *ngIf="bookingStatus.data.bookingStatus === 1" nz-icon nzType="check-circle" style="color: #52c41a" nzTheme="outline"></span>
+      <span *ngIf="bookingStatus.data.bookingStatus === 2" nz-icon nzType="close-circle" style="color: #dc3545" nzTheme="outline"></span>
+      <div style="margin-left: 0.25rem;" [style.color]="(bookingStatus.data.bookingStatus === 0) ? '#000': ((bookingStatus.data.bookingStatus === 1) ? '#52c41a': (bookingStatus.data.bookingStatus === 2) ? '#dc3545': '') ">
+        {{bookingStatus.value}}
       </div>
     </div>
   </div>

@@ -17,6 +17,7 @@ import { saveAs } from 'file-saver-es';
 import { NzImageService } from 'ng-zorro-antd/image';
 // import { removeAccents } from ;
 import { removeAccents } from 'src/app/shared/utils/filters/remove-accents';
+
 import {
   DxDataGridComponent,
   DxTemplateDirective,
@@ -33,6 +34,7 @@ import { MoneyUtils } from 'src/app/shared/utils/money-utils.class';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 import { DataService } from 'src/app/service/data.service';
 import { Router } from '@angular/router';
+import { BookingHotelStatusPipe } from 'src/app/shared/pipe/booking-hotel-status.pipe';
 @Component({
   selector: 'app-hotel',
   templateUrl: './booking-hotel.component.html',
@@ -145,7 +147,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
     private msg: NzMessageService,
     private dataService: DataService,
     private datePipe: DatePipe,
-    public phoneUtils: PhoneUtils
+    public phoneUtils: PhoneUtils,
   ) {
     super('id');
     this.formAddHotel = this.fb.group({
@@ -221,6 +223,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
           let stt = 0;
           this.datas.forEach((en: any) => {
             en.stt = ++stt;
+            en.bookingStatusText =  (new BookingHotelStatusPipe()).transform(en.bookingStatus);
             let sttx = 0;
             en.bookingHotelDetails.forEach(element => {
               en.isOnSendEmailLoading = false;
@@ -915,7 +918,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
 
     const from = this.dateFormatPipe.transformFull(new Date(), Constant.DATE_FMT_STR);
     const dateStr = from;
-    const fileName = `DS_Khach_san_${dateStr}`;
+    const fileName = `DS_Dat_khach_san_${dateStr}`;
     exportDataGrid({
       component: e.component,
       worksheet,
