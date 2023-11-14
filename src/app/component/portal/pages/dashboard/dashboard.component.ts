@@ -21,8 +21,9 @@ import {FileManagerService} from '../../../../service/file-manager.service';
 import {NotificationService} from '../../../../service/notification.service';
 import {TableSelectionAbstract} from '../../../../shared/component/table/table-selection.abstract';
 import {AppConfigService} from '../../../../../app-config.service';
-
+import { NzIconService } from 'ng-zorro-antd/icon';
 export interface ChartOptions1 {
+
   series: ApexAxisChartSeries;
   chart: ApexChart;
   dataLabels: ApexDataLabels;
@@ -64,6 +65,7 @@ export interface ChartOptionsLine {
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent extends TableSelectionAbstract implements OnInit {
+  userInfo : any;
   @ViewChild('chart') chart: ChartComponent;
   public chartOptions: Partial<ChartOptions>;
   @ViewChild('chart1') chart1: ChartComponent;
@@ -91,8 +93,10 @@ export class DashboardComponent extends TableSelectionAbstract implements OnInit
     private route: ActivatedRoute,
     private fileManagerService: FileManagerService,
     private notificationService: NotificationService,
-    private configService: AppConfigService
+    private configService: AppConfigService,
+    private iconService: NzIconService
   ) {
+
     super('id');
     this.pageIndex = 1;
     this.pageSize = 20;
@@ -213,9 +217,16 @@ export class DashboardComponent extends TableSelectionAbstract implements OnInit
       totalCanhBao: 0,
       totalQuaHan: 0
     };
+    this.iconService.fetchFromIconfont({
+      scriptUrl: 'https://at.alicdn.com/t/font_8d5l8fzk5b87iudi.js'
+    });
   }
 
   ngOnInit(): void {
+    this.userInfo = JSON.parse(localStorage.getItem(Constant.USER_INFO));
+    console.log('this.userInfo ',this.userInfo);
+
+
     // this.searchPieChart();
     this.gridHeight = (window.innerHeight - 330) + 'px';
     this.selectedTinhThanhId = +localStorage.getItem(Constant.TINHTHANH);
