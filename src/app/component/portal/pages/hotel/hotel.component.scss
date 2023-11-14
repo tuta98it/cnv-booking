@@ -1,28 +1,32 @@
-.action-button button{
+.action-button button {
   margin-left: 8px;
 }
-.btn-edit{
+
+.btn-edit {
   margin-right: 8px;
 }
-h1{
+
+h1 {
   font-size: 18px;
   margin: 0;
   line-height: 32px;
   text-transform: uppercase;
 }
-.labeb_text label{
+
+.labeb_text label {
   width: 200px;
 }
 
 
-.ant-btn-tertiary{
+.ant-btn-tertiary {
   color: #fff;
   background-color: #5260ff;
   border: none;
   box-shadow: none;
 }
 
-.ant-btn-tertiary:focus, .ant-btn-tertiary:hover {
+.ant-btn-tertiary:focus,
+.ant-btn-tertiary:hover {
   color: #fff;
   background: #4c8dff;
   border-color: #4c8dff;
@@ -35,12 +39,15 @@ h1{
   width: 200px;
   margin-right: 8px;
 }
+
 :host ::ng-deep .upload-list-inline [class*='-upload-list-rtl'] .ant-upload-list-item {
   float: right;
 }
+
 :host ::ng-deep .upload-list-inline .ant-upload-animate-enter {
   animation-name: uploadAnimateInlineIn;
 }
+
 :host ::ng-deep .upload-list-inline .ant-upload-animate-leave {
   animation-name: uploadAnimateInlineOut;
 }
@@ -51,12 +58,15 @@ h1{
   width: 200px;
   margin-right: 8px;
 }
+
 :host ::ng-deep .upload-list-inline [class*='-upload-list-rtl'] .ant-upload-list-item {
   float: right;
 }
+
 :host ::ng-deep .upload-list-inline .ant-upload-animate-enter {
   animation-name: uploadAnimateInlineIn;
 }
+
 :host ::ng-deep .upload-list-inline .ant-upload-animate-leave {
   animation-name: uploadAnimateInlineOut;
 }
@@ -66,5 +76,12 @@ h1{
   &#gridContainer {
     // height: 100%;
     height: 82vh;
+  }
+
+  .dx-datagrid-rowsview .dx-row-focused.dx-data-row .dx-command-edit:not(.dx-focused) .dx-link,
+  .dx-datagrid-rowsview .dx-row-focused.dx-data-row>td:not(.dx-focused),
+  .dx-datagrid-rowsview .dx-row-focused.dx-data-row>tr>td:not(.dx-focused) {
+    background-color: #d2d2d2;
+    color: #fff;
   }
 }
