@@ -1,9 +1,11 @@
 body {
   font: Roboto, "sans-serif", helvetica, verdana, sans-serif !important;
 }
-.dx-theme-generic-typography{
+
+.dx-theme-generic-typography {
   font: Roboto, RobotoFallback, "Noto Kufi Arabic", Helvetica, Arial, sans-serif !important;
 }
+
 .container {
   background: #FFF;
 }
@@ -50,7 +52,9 @@ h1 {
   }
 
   .header_menu {
-    .ant-menu-item, .ant-menu-submenu-title {
+
+    .ant-menu-item,
+    .ant-menu-submenu-title {
       padding: 0 10px;
     }
 
@@ -59,18 +63,19 @@ h1 {
       border-bottom: none;
     }
 
-    .ant-menu-horizontal > .ant-menu-item > a {
+    .ant-menu-horizontal>.ant-menu-item>a {
       color: #fff;
       display: inline;
       padding: 4px 6px;
     }
 
-    .ant-menu-horizontal > .ant-menu-item {
+    .ant-menu-horizontal>.ant-menu-item {
       border-bottom: none;
     }
 
-    .ant-menu-horizontal > .ant-menu-item > a:hover, .ant-menu-item-selected > a {
-     /* color: #22577a !important;
+    .ant-menu-horizontal>.ant-menu-item>a:hover,
+    .ant-menu-item-selected>a {
+      /* color: #22577a !important;
       background: #80ED99;*/
 
       color: #fff !important;
@@ -83,12 +88,13 @@ h1 {
       border-bottom: none !important;
     }
 
-    .ant-menu-submenu-title > span {
+    .ant-menu-submenu-title>span {
       color: #eee;
       padding: 6px;
     }
 
-    .ant-menu-submenu-title > span:hover, .ant-menu-submenu-selected > .ant-menu-submenu-title > span {
+    .ant-menu-submenu-title>span:hover,
+    .ant-menu-submenu-selected>.ant-menu-submenu-title>span {
       color: #fff !important;
       background: #0399ab;
       border-radius: 4px;
@@ -101,7 +107,14 @@ h1 {
     //.ant-menu-item{
     //  padding-left: 0px;
     //}
-    .ant-menu-horizontal > .ant-menu-item-active, .ant-menu-horizontal > .ant-menu-item-open, .ant-menu-horizontal > .ant-menu-item-selected, .ant-menu-horizontal > .ant-menu-item:hover, .ant-menu-horizontal > .ant-menu-submenu-active, .ant-menu-horizontal > .ant-menu-submenu-open, .ant-menu-horizontal > .ant-menu-submenu-selected, .ant-menu-horizontal > .ant-menu-submenu:hover {
+    .ant-menu-horizontal>.ant-menu-item-active,
+    .ant-menu-horizontal>.ant-menu-item-open,
+    .ant-menu-horizontal>.ant-menu-item-selected,
+    .ant-menu-horizontal>.ant-menu-item:hover,
+    .ant-menu-horizontal>.ant-menu-submenu-active,
+    .ant-menu-horizontal>.ant-menu-submenu-open,
+    .ant-menu-horizontal>.ant-menu-submenu-selected,
+    .ant-menu-horizontal>.ant-menu-submenu:hover {
       border-bottom: none !important;
     }
 
@@ -109,6 +122,11 @@ h1 {
       font-size: 16px !important;
     }
   }
+
+  .ant-menu-vertical.ant-menu-sub {
+    min-width: fit-content;
+}
+
 }
 
 .text-right {
@@ -123,7 +141,8 @@ h1 {
 a.btn-primary {
   color: #FFF !important;
 }
-footer{
+
+footer {
   display: flex;
   padding: 4px 8px;
   background: #ededed;
@@ -137,15 +156,20 @@ footer{
   left: 0;
   right: 0;
   z-index: 9999;
-  div{
+
+  div {
     margin-right: 8px;
     text-align: right !important;
   }
 }
-.chart-region{
+
+.chart-region {
   font-family: Roboto;
-  span{
+
+  span {
     font-family: Roboto;
     font-size: 14px;
   }
+
+
 }

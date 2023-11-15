@@ -1,17 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Constant} from '../../../shared/constants/constant.class';
-import {Cookie} from 'ng2-cookies';
-import {Subscription} from 'rxjs';
-import {User} from '../../../model/user.class';
-import {AuthModel} from '../../../model/auth.model';
-import {ActivatedRoute, Router} from '@angular/router';
-import {Store} from '@ngrx/store';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Constant } from '../../../shared/constants/constant.class';
+import { Cookie } from 'ng2-cookies';
+import { Subscription } from 'rxjs';
+import { User } from '../../../model/user.class';
+import { AuthModel } from '../../../model/auth.model';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 import * as fromAuth from '../redux/auth.reducer';
-import {AuthService} from '../../../service/auth.service';
-import {UserService} from '../../../service/user-service';
-import {GeneralService} from '../../../service/general-service';
-import {NotificationService} from "../../../service/notification.service";
+import { AuthService } from '../../../service/auth.service';
+import { UserService } from '../../../service/user-service';
+import { GeneralService } from '../../../service/general-service';
+import { NotificationService } from "../../../service/notification.service";
 
 @Component({
   selector: 'app-sms-login',
@@ -21,6 +21,9 @@ import {NotificationService} from "../../../service/notification.service";
 export class SmsLoginComponent implements OnInit {
   validateForm: FormGroup;
   checked = false;
+  isVisibleForgotPassowrd: boolean = false;
+  isSendEmailLoading: boolean = false;
+  emaillForgotPassowrd: string;
   returnUrl: string;
   messageError: string;
   sub: Subscription;
@@ -65,8 +68,41 @@ export class SmsLoginComponent implements OnInit {
       }
     }, error => {
       this.messageError = Constant.LOGIN_FAIL;
-      this.notificationService.showNotification(Constant.ERROR, this.messageError );
+      this.notificationService.showNotification(Constant.ERROR, this.messageError);
     });
   }
 
+  cancelModalForgotPassowrd() {
+    this.isVisibleForgotPassowrd = false;
+    this.emaillForgotPassowrd = '';
+  }
+
+  openModalForgotPassowrd() {
+    this.isVisibleForgotPassowrd = true
+  }
+  sendLinkForgotPassowrd() {
+    this.generalService.forgotPassword(this.emaillForgotPassowrd).subscribe({
+      next: (res) => {
+        if (res.isValid) {
+          this.notificationService.showNotification(Constant.SUCCESS, res.jsonData);
+        } else {
+          if (res.errors && res.errors.length > 0) {
+            res.errors.forEach((el: any) => {
+              this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+            });
+          } else {
+            this.notificationService.showNotification(Constant.ERROR, 'Không gửi thể gửi email');
+          }
+        }
+      },
+      error: (error: any) => {
+        this.notificationService.showNotification(Constant.ERROR, 'Gửi email đã gặp lỗi');
+      },
+
+      complete: () => {
+      }
+    })
+    .add(() => {
+    });
+  }
 }

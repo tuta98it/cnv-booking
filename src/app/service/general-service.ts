@@ -6,6 +6,13 @@ import { Role } from '../model/role.class';
 
 @Injectable()
 export class GeneralService extends BaseService {
+
+  // LOGIN
+  // Forgot passowrd
+  forgotPassword(email: any): any {
+    return this.post('/identify', email);
+  }
+
   //phong
   getPhong(): Observable<any[]> {
     return this.get(UrlConstant.LIST_PHONG);
@@ -555,7 +562,7 @@ export class GeneralService extends BaseService {
   }
 
 
-  markCanceledSystemTicketFlightExport​(idTicket: any): Observable<any> {
+  markCanceledSystemTicketFlightExport(idTicket: any): Observable<any> {
     console.log('idTicket: ', idTicket);
 
     return this.post(`/api${UrlConstant.BOOKING}/MarkCanceled/${idTicket}`, idTicket);
@@ -616,6 +623,11 @@ export class GeneralService extends BaseService {
 
   deleteHotelImageByID(idImage: any): Observable<any> {
     return this.delete(`/api${UrlConstant.HOTEL}/DeleteHotelFile/${idImage}`, idImage);
+  }
+
+  // setActiveHotel/{id}
+  setetActiveHotel(idHotel: number, isActive: boolean): Observable<any> {
+    return this.put(`/api${UrlConstant.HOTEL}/SetActiveHotel/${idHotel}?isActive=${isActive}`, '');
   }
 
   // BookingHotel
@@ -742,13 +754,13 @@ export class GeneralService extends BaseService {
 
 
   createRoomPriceDetail(newItemPriceDetail: any): Observable<any> {
-    if(newItemPriceDetail.id === 0){
+    if (newItemPriceDetail.id === 0) {
       return this.post(`/api${UrlConstant.ROOM}/UpdateRoomPriceDetail`, newItemPriceDetail);
     }
   }
 
   updateRoomPriceDetailByID(editItemPriceDetail: any): Observable<any> {
-    if(editItemPriceDetail.id !== 0){
+    if (editItemPriceDetail.id !== 0) {
       return this.post(`/api${UrlConstant.ROOM}/UpdateRoomPriceDetail`, editItemPriceDetail);
     }
   }

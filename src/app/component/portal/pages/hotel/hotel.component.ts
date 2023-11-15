@@ -54,8 +54,6 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
   item: any;
   loading: boolean;
   checkDelete = true;
-  checkAdd = true;
-  checkUpdate = true;
   submitted = false;
   updated: boolean;
   formAddHotel: FormGroup;
@@ -111,7 +109,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
     toolbarPosition: 'top',
     toolbarHiddenButtons: []
   };
-
+  loadingActiveHotel: boolean = false;
   constructor(
     private router: Router,
     private modalService: NzModalService,
@@ -183,30 +181,40 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
 
   }
 
-
-
   getListData() {
     return new Promise((resolve, reject) => {
       this.loading = true;
-      this.generalService.getHotels().subscribe((res: any) => {
-        this.datas = res;
-        let stt = 0;
-        this.datas.forEach((en: any) => {
-          en.stt = ++stt;
-          let sttx = 0;
-          en.roomHotels.forEach((roomHotel: any) => {
-            roomHotel.stt = ++sttx;
-            let sttp = 0;
-            roomHotel.prices.forEach((priceCustom: any) => {
-              priceCustom.stt = ++sttp;
+      this.generalService.getHotels().subscribe(
+        {
+          next: (res) => {
+            this.datas = res;
+            let stt = 0;
+            this.datas.forEach((en: any) => {
+              en.stt = ++stt;
+              en.loadingActiveHotel = false;
+              let sttx = 0;
+              en.roomHotels.forEach((roomHotel: any) => {
+                roomHotel.stt = ++sttx;
+                let sttp = 0;
+                roomHotel.prices.forEach((priceCustom: any) => {
+                  priceCustom.stt = ++sttp;
+                });
+              });
             });
-          });
+            this.filteredDatas = this.datas;
+          },
+
+          error: (error) => {
+
+          },
+
+          complete: () => {
+            resolve(true);
+          }
+
+        }).add(() => {
+          this.loading = false;
         });
-        this.filteredDatas = this.datas;
-      }).add(() => {
-        this.loading = false;
-        resolve(true);
-      });
     });
 
 
@@ -243,7 +251,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
   }
 
 
-  showDeleteConfirm(id: any): void {
+  showConfirmDeleteHotel(id: any): void {
     this.modalService.confirm({
       nzTitle: 'Bạn có chắc muốn xóa khách sạn này?',
       nzContent: '<b style="color: red;">khách sạn sẽ không thể hoàn tác sau khi xoá. Ấn đồng ý để xoá</b>',
@@ -251,6 +259,17 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
       nzOkText: 'Đồng ý',
       nzCancelText: 'Không',
       nzOnOk: () => this.deleteItemHotelByID(id).then(() => this.getListData()),
+    });
+  }
+
+  showConfirmDeleteRoom(id: any): void {
+    this.modalService.confirm({
+      nzTitle: 'Bạn có chắc muốn xóa phòng này?',
+      nzContent: '<b style="color: red;">Phòng sẽ không thể hoàn tác sau khi xoá. Ấn đồng ý để xoá</b>',
+      nzOkDanger: true,
+      nzOkText: 'Đồng ý',
+      nzCancelText: 'Không',
+      nzOnOk: () => this.deleteItemRoomByID(id).then(() => this.getListData()),
     });
   }
 
@@ -268,6 +287,24 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
       }, error => {
         // Error handling and close the popup
         this.notificationService.showNotification(Constant.ERROR, 'Đã có lỗi xảy ra khi xoá khách sạn!');
+      });
+    });
+  }
+
+  deleteItemRoomByID(id: any) {
+    // Delete workspace here
+    return new Promise((resolve, reject) => {
+      this.generalService.deleteRoomByID(id).subscribe((res: any) => {
+        // Do some logic and close the popup
+        if (res && res.ret && res.ret[0].code !== 0) {
+          this.notificationService.showNotification(Constant.ERROR, 'Không thể xóa phòng');
+        } else {
+          this.notificationService.showNotification(Constant.SUCCESS, 'Xóa phòng thành công');
+          resolve(true);
+        }
+      }, error => {
+        // Error handling and close the popup
+        this.notificationService.showNotification(Constant.ERROR, 'Đã có lỗi xảy ra khi xoá phòng!');
       });
     });
   }
@@ -929,5 +966,30 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
       return '0 đ';
     }
     return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' đ';
+  }
+
+  onChangeActiveHotel(hotel: any) {
+    hotel.loadingActiveHotel = true;
+    let changeIsActiveHotel = !hotel.isActive;
+    this.generalService.setetActiveHotel(hotel.id, changeIsActiveHotel).subscribe({
+      next: (res) => {
+        if (res.ret && res.ret[0].code !== 0) {
+          this.notificationService.showNotification(Constant.ERROR, 'Thiết lập trạng thái khách sạn không thành công');
+        } else {
+        }
+      },
+
+      error: (error) => {
+        this.notificationService.showNotification(Constant.ERROR, 'Thiết lập trạng thái khách sạn đã gặp lỗi');
+      },
+
+      complete: () => {
+        this.getListData().then(() => {
+          this.notificationService.showNotification(Constant.SUCCESS, `${changeIsActiveHotel ? 'Active' : 'Inactive' } khách sạn thành công`);
+          hotel.loadingActiveHotel = false;
+
+        });
+      }
+    }).add(() => { });
   }
 }

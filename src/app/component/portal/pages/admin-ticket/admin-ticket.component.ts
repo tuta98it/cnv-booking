@@ -189,8 +189,6 @@ export class AdminTicketComponent extends TableSelectionAbstract implements OnIn
 
 
   onChangeStatusSystemTicketExport(ticketFlightExp: any) {
-    console.log('ticketFlightExp: ', ticketFlightExp);
-
     if (!ticketFlightExp.systemCancelled) {
       this.modalService.confirm({
         nzTitle: `Bạn có chắc KHÔNG tính chi phí vé máy bay của khách hàng <strong>${ticketFlightExp.passengerName}</strong> vào công nợ`,

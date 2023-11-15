@@ -28,13 +28,13 @@
 
   <dxi-column cssClass="text-center" caption="STT" [width]="55" dataField="stt" [fixed]="true" [allowFiltering]="false"
     [allowSorting]="false"></dxi-column>
-  <dxi-column caption="Hãng bay" dataField="airlineName" [width]="200"></dxi-column>
-  <dxi-column caption="Mã đặt chỗ" [width]="200" dataField="bookingNumber"></dxi-column>
-  <dxi-column caption="Số vé" [width]="200" dataField="ticketNumber"></dxi-column>
+  <dxi-column caption="Hãng bay" dataField="airlineName" [width]="400"></dxi-column>
+  <dxi-column caption="Mã đặt chỗ" [width]="400" dataField="bookingNumber"></dxi-column>
+  <dxi-column caption="Số vé" [width]="400" dataField="ticketNumber"></dxi-column>
   <dxi-column caption="Ngày đặt vé" dataField="dateCreated" dataType="date" format="HH:mm dd/MM/yy"></dxi-column>
-  <dxi-column caption="Huỷ vé" cssClass="text-center" dataField="status" [width]="200" [fixed]="true"  fixedPosition="right" cellTemplate="cellBillet"></dxi-column>
+  <!-- <dxi-column caption="Huỷ vé" cssClass="text-center" dataField="status" [width]="200" [fixed]="true"  fixedPosition="right" cellTemplate="cellBillet"></dxi-column> -->
 
-  <div *dxTemplate="let item of 'cellBillet'">
+  <!-- <div *dxTemplate="let item of 'cellBillet'">
 
     <div *ngIf="item.data.status === 'VOIDED'" >
       <a nz-button nzType="link" nzBlock>Xem vé đã huỷ</a>
@@ -43,7 +43,7 @@
     <div *ngIf="item.data.status === ''" >
       Lỗi không tồn tại vé
     </div>
-  </div>
+  </div> -->
 
   <dxo-summary>
     <dxi-total-item column="passengerName" displayFormat="Số bản ghi: {0}" summaryType="count">

@@ -324,3 +324,4 @@ export class Roles {
     public static readonly GROUP_MANAGE = 3;
     public static readonly CUSTOMER = 100;
 }
+
