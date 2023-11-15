@@ -563,10 +563,19 @@ export class GeneralService extends BaseService {
 
 
   markCanceledSystemTicketFlightExport(idTicket: any): Observable<any> {
-    console.log('idTicket: ', idTicket);
-
     return this.post(`/api${UrlConstant.BOOKING}/MarkCanceled/${idTicket}`, idTicket);
   }
+
+
+  salesReport(payload: any): Observable<any> {
+    return this.post(`/api${UrlConstant.BOOKING}/BaoCaoDoanhSo`, payload);
+  }
+
+
+  salesReportByDay(payload: any): Observable<any> {
+    return this.post(`/api${UrlConstant.BOOKING}/BaoCaoDoanhSoTheoNgay`, payload);
+  }
+
 
 
   //TestResult

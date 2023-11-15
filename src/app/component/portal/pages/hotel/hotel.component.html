@@ -420,7 +420,7 @@
               (onInitNewRow)="onInitNewRowPriceDetail($event)"
               (onRowInserting)="onRowInsertingPriceDetail($event, formAddRoom.value.id)"
               (onRowInserted)="onRowInsertedPriceDetail($event)" (onRowUpdating)="onRowUpdatingPriceDetail($event)"
-              (onRowUpdated)="onRowUpdatedPriceDetail($event)" (onRowRemoving)="onRowRemovingdPriceDetail($event)"
+              (onRowUpdated)="onRowUpdatedPriceDetail($event)" (onRowRemoving)="+($event)"
               (onRowRemoved)="logEvent('RowRemoved')" (onSaving)="onSavingPriceDetail($event)"
               (onSaved)="logEvent('Saved')" (onEditCanceling)="logEvent('EditCanceling')"
               (onEditCanceled)="logEvent('EditCanceled')">
