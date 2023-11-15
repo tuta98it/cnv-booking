@@ -85,16 +85,16 @@ export class Constant {
 ]
   public static readonly TIME_RANGE_FILTER = [
     // { label: '--Tất Cả--', value: '0' },
-    { label: 'Hôm nay', value: '1' },
-    { label: 'Hôm qua', value: '2' },
-    { label: '7 ngày qua', value: '3' },
-    { label: '14 ngày qua', value: '4' },
-    { label: '30 ngày qua', value: '5' },
-    { label: 'Tuần này', value: '6' },
-    { label: 'Tuần trước', value: '7' },
-    { label: 'Tháng này', value: '8' },
-    { label: 'Tháng trước', value: '9' },
-    { label: 'Từ ngày đến ngày', value: '10' },
+    { label: 'Hôm nay', value: 1 },
+    { label: 'Hôm qua', value: 2 },
+    { label: '7 ngày qua', value: 3 },
+    { label: '14 ngày qua', value: 4 },
+    { label: '30 ngày qua', value: 5 },
+    { label: 'Tuần này', value: 6 },
+    { label: 'Tuần trước', value: 7 },
+    { label: 'Tháng này', value: 8 },
+    { label: 'Tháng trước', value: 9 },
+    { label: 'Từ ngày đến ngày', value: 10 },
   ];
 
 
