@@ -34,7 +34,7 @@ export class EditHotelComponent implements OnInit {
   configDescriptionHotel: AngularEditorConfig = {
     editable: true,
     spellcheck: true,
-    height: '22rem',
+    height: '23rem',
     minHeight: '5rem',
     maxHeight: 'auto',
     width: 'auto',

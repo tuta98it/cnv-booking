@@ -7,10 +7,10 @@
     </div>
 
     <div class="content">
-      <div style="display: flex; justify-content: space-evenly;">
-        <div style="width: 30%;">
+      <div style="display: flex;">
+        <div style="width: 40%;">
           <div class="input-wrap" nz-row>
-            <label class="title-detail" nz-col [nzSpan]="8">Tên khách sạn<em
+            <label class="title-detail" nz-col [nzSpan]="6">Tên khách sạn<em
                 class="fas fa-asterisk required"></em></label>
             <div nz-col [nzSpan]="16">
               <input nz-input formControlName="name" type="text"
@@ -18,7 +18,7 @@
             </div>
           </div>
           <div class="input-wrap" nz-row>
-            <label class="title-detail" nz-col [nzSpan]="8">Mã khách sạn<em
+            <label class="title-detail" nz-col [nzSpan]="6">Mã khách sạn<em
                 class="fas fa-asterisk required"></em></label>
             <div nz-col [nzSpan]="16">
               <input nz-input formControlName="code" type="text"
@@ -26,7 +26,7 @@
             </div>
           </div>
           <div class="input-wrap" nz-row>
-            <label class="title-detail" nz-col [nzSpan]="8">Số điện thoại<em
+            <label class="title-detail" nz-col [nzSpan]="6">Số điện thoại<em
                 class="fa fa-asterisk required"></em></label>
             <div nz-col [nzSpan]="16">
               <input nz-input formControlName="phoneNo" type="tel"
@@ -34,51 +34,50 @@
             </div>
           </div>
           <div class="input-wrap" nz-row>
-            <label class="title-detail" nz-col [nzSpan]="8">Email<em class="fa fa-asterisk required"></em></label>
+            <label class="title-detail" nz-col [nzSpan]="6">Email<em class="fa fa-asterisk required"></em></label>
             <div nz-col [nzSpan]="16">
               <input type="email" nz-input formControlName="contactEmail" type="text"
                 [ngClass]="{ 'is-invalid': submitted && formControlHotel.contactEmail.errors?.required }" />
             </div>
           </div>
           <div class="input-wrap" nz-row>
-            <label class="title-detail" nz-col [nzSpan]="8">Địa chỉ<em class="fas fa-asterisk required"></em></label>
+            <label class="title-detail" nz-col [nzSpan]="6">Địa chỉ<em class="fas fa-asterisk required"></em></label>
             <div nz-col [nzSpan]="16">
               <input nz-input formControlName="address" type="text"
                 [ngClass]="{ 'is-invalid': submitted && formControlHotel.address.errors?.required }" />
             </div>
           </div>
           <div class="input-wrap" nz-row>
-            <label class="title-detail" nz-col [nzSpan]="8">Tỉnh thành<em class="fas fa-asterisk required"></em></label>
+            <label class="title-detail" nz-col [nzSpan]="6">Tỉnh thành<em class="fas fa-asterisk required"></em></label>
             <div nz-col [nzSpan]="16">
               <nz-select nzShowSearch nzMode="default" nzPlaceHolder="--Tỉnh thành phố--" formControlName="provinceId">
-                <nz-option *ngFor="let pro of provinces" nzLabel="{{pro.name}}"
-                           [nzValue]="pro.id"></nz-option>
+                <nz-option *ngFor="let pro of provinces" nzLabel="{{pro.name}}" [nzValue]="pro.id"></nz-option>
               </nz-select>
             </div>
           </div>
           <div class="input-wrap" nz-row>
-            <label class="title-detail" nz-col [nzSpan]="8">Website<em class="fas fa-asterisk required"></em></label>
+            <label class="title-detail" nz-col [nzSpan]="6">Website<em class="fas fa-asterisk required"></em></label>
             <div nz-col [nzSpan]="16">
               <input nz-input formControlName="websiteUrl" type="text"
                 [ngClass]="{ 'is-invalid': submitted && formControlHotel.websiteUrl.errors?.required }" />
             </div>
           </div>
           <div class="input-wrap" nz-row>
-            <label class="title-detail" nz-col [nzSpan]="8">Hạng<em class="fas fa-asterisk required"></em></label>
+            <label class="title-detail" nz-col [nzSpan]="6">Hạng<em class="fas fa-asterisk required"></em></label>
             <div nz-col [nzSpan]="16">
               <input nz-input formControlName="ratingStar" type="number"
                 [ngClass]="{ 'is-invalid': submitted && formControlHotel.ratingStar.errors?.required }" />
             </div>
           </div>
           <div class="input-wrap" nz-row>
-            <label class="title-detail" nz-col [nzSpan]="8">Số phòng<em class="fas fa-asterisk required"></em></label>
+            <label class="title-detail" nz-col [nzSpan]="6">Số phòng<em class="fas fa-asterisk required"></em></label>
             <div nz-col [nzSpan]="16">
               <input nz-input formControlName="numRooms" type="number"
                 [ngClass]="{ 'is-invalid': submitted && formControlHotel.numRooms.errors?.required }" />
             </div>
           </div>
           <div class="input-wrap" nz-row>
-            <label class="title-detail" nz-col [nzSpan]="8">Tiện ích khách sạn:<em
+            <label class="title-detail" nz-col [nzSpan]="6">Tiện ích khách sạn:<em
                 class="fas fa-asterisk required"></em></label>
             <div nz-col [nzSpan]="16">
               <nz-select nzMode="multiple" nzPlaceHolder="--Tiện ích khách sạn--" formControlName="utilitieIds">
@@ -88,10 +87,10 @@
             </div>
           </div>
         </div>
-        <div style="width: 50%">
-          <div class="input-wrap" style="display: flex; flex-direction: row; justify-content: center;" nz-row>
-            <label class="title-detail" nz-col [nzSpan]="2">Mô tả</label>
-            <div nz-col [nzSpan]="20">
+        <div style="width: 60%">
+          <div>
+            <label class="title-detail" nz-col [nzSpan]="4">Mô tả khách sạn:</label>
+            <div nz-col [nzSpan]="24">
               <!-- <textarea nz-input formControlName="description" placeholder="Mô tả khách sạn ..."
                 [nzAutosize]="{ minRows: 4, maxRows: 8 }"></textarea> -->
               <!-- <input nz-input formControlName="description" type="text" /> -->
@@ -100,20 +99,20 @@
             </div>
           </div>
         </div>
-        <div style="width: 20%;  max-height: 32rem; overflow: auto;">
-          <div class="input-wrap" style="justify-content: end;" nz-row>
-            <label class="title-detail" nz-col [nzSpan]="8">Ảnh khách sạn<em
-                class="fas fa-asterisk required"></em></label>
-            <div nz-col [nzSpan]="16">
-              <nz-upload class="upload-list-inline" [nzMultiple]="true" [nzAction]="uploadUrl" nzName="postedFile"
-                [nzHeaders]="uploadHeader" nzListType="picture" [nzRemove]="handleRemoveImageHotel"
-                (nzChange)="handleChangeImages($event, 'hotel')" [nzFileList]="fileList">
-                <button nz-button>
-                  <span nz-icon nzType="upload"></span>
-                  Nhấn để tải ảnh
-                </button>
-              </nz-upload>
-            </div>
+      </div>
+      <div>
+        <div class="input-wrap" nz-row>
+          <label class="title-detail" nz-col style="width: 10%;">Ảnh khách sạn<em
+              class="fas fa-asterisk required"></em></label>
+          <div nz-col style="width: 90%;">
+            <nz-upload class="upload-list-inline" [nzMultiple]="true" [nzAction]="uploadUrl" nzName="postedFile"
+              [nzHeaders]="uploadHeader" nzListType="picture" [nzRemove]="handleRemoveImageHotel"
+              (nzChange)="handleChangeImages($event, 'hotel')" [nzFileList]="fileList">
+              <button nz-button>
+                <span nz-icon nzType="upload"></span>
+                Nhấn để tải ảnh
+              </button>
+            </nz-upload>
           </div>
         </div>
       </div>
