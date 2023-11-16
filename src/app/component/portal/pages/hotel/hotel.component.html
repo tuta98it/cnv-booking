@@ -33,7 +33,7 @@
   <dxo-master-detail [enabled]="true" template="detail"></dxo-master-detail>
 
   <dxi-column caption="Active" cssClass="text-center" [width]="100" [fixed]="true" fixedPosition="right"
-     cellTemplate="cellActive"></dxi-column>
+    cellTemplate="cellActive"></dxi-column>
   <dxi-column cssClass="text-center" caption="Action" [fixed]="true" [width]="100" fixedPosition="right"
     cellTemplate="cellBtnTemplate"></dxi-column>
 
@@ -44,7 +44,7 @@
   <dxi-column caption="Mã khách sạn" [width]="200" dataField="code" [fixed]="true"></dxi-column>
   <dxi-column caption="Địa chỉ" [width]="200" dataField="address"></dxi-column>
   <dxi-column caption="Tỉnh thành" [width]="200" dataField="province.name"></dxi-column>
-  <dxi-column caption="Số điện thoại" [width]="200" dataField="phoneNo" [format]="phoneNumberFormat"></dxi-column>
+  <dxi-column caption="Số điện thoại" [width]="200" dataField="phoneNo" [format]="phoneUtils.phoneNumberFormat"></dxi-column>
   <dxi-column caption="Email" [width]="300" dataField="contactEmail"></dxi-column>
   <dxi-column caption="Website" [width]="200" dataField="websiteUrl" cellTemplate="cellWebsite"></dxi-column>
   <dxi-column caption="Facebook" [width]="200" dataField="facebook" cellTemplate="cellFacebook"
@@ -58,11 +58,11 @@
 
   <div *dxTemplate="let item of 'cellBtnTemplate'">
     <button title="Xóa khách sạn" nz-button nzSize="small" nzType="default" class="btn-right button-update ant-btn-red"
-      (click)="showConfirmDeleteHotel(item.data.id)" >
+      (click)="showConfirmDeleteHotel(item.data.id)">
       <span class="fa fa-times fa-fw"></span>
     </button>
-    <button [disabled]="!item.data.isActive" title="Chỉnh sửa thông tin khách sạn" nz-button nzSize="small" nzType="default"
-      class="btn-right button-update" (click)="routingPageHotelUpdate(item.data)">
+    <button [disabled]="!item.data.isActive" title="Chỉnh sửa thông tin khách sạn" nz-button nzSize="small"
+      nzType="default" class="btn-right button-update" (click)="routingPageHotelUpdate(item.data)">
       <span class="fa fa-edit fa-fw"></span>
     </button>
   </div>
@@ -88,7 +88,8 @@
 
   <div *dxTemplate="let item of 'cellActive'">
     <!--  -->
-    <nz-switch [ngModel]="item.data.isActive" [nzControl]="true" nzCheckedChildren="Active" nzUnCheckedChildren="InActive" (click)="onChangeActiveHotel(item.data)"
+    <nz-switch [ngModel]="item.data.isActive" [nzControl]="true" nzCheckedChildren="Active"
+      nzUnCheckedChildren="InActive" (click)="onChangeActiveHotel(item.data)"
       [nzLoading]="item.data.loadingActiveHotel"></nz-switch>
   </div>
 
@@ -103,29 +104,31 @@
 
         <!-- Nút thêm -->
         <button nz-button nzType="primary" [disabled]="!hotel.data.isActive" class="ant-btn-primary" type="button"
-          (click)="showModalAddRoom(hotel.data.id)" >
+          (click)="showModalAddRoom(hotel.data.id)">
           <em class="fas fa-plus fa-fw" style="margin-right: 4px;"></em> Thêm phòng</button>
       </div>
     </div>
     <!-- <dxi-column caption="Địa chỉ" [width]="200">{{hotel.data.name}}</dxi-column> -->
     <dx-data-grid id="gridDetail" [dataSource]="hotel.data.roomHotels" [showBorders]="true">
-      <dxi-column cssClass="text-center" caption="Action" [visible]="true" [fixed]="true" [width]="100" fixedPosition="right"
-        cellTemplate="cellBtnDetailTemplate"></dxi-column>
+      <dxi-column cssClass="text-center" caption="Action" [visible]="true" [fixed]="true" [width]="100"
+        fixedPosition="right" cellTemplate="cellBtnDetailTemplate"></dxi-column>
       <dxi-column cssClass="text-center" caption="STT" [width]="55" dataField="stt" [fixed]="true"
         [allowFiltering]="false" [allowSorting]="false"></dxi-column>
       <dxi-column caption="Loại phòng" [width]="200" dataField="name" dataType="string"></dxi-column>
+      <dxi-column  cssClass="text-center" caption="Số người" [width]="100" dataField="numberOfPeople"></dxi-column>
+      <dxi-column  cssClass="text-center" caption="Diện tích phòng" [width]="150" dataField="roomArea" [format]="areaUtils.areaNumberFormat"></dxi-column>
       <dxi-column caption="Mô tả phòng" [width]="400" dataField="description" dataType="string"
         [visible]="false"></dxi-column>
       <!--<dxi-column caption="Phòng số" cssClass="text-left" [width]="200" dataField="roomNumber"
       ></dxi-column>-->
-      <dxi-column caption="Giá phòng" cssClass="text-left" [width]="200" dataField="price"
+      <dxi-column caption="Giá phòng" cssClass="text-left" [width]="150" dataField="price"
         cellTemplate="cellPrice"></dxi-column>
-      <dxi-column caption="Giường phụ" cssClass="text-left" [width]="200" dataField="extraBed"></dxi-column>
-      <dxi-column caption="Giá giường phụ" cssClass="text-left" [width]="200" dataField="extraBedPrice"
+      <dxi-column caption="Giường phụ" cssClass="text-left" [width]="150" dataField="extraBed"></dxi-column>
+      <dxi-column caption="Giá giường phụ" cssClass="text-left" [width]="150" dataField="extraBedPrice"
         cellTemplate="cellExtraBedPrice"></dxi-column>
-      <dxi-column caption="Phụ phí người lớn" cssClass="text-left" [width]="200" dataField="adultSurcharge"
+      <dxi-column caption="Phụ phí người lớn" cssClass="text-left" [width]="150" dataField="adultSurcharge"
         cellTemplate="cellAdultSurcharge"></dxi-column>
-      <dxi-column caption="Phụ phí trẻ em" cssClass="text-left" [width]="200" dataField="childSurcharge"
+      <dxi-column caption="Phụ phí trẻ em" cssClass="text-left" [width]="150" dataField="childSurcharge"
         cellTemplate="cellChildSurcharge"></dxi-column>
       <dxi-column caption="Hình ảnh phòng" cssClass="text-center" [width]="200" dataField="roomFiles"
         cellTemplate="cellImages"></dxi-column>
@@ -154,16 +157,16 @@
       </div>
       <div *dxTemplate="let isAvaliableRoomOBJ of 'cellIsRoom'">
         <!-- {{isAvaliable.value}} -->
-        <nz-switch [disabled]="!hotel.data.isActive"  [(ngModel)]="isAvaliableRoomOBJ.value"
+        <nz-switch [disabled]="!hotel.data.isActive" [(ngModel)]="isAvaliableRoomOBJ.value"
           (click)="clickSwitchIsAvaliable(isAvaliableRoomOBJ.value, isAvaliableRoomOBJ.data.id)"></nz-switch>
       </div>
       <div *dxTemplate="let room of 'cellBtnDetailTemplate'">
-        <button [disabled]="!hotel.data.isActive" title="Xóa phòng" nz-button nzSize="small" nzType="default" class="btn-right button-update ant-btn-red"
-          (click)="showConfirmDeleteRoom(room.data.id)">
+        <button [disabled]="!hotel.data.isActive" title="Xóa phòng" nz-button nzSize="small" nzType="default"
+          class="btn-right button-update ant-btn-red" (click)="showConfirmDeleteRoom(room.data.id)">
           <span class="fa fa-times fa-fw"></span>
         </button>
-        <button [disabled]="!hotel.data.isActive" title="Chỉnh sửa thông tin phòng" nz-button nzSize="small" nzType="default"
-          class="btn-right button-update" (click)="showModalUpdateRoom(hotel.data.id, room.data)">
+        <button [disabled]="!hotel.data.isActive" title="Chỉnh sửa thông tin phòng" nz-button nzSize="small"
+          nzType="default" class="btn-right button-update" (click)="showModalUpdateRoom(hotel.data.id, room.data)">
           <span class="fa fa-edit fa-fw"></span>
         </button>
       </div>
@@ -337,6 +340,23 @@
                 [ngClass]="{ 'is-invalid': submitted && formControlRoom.name.errors?.required }" />
             </div>
           </div>
+
+          <div class="input-wrap" nz-row>
+            <label class="title-detail" nz-col [nzSpan]="4">Số khách</label>
+            <div nz-col [nzSpan]="19">
+              <!-- [ngClass]="{ 'is-invalid': submitted && formControlRoom.numberOfPeople.errors?.required }"  -->
+              <dx-number-box formControlName="numberOfPeople" format="#,##0"></dx-number-box>
+            </div>
+          </div>
+
+
+          <div class="input-wrap" nz-row>
+            <label class="title-detail" nz-col [nzSpan]="4">Diện tích phòng</label>
+            <div nz-col [nzSpan]="19">
+              <!-- [ngClass]="{ 'is-invalid': submitted && formControlRoom.roomArea.errors?.required }"  -->
+              <dx-number-box formControlName="roomArea" format="#,##0 m2"></dx-number-box>
+            </div>
+          </div>
           <!-- <div class="input-wrap" nz-row>
             <label class="title-detail" nz-col [nzSpan]="4">Mô tả</label>
             <div nz-col [nzSpan]="19">
@@ -362,7 +382,7 @@
           <div class="input-wrap" nz-row>
             <label class="title-detail" nz-col [nzSpan]="4">Giường phụ</label>
             <div nz-col [nzSpan]="19">
-              <input nz-input formControlName="extraBed" />
+              <dx-number-box formControlName="extraBed" format="#,##0"></dx-number-box>
             </div>
           </div>
 

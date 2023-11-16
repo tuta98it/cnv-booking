@@ -31,6 +31,8 @@ import { StringUtils } from 'src/app/shared/utils/string-utils.class';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 import { DataService } from 'src/app/service/data.service';
 import { Router } from '@angular/router';
+import { PhoneUtils } from 'src/app/shared/utils/phone-utils.class';
+import { AreaUtils } from 'src/app/shared/utils/area-utils.class copy';
 
 @Component({
   selector: 'app-hotel',
@@ -122,6 +124,8 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
     private nzImageService: NzImageService,
     private msg: NzMessageService,
     private dataService: DataService,
+    public phoneUtils: PhoneUtils,
+    public areaUtils: AreaUtils,
   ) {
     super('id');
     this.formAddHotel = this.fb.group({
@@ -145,6 +149,8 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
       id: [null],
       hotelId: [null],
       name: [null, [Validators.required]],
+      numberOfPeople: [null],
+      roomArea: [null],
       description: [null],
       roomNumber: [0],
       floorNumber: [0],
@@ -589,6 +595,8 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
     this.formAddRoom.patchValue({
       id: 0,
       name: '',
+      numberOfPeople: '',
+      roomArea: '',
       description: '',
       hotelId: idHotel,
       hotelName: '',
@@ -620,6 +628,8 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
       id: this.item.id,
       hotelId: idHotel,
       name: this.item.name,
+      numberOfPeople: this.item.numberOfPeople,
+      roomArea: this.item.roomArea,
       description: this.item.description,
       roomNumber: 0,
       floorNumber: 0,
@@ -878,6 +888,8 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
           id: this.item.id,
           hotelId: this.item.hotelId,
           name: this.item.name,
+          numberOfPeople: this.item.numberOfPeople,
+          roomArea: this.item.roomArea,
           description: this.item.description,
           roomNumber: 0,
           floorNumber: 0,
@@ -901,7 +913,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
 
   onRowUpdatingPriceDetail(event: any) {
     console.log('onRowUpdatingPriceDetail: ', event);
-    if(!this.updated){
+    if (!this.updated) {
       return;
     }
     let oldData = event.oldData;
@@ -944,7 +956,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
 
   onRowRemovingdPriceDetail(event: any) {
     console.log('onRowRemovingdPriceDetail: ', event);
-    if(!this.updated){
+    if (!this.updated) {
       return;
     }
     let idRecordPriceDetail = event.data.id;
