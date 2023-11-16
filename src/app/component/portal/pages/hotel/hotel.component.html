@@ -44,7 +44,8 @@
   <dxi-column caption="Mã khách sạn" [width]="200" dataField="code" [fixed]="true"></dxi-column>
   <dxi-column caption="Địa chỉ" [width]="200" dataField="address"></dxi-column>
   <dxi-column caption="Tỉnh thành" [width]="200" dataField="province.name"></dxi-column>
-  <dxi-column caption="Số điện thoại" [width]="200" dataField="phoneNo" [format]="phoneUtils.phoneNumberFormat"></dxi-column>
+  <dxi-column caption="Số điện thoại" [width]="200" dataField="phoneNo"
+    [format]="phoneUtils.phoneNumberFormat"></dxi-column>
   <dxi-column caption="Email" [width]="300" dataField="contactEmail"></dxi-column>
   <dxi-column caption="Website" [width]="200" dataField="websiteUrl" cellTemplate="cellWebsite"></dxi-column>
   <dxi-column caption="Facebook" [width]="200" dataField="facebook" cellTemplate="cellFacebook"
@@ -115,8 +116,9 @@
       <dxi-column cssClass="text-center" caption="STT" [width]="55" dataField="stt" [fixed]="true"
         [allowFiltering]="false" [allowSorting]="false"></dxi-column>
       <dxi-column caption="Loại phòng" [width]="200" dataField="name" dataType="string"></dxi-column>
-      <dxi-column  cssClass="text-center" caption="Số người" [width]="100" dataField="numberOfPeople"></dxi-column>
-      <dxi-column  cssClass="text-center" caption="Diện tích phòng" [width]="150" dataField="roomArea" [format]="areaUtils.areaNumberFormat"></dxi-column>
+      <dxi-column cssClass="text-center" caption="Số người" [width]="100" dataField="numberOfPeople"></dxi-column>
+      <dxi-column cssClass="text-center" caption="Diện tích phòng" [width]="150" dataField="roomArea"
+        [format]="areaUtils.areaNumberFormat"></dxi-column>
       <dxi-column caption="Mô tả phòng" [width]="400" dataField="description" dataType="string"
         [visible]="false"></dxi-column>
       <!--<dxi-column caption="Phòng số" cssClass="text-left" [width]="200" dataField="roomNumber"
@@ -321,7 +323,7 @@
 </form>
 
 <form [formGroup]="formAddRoom" (ngSubmit)="saveRoom()">
-  <nz-modal nzWidth="2000px" [(nzVisible)]="isVisibleAddRoom" nzClosable="false" [nzTitle]="titleRoom"
+  <nz-modal nzWidth="1536px" [(nzVisible)]="isVisibleAddRoom" nzClosable="false" [nzTitle]="titleRoom"
     [nzContent]="contelRoom" nzMaskClosable="false">
     <ng-template #titleRoom>
       {{titleFormRoom}}
@@ -332,99 +334,88 @@
 
     <ng-template nzModalContent #contelRoom>
       <div style="display: flex; justify-content: space-between;">
-        <div style="width: 39%;">
+        <div style="width: 26%;">
           <div class="input-wrap" nz-row>
-            <label class="title-detail" nz-col [nzSpan]="4">Loại phòng<em class="fas fa-asterisk required"></em></label>
-            <div nz-col [nzSpan]="19">
+            <label class="title-detail" nz-col [nzSpan]="8">Loại phòng<em class="fas fa-asterisk required"></em></label>
+            <div nz-col [nzSpan]="16">
               <input nz-input formControlName="name"
                 [ngClass]="{ 'is-invalid': submitted && formControlRoom.name.errors?.required }" />
             </div>
           </div>
-
           <div class="input-wrap" nz-row>
-            <label class="title-detail" nz-col [nzSpan]="4">Số khách</label>
-            <div nz-col [nzSpan]="19">
+            <label class="title-detail" nz-col [nzSpan]="8">Số khách</label>
+            <div nz-col [nzSpan]="16">
               <!-- [ngClass]="{ 'is-invalid': submitted && formControlRoom.numberOfPeople.errors?.required }"  -->
               <dx-number-box formControlName="numberOfPeople" format="#,##0"></dx-number-box>
             </div>
           </div>
-
-
           <div class="input-wrap" nz-row>
-            <label class="title-detail" nz-col [nzSpan]="4">Diện tích phòng</label>
-            <div nz-col [nzSpan]="19">
+            <label class="title-detail" nz-col [nzSpan]="8">Diện tích phòng</label>
+            <div nz-col [nzSpan]="16">
               <!-- [ngClass]="{ 'is-invalid': submitted && formControlRoom.roomArea.errors?.required }"  -->
               <dx-number-box formControlName="roomArea" format="#,##0 m2"></dx-number-box>
             </div>
           </div>
           <!-- <div class="input-wrap" nz-row>
-            <label class="title-detail" nz-col [nzSpan]="4">Mô tả</label>
-            <div nz-col [nzSpan]="19">
+            <label class="title-detail" nz-col [nzSpan]="8">Mô tả</label>
+            <div nz-col [nzSpan]="16">
               <textarea nz-input formControlName="description" placeholder="Mô tả phòng khách sạn ..."
                 [nzAutosize]="{ minRows: 6, maxRows: 8 }"></textarea>
             </div>
           </div> -->
-
           <!--<div class="input-wrap" nz-row>
-            <label class="title-detail" nz-col [nzSpan]="4">Phòng số<em class="fas fa-asterisk required"></em></label>
-            <div nz-col [nzSpan]="19">
+            <label class="title-detail" nz-col [nzSpan]="8">Phòng số<em class="fas fa-asterisk required"></em></label>
+            <div nz-col [nzSpan]="16">
               <input nz-input formControlName="roomNumber"
                 [ngClass]="{ 'is-invalid': submitted && formControlRoom.roomNumber.errors?.required }" />
             </div>
           </div>
           <div class="input-wrap" nz-row>
-            <label class="title-detail" nz-col [nzSpan]="4">Tầng số<em class="fas fa-asterisk required"></em></label>
-            <div nz-col [nzSpan]="19">
+            <label class="title-detail" nz-col [nzSpan]="8">Tầng số<em class="fas fa-asterisk required"></em></label>
+            <div nz-col [nzSpan]="16">
               <input nz-input formControlName="floorNumber"
                 [ngClass]="{ 'is-invalid': submitted && formControlRoom.floorNumber.errors?.required }" />
             </div>
           </div>-->
           <div class="input-wrap" nz-row>
-            <label class="title-detail" nz-col [nzSpan]="4">Giường phụ</label>
-            <div nz-col [nzSpan]="19">
+            <label class="title-detail" nz-col [nzSpan]="8">Giường phụ</label>
+            <div nz-col [nzSpan]="16">
               <dx-number-box formControlName="extraBed" format="#,##0"></dx-number-box>
             </div>
           </div>
-
-
           <div class="input-wrap" nz-row>
-            <label class="title-detail" nz-col [nzSpan]="4">Giá giường phụ</label>
-            <div nz-col [nzSpan]="19">
+            <label class="title-detail" nz-col [nzSpan]="8">Giá giường phụ</label>
+            <div nz-col [nzSpan]="16">
               <dx-number-box formControlName="extraBedPrice" format="#,##0"></dx-number-box>
             </div>
           </div>
-
-
           <div class="input-wrap" nz-row>
-            <label class="title-detail" nz-col [nzSpan]="4">Phụ phí người lớn</label>
-            <div nz-col [nzSpan]="19">
+            <label class="title-detail" nz-col [nzSpan]="8">Phụ phí người lớn</label>
+            <div nz-col [nzSpan]="16">
               <dx-number-box formControlName="adultSurcharge" format="#,##0"></dx-number-box>
             </div>
           </div>
-
-
           <div class="input-wrap" nz-row>
-            <label class="title-detail" nz-col [nzSpan]="4">Phụ phí trẻ em</label>
-            <div nz-col [nzSpan]="19">
+            <label class="title-detail" nz-col [nzSpan]="8">Phụ phí trẻ em</label>
+            <div nz-col [nzSpan]="16">
               <dx-number-box formControlName="childSurcharge" format="#,##0"></dx-number-box>
             </div>
           </div>
-
           <div class="input-wrap" nz-row>
-            <label class="title-detail" nz-col [nzSpan]="4">Tiện ích phòng:<em
+            <label class="title-detail" nz-col [nzSpan]="8">Tiện ích phòng:<em
                 class="fas fa-asterisk required"></em></label>
-            <div nz-col [nzSpan]="19">
+            <div nz-col [nzSpan]="16">
               <nz-select nzMode="multiple" nzPlaceHolder="--Tiện ích phòng--" formControlName="utilitieIds">
                 <nz-option *ngFor="let room of listUtilityRoom" nzLabel="{{room.name}}" [nzValue]="room.id"></nz-option>
               </nz-select>
             </div>
           </div>
         </div>
-        <div style="width: 48%;  max-height: 32rem; overflow: auto;">
+        <div style="width: 72%;  max-height: 32rem; overflow: auto;">
           <div class="input-wrap" nz-row>
-            <label class="title-detail" nz-col [nzSpan]="5">Giá phòng mặc định<em
+            <label class="title-detail" nz-col [nzSpan]="4">Giá phòng mặc định<em
                 class="fas fa-asterisk required"></em></label>
-            <div nz-col [nzSpan]="18">
+            <div nz-col [nzSpan]="20">
               <dx-number-box formControlName="price"
                 [ngClass]="{ 'is-invalid': submitted && formControlRoom.price.errors?.required }"
                 format="#,##0"></dx-number-box>
@@ -434,7 +425,6 @@
             </div>
           </div>
           <div>
-
             <dx-data-grid id="gridContainerPriceRoomDetail" [dataSource]="formAddRoom.value.prices" keyExpr="id"
               [allowColumnReordering]="true" [showBorders]="true" (onEditingStart)="logEvent('EditingStart')"
               (onInitNewRow)="onInitNewRowPriceDetail($event)"
@@ -457,19 +447,19 @@
               <dxi-column cssClass="text-center" caption="Room ID" [width]="55" dataField="roomId" [fixed]="true"
                 [allowFiltering]="false" [allowSorting]="false" [visible]="false"></dxi-column>
 
-              <dxi-column caption="Tiêu đề" dataField="title" [width]="200" dataType="string" [fixed]="true">
+              <dxi-column caption="Tiêu đề" dataField="title" [width]="250" dataType="string" [fixed]="true">
               </dxi-column>
 
-              <dxi-column caption="Giá phòng" dataField="price" [width]="125" [format]="formatCurrencyVND"
+              <dxi-column caption="Giá phòng" dataField="price" [width]="150" [format]="formatCurrencyVND"
                 alignment="right"> </dxi-column>
 
-              <dxi-column caption="Thời điểm bắt đầu" dataField="fromDate" [width]="150" dataType="date"
+              <dxi-column caption="Thời điểm bắt đầu" dataField="fromDate" [width]="200" dataType="date"
                 format="dd/MM/yyyy"> </dxi-column>
 
-              <dxi-column caption="Thời điểm kết thúc" dataField="toDate" [width]="150" dataType="date"
+              <dxi-column caption="Thời điểm kết thúc" dataField="toDate" [width]="200" dataType="date"
                 format="dd/MM/yyyy"> </dxi-column>
 
-              <dxi-column caption="Trạng thái" dataField="isUse" [width]="125">
+              <dxi-column caption="Trạng thái" dataField="isUse" [minWidth]="150">
                 <dxo-lookup [dataSource]="statusPriceDetail" displayExpr="name" valueExpr="value">
                 </dxo-lookup>
               </dxi-column>
@@ -500,11 +490,13 @@
             </dx-data-grid>
           </div>
         </div>
-        <div style="width: 15%;  max-height: 32rem; overflow: auto;">
+      </div>
+      <div>
+        <div style="width: 100%;  max-height: 32rem; overflow: auto;">
           <div class="input-wrap" style="justify-content: end;" nz-row>
-            <label class="title-detail" nz-col [nzSpan]="8">Ảnh phòng<em class="fas fa-asterisk required"></em></label>
-            <div nz-col [nzSpan]="16">
-              <nz-upload class="upload-list-inline" nzListType="picture" [nzMultiple]="true" [nzAction]="uploadUrl"
+            <label class="title-detail" nz-col [nzSpan]="2">Ảnh phòng<em class="fas fa-asterisk required"></em></label>
+            <div nz-col [nzSpan]="22">
+              <nz-upload class="upload-list-inline" style="padding: 5px;" nzListType="picture" [nzMultiple]="true" [nzAction]="uploadUrl"
                 nzName="postedFile" [nzHeaders]="uploadHeader" (nzChange)="handleChangeImages($event, 'room')"
                 [nzRemove]="handleRemoveImageRoom" [nzFileList]="fileList">
                 <button nz-button>
