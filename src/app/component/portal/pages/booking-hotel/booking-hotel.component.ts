@@ -52,6 +52,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   isVisibleAddRoom: boolean;
   isVisibleUpdate: boolean;
   isVisiblePassword: boolean;
+  loadingSystemStatus: boolean = false;
   item: any;
   loading: boolean;
   total = 0;
@@ -223,7 +224,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
           let stt = 0;
           this.datas.forEach((en: any) => {
             en.stt = ++stt;
-            en.bookingStatusText =  (new BookingHotelStatusPipe()).transform(en.bookingStatus);
+            en.bookingStatusText = (new BookingHotelStatusPipe()).transform(en.bookingStatus);
             let sttx = 0;
             en.bookingHotelDetails.forEach(element => {
               en.isOnSendEmailLoading = false;
@@ -752,7 +753,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
     this.formAddRoom.reset();
   }
 
-  handleCancelConfirmBooking(){
+  handleCancelConfirmBooking() {
     this.isVisibleConfirmBooking = false;
     this.resetConfirmBookingHotel();
   }
@@ -1284,4 +1285,37 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   handleConfirmAndSendBookingHotel() {
     this.handleOkConfirmBookingHotel().then(() => this.onConfirmSendEmailBookingHotel(this.item));
   }
+
+  onChangeStatusBookingHotelExport(hotelFlightExport: any) {
+    if (!hotelFlightExport.systemCancelled) {
+      this.modalService.confirm({
+        nzTitle: `Bạn có chắc KHÔNG tính chi phí khách sạn của khách hàng <strong>${hotelFlightExport.contactName? hotelFlightExport.contactName : ''}</strong> vào công nợ`,
+        nzContent: `<b style="color: red;">Việc KHÔNG tính chi phí khách sạn của khách hàng <strong>${hotelFlightExport.contactName? hotelFlightExport.contactName : ''} vào công nợ sẽ không thể hoàn tác. Ấn đồng ý để tiếp tục</b>`,
+        nzOkDanger: true,
+        nzOkText: 'Đồng ý',
+        nzCancelText: 'Không',
+        nzOnOk: () => this.changeSystemStatusBookingHotelExport(hotelFlightExport.id),
+      });
+    }
+  }
+
+
+  changeSystemStatusBookingHotelExport(idBookingTicketFlightExp: any) {
+    this.generalService.markCanceledSystemBookingHotelExport(idBookingTicketFlightExp).subscribe({
+      next: (res) => {
+        if (res.ret && res.ret[0].code !== 0) {
+          this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
+        } else {
+          this.notificationService.showNotification(Constant.SUCCESS, 'Thiết lập không tính công nợ thành công');
+        }
+      },
+      error: (error) => {
+        this.notificationService.showNotification(Constant.ERROR, 'Thiết lập không tính công nợ không thành công');
+      },
+      complete: () => {
+        this.getListData();
+      }
+    });
+  }
+
 }

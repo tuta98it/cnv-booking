@@ -46,12 +46,16 @@
   <dxi-column caption="Xuất vé" cssClass="text-center" cellTemplate="cellBillet"></dxi-column>
 
   <div *dxTemplate="let ticketFlightExport of 'cellSystemCancelled'">
-    <nz-switch [ngModel]="!ticketFlightExport.data.systemCancelled" [nzControl]="true" nzCheckedChildren="Tính công nợ" nzUnCheckedChildren="Không tính công nợ" [nzLoading]="loadingSystemStatus" (click)="onChangeStatusSystemTicketExport(ticketFlightExport.data)" [nzDisabled]="ticketFlightExport.data.systemCancelled"></nz-switch>
+    <nz-switch [ngModel]="!ticketFlightExport.data.systemCancelled" [nzControl]="true" nzCheckedChildren="Tính công nợ"
+      nzUnCheckedChildren="Không tính công nợ" [nzLoading]="loadingSystemStatus"
+      (click)="onChangeStatusSystemTicketExport(ticketFlightExport.data)"
+      [nzDisabled]="ticketFlightExport.data.systemCancelled"></nz-switch>
   </div>
 
   <div *dxTemplate="let item of 'cellBillet'">
     <div *ngIf="item.data.status === 'OK'" (click)="onOpenPopupTicketDetail(item.data)">
-      <a nz-button nzType="link" nzBlock>Xem vé <span *ngIf="item.data.isLoadingViewTicket" nz-icon nzType="loading" nzTheme="outline"></span></a>
+      <a nz-button nzType="link" nzBlock>Xem vé <span *ngIf="item.data.isLoadingViewTicket" nz-icon nzType="loading"
+          nzTheme="outline"></span></a>
     </div>
 
     <div *ngIf="item.data.status === 'FAIL'">
@@ -89,7 +93,8 @@
               <label for="">Mã base: <strong>{{ticket.approvalCode}}</strong></label>
             </div>
             <div class="ticket-status">
-              <label for="">Tình trạng: <strong>{{ticket.status === 'OK'? 'Đã xuất vé' : 'Lỗi xuất vé'}}</strong></label>
+              <label for="">Tình trạng: <strong>{{ticket.status === 'OK'? 'Đã xuất vé' : 'Lỗi xuất
+                  vé'}}</strong></label>
             </div>
           </div>
         </div>
@@ -107,15 +112,16 @@
                   <strong>{{bookingPassenger.lastName}} {{bookingPassenger.firstName}}</strong></label>
                 <label *ngIf="bookingPassenger.typeCode === 'CHD'">Hành khách: {{bookingPassenger.gender? 'Bé trai' :
                   'Bé gái'}} <strong>{{bookingPassenger.lastName}} {{bookingPassenger.firstName}}</strong></label>
-                <label *ngIf="bookingPassenger.typeCode === 'INF'">Hành khách: {{bookingPassenger.gender? 'Trẻ sơ sinh trai' : 'Trẻ sơ sinh gái'}} <strong>{{bookingPassenger.lastName}}
+                <label *ngIf="bookingPassenger.typeCode === 'INF'">Hành khách: {{bookingPassenger.gender? 'Trẻ sơ sinh
+                  trai' : 'Trẻ sơ sinh gái'}} <strong>{{bookingPassenger.lastName}}
                     {{bookingPassenger.firstName}}</strong></label>
               </div>
               <div class="passenger-ticket-info-content">
                 <div>
                   <strong>Chi tiết vé</strong>
                 </div>
-                <div >
-                  <table >
+                <div>
+                  <table>
                     <tr>
                       <th>Loại vé</th>
                       <th>Số lượng</th>
@@ -129,23 +135,26 @@
                       <td *ngIf="bookingFlight.adt > 0">{{bookingFlight.adt}}</td>
                       <td *ngIf="bookingFlight.adt > 0">{{bookingFlight.startPoint}} - {{bookingFlight.endPoint}}</td>
                       <td *ngIf="bookingFlight.adt > 0">{{bookingFlight.priceAdult | currencyFormat }} VND</td>
-                      <td *ngIf="bookingFlight.adt > 0">{{bookingFlight.taxAdult + bookingFlight.feeAdult | currencyFormat}} VND</td>
+                      <td *ngIf="bookingFlight.adt > 0">{{bookingFlight.taxAdult + bookingFlight.feeAdult |
+                        currencyFormat}} VND</td>
                       <td *ngIf="bookingFlight.adt > 0">{{bookingFlight.totalPrice | currencyFormat}} VND</td>
 
                       <td *ngIf="bookingFlight.chd > 0">Trẻ em 2 - 11 tuổi</td>
                       <td *ngIf="bookingFlight.chd > 0">{{bookingFlight.chd}}</td>
                       <td *ngIf="bookingFlight.chd > 0">{{bookingFlight.startPoint}} - {{bookingFlight.endPoint}}</td>
                       <td *ngIf="bookingFlight.chd > 0">{{bookingFlight.priceChild | currencyFormat }} VND</td>
-                      <td *ngIf="bookingFlight.chd > 0">{{bookingFlight.taxChild + bookingFlight.feeChild | currencyFormat}} VND</td>
+                      <td *ngIf="bookingFlight.chd > 0">{{bookingFlight.taxChild + bookingFlight.feeChild |
+                        currencyFormat}} VND</td>
                       <td *ngIf="bookingFlight.chd > 0">{{bookingFlight.totalPrice | currencyFormat}} VND</td>
 
 
-                      <td  *ngIf="bookingFlight.inf > 0">Trẻ sơ sinh</td>
-                      <td  *ngIf="bookingFlight.inf > 0">{{bookingFlight.inf}}</td>
-                      <td   *ngIf="bookingFlight.inf > 0">{{bookingFlight.startPoint}} - {{bookingFlight.endPoint}}</td>
-                      <td  *ngIf="bookingFlight.inf > 0">{{bookingFlight.priceInfant | currencyFormat }} VND</td>
-                      <td  *ngIf="bookingFlight.inf > 0">{{bookingFlight.taxInfant + bookingFlight.feeInfant | currencyFormat}} VND</td>
-                      <td  *ngIf="bookingFlight.inf > 0">{{bookingFlight.totalPrice | currencyFormat}} VND</td>
+                      <td *ngIf="bookingFlight.inf > 0">Trẻ sơ sinh</td>
+                      <td *ngIf="bookingFlight.inf > 0">{{bookingFlight.inf}}</td>
+                      <td *ngIf="bookingFlight.inf > 0">{{bookingFlight.startPoint}} - {{bookingFlight.endPoint}}</td>
+                      <td *ngIf="bookingFlight.inf > 0">{{bookingFlight.priceInfant | currencyFormat }} VND</td>
+                      <td *ngIf="bookingFlight.inf > 0">{{bookingFlight.taxInfant + bookingFlight.feeInfant |
+                        currencyFormat}} VND</td>
+                      <td *ngIf="bookingFlight.inf > 0">{{bookingFlight.totalPrice | currencyFormat}} VND</td>
                     </tr>
                     <tr>
                       <td></td>
@@ -170,7 +179,8 @@
               </div>
 
               <div class="flight-info-content">
-                <div class="flight-schedule"  *ngFor="let bookingFlight of bookingTicketDetail.bookingFlights; let i = index;">
+                <div class="flight-schedule"
+                  *ngFor="let bookingFlight of bookingTicketDetail.bookingFlights; let i = index;">
                   <div class="flight-schedule-title">
                     <label>
                       Hành trình : <strong>{{toNameAirportByCode(bookingFlight.startPoint)}} -
@@ -178,7 +188,8 @@
                     </label>
                   </div>
                   <div>
-                    <label for="">Ngày bay: <strong>{{bookingFlight.startTime | date:"HH:MM dd-MM-yyyy"}}</strong></label>
+                    <label for="">Ngày bay: <strong>{{bookingFlight.startTime | date:"HH:MM
+                        dd-MM-yyyy"}}</strong></label>
                   </div>
                   <div>
                     <label for="">Ngày đến:</label> <strong>{{bookingFlight.endTime | date:"HH:MM dd-MM-yyyy"}}</strong>

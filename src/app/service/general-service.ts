@@ -661,6 +661,10 @@ export class GeneralService extends BaseService {
     return this.get(`/api${UrlConstant.BOOKING_HOTEL}/GetBookingHotelById/${idBoooking}`);
   }
 
+  markCanceledSystemBookingHotelExport(idBookingHotel: any): Observable<any> {
+    return this.post(`/api${UrlConstant.BOOKING_HOTEL}/MarkCanceled/${idBookingHotel}`, idBookingHotel);
+  }
+
   // Email
   // /api/Email/SendEmailConfirmedBookingHotel
   sendEmailConfirmedBookingHotel(payload: any): Observable<any> {
@@ -683,6 +687,9 @@ export class GeneralService extends BaseService {
   deleteNewsByID(idNews: any): Observable<any> {
     return this.delete(`/api${UrlConstant.NEWS}/${idNews}`, idNews);
   }
+
+
+
 
   // Utility
   private getListUtilityByType(utilityType: any): Observable<any> {

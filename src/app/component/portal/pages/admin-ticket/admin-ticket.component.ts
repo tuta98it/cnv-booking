@@ -199,7 +199,6 @@ export class AdminTicketComponent extends TableSelectionAbstract implements OnIn
         nzOnOk: () => this.changeSystemStatusTicketExport(ticketFlightExp.bookingId),
       });
     }
-
   }
 
   changeSystemStatusTicketExport(idBookingTicketFlightExp: any) {

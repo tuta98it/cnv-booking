@@ -21,16 +21,21 @@
   <dxo-master-detail [enabled]="true" template="detailBookingHotel"></dxo-master-detail>
 
 
-  <dxi-column cssClass="text-center" caption="STT" [width]="55" dataField="stt" [fixed]="true" [allowFiltering]="false"   [allowSorting]="false"></dxi-column>
+  <dxi-column cssClass="text-center" caption="STT" [width]="55" dataField="stt" [fixed]="true" [allowFiltering]="false"
+    [allowSorting]="false"></dxi-column>
   <dxi-column cssClass="text-center" caption="Action" [fixed]="true" [width]="175" fixedPosition="right"
-  cellTemplate="cellBtnTemplate"></dxi-column>
-  <dxi-column caption="Trạng thái" cssClass="text-center" [width]="200" dataField="bookingStatusText" fixedPosition="left" cellTemplate="cellBookingStatus"></dxi-column>
+    cellTemplate="cellBtnTemplate"></dxi-column>
+  <dxi-column caption="Trạng thái" cssClass="text-center" [width]="200" dataField="bookingStatusText"
+    fixedPosition="left" cellTemplate="cellBookingStatus"></dxi-column>
   <dxi-column caption="Họ tên người đặt" dataField="contactName" fixedPosition="left"></dxi-column>
-  <dxi-column caption="Số điện thoại" [width]="200" dataField="contactPhone" [format]="phoneUtils.phoneNumberFormat"></dxi-column>
+  <dxi-column caption="Số điện thoại" [width]="200" dataField="contactPhone"
+    [format]="phoneUtils.phoneNumberFormat"></dxi-column>
   <dxi-column caption="Email" [width]="300" dataField="contactEmail"></dxi-column>
   <dxi-column caption="Mã đặt KS" [width]="200" dataField="bookingCode"></dxi-column>
   <dxi-column caption="Ngày đặt" [width]="200" dataField="dateCreated" dataType="date"
     format="HH:mm dd/MM/yy"></dxi-column>
+  <dxi-column caption="Trạng thái hệ thống" cssClass="text-center" [width]="200"
+    cellTemplate="cellSystemCancelled"></dxi-column>
 
   <div *dxTemplate="let bookingStatus of 'cellBookingStatus'">
     <div style="
@@ -39,22 +44,28 @@
     flex-direction: row;
     justify-content: start;
     margin-left: 1rem">
-      <span *ngIf="bookingStatus.data.bookingStatus === 0" nz-icon nzType="issues-close" style="color: #000" nzTheme="outline"></span>
-      <span *ngIf="bookingStatus.data.bookingStatus === 1" nz-icon nzType="check-circle" style="color: #52c41a" nzTheme="outline"></span>
-      <span *ngIf="bookingStatus.data.bookingStatus === 2" nz-icon nzType="close-circle" style="color: #dc3545" nzTheme="outline"></span>
-      <div style="margin-left: 0.25rem;" [style.color]="(bookingStatus.data.bookingStatus === 0) ? '#000': ((bookingStatus.data.bookingStatus === 1) ? '#52c41a': (bookingStatus.data.bookingStatus === 2) ? '#dc3545': '') ">
+      <span *ngIf="bookingStatus.data.bookingStatus === 0" nz-icon nzType="issues-close" style="color: #000"
+        nzTheme="outline"></span>
+      <span *ngIf="bookingStatus.data.bookingStatus === 1" nz-icon nzType="check-circle" style="color: #52c41a"
+        nzTheme="outline"></span>
+      <span *ngIf="bookingStatus.data.bookingStatus === 2" nz-icon nzType="close-circle" style="color: #dc3545"
+        nzTheme="outline"></span>
+      <div style="margin-left: 0.25rem;"
+        [style.color]="(bookingStatus.data.bookingStatus === 0) ? '#000': ((bookingStatus.data.bookingStatus === 1) ? '#52c41a': (bookingStatus.data.bookingStatus === 2) ? '#dc3545': '') ">
         {{bookingStatus.value}}
       </div>
     </div>
   </div>
   <div *dxTemplate="let item of 'cellBtnTemplate'">
-    <button *ngIf="item.data.bookingStatus !== 2"  title="Từ chối yêu cầu" nz-button nzSize="small" nzType="default"
+    <button *ngIf="item.data.bookingStatus !== 2" title="Từ chối yêu cầu" nz-button nzSize="small" nzType="default"
       class="btn-right button-update ant-btn-red" (click)="onRefuseBookingHotel(item.data)">
       <span class="fa fa-times fa-fw"></span>
     </button>
 
-    <button *ngIf="item.data.bookingStatus === 0 || item.data.bookingStatus === 1" [title]="(item.data.bookingStatus === 0) ?  'Xác nhận thông tin đặt khách sạn' : 'Cập nhật thông tin đặt khách sạn'" nz-button nzSize="small" nzType="default"
-      class="btn-right button-update" (click)="onConfirmBookingHotel(item.data)">
+    <button *ngIf="item.data.bookingStatus === 0 || item.data.bookingStatus === 1"
+      [title]="(item.data.bookingStatus === 0) ?  'Xác nhận thông tin đặt khách sạn' : 'Cập nhật thông tin đặt khách sạn'"
+      nz-button nzSize="small" nzType="default" class="btn-right button-update"
+      (click)="onConfirmBookingHotel(item.data)">
       <span class='{{(item.data.bookingStatus === 0) ? "fa fa-check fa-fw" : "fa fa-edit fa-fw"}}'></span>
     </button>
 
@@ -123,6 +134,12 @@
         </dxi-total-item>
       </dxo-summary>
     </dx-data-grid>
+  </div>
+  <div *dxTemplate="let hotelFlightExport of 'cellSystemCancelled'">
+    <nz-switch [ngModel]="!hotelFlightExport.data.systemCancelled" [nzControl]="true" nzCheckedChildren="Tính công nợ"
+      nzUnCheckedChildren="Không tính công nợ" [nzLoading]="loadingSystemStatus"
+      (click)="onChangeStatusBookingHotelExport(hotelFlightExport.data)"
+      [nzDisabled]="hotelFlightExport.data.systemCancelled"></nz-switch>
   </div>
   <dxo-summary>
     <dxi-total-item column="contactName" displayFormat="Số bản ghi: {0}" summaryType="count">
@@ -206,8 +223,12 @@
   </ng-template>
   <div *nzModalFooter>
     <button nz-button nzType="default" (click)="handleCancelConfirmBooking()">Huỷ</button>
-    <button nz-button nzType="primary" (click)="handleOkConfirmBookingHotel()" [nzLoading]="isConfirmLoading">{{item.bookingStatus === 0 ? 'Xác nhận' : (item.bookingStatus === 1 ? 'Cập nhật' : '')}}</button>
-    <button nz-button nzType="primary" (click)="handleConfirmAndSendBookingHotel()" [nzLoading]="isConfirmLoading">{{item.bookingStatus === 0 ? 'Xác nhận' : (item.bookingStatus === 1 ? 'Cập nhật' : '')}} và gửi email</button>
+    <button nz-button nzType="primary" (click)="handleOkConfirmBookingHotel()"
+      [nzLoading]="isConfirmLoading">{{item.bookingStatus === 0 ? 'Xác nhận' : (item.bookingStatus === 1 ? 'Cập nhật' :
+      '')}}</button>
+    <button nz-button nzType="primary" (click)="handleConfirmAndSendBookingHotel()"
+      [nzLoading]="isConfirmLoading">{{item.bookingStatus === 0 ? 'Xác nhận' : (item.bookingStatus === 1 ? 'Cập nhật' :
+      '')}} và gửi email</button>
   </div>
 </nz-modal>
 
