@@ -31,6 +31,7 @@ import { AngularEditorConfig } from '@kolkov/angular-editor';
 import { DataService } from 'src/app/service/data.service';
 import { Router } from '@angular/router';
 import { stringify } from 'querystring';
+import { PipeUtils } from 'src/app/shared/utils/pipe-utils.class';
 @Component({
   selector: 'app-data-hotels',
   templateUrl: './data-hotels.component.html',
@@ -76,6 +77,7 @@ export class DataHotelsComponent extends TableSelectionAbstract implements OnIni
     private nzImageService: NzImageService,
     private msg: NzMessageService,
     private dataService: DataService,
+    public pipeUtils:  PipeUtils
   ) {
     super('id');
 
@@ -315,7 +317,6 @@ export class DataHotelsComponent extends TableSelectionAbstract implements OnIni
         options.totalValue += options.value.tax;
       }
     } else if (options.name === 'SelectedRowsTotalPrice') {
-      console.log(';SelectedRowsTotalPrice');
       if (options.summaryProcess === 'start') {
         options.totalValue = 0;
       } else if (options.summaryProcess === 'calculate') {
@@ -330,5 +331,4 @@ export class DataHotelsComponent extends TableSelectionAbstract implements OnIni
     }
     return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' đ';
   }
-
 }

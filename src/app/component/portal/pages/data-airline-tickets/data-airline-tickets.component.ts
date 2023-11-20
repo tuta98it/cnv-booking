@@ -15,6 +15,7 @@ import { saveAs } from 'file-saver-es';
 import { NzImageService } from 'ng-zorro-antd/image';
 // import { removeAccents } from ;
 import { removeAccents } from 'src/app/shared/utils/filters/remove-accents';
+
 import {
   DxDataGridComponent,
   DxTemplateDirective,
@@ -31,6 +32,7 @@ import { AngularEditorConfig } from '@kolkov/angular-editor';
 import { DataService } from 'src/app/service/data.service';
 import { Router } from '@angular/router';
 import { stringify } from 'querystring';
+import { PipeUtils } from 'src/app/shared/utils/pipe-utils.class';
 @Component({
   selector: 'app-data-airline-tickets',
   templateUrl: './data-airline-tickets.component.html',
@@ -154,6 +156,7 @@ export class DataAirlineTicketsComponent extends TableSelectionAbstract implemen
     private nzImageService: NzImageService,
     private msg: NzMessageService,
     private dataService: DataService,
+    public pipeUtils: PipeUtils,
   ) {
     super('id');
     this.formAddHotel = this.fb.group({

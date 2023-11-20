@@ -39,6 +39,7 @@ import { NzMessageModule } from 'ng-zorro-antd/message';
 import { AngularEditorModule } from '@kolkov/angular-editor';
 import { BookingHotelStatusPipe } from './pipe/booking-hotel-status.pipe';
 import { DxDateBoxModule } from 'devextreme-angular';
+import { PassengerTypesPipe } from './pipe/passenger-type.pipe';
 @NgModule({
   imports: [
     CommonModule,
@@ -111,7 +112,8 @@ import { DxDateBoxModule } from 'devextreme-angular';
     NzMessageModule,
     AngularEditorModule,
     DxDateBoxModule,
-    BookingHotelStatusPipe
+    BookingHotelStatusPipe,
+    PassengerTypesPipe
   ],
   declarations: [
     DateFormatPipe,
@@ -122,6 +124,7 @@ import { DxDateBoxModule } from 'devextreme-angular';
     OrderStatusFormatPipe,
     IsEmptyPipe,
     BookingHotelStatusPipe,
+    PassengerTypesPipe,
     MViewPdfComponent
   ],
   providers: [NotificationService],

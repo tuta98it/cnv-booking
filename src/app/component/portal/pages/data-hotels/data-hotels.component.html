@@ -57,7 +57,7 @@
     [showNavigationButtons]="showNavButtons"></dxo-pager>
   <dxi-column cssClass="text-center" caption="STT" [width]="55" dataField="stt" [fixed]="true" [allowFiltering]="false"
     [allowSorting]="false"></dxi-column>
-  <dxi-column caption="Mã Base" [width]="100" dataField="baseCode" dataType="string"></dxi-column>
+  <dxi-column caption="Mã Base" [width]="100" [fixed]="true" dataField="baseCode" dataType="string"></dxi-column>
   <dxi-column caption="Ngày đặt phòng" [width]="150" dataField="bookingDate" dataType="date"  format="HH:mm dd/MM/yy"></dxi-column>
   <dxi-column caption="Ngày nhận phòng" [width]="150" dataField="checkinDate" dataType="date"  format="HH:mm dd/MM/yy"></dxi-column>
   <dxi-column caption="Ngày trả phòng" [width]="150" dataField="checkoutDate" dataType="date"  format="HH:mm dd/MM/yy"></dxi-column>
@@ -68,9 +68,10 @@
   <dxi-column caption="Giá 1 phòng" [width]="200" dataField="roomPriceOneFormat" dataType="string"></dxi-column>
   <dxi-column caption="Thuế 1 phòng" [width]="200" dataField="tax" dataType="string"></dxi-column>
   <dxi-column caption="Thành tiền" [width]="300" dataField="totalPriceFormat" dataType="string"></dxi-column>
-  <dxi-column caption="Phân loại khách hàng" [width]="180" dataField="purpose" dataType="string"></dxi-column>
-  <dxi-column caption="Người đặt" [width]="150" dataField="contactName" dataType="string"></dxi-column>
+  <dxi-column caption="Phân loại khách hàng" [fixed]="true" fixedPosition="right" cssClass="text-center" [width]="180" dataField="passengerType" [format]="pipeUtils.pipePassengerType"></dxi-column>
+  <dxi-column caption="Người đặt" [fixed]="true" fixedPosition="right" cssClass="text-center" [width]="150" dataField="contactName" dataType="string"></dxi-column>
   <!-- <dxi-column caption="Email người đặt" [width]="150" dataField="contactEmail" dataType="string"></dxi-column> -->
+
 
   <dxo-summary [calculateCustomSummary]="calculateSelectedRowPrice">
     <dxi-total-item name="SelectedRowSumPriceRoom" showInColumn="totalPriceFormat" displayFormat="Tổng giá phòng: {0}" [valueFormat]="formatCurrencyVND"

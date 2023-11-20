@@ -32,7 +32,8 @@ import { AngularEditorConfig } from '@kolkov/angular-editor';
 import { DataService } from 'src/app/service/data.service';
 import { Router } from '@angular/router';
 import { PhoneUtils } from 'src/app/shared/utils/phone-utils.class';
-import { AreaUtils } from 'src/app/shared/utils/area-utils.class copy';
+import { AreaUtils } from 'src/app/shared/utils/area-utils.class';
+import { PipeUtils } from 'src/app/shared/utils/pipe-utils.class';
 
 @Component({
   selector: 'app-hotel',
