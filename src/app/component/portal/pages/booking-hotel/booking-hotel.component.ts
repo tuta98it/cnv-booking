@@ -135,6 +135,8 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   };
 
   imageLogoVHL = '';
+
+  valueTrue = true;
   constructor(
     private router: Router,
     private modalService: NzModalService,

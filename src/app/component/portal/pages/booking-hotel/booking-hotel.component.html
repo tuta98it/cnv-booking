@@ -34,6 +34,7 @@
   <dxi-column caption="Mã đặt KS" [width]="200" dataField="bookingCode"></dxi-column>
   <dxi-column caption="Ngày đặt" [width]="200" dataField="dateCreated" dataType="date"
     format="HH:mm dd/MM/yy"></dxi-column>
+  <dxi-column caption="Khẩn cấp" [width]="150" dataField="isUrgent" cellTemplate="cellIsUrgent"></dxi-column>
   <dxi-column caption="Trạng thái hệ thống" cssClass="text-center" [width]="200"
     cellTemplate="cellSystemCancelled"></dxi-column>
 
@@ -135,6 +136,10 @@
       </dxo-summary>
     </dx-data-grid>
   </div>
+  <div *dxTemplate="let urgent of 'cellIsUrgent'">
+    <span [style.color]="urgent.value? '#dc3545': '#000'">{{ urgent.value ? 'Khẩn cấp' : 'Không khẩn cấp' }}</span>
+  </div>
+
   <div *dxTemplate="let hotelFlightExport of 'cellSystemCancelled'">
     <nz-switch [ngModel]="!hotelFlightExport.data.systemCancelled" [nzControl]="true" nzCheckedChildren="Tính công nợ"
       nzUnCheckedChildren="Không tính công nợ" [nzLoading]="loadingSystemStatus"

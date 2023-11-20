@@ -35,7 +35,7 @@ import { BookingHotelComponent } from './pages/booking-hotel/booking-hotel.compo
 import { DataStatisticsComponent } from './pages/data-statistics/data-statistics.component';
 import { DataAirlineTicketsComponent } from './pages/data-airline-tickets/data-airline-tickets.component';
 import { DataHotelsComponent } from './pages/data-hotels/data-hotels.component';
-
+import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import {
   DxButtonModule, DxTabPanelModule, DxDataGridModule, DxDataGridComponent, DxNumberBoxModule
 } from 'devextreme-angular';
@@ -80,6 +80,7 @@ const icons: IconDefinition[] = Object.keys(antDesignIcons).map(key => antDesign
     DxTabPanelModule,
     DxDataGridModule,
     NzSwitchModule,
+    NzCheckboxModule
   ],
   providers: [GeneralService, FileManagerService, MenuService, SignalRService, DateFormatPipe,]
 })

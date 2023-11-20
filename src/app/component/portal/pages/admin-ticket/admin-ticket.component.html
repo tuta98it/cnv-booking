@@ -93,8 +93,7 @@
               <label for="">Mã base: <strong>{{ticket.approvalCode}}</strong></label>
             </div>
             <div class="ticket-status">
-              <label for="">Tình trạng: <strong>{{ticket.status === 'OK'? 'Đã xuất vé' : 'Lỗi xuất
-                  vé'}}</strong></label>
+              <label for="">Tình trạng: <strong>{{ticket.status === 'OK'? 'Đã xuất vé' : 'Lỗi xuất vé'}}</strong></label>
             </div>
           </div>
         </div>
@@ -112,8 +111,7 @@
                   <strong>{{bookingPassenger.lastName}} {{bookingPassenger.firstName}}</strong></label>
                 <label *ngIf="bookingPassenger.typeCode === 'CHD'">Hành khách: {{bookingPassenger.gender? 'Bé trai' :
                   'Bé gái'}} <strong>{{bookingPassenger.lastName}} {{bookingPassenger.firstName}}</strong></label>
-                <label *ngIf="bookingPassenger.typeCode === 'INF'">Hành khách: {{bookingPassenger.gender? 'Trẻ sơ sinh
-                  trai' : 'Trẻ sơ sinh gái'}} <strong>{{bookingPassenger.lastName}}
+                <label *ngIf="bookingPassenger.typeCode === 'INF'">Hành khách: {{bookingPassenger.gender? 'Trẻ sơ sinh trai' : 'Trẻ sơ sinh gái'}} <strong>{{bookingPassenger.lastName}}
                     {{bookingPassenger.firstName}}</strong></label>
               </div>
               <div class="passenger-ticket-info-content">
@@ -188,8 +186,7 @@
                     </label>
                   </div>
                   <div>
-                    <label for="">Ngày bay: <strong>{{bookingFlight.startTime | date:"HH:MM
-                        dd-MM-yyyy"}}</strong></label>
+                    <label for="">Ngày bay: <strong>{{bookingFlight.startTime | date:"HH:MM dd-MM-yyyy"}}</strong></label>
                   </div>
                   <div>
                     <label for="">Ngày đến:</label> <strong>{{bookingFlight.endTime | date:"HH:MM dd-MM-yyyy"}}</strong>
