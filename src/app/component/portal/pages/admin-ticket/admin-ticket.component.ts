@@ -220,18 +220,19 @@ export class AdminTicketComponent extends TableSelectionAbstract implements OnIn
     // }
   }
 
-  changeSystemStatusTicketExport(idBookingTicketFlightExp: any, nodeSystemCancelled: any) {
+  changeSystemStatusTicketExport(idBookingTicketFlightExp: any, noteSystemCancelled: any) {
     this.systemCancelBookingFligh.submitted = true;
-    if(!nodeSystemCancelled){
+    if(!noteSystemCancelled){
       this.notificationService.showNotification(Constant.ERROR, 'Nội dung ghi chú không được để trống');
       return;
     }
-    let payload = {noteSystemCancelled: nodeSystemCancelled};
+    let payload = {noteSystemCancelled: noteSystemCancelled};
     this.generalService.markCanceledSystemTicketFlightExport(idBookingTicketFlightExp, payload).subscribe({
       next: (res) => {
         if (res.ret && res.ret[0].code !== 0) {
           this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
         } else {
+          this.handleCancelConfirmCancelSystem();
           this.notificationService.showNotification(Constant.SUCCESS, 'Thiết lập không tính công nợ thành công');
         }
       },

@@ -1320,13 +1320,13 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   }
 
 
-  changeSystemStatusBookingHotelExport(idBookingTicketFlightExp: any, nodeSystemCancelled: any) {
+  changeSystemStatusBookingHotelExport(idBookingTicketFlightExp: any, noteSystemCancelled: any) {
     this.submitted = true;
-    if(!nodeSystemCancelled){
+    if(!noteSystemCancelled){
       this.notificationService.showNotification(Constant.ERROR, 'Nội dung ghi chú không được để trống');
       return;
     }
-    let payload = {noteSystemCancelled: nodeSystemCancelled};
+    let payload = {noteSystemCancelled: noteSystemCancelled};
     this.generalService.markCanceledSystemBookingHotelExport(idBookingTicketFlightExp, payload).subscribe({
       next: (res) => {
         if (res.ret && res.ret[0].code !== 0) {
