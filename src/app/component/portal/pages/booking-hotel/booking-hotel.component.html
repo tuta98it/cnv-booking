@@ -27,10 +27,11 @@
     cellTemplate="cellBtnTemplate"></dxi-column>
   <dxi-column caption="Trạng thái" cssClass="text-center" [width]="200" dataField="bookingStatusText"
     fixedPosition="left" cellTemplate="cellBookingStatus"></dxi-column>
+  <dxi-column caption="Mã phê duyệt" dataField="approvalCode" fixedPosition="left"></dxi-column>
   <dxi-column caption="Họ tên người đặt" dataField="contactName" fixedPosition="left"></dxi-column>
   <dxi-column caption="Số điện thoại" [width]="200" dataField="contactPhone"
     [format]="phoneUtils.phoneNumberFormat"></dxi-column>
-  <dxi-column caption="Email" [width]="300" dataField="contactEmail"></dxi-column>
+  <dxi-column caption="Email" [width]="200" dataField="contactEmail"></dxi-column>
   <dxi-column caption="Mã đặt KS" [width]="200" dataField="bookingCode"></dxi-column>
   <dxi-column caption="Ngày đặt" [width]="200" dataField="dateCreated" dataType="date"
     format="HH:mm dd/MM/yy"></dxi-column>
