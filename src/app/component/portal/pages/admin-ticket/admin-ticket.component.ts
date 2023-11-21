@@ -32,6 +32,13 @@ export class AdminTicketComponent extends TableSelectionAbstract implements OnIn
   filteredDatas: any[] = [];
   searchText = '';
   isVisibleTicketDetail: boolean = false;
+  nzVisibleCancelSystem: boolean = false;
+  systemCancelBookingFligh = {
+    submitted:  false,
+    nodeSystemCancelled: '',
+  }
+  item: any;
+
 
   constructor(
     public translate: TranslateService,
@@ -187,22 +194,40 @@ export class AdminTicketComponent extends TableSelectionAbstract implements OnIn
     this.isVisibleTicketDetail = false;
   }
 
-
-  onChangeStatusSystemTicketExport(ticketFlightExp: any) {
-    if (!ticketFlightExp.systemCancelled) {
-      this.modalService.confirm({
-        nzTitle: `Bạn có chắc KHÔNG tính chi phí vé máy bay của khách hàng <strong>${ticketFlightExp.passengerName}</strong> vào công nợ`,
-        nzContent: `<b style="color: red;">Việc KHÔNG tính chi phí vé máy bay của khách hàng <strong>${ticketFlightExp.passengerName} vào công nợ sẽ không thể hoàn tác. Ấn đồng ý để tiếp tục</b>`,
-        nzOkDanger: true,
-        nzOkText: 'Đồng ý',
-        nzCancelText: 'Không',
-        nzOnOk: () => this.changeSystemStatusTicketExport(ticketFlightExp.bookingId),
-      });
-    }
+  handleCancelConfirmCancelSystem() {
+    this.nzVisibleCancelSystem = false;
+    this.resetConfirmSystemCancel();
   }
 
-  changeSystemStatusTicketExport(idBookingTicketFlightExp: any) {
-    this.generalService.markCanceledSystemTicketFlightExport(idBookingTicketFlightExp).subscribe({
+  private resetConfirmSystemCancel() {
+    this.systemCancelBookingFligh.nodeSystemCancelled = '';
+    this.systemCancelBookingFligh.submitted = false;
+  }
+
+  onChangeStatusSystemTicketExport(ticketFlightExp: any) {
+    this.nzVisibleCancelSystem = true;
+    this.resetConfirmSystemCancel();
+    this.item = ticketFlightExp;
+    // if (!ticketFlightExp.systemCancelled) {
+    //   this.modalService.confirm({
+    //     nzTitle: `Bạn có chắc KHÔNG tính chi phí vé máy bay của khách hàng <strong>${ticketFlightExp.passengerName}</strong> vào công nợ`,
+    //     nzContent: `<b style="color: red;">Việc KHÔNG tính chi phí vé máy bay của khách hàng <strong>${ticketFlightExp.passengerName} vào công nợ sẽ không thể hoàn tác. Ấn đồng ý để tiếp tục</b>`,
+    //     nzOkDanger: true,
+    //     nzOkText: 'Đồng ý',
+    //     nzCancelText: 'Không',
+    //     nzOnOk: () => this.changeSystemStatusTicketExport(ticketFlightExp.bookingId),
+    //   });
+    // }
+  }
+
+  changeSystemStatusTicketExport(idBookingTicketFlightExp: any, nodeSystemCancelled: any) {
+    this.systemCancelBookingFligh.submitted = true;
+    if(!nodeSystemCancelled){
+      this.notificationService.showNotification(Constant.ERROR, 'Nội dung ghi chú không được để trống');
+      return;
+    }
+    let payload = {noteSystemCancelled: nodeSystemCancelled};
+    this.generalService.markCanceledSystemTicketFlightExport(idBookingTicketFlightExp, payload).subscribe({
       next: (res) => {
         if (res.ret && res.ret[0].code !== 0) {
           this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);

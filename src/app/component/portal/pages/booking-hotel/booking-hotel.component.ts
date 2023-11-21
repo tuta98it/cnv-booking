@@ -771,6 +771,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   }
 
   handleCancelConfirmCancelSystem() {
+    this.submitted = false;
     this.nzVisibleCancelSystem = false;
     this.resetConfirmSystemCancel();
   }
@@ -1320,6 +1321,11 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
 
 
   changeSystemStatusBookingHotelExport(idBookingTicketFlightExp: any, nodeSystemCancelled: any) {
+    this.submitted = true;
+    if(!nodeSystemCancelled){
+      this.notificationService.showNotification(Constant.ERROR, 'Nội dung ghi chú không được để trống');
+      return;
+    }
     let payload = {noteSystemCancelled: nodeSystemCancelled};
     this.generalService.markCanceledSystemBookingHotelExport(idBookingTicketFlightExp, payload).subscribe({
       next: (res) => {

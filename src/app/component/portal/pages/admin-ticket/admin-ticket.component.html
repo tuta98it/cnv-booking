@@ -41,8 +41,9 @@
   <dxi-column caption="Số vé" [width]="200" dataField="ticketNumber"></dxi-column>
   <dxi-column caption="Ngày đặt vé" [width]="200" dataField="dateCreated" dataType="date"
     format="HH:mm dd/MM/yyyy"></dxi-column>
-  <dxi-column caption="Trạng thái hệ thống" cssClass="text-center" [width]="300"
+  <dxi-column caption="Trạng thái hệ thống" cssClass="text-center" [width]="200"
     cellTemplate="cellSystemCancelled"></dxi-column>
+  <dxi-column caption="Lý do huỷ" [width]="150" dataField="noteSystemCancelled" dataTyp="string"></dxi-column>
   <dxi-column caption="Xuất vé" cssClass="text-center" cellTemplate="cellBillet"></dxi-column>
 
   <div *dxTemplate="let ticketFlightExport of 'cellSystemCancelled'">
@@ -93,7 +94,8 @@
               <label for="">Mã base: <strong>{{ticket.approvalCode}}</strong></label>
             </div>
             <div class="ticket-status">
-              <label for="">Tình trạng: <strong>{{ticket.status === 'OK'? 'Đã xuất vé' : 'Lỗi xuất vé'}}</strong></label>
+              <label for="">Tình trạng: <strong>{{ticket.status === 'OK'? 'Đã xuất vé' : 'Lỗi xuất
+                  vé'}}</strong></label>
             </div>
           </div>
         </div>
@@ -111,7 +113,8 @@
                   <strong>{{bookingPassenger.lastName}} {{bookingPassenger.firstName}}</strong></label>
                 <label *ngIf="bookingPassenger.typeCode === 'CHD'">Hành khách: {{bookingPassenger.gender? 'Bé trai' :
                   'Bé gái'}} <strong>{{bookingPassenger.lastName}} {{bookingPassenger.firstName}}</strong></label>
-                <label *ngIf="bookingPassenger.typeCode === 'INF'">Hành khách: {{bookingPassenger.gender? 'Trẻ sơ sinh trai' : 'Trẻ sơ sinh gái'}} <strong>{{bookingPassenger.lastName}}
+                <label *ngIf="bookingPassenger.typeCode === 'INF'">Hành khách: {{bookingPassenger.gender? 'Trẻ sơ sinh
+                  trai' : 'Trẻ sơ sinh gái'}} <strong>{{bookingPassenger.lastName}}
                     {{bookingPassenger.firstName}}</strong></label>
               </div>
               <div class="passenger-ticket-info-content">
@@ -186,7 +189,8 @@
                     </label>
                   </div>
                   <div>
-                    <label for="">Ngày bay: <strong>{{bookingFlight.startTime | date:"HH:MM dd-MM-yyyy"}}</strong></label>
+                    <label for="">Ngày bay: <strong>{{bookingFlight.startTime | date:"HH:MM
+                        dd-MM-yyyy"}}</strong></label>
                   </div>
                   <div>
                     <label for="">Ngày đến:</label> <strong>{{bookingFlight.endTime | date:"HH:MM dd-MM-yyyy"}}</strong>
@@ -233,4 +237,46 @@
   <div *nzModalFooter>
     <button nz-button nzType="default" (click)="handleCancelPopup()">Huỷ</button>
   </div>
+</nz-modal>
+
+
+<nz-modal [(nzVisible)]="nzVisibleCancelSystem" nzOkDanger="true" nzOkText="Đồng ý" nzCancelText="Không"
+  (nzOnCancel)="handleCancelConfirmCancelSystem()"
+  (nzOnOk)="changeSystemStatusTicketExport(item.bookingId, systemCancelBookingFligh.nodeSystemCancelled)">
+  <div *nzModalTitle style="display: flex; align-items: baseline;">
+    <span nz-icon nzType="question-circle" nzTheme="outline" style="color: #faad14; float: left;
+      margin-right: 16px; font-size: 22px;"></span>
+    <div>
+      KHÔNG tính chi phí vé máy bay của khách hàng
+    </div>
+
+  </div>
+  <ng-container *nzModalContent>
+    <div>
+      <label>Ghi chú<span style="color: #dc3545;">*</span></label>
+      <div>
+        <nz-input-group [nzSuffix]="inputClearTpl"
+          [ngClass]="{ 'is-invalid': (systemCancelBookingFligh.submitted && !systemCancelBookingFligh.nodeSystemCancelled)}">
+          <input nz-input type="text" [(ngModel)]="systemCancelBookingFligh.nodeSystemCancelled"
+            placeholder="Nội dung ghi chú..." />
+
+        </nz-input-group>
+        <ng-template #inputClearTpl>
+          <span nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle"
+            *ngIf="systemCancelBookingFligh.nodeSystemCancelled"
+            (click)="systemCancelBookingFligh.nodeSystemCancelled = null"></span> </ng-template>
+      </div>
+      <span><i style="font-size: x-small; opacity: 0.8;">(*Lý do tại sao yêu cầu đặt vé máy bay bị huỷ)</i></span>
+    </div>
+
+    <p style="margin-top: 1rem;">Bạn có chắc KHÔNG tính chi phí vé máy bay của khách hàng <strong>{{item.contactName?
+        item.contactName : ''}}</strong> vào công nợ?</p>
+    <span>
+      <b style="color: #dc3545;">Việc KHÔNG tính chi phí vé máy bay của khách hàng
+        {{item.contactName? item.contactName : ''}} vào công nợ sẽ không thể hoàn tác.</b>
+    </span>
+    <span>
+      Ấn đồng ý để tiếp tục.
+    </span>
+  </ng-container>
 </nz-modal>

@@ -283,7 +283,7 @@
 
 <nz-modal [(nzVisible)]="nzVisibleCancelSystem" nzOkDanger="true" nzOkText="Đồng ý" nzCancelText="Không"
   (nzOnCancel)="handleCancelConfirmCancelSystem()"
-  (nzOnOk)="this.changeSystemStatusBookingHotelExport(item.id, systemCancelBookingHotel.nodeSystemCancelled)">
+  (nzOnOk)="changeSystemStatusBookingHotelExport(item.id, systemCancelBookingHotel.nodeSystemCancelled)">
   <div *nzModalTitle style="display: flex; align-items: baseline;">
     <span nz-icon nzType="question-circle" nzTheme="outline" style="color: #faad14; float: left;
       margin-right: 16px; font-size: 22px;"></span>
