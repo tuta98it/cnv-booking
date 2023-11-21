@@ -52,6 +52,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   isVisibleAddRoom: boolean;
   isVisibleUpdate: boolean;
   isVisiblePassword: boolean;
+  nzVisibleCancelSystem: boolean = false;
   loadingSystemStatus: boolean = false;
   item: any;
   loading: boolean;
@@ -78,6 +79,10 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
     textValueNoteConfirm: '',
     approvalCodeConfirm: '',
 
+  }
+
+  systemCancelBookingHotel = {
+    nodeSystemCancelled: '',
   }
 
   textValueNoteRefuse = '';
@@ -723,8 +728,12 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
     return inerHTMLCustomerInfoVontentName;
   }
   private resetConfirmBookingHotel() {
-    this.confirmBookingHotel.approvalCodeConfirm = '',
-      this.confirmBookingHotel.textValueNoteConfirm = ''
+    this.confirmBookingHotel.approvalCodeConfirm = '';
+    this.confirmBookingHotel.textValueNoteConfirm = '';
+  }
+
+  private resetConfirmSystemCancel() {
+    this.systemCancelBookingHotel.nodeSystemCancelled = '';
   }
 
   onRefuseBookingHotel(booking: any) {
@@ -751,6 +760,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
     this.isVisibleRefuseBooking = false;
     this.isVisibleConfirmSendEmaiBooking = false;
     this.isConfirmSendEmailLoading = false;
+    this.nzVisibleCancelSystem = false;
     this.formAddHotel.reset();
     this.formAddRoom.reset();
   }
@@ -758,6 +768,11 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   handleCancelConfirmBooking() {
     this.isVisibleConfirmBooking = false;
     this.resetConfirmBookingHotel();
+  }
+
+  handleCancelConfirmCancelSystem() {
+    this.nzVisibleCancelSystem = false;
+    this.resetConfirmSystemCancel();
   }
 
   handleRemoveImageHotel = async (file: NzUploadFile): Promise<void> => {
@@ -1289,26 +1304,30 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   }
 
   onChangeStatusBookingHotelExport(hotelFlightExport: any) {
-    if (!hotelFlightExport.systemCancelled) {
-      this.modalService.confirm({
-        nzTitle: `Bạn có chắc KHÔNG tính chi phí khách sạn của khách hàng <strong>${hotelFlightExport.contactName? hotelFlightExport.contactName : ''}</strong> vào công nợ`,
-        nzContent: `<b style="color: red;">Việc KHÔNG tính chi phí khách sạn của khách hàng <strong>${hotelFlightExport.contactName? hotelFlightExport.contactName : ''} vào công nợ sẽ không thể hoàn tác. Ấn đồng ý để tiếp tục</b>`,
-        nzOkDanger: true,
-        nzOkText: 'Đồng ý',
-        nzCancelText: 'Không',
-        nzOnOk: () => this.changeSystemStatusBookingHotelExport(hotelFlightExport.id),
-      });
-    }
+    this.nzVisibleCancelSystem = true;
+    this.item = hotelFlightExport;
+    // if (!hotelFlightExport.systemCancelled) {
+    //   this.modalService.confirm({
+    //     nzTitle: `Bạn có chắc KHÔNG tính chi phí khách sạn của khách hàng <strong>${hotelFlightExport.contactName? hotelFlightExport.contactName : ''}</strong> vào công nợ`,
+    //     nzContent: `<b style="color: red;">Việc KHÔNG tính chi phí khách sạn của khách hàng <strong>${hotelFlightExport.contactName? hotelFlightExport.contactName : ''} vào công nợ sẽ không thể hoàn tác. Ấn đồng ý để tiếp tục.</b>`,
+    //     nzOkDanger: true,
+    //     nzOkText: 'Đồng ý',
+    //     nzCancelText: 'Không',
+    //     nzOnOk: () => this.changeSystemStatusBookingHotelExport(hotelFlightExport.id),
+    //   });
+    // }
   }
 
 
-  changeSystemStatusBookingHotelExport(idBookingTicketFlightExp: any) {
-    this.generalService.markCanceledSystemBookingHotelExport(idBookingTicketFlightExp).subscribe({
+  changeSystemStatusBookingHotelExport(idBookingTicketFlightExp: any, nodeSystemCancelled: any) {
+    let payload = {noteSystemCancelled: nodeSystemCancelled};
+    this.generalService.markCanceledSystemBookingHotelExport(idBookingTicketFlightExp, payload).subscribe({
       next: (res) => {
         if (res.ret && res.ret[0].code !== 0) {
           this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
         } else {
           this.notificationService.showNotification(Constant.SUCCESS, 'Thiết lập không tính công nợ thành công');
+          this.handleCancelConfirmCancelSystem();
         }
       },
       error: (error) => {

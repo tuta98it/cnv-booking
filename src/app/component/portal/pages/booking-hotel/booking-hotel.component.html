@@ -32,12 +32,13 @@
   <dxi-column caption="Số điện thoại" [width]="200" dataField="contactPhone"
     [format]="phoneUtils.phoneNumberFormat"></dxi-column>
   <dxi-column caption="Email" [width]="200" dataField="contactEmail"></dxi-column>
-  <dxi-column caption="Mã đặt KS" [width]="200" dataField="bookingCode"></dxi-column>
-  <dxi-column caption="Ngày đặt" [width]="200" dataField="dateCreated" dataType="date"
+  <dxi-column caption="Mã đặt KS" [width]="100" dataField="bookingCode"></dxi-column>
+  <dxi-column caption="Ngày đặt" [width]="150" dataField="dateCreated" dataType="date"
     format="HH:mm dd/MM/yy"></dxi-column>
   <dxi-column caption="Khẩn cấp" [width]="150" dataField="isUrgent" cellTemplate="cellIsUrgent"></dxi-column>
   <dxi-column caption="Trạng thái hệ thống" cssClass="text-center" [width]="200"
     cellTemplate="cellSystemCancelled"></dxi-column>
+  <dxi-column caption="Lý do huỷ" [width]="150" dataField="noteSystemCancelled"dataTyp="string"></dxi-column>
 
   <div *dxTemplate="let bookingStatus of 'cellBookingStatus'">
     <div style="
@@ -140,7 +141,6 @@
   <div *dxTemplate="let urgent of 'cellIsUrgent'">
     <span [style.color]="urgent.value? '#dc3545': '#000'">{{ urgent.value ? 'Khẩn cấp' : 'Không khẩn cấp' }}</span>
   </div>
-
   <div *dxTemplate="let hotelFlightExport of 'cellSystemCancelled'">
     <nz-switch [ngModel]="!hotelFlightExport.data.systemCancelled" [nzControl]="true" nzCheckedChildren="Tính công nợ"
       nzUnCheckedChildren="Không tính công nợ" [nzLoading]="loadingSystemStatus"
@@ -279,4 +279,45 @@
     <button nz-button nzType="primary" (click)="handleOkConfirmSendEmailBookingHotel()"
       [nzLoading]="isConfirmSendEmailLoading">Gửi Email</button>
   </div>
+</nz-modal>
+
+<nz-modal [(nzVisible)]="nzVisibleCancelSystem" nzOkDanger="true" nzOkText="Đồng ý" nzCancelText="Không"
+  (nzOnCancel)="handleCancelConfirmCancelSystem()"
+  (nzOnOk)="this.changeSystemStatusBookingHotelExport(item.id, systemCancelBookingHotel.nodeSystemCancelled)">
+  <div *nzModalTitle style="display: flex; align-items: baseline;">
+    <span nz-icon nzType="question-circle" nzTheme="outline" style="color: #faad14; float: left;
+      margin-right: 16px; font-size: 22px;"></span>
+    <div>
+      KHÔNG tính chi phí khách sạn của khách hàng
+    </div>
+
+  </div>
+  <ng-container *nzModalContent>
+    <div>
+      <label>Ghi chú<span style="color: #dc3545;">*</span></label>
+      <div>
+        <nz-input-group [nzSuffix]="inputClearTpl"
+          [ngClass]="{ 'is-invalid': (submitted && !systemCancelBookingHotel.nodeSystemCancelled)}">
+          <input nz-input type="text" [(ngModel)]="systemCancelBookingHotel.nodeSystemCancelled"
+            placeholder="Nội dung ghi chú..." />
+
+        </nz-input-group>
+        <ng-template #inputClearTpl>
+          <span nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle"
+            *ngIf="systemCancelBookingHotel.nodeSystemCancelled"
+            (click)="systemCancelBookingHotel.nodeSystemCancelled = null"></span> </ng-template>
+      </div>
+      <span><i style="font-size: x-small; opacity: 0.8;">(*Lý do tại sao yêu cầu đặt khách sạn bị huỷ)</i></span>
+    </div>
+
+    <p style="margin-top: 1rem;">Bạn có chắc KHÔNG tính chi phí khách sạn của khách hàng <strong>{{item.contactName?
+        item.contactName : ''}}</strong> vào công nợ?</p>
+    <span>
+      <b style="color: #dc3545;">Việc KHÔNG tính chi phí khách sạn của khách hàng
+        {{item.contactName? item.contactName : ''}} vào công nợ sẽ không thể hoàn tác.</b>
+    </span>
+    <span>
+      Ấn đồng ý để tiếp tục.
+    </span>
+  </ng-container>
 </nz-modal>

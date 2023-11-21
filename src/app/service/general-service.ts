@@ -661,8 +661,8 @@ export class GeneralService extends BaseService {
     return this.get(`/api${UrlConstant.BOOKING_HOTEL}/GetBookingHotelById/${idBoooking}`);
   }
 
-  markCanceledSystemBookingHotelExport(idBookingHotel: any): Observable<any> {
-    return this.post(`/api${UrlConstant.BOOKING_HOTEL}/MarkCanceled/${idBookingHotel}`, idBookingHotel);
+  markCanceledSystemBookingHotelExport(idBookingHotel: any, nodeSystemCancelled: any): Observable<any> {
+    return this.post(`/api${UrlConstant.BOOKING_HOTEL}/MarkCanceled/${idBookingHotel}`, nodeSystemCancelled);
   }
 
   // Email
