@@ -68,7 +68,6 @@ export class AdminHistoryHoldingTicketComponent extends TableSelectionAbstract i
 
   getUserInfo() {
     this.userInfor = JSON.parse(localStorage.getItem(Constant.USER_INFO));
-    console.log('this.userInfor: ', this.userInfor);
   }
   getAirport() {
     this.generalService.getAirport().subscribe((res: any) => {
@@ -94,7 +93,6 @@ export class AdminHistoryHoldingTicketComponent extends TableSelectionAbstract i
           en.isLoadingViewTicket = false;
         });
         this.filteredDatas = this.datas;
-        // console.log(this.datas);
         super.setListOfAllData(this.datas);
       }
     }, error => {
@@ -162,9 +160,6 @@ export class AdminHistoryHoldingTicketComponent extends TableSelectionAbstract i
             i++;
           });
           this.itemTicketHistoryTicket.totalPricebookingFlight = bookingFlightTotalPrice;
-
-          console.log('this.itemTicketHistoryTicket: ', this.itemTicketHistoryTicket);
-
         } else {
           this.notificationService.showNotification(Constant.ERROR, `Dữ liệu vé máy bay của khách hàng <strong>${booking.passengerName}</strong> không tồn tại`);
         }
@@ -253,7 +248,6 @@ export class AdminHistoryHoldingTicketComponent extends TableSelectionAbstract i
 
   onSearch() {
     const keyword = removeAccents(this.searchText.trim().toLowerCase());
-    console.log(keyword);
     this.filteredDatas = this.datas.filter((en) =>
       removeAccents(en.contactName?.trim()).toLowerCase().includes(keyword) ||
       removeAccents(en.contactPhone?.trim()).toLowerCase().includes(keyword) ||

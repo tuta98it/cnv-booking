@@ -63,12 +63,10 @@ export class SignalRService implements OnDestroy {
       this.hasRemoteConnection = false;
     });
     this.hubConnection.on('transferdata', (data) => {
-      console.log(data);
       this.data.next(data);
     });
 
     this.hubConnection.on('BroadcastMessage', (data) => {
-      console.log(data);
     });
   }
 }

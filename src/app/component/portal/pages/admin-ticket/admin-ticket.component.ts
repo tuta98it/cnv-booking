@@ -77,7 +77,6 @@ export class AdminTicketComponent extends TableSelectionAbstract implements OnIn
             en.isLoadingViewTicket = false;
           });
           this.filteredDatas = this.datas;
-          // console.log(this.datas);
           super.setListOfAllData(this.datas);
         }
       },
@@ -123,7 +122,6 @@ export class AdminTicketComponent extends TableSelectionAbstract implements OnIn
 
   onSearch() {
     const keyword = removeAccents(this.searchText.trim().toLowerCase());
-    console.log(keyword);
     this.filteredDatas = this.datas.filter((en) =>
       removeAccents(en.passengerName?.trim()).toLowerCase().includes(keyword) ||
       removeAccents(en.airlineName?.trim()).toLowerCase().includes(keyword) ||

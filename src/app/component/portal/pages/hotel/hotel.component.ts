@@ -446,7 +446,6 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
   };
 
   handleRemoveImageRoom = async (file: NzUploadFile): Promise<void> => {
-    console.log('xoá file: ', file);
     const idHotelImage = file.uid;
     this.generalService.deleteRoomImageByID(idHotelImage).subscribe(
       {
@@ -556,7 +555,6 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
 
   onSearch() {
     const keyword = removeAccents(this.searchText.trim().toLowerCase());
-    console.log(keyword);
     this.filteredDatas = this.datas.filter((en) =>
       removeAccents(en.name?.toString().trim()).toLowerCase().includes(keyword) ||
       removeAccents(en.address?.trim()).toLowerCase().includes(keyword) ||
@@ -683,8 +681,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
     roomNew.prices.forEach((price: any) => {
       delete price.id;
     });
-    console.log('roomNew: ', roomNew);
-    console.log('roomNew.prices: ', roomNew.prices);
+
 
     this.generalService.addRoom(roomNew).subscribe(
       {
@@ -727,7 +724,6 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
 
 
   previewImages(images: any) {
-    console.log('image: ', images);
     let arrImage: any[] = [];
     if (typeof images === 'string') {
       let objImage = {
@@ -755,9 +751,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
     const status = file.status;
     if (status === 'done') {
       this.msg.success(`file ${file.name} tải lên thành công.`);
-      console.log(file, fileList);
       this.fileList = fileList;
-      console.log('this.fileList', this.fileList);
       if (form === 'hotel') {
         setTimeout(() => {
           if (this.fileList.length > 0) {
@@ -774,7 +768,6 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
           }
         }, 200);
         this.listURLFiles.push(file.response.hotelFileId);
-        console.log('this.listURLFiles: ', this.listURLFiles);
         this.formAddHotel.controls['hotelFileIds'].setValue(this.listURLFiles);
       } else if (form === 'room') {
         setTimeout(() => {
@@ -784,7 +777,6 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
           }
         }, 200);
         this.listURLFiles.push(file.response.roomFileId);
-        console.log('this.listURLFiles: ', this.listURLFiles);
         this.formAddRoom.controls['roomFileIds'].setValue(this.listURLFiles);
       }
     } else if (status === 'error') {
@@ -828,17 +820,13 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
 
   logEvent(eventName: any) {
     // this.events.unshift(eventName);
-    console.log('eventName: ', eventName);
   }
 
   onInitNewRowPriceDetail(event: any) {
-    console.log('onInitNewRowPriceDetail: ', event);
   }
 
   onRowInsertingPriceDetail(event: any, roomId: any) {
-    console.log('onRowInsertingPriceDetail: ', event);
-    console.log('onRowInsertingPriceDetail id: ', roomId);
-    console.log('event.data =: ', event.data);
+
     if (!this.updated) {
       return;
     }
@@ -909,11 +897,9 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
   }
 
   onRowInsertedPriceDetail(event: any) {
-    console.log('onRowInsertedPriceDetail: ', event);
   }
 
   onRowUpdatingPriceDetail(event: any) {
-    console.log('onRowUpdatingPriceDetail: ', event);
     if (!this.updated) {
       return;
     }
@@ -949,14 +935,12 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
   }
 
   onRowUpdatedPriceDetail(event: any) {
-    console.log('onRowUpdatedPriceDetail: ', event);
     let newPriceDetail = {
 
     }
   }
 
   onRowRemovingdPriceDetail(event: any) {
-    console.log('onRowRemovingdPriceDetail: ', event);
     if (!this.updated) {
       return;
     }
@@ -987,7 +971,6 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
   }
 
   onSavingPriceDetail(event: any) {
-    console.log('onSavingPriceDetail: ', event);
   }
 
   phoneNumberFormat(value: any) {

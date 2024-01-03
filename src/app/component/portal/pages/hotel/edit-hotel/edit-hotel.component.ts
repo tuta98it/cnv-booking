@@ -115,7 +115,6 @@ export class EditHotelComponent implements OnInit {
     this.receivedData = this.dataService.getData();
     if (this.receivedData != null && Object.keys(this.receivedData).length > 0) {
       this.isUpdate = this.receivedData.isUpdateHotel;
-      // console.log('item: ',item);
       if (!this.isUpdate) {
         this.showModalAddHotel();
       } else {
@@ -279,9 +278,7 @@ export class EditHotelComponent implements OnInit {
     const status = file.status;
     if (status === 'done') {
       this.msg.success(`file ${file.name} tải lên thành công.`);
-      console.log(file, fileList);
       this.fileList = fileList;
-      console.log('this.fileList', this.fileList);
       if (form === 'hotel') {
         setTimeout(() => {
           if (this.fileList.length > 0) {
@@ -298,7 +295,6 @@ export class EditHotelComponent implements OnInit {
           }
         }, 200);
         this.listURLFiles.push(file.response.hotelFileId);
-        console.log('this.listURLFiles: ', this.listURLFiles);
         this.formAddHotel.controls['hotelFileIds'].setValue(this.listURLFiles);
       } else if (form === 'room') {
         // setTimeout(() => {
@@ -308,7 +304,6 @@ export class EditHotelComponent implements OnInit {
         //   }
         // }, 200);
         // this.listURLFiles.push(file.response.roomFileId);
-        // console.log('this.listURLFiles: ', this.listURLFiles);
         // this.formAddRoom.controls['roomFileIds'].setValue(this.listURLFiles);
       }
     } else if (status === 'error') {

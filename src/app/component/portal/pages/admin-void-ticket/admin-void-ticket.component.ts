@@ -91,7 +91,6 @@ export class AdminVoidTicketComponent extends TableSelectionAbstract implements 
 
   onSearch() {
     const keyword = removeAccents(this.searchText.trim().toLowerCase());
-    console.log(keyword);
     this.filteredDatas = this.datas.filter((en) =>
       removeAccents(en.passengerName?.trim()).toLowerCase().includes(keyword) ||
       removeAccents(en.airlineName?.trim()).toLowerCase().includes(keyword) ||

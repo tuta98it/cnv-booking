@@ -124,7 +124,6 @@ export class MasterPageComponent implements OnInit, OnDestroy {
       filter(event => event instanceof NavigationEnd)).subscribe(event => {
       // @ts-ignore
       this.url = event.url;
-      console.log(this.url);
       // alert(this.url);
     });
     // this.getTinhThanh();
@@ -202,7 +201,6 @@ export class MasterPageComponent implements OnInit, OnDestroy {
         this.selectionData = res;
         this.selectionData.password = null;
         this.selectionData.roles = res.userroles.map(en => en.roleId);
-        console.log(this.selectionData);
       }
     }, error => {
 

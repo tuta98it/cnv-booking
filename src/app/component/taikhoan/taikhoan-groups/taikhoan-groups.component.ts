@@ -48,7 +48,6 @@ export class TaikhoanGroupsComponent implements OnInit, OnChanges {
       for (const i = 0; i < this.groupsInUser.length; i++) {
         arrGroupsIds.push(this.groupsInUser[0].group.id);
       }*/
-      console.log('groupsInUser', this.groupsInUser);
       this.getListGroupData();
     }
   }
@@ -56,7 +55,6 @@ export class TaikhoanGroupsComponent implements OnInit, OnChanges {
     this.generalService.getGroup().subscribe(res => {
       if (res !== null) {
         this.groups = res;
-        console.log('groups', res);
       }
     }, error => {
 
@@ -100,7 +98,6 @@ export class TaikhoanGroupsComponent implements OnInit, OnChanges {
           groupAddItem
         ];
 
-        console.log(this.groupsInUser);
         this.formAdd.patchValue({
           groupId: null,
         });

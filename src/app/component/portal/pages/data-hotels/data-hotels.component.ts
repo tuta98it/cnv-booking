@@ -94,7 +94,6 @@ export class DataHotelsComponent extends TableSelectionAbstract implements OnIni
 
   getUserInfo() {
     this.userInfor = JSON.parse(localStorage.getItem(Constant.USER_INFO));
-    // console.log('this.userInfor: ', this.userInfor);
   }
 
   getListData() {
@@ -278,7 +277,6 @@ export class DataHotelsComponent extends TableSelectionAbstract implements OnIni
 
   onSearch() {
     const keyword = removeAccents(this.searchText.trim().toLowerCase());
-    console.log(keyword);
     this.filteredDatas = this.datas.filter((en) =>
       removeAccents(en.name?.toString().trim()).toLowerCase().includes(keyword) ||
       removeAccents(en.address?.trim()).toLowerCase().includes(keyword) ||

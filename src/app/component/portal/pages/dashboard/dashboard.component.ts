@@ -511,7 +511,6 @@ export class DashboardComponent extends TableSelectionAbstract implements OnInit
       sender: this.filterData.sender,
       reader: this.filterData.reader
     };
-    console.log(payload);
     this.fileManagerService.reportChungLoaiTheoTinh(this.selectedTinhThanhId).subscribe(res => {
       if (res !== null) {
         this.datas = res.data;
@@ -651,7 +650,6 @@ export class DashboardComponent extends TableSelectionAbstract implements OnInit
     // seriesS.splice(3, 1);
     const labelS = [this.datas[0].name, this.datas[1].name, this.datas[2].name];
     // labelS.splice(3, 1);
-    // console.log(seriesS);
     this.chartOptions = {
       series: seriesS,
       labels: labelS,

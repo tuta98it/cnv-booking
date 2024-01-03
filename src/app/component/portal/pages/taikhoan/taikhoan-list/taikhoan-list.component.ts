@@ -133,7 +133,6 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
 
   getUserInfo() {
     this.userInfor = JSON.parse(localStorage.getItem(Constant.USER_INFO));
-    console.log('this.userInfor: ', this.userInfor);
   }
 
   getListData() {
@@ -179,7 +178,6 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
       console.log('UserType không hợp lệ!');
     }
 
-    // console.log('isGetAPT: ',  isGetAPT);
   }
 
   validateEmail(mail) {
@@ -280,7 +278,6 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
       position: this.item.position,
       partnerId: this.item.partnerId
     });
-    console.log(this.formAdd.value);
 
   }
 
@@ -518,7 +515,6 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
 
   onSearch() {
     const keyword = removeAccents(this.searchText.trim().toLowerCase());
-    console.log(keyword);
     this.filteredDatas = this.datas.filter((en) =>
       removeAccents(en.id?.toString().trim()).toLowerCase().includes(keyword) ||
       removeAccents(en.fullname?.trim()).toLowerCase().includes(keyword) ||
