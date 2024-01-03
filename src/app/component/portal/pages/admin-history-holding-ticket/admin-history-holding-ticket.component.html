@@ -24,13 +24,13 @@
   <dxo-header-filter [visible]="true"></dxo-header-filter>
   <dxo-filter-row [visible]="true" [applyFilter]="currentFilter"></dxo-filter-row>
 
-  <dxi-column cssClass="text-center" caption="STT" [width]="55" dataField="stt" [fixed]="true" [allowFiltering]="false"
-    [allowSorting]="false"></dxi-column>
-  <dxi-column caption="Tên người đặt vé" [width]="250" dataField="contactName"></dxi-column>
-  <dxi-column caption="SĐT" dataField="contactPhone" [width]="250"></dxi-column>
-  <dxi-column caption="Email" [width]="250" dataField="contactEmail"></dxi-column>
-  <dxi-column caption="Ngày đặt vé" dataField="dateCreated" dataType="date" format="HH:mm dd/MM/yy"></dxi-column>
-  <dxi-column caption="Thông tin vé" cssClass="text-center" [width]="200" cellTemplate="cellInfoTickets"></dxi-column>
+  <dxi-column  caption="STT" [width]="55" dataField="stt" [fixed]="true" [allowFiltering]="false"
+    [allowSorting]="false" cssClass="text-center vertical-align-middle"></dxi-column>
+  <dxi-column caption="Tên người đặt vé" [width]="250" dataField="contactName" cssClass="vertical-align-middle"></dxi-column>
+  <dxi-column caption="SĐT" dataField="contactPhone" [width]="250" cssClass="vertical-align-middle"></dxi-column>
+  <dxi-column caption="Email" [width]="250" dataField="contactEmail" cssClass="vertical-align-middle"></dxi-column>
+  <dxi-column caption="Ngày đặt vé" dataField="dateCreated" dataType="date" format="HH:mm dd/MM/yy" cssClass="vertical-align-middle"></dxi-column>
+  <dxi-column caption="Thông tin vé" [width]="200" cellTemplate="cellInfoTickets" cssClass="text-center vertical-align-middle"></dxi-column>
   <div *dxTemplate="let item of 'cellInfoTickets'">
     <a nz-button nzType="link" (click)="previewDetailTransactionHistoryTickets(item.data)" nzBlock>«Chi tiết»</a>
   </div>
@@ -52,24 +52,24 @@
 
 
       <dxo-load-panel [enabled]="true"></dxo-load-panel>`
-      <dxo-scrolling mode="virtual"></dxo-scrolling>
+      <dxo-scrolling mode="virtual" rowRenderingMode="virtual" columnRenderingMode="virtual"></dxo-scrolling>
       <dxo-sorting mode="multiple"></dxo-sorting>
       <dxo-header-filter [visible]="true"></dxo-header-filter>
       <dxo-filter-row [visible]="true" [applyFilter]="currentFilter"></dxo-filter-row>
 
-      <dxi-column cssClass="text-center" caption="STT" [width]="55" dataField="stt" [fixed]="true"
-        [allowFiltering]="false" [allowSorting]="false"></dxi-column>
+      <dxi-column caption="STT" [width]="55" dataField="stt" [fixed]="true"
+        [allowFiltering]="false" [allowSorting]="false" cssClass="text-center vertical-align-middle"></dxi-column>
       <dxi-column caption="Tên" [fixed]="true" [width]="150" dataField="firstName" cssClass="vertical-align-middle"></dxi-column>
-      <dxi-column caption="Họ" [fixed]="true" dataField="lastName" [width]="100"></dxi-column>
+      <dxi-column caption="Họ" [fixed]="true" dataField="lastName" [width]="100" cssClass="vertical-align-middle"></dxi-column>
       <dxi-column caption="Ngày sinh" dataField="dateOfBirth" [width]="150" dataType="date" format="dd/MM/yy" cssClass="vertical-align-middle"></dxi-column>
-      <dxi-column caption="Giới tính" dataField="gender" cssClass="vertical-align-middle"></dxi-column>
+      <dxi-column caption="Giới tính" dataField="gender" cssClass="text-center vertical-align-middle"></dxi-column>
       <dxi-column caption="Hãng bay" dataField="airlineName" [width]="150" cssClass="vertical-align-middle"></dxi-column>
-      <dxi-column caption="Số hiệu chuyến bay" dataField="flightNumber" [width]="200" cssClass="vertical-align-middle"></dxi-column>
-      <dxi-column caption="Hạng" dataField="fareClass" [width]="100" cssClass="vertical-align-middle"></dxi-column>
+      <dxi-column caption="Số hiệu chuyến bay" dataField="flightNumber" [width]="200" cssClass="text-center vertical-align-middle"></dxi-column>
+      <dxi-column caption="Hạng" dataField="fareClass" [width]="100" cssClass="text-center vertical-align-middle"></dxi-column>
       <dxi-column caption="Cân nặng hành lý" dataField="baggageFee" [width]="100" cssClass="vertical-align-middle"></dxi-column>
       <dxi-column caption="Thời gian cất cánh" dataField="startTime" [width]="200" dataType="date" format="HH:mm dd/MM/yy" cssClass="vertical-align-middle"></dxi-column>
       <dxi-column caption="Thời gian hạ cánh" dataField="endTime" [width]="200" dataType="date" format="HH:mm dd/MM/yy" cssClass="vertical-align-middle"></dxi-column>
-      <dxi-column caption="Hành trình" dataField="fromToPoint" [width]="150" cssClass="vertical-align-middle"></dxi-column>
+      <dxi-column caption="Hành trình" dataField="fromToPoint" [width]="150" cssClass="text-center vertical-align-middle"></dxi-column>
       <dxi-column caption="Giá vé" dataField="price" dataType="number" cssClass="vertical-align-middle"></dxi-column>
       <dxi-column caption="Giữ vé" cssClass="text-center" dataField="status" [width]="100" [fixed]="true" fixedPosition="right"  cellTemplate="cellTicket"></dxi-column>
       <div *dxTemplate="let item of 'cellTicket'">

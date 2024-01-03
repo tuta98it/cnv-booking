@@ -27,24 +27,24 @@
   [allowColumnResizing]="true" columnResizingMode="widget" [columnMinWidth]="50" [columnAutoWidth]="true"
   (onExporting)="onExporting($event)">
   <dxo-load-panel [enabled]="true"></dxo-load-panel>
-  <dxo-scrolling mode="virtual"></dxo-scrolling>
+  <dxo-scrolling mode="virtual" rowRenderingMode="virtual" columnRenderingMode="virtual"></dxo-scrolling>
   <dxo-sorting mode="multiple"></dxo-sorting>
   <dxo-header-filter [visible]="true"></dxo-header-filter>
   <dxo-filter-row [visible]="true" [applyFilter]="currentFilter"></dxo-filter-row>
 
 
-  <dxi-column cssClass="text-center" caption="STT" [width]="55" dataField="stt" [fixed]="true" [allowFiltering]="false"
-    [allowSorting]="false"></dxi-column>
-  <dxi-column caption="Tên khách hàng" [width]="300" dataField="passengerName"></dxi-column>
-  <dxi-column caption="Hãng bay" dataField="airlineName" [width]="200"></dxi-column>
-  <dxi-column caption="Mã đặt chỗ" [width]="200" dataField="bookingNumber"></dxi-column>
-  <dxi-column caption="Số vé" [width]="200" dataField="ticketNumber"></dxi-column>
+  <dxi-column  caption="STT" [width]="55" dataField="stt" [fixed]="true" [allowFiltering]="false"
+    [allowSorting]="false" cssClass="vertical-align-middle text-center"></dxi-column>
+  <dxi-column caption="Tên khách hàng" [width]="300" dataField="passengerName" cssClass="vertical-align-middle"></dxi-column>
+  <dxi-column caption="Hãng bay" dataField="airlineName" [width]="200" cssClass="vertical-align-middle"></dxi-column>
+  <dxi-column caption="Mã đặt chỗ" [width]="200" dataField="bookingNumber" cssClass="vertical-align-middle"></dxi-column>
+  <dxi-column caption="Số vé" [width]="200" dataField="ticketNumber" cssClass="vertical-align-middle"></dxi-column>
   <dxi-column caption="Ngày đặt vé" [width]="200" dataField="dateCreated" dataType="date"
-    format="HH:mm dd/MM/yyyy"></dxi-column>
-  <dxi-column caption="Trạng thái hệ thống" cssClass="text-center" [width]="200"
-    cellTemplate="cellSystemCancelled"></dxi-column>
-  <dxi-column caption="Lý do huỷ" [width]="150" dataField="noteSystemCancelled" dataTyp="string"></dxi-column>
-  <dxi-column caption="Xuất vé" cssClass="text-center" cellTemplate="cellBillet"></dxi-column>
+    format="HH:mm dd/MM/yyyy" cssClass="vertical-align-middle"></dxi-column>
+  <dxi-column caption="Trạng thái hệ thống" cssClass="text-center vertical-align-middle" [width]="200"
+    cellTemplate="cellSystemCancelled" cssClass="vertical-align-middle"></dxi-column>
+  <dxi-column caption="Lý do huỷ" [width]="150" dataField="noteSystemCancelled" dataTyp="string" cssClass="vertical-align-middle"></dxi-column>
+  <dxi-column caption="Xuất vé"  cellTemplate="cellBillet" cssClass="vertical-align-middle text-center"></dxi-column>
 
   <div *dxTemplate="let ticketFlightExport of 'cellSystemCancelled'">
     <nz-switch [ngModel]="!ticketFlightExport.data.systemCancelled" [nzControl]="true" nzCheckedChildren="Tính công nợ"
