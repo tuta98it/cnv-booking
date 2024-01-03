@@ -102,18 +102,9 @@
       </div>
       <div class="ticket-content">
         <div class="ticket-general-info">
-          <div *ngFor="let ticket of itemTicketHistoryTicket.tickets; let i = index;">
+          <div *ngFor="let ticket of itemTicketHistoryTicket.bookingReservations; let i = index;">
             <div class="ticket-code">
-              <label for="">Mã đặt vé: <strong>{{ticket.bookingNumber}}</strong></label>
-            </div>
-            <div class="ticket-code">
-              <label for="">Số vé: <strong>{{ticket.ticketNumber}}</strong></label>
-            </div>
-            <div class="ticket-holding-period">
-              <label for="">Mã base: <strong>{{ticket.approvalCode}}</strong></label>
-            </div>
-            <div class="ticket-status">
-              <label for="">Tình trạng: <strong>{{ticket.status === 'OK'? 'Đã xuất vé' : 'Lỗi xuất vé'}}</strong></label>
+              <label for="">Mã đặt chỗ: <strong>{{ticket.bookingCode}}</strong></label>
             </div>
           </div>
         </div>
