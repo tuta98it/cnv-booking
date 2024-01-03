@@ -40,6 +40,9 @@ export class AdminHistoryHoldingTicketComponent extends TableSelectionAbstract i
   showPageSizeSelector = true;
   showInfo = true;
   showNavButtons = true;
+  isVisibleTicketDetail: boolean = false;
+  itemTicketHistoryTicket: any;
+  airports: any[] = [];
   constructor(
     public translate: TranslateService,
     private notificationService: NotificationService,
@@ -55,6 +58,7 @@ export class AdminHistoryHoldingTicketComponent extends TableSelectionAbstract i
   ngOnInit(): void {
     this.getListData();
     this.getUserInfo();
+    this.getAirport();
   }
 
   ngOnDestroy(): void {
@@ -66,7 +70,14 @@ export class AdminHistoryHoldingTicketComponent extends TableSelectionAbstract i
     this.userInfor = JSON.parse(localStorage.getItem(Constant.USER_INFO));
     console.log('this.userInfor: ', this.userInfor);
   }
-
+  getAirport() {
+    this.generalService.getAirport().subscribe((res: any) => {
+      if (res !== null) {
+        this.airports = res;
+      }
+    }, error => {
+    });
+  }
   getListData() {
     this.loading = true;
     const payload = {
@@ -80,6 +91,7 @@ export class AdminHistoryHoldingTicketComponent extends TableSelectionAbstract i
         let stt = 0;
         this.datas.forEach(en => {
           en.stt = ++stt;
+          en.isLoadingViewTicket = false;
         });
         this.filteredDatas = this.datas;
         // console.log(this.datas);
@@ -97,6 +109,8 @@ export class AdminHistoryHoldingTicketComponent extends TableSelectionAbstract i
     let stt = 0;
     this.listDetailTicket.forEach(en => {
       en.gender = en.gender ? 'Nam' : 'Nữ'
+      en.startPoint = this.convertRotueBookingReservations(en.route)[stt].startPoint;
+      en.endPoint = this.convertRotueBookingReservations(en.route)[stt].endPoint;
       en.fromToPoint = `${en.startPoint} - ${en.endPoint}`
       en.stt = ++stt;
     });
@@ -131,12 +145,87 @@ export class AdminHistoryHoldingTicketComponent extends TableSelectionAbstract i
       arraybookingDataMap.push(bookingDataMap);
     });
 
-    console.log(arraybookingDataMap);
     return arraybookingDataMap;
   }
+  onOpenPopupTicketDetail(booking: any) {
+    booking.isLoadingViewTicket = true;
+    this.generalService.getBookingByID(booking.bookingId).subscribe({
+      next: (res: any) => {
+        if (res) {
+          this.itemTicketHistoryTicket = res;
+          let bookingFlightTotalPrice = 0;
+          let i = 0;
+          this.itemTicketHistoryTicket.bookingFlights.forEach((bookingFlight: any) => {
+            bookingFlightTotalPrice += bookingFlight.totalPrice;
+            bookingFlight.startPoint = this.convertRotueBookingReservations(this.itemTicketHistoryTicket.bookingReservations[0].route)[i].startPoint;
+            bookingFlight.endPoint = this.convertRotueBookingReservations(this.itemTicketHistoryTicket.bookingReservations[0].route)[i].endPoint;
+            i++;
+          });
+          this.itemTicketHistoryTicket.totalPricebookingFlight = bookingFlightTotalPrice;
 
-  handleCancel() {
+          console.log('this.itemTicketHistoryTicket: ', this.itemTicketHistoryTicket);
+
+        } else {
+          this.notificationService.showNotification(Constant.ERROR, `Dữ liệu vé máy bay của khách hàng <strong>${booking.passengerName}</strong> không tồn tại`);
+        }
+      },
+
+      error: (error) => {
+        this.notificationService.showNotification(Constant.ERROR, 'Dữ liệu vé máy bay trả về đã gặp lỗi');
+      },
+
+      complete: () => {
+        booking.isLoadingViewTicket = false;
+        this.isVisibleTicketDetail = true;
+      }
+    })
+  }
+
+
+  private convertRotueBookingReservations(route: string): any {
+    // Tách chuỗi theo dấu "|"
+    const parts = route.trim().split("|");
+    // Khởi tạo mảng để lưu kết quả
+    const result = [];
+    // Lặp qua từng phần tử
+    parts.forEach(part => {
+      // Sử dụng regex để tìm các cặp từ
+      const matches = part.trim().match(/([A-Z]{3})([A-Z]{3})/);
+      if (matches && matches.length === 3) {
+        // Lấy các match và tạo đối tượng
+        const startPoint = matches[1];
+        const endPoint = matches[2];
+        result.push({ startPoint, endPoint });
+      }
+    });
+    return result;
+  }
+  toNameAirportByCode(code: String) {
+    let mameAirport = '';
+    if (code) {
+      let airport = this.airports.find((objAirports: any) => objAirports.code === code);
+      if (airport) {
+        mameAirport = airport.name;
+      }
+    }
+    return mameAirport;
+  }
+  toAirlineNameByCode(codeAirline: string) {
+    switch (codeAirline) {
+      case "VN":
+        return "Vietnam Airlines";
+      case "QH":
+        return "Bamboo Airways";
+      case "VJ":
+        return "VietJet Air";
+      default:
+        return "";
+    }
+  }
+
+  handleCancelPopup() {
     this.isVisibleDetailTransactionHistoryTickets = false;
+    this.isVisibleTicketDetail = false;
   }
 
   exportData() {

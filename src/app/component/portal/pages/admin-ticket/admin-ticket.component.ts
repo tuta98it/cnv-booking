@@ -149,9 +149,6 @@ export class AdminTicketComponent extends TableSelectionAbstract implements OnIn
             i++;
           });
           this.bookingTicketDetail.totalPricebookingFlight = bookingFlightTotalPrice;
-
-          console.log('this.bookingTicketDetail.bookingFlights: ', this.bookingTicketDetail.bookingFlights);
-
         } else {
           this.notificationService.showNotification(Constant.ERROR, `Dữ liệu vé máy bay của khách hàng <strong>${booking.passengerName}</strong> không tồn tại`);
         }
