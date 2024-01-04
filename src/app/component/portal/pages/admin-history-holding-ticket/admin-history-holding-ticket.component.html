@@ -19,10 +19,14 @@
   [allowColumnResizing]="true" columnResizingMode="widget" [columnMinWidth]="50" [columnAutoWidth]="true"
   (onExporting)="onExporting($event)">
   <dxo-load-panel [enabled]="true"></dxo-load-panel>
-  <dxo-scrolling mode="virtual"></dxo-scrolling>
   <dxo-sorting mode="multiple"></dxo-sorting>
   <dxo-header-filter [visible]="true"></dxo-header-filter>
   <dxo-filter-row [visible]="true" [applyFilter]="currentFilter"></dxo-filter-row>
+  <dxo-paging [pageSize]="10"> </dxo-paging>
+  <dxo-scrolling rowRenderingMode="virtual"> </dxo-scrolling>
+  <dxo-pager [visible]="true" [allowedPageSizes]="allowedPageSizes" [displayMode]="displayMode"
+    [showPageSizeSelector]="showPageSizeSelector" [showInfo]="showInfo"
+    [showNavigationButtons]="showNavButtons"></dxo-pager>
 
   <dxi-column  caption="STT" [width]="55" dataField="stt" [fixed]="true" [allowFiltering]="false"
     [allowSorting]="false" cssClass="text-center vertical-align-middle"></dxi-column>
@@ -43,7 +47,7 @@
 
 
 <nz-modal [(nzVisible)]="isVisibleDetailTransactionHistoryTickets" nzTitle="Thông tin chi tiết" [nzContent]="content"
-  [nzFooter]="footer" nzWidth="1500px" (nzOnCancel)="handleCancelPopup()">
+  [nzFooter]="footer" nzWidth="1500px" (nzOnCancel)="handleCancel()">
   <ng-template #content>
     <dx-data-grid id="gridContainer" [dataSource]="listDetailTicket" #ListAccount [showColumnLines]="true"
       [showRowLines]="true" [height]="dxGridHeight" [rowAlternationEnabled]="true" [showBorders]="true"
@@ -52,7 +56,7 @@
 
 
       <dxo-load-panel [enabled]="true"></dxo-load-panel>`
-      <dxo-scrolling mode="virtual" rowRenderingMode="virtual" columnRenderingMode="virtual"></dxo-scrolling>
+      <dxo-scrolling rowRenderingMode="virtual"></dxo-scrolling>
       <dxo-sorting mode="multiple"></dxo-sorting>
       <dxo-header-filter [visible]="true"></dxo-header-filter>
       <dxo-filter-row [visible]="true" [applyFilter]="currentFilter"></dxo-filter-row>
@@ -243,7 +247,7 @@
     </div>
   </ng-template>
   <div *nzModalFooter>
-    <button nz-button nzType="default" (click)="handleCancelPopup()">Huỷ</button>
+    <button nz-button nzType="default" (click)="handleCancelPopup()">Đóng</button>
   </div>
 </nz-modal>
 

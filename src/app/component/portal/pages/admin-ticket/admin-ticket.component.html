@@ -27,11 +27,14 @@
   [allowColumnResizing]="true" columnResizingMode="widget" [columnMinWidth]="50" [columnAutoWidth]="true"
   (onExporting)="onExporting($event)">
   <dxo-load-panel [enabled]="true"></dxo-load-panel>
-  <dxo-scrolling mode="virtual" rowRenderingMode="virtual" columnRenderingMode="virtual"></dxo-scrolling>
   <dxo-sorting mode="multiple"></dxo-sorting>
   <dxo-header-filter [visible]="true"></dxo-header-filter>
   <dxo-filter-row [visible]="true" [applyFilter]="currentFilter"></dxo-filter-row>
-
+  <dxo-paging [pageSize]="10"> </dxo-paging>
+  <dxo-scrolling rowRenderingMode="virtual"> </dxo-scrolling>
+  <dxo-pager [visible]="true" [allowedPageSizes]="allowedPageSizes" [displayMode]="displayMode"
+    [showPageSizeSelector]="showPageSizeSelector" [showInfo]="showInfo"
+    [showNavigationButtons]="showNavButtons"></dxo-pager>
 
   <dxi-column  caption="STT" [width]="55" dataField="stt" [fixed]="true" [allowFiltering]="false"
     [allowSorting]="false" cssClass="vertical-align-middle text-center"></dxi-column>
@@ -233,7 +236,7 @@
     </div>
   </ng-template>
   <div *nzModalFooter>
-    <button nz-button nzType="default" (click)="handleCancelPopup()">Huỷ</button>
+    <button nz-button nzType="default" (click)="handleCancelPopup()">Đóng</button>
   </div>
 </nz-modal>
 

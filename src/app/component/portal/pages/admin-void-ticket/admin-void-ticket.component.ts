@@ -29,6 +29,11 @@ export class AdminVoidTicketComponent extends TableSelectionAbstract implements 
   searchText = '';
   userInfor: any;
   titleFormPartner = '';
+  readonly allowedPageSizes = [5, 10, 15, 20, 'all'];
+  displayMode = 'full';
+  showPageSizeSelector = true;
+  showInfo = true;
+  showNavButtons = true;
   constructor(
     private notificationService: NotificationService,
     private generalService: GeneralService,
@@ -47,7 +52,7 @@ export class AdminVoidTicketComponent extends TableSelectionAbstract implements 
     this.loading = true;
     const payload = {
       "page": 1,
-      "pageSize": 100
+      "pageSize": 500
     }
     this.generalService.getAdminVoidTicket(payload).subscribe((res: any) => {
       if (res !== null) {

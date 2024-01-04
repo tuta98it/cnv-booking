@@ -34,8 +34,7 @@ export class AdminHistoryHoldingTicketComponent extends TableSelectionAbstract i
   titleFormPartner = '';
   isVisibleDetailTransactionHistoryTickets: boolean = false;
   listDetailTicket: any[];
-  readonly allowedPageSizes = [5, 10, 'all'];
-  readonly displayModes = [{ text: "Display Mode 'full'", value: 'full' }, { text: "Display Mode 'compact'", value: 'compact' }];
+  readonly allowedPageSizes = [5, 10, 15, 20, 'all'];
   displayMode = 'full';
   showPageSizeSelector = true;
   showInfo = true;
@@ -81,7 +80,7 @@ export class AdminHistoryHoldingTicketComponent extends TableSelectionAbstract i
     this.loading = true;
     const payload = {
       "page": 1,
-      "pageSize": 100
+      "pageSize": 500
     }
     this.generalService.getAdminHistoryBooking(payload).subscribe((res: any) => {
       if (res !== null) {
@@ -218,10 +217,15 @@ export class AdminHistoryHoldingTicketComponent extends TableSelectionAbstract i
     }
   }
 
-  handleCancelPopup() {
+  handleCancel() {
     this.isVisibleDetailTransactionHistoryTickets = false;
-    this.isVisibleTicketDetail = false;
   }
+
+  handleCancelPopup() {
+    this.isVisibleTicketDetail = false;
+
+  }
+
 
   exportData() {
     this.dataGridDetail.instance.exportToExcel(false);

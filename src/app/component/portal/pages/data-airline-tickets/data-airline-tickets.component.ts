@@ -132,16 +132,11 @@ export class DataAirlineTicketsComponent extends TableSelectionAbstract implemen
     page: 1,
     pageSize: 1000
   };
-  readonly allowedPageSizes = [5, 10, 20, 'all'];
-
+  readonly allowedPageSizes = [5, 10, 15, 20, 'all'];
   readonly displayModes = [{ text: "Display Mode 'full'", value: 'full' }, { text: "Display Mode 'compact'", value: 'compact' }];
-
   displayMode = 'full';
-
   showPageSizeSelector = true;
-
   showInfo = true;
-
   showNavButtons = true;
   partnerInfo: any;
   constructor(
