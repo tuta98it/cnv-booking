@@ -43,23 +43,26 @@
   <dxi-column caption="Phòng ban" [width]="200" dataField="department"></dxi-column>
   <dxi-column caption="Mã nhân viên" [width]="200" dataField="staffCode"></dxi-column>
   <!-- <dxi-column caption="User ID	" [width]="80" dataField="id"></dxi-column> -->
-  <div *dxTemplate="let item of 'cellBtnTemplate'">
+  <div *dxTemplate="let item of 'cellBtnTemplate'" style="display: flex; justify-content: space-evenly;">
     <button title="Xóa tài khoản" nz-button nzSize="small" nzType="default" class="btn-right button-update ant-btn-red"
-      (click)="showDeleteConfirm(item.data.id)" *ngIf="checkUpdate">
+      (click)="showIsActiveUserConfirm(item.data.id)" [disabled]="!item.data.status">
       <span class="fa fa-times fa-fw"></span>
     </button>
-    <button title="Chỉnh sửa thông tin tài khoản" nz-button nzSize="small" nzType="default" class="btn-right button-update"
-      (click)="showModalUpdate(item.data)" *ngIf="checkUpdate">
+
+    <button title="Chỉnh sửa thông tin tài khoản" nz-button nzSize="small" nzType="default"
+      (click)="showModalUpdate(item.data)" [disabled]="!item.data.status">
       <span class="fa fa-edit fa-fw"></span>
     </button>
-    <!-- <button title="Danh sách nhóm" nz-button nzSize="small" nzType="default" class="btn-right button-update"
-      (click)="showModalUserGroup(item.data)" *ngIf="checkUpdate">
-      <span class="fa fa-user fa-fw"></span>
-    </button> -->
-    <button title="Đổi mật khẩu" nz-button nzSize="small" nzType="default" class="btn-right button-update"
-      (click)="showModalPassword(item.data)" *ngIf="checkUpdate">
+
+    <button title="Đổi mật khẩu" nz-button nzSize="small" nzType="default" (click)="showModalPassword(item.data)"
+      [disabled]="!item.data.status">
       <span class="fa fa-key fa-fw"></span>
     </button>
+
+    <nz-switch [ngModel]="item.data.status" [nzControl]="true" [nzCheckedChildren]="checkedTemplateUser" [nzUnCheckedChildren]="unCheckedTemplateUser"
+      [nzLoading]="item.data.isLoadingActiveUser" (click)="showIsActiveUserConfirm(item.data)"></nz-switch>
+    <ng-template #checkedTemplateUser><span nz-icon nzType="user"></span></ng-template>
+    <ng-template #unCheckedTemplateUser><span nz-icon nzType="user-delete"></span></ng-template>
   </div>
   <dxo-summary>
     <dxi-total-item column="fullname" displayFormat="Số bản ghi: {0}" summaryType="count">
@@ -120,7 +123,8 @@
       <div class="input-wrap" nz-row>
         <label class="title-detail" nz-col [nzSpan]="8">Họ tên<em class="fas fa-asterisk required"></em></label>
         <div nz-col [nzSpan]="16">
-          <input nz-input formControlName="fullname" [ngClass]="{ 'is-invalid': submitted && f.fullname.errors?.required }" />
+          <input nz-input formControlName="fullname"
+            [ngClass]="{ 'is-invalid': submitted && f.fullname.errors?.required }" />
         </div>
       </div>
 
@@ -128,14 +132,16 @@
       <div class="input-wrap" nz-row>
         <label class="title-detail" nz-col [nzSpan]="8">Số điện thoại<em class="fa fa-asterisk required"></em></label>
         <div nz-col [nzSpan]="16">
-          <input nz-input formControlName="phoneNo" type="tel" [ngClass]="{ 'is-invalid': submitted && f.phoneNo.errors?.required }"/>
+          <input nz-input formControlName="phoneNo" type="tel"
+            [ngClass]="{ 'is-invalid': submitted && f.phoneNo.errors?.required }" />
         </div>
       </div>
 
       <div class="input-wrap" nz-row>
         <label class="title-detail" nz-col [nzSpan]="8">Email<em class="fa fa-asterisk required"></em></label>
         <div nz-col [nzSpan]="16">
-          <input type="email" nz-input formControlName="email" [ngClass]="{ 'is-invalid': submitted && f.email.errors?.required }"/>
+          <input type="email" nz-input formControlName="email"
+            [ngClass]="{ 'is-invalid': submitted && f.email.errors?.required }" />
         </div>
       </div>
 
@@ -161,7 +167,8 @@
         <label class="title-detail" nz-col [nzSpan]="8">Chức vụ<em class="fas fa-asterisk required"></em></label>
         <div nz-col [nzSpan]="16">
           <!-- [ngClass]="{ 'is-invalid': submitted && f.staffCode.errors }"  -->
-          <input nz-input formControlName="position" [ngClass]="{ 'is-invalid': submitted && f.email.errors?.required }"/>
+          <input nz-input formControlName="position"
+            [ngClass]="{ 'is-invalid': submitted && f.email.errors?.required }" />
         </div>
       </div>
 
@@ -180,7 +187,8 @@
       <div class="input-wrap" nz-row>
         <label class="title-detail" nz-col [nzSpan]="8">Mã nhân viên<em class="fas fa-asterisk required"></em></label>
         <div nz-col [nzSpan]="16">
-          <input nz-input formControlName="staffCode" [ngClass]="{ 'is-invalid': submitted && f.staffCode.errors?.required }" />
+          <input nz-input formControlName="staffCode"
+            [ngClass]="{ 'is-invalid': submitted && f.staffCode.errors?.required }" />
         </div>
       </div>
 
@@ -200,14 +208,16 @@
       <div class="input-wrap" nz-row [hidden]=updated>
         <label class="title-detail" nz-col [nzSpan]="8">Tài khoản<em class="fa fa-asterisk required"></em></label>
         <div nz-col [nzSpan]="16">
-          <input nz-input formControlName="username" autocomplete="new-password" [ngClass]="{ 'is-invalid': submitted && f.username.errors?.required }"/>
+          <input nz-input formControlName="username" autocomplete="new-password"
+            [ngClass]="{ 'is-invalid': submitted && f.username.errors?.required }" />
         </div>
       </div>
       <div [hidden]=updated>
         <div class="input-wrap" nz-row>
           <label class="title-detail" nz-col [nzSpan]="8">Mật khẩu<em class="fa fa-asterisk required"></em></label>
           <div nz-col [nzSpan]="16">
-            <nz-input-group [nzSuffix]="suffixTemplate" [ngClass]="{ 'is-invalid': submitted && ((formAdd.controls['password'].value) | isEmpty) }">
+            <nz-input-group [nzSuffix]="suffixTemplate"
+              [ngClass]="{ 'is-invalid': submitted && ((formAdd.controls['password'].value) | isEmpty) }">
               <input [type]="passwordVisible ? 'text' : 'password'" nz-input placeholder="Nhập mật khẩu"
                 formControlName="password" autocomplete="new-password" />
             </nz-input-group>
@@ -220,7 +230,8 @@
         <div class="input-wrap" nz-row>
           <label class="title-detail" nz-col [nzSpan]="8">Nhắc lại<em class="fa fa-asterisk required"></em></label>
           <div nz-col [nzSpan]="16">
-            <nz-input-group [nzSuffix]="suffixRepeatTemplate" [ngClass]="{ 'is-invalid': submitted &&  ((formAdd.controls['repeatPassword'].value) | isEmpty) }">
+            <nz-input-group [nzSuffix]="suffixRepeatTemplate"
+              [ngClass]="{ 'is-invalid': submitted &&  ((formAdd.controls['repeatPassword'].value) | isEmpty) }">
               <input [type]="repeatpasswordVisible ? 'text' : 'password'" nz-input placeholder="Nhập lại mật khẩu"
                 formControlName="repeatPassword" />
             </nz-input-group>

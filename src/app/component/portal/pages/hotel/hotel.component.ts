@@ -994,7 +994,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
   onChangeActiveHotel(hotel: any) {
     hotel.loadingActiveHotel = true;
     let changeIsActiveHotel = !hotel.isActive;
-    this.generalService.setetActiveHotel(hotel.id, changeIsActiveHotel).subscribe({
+    this.generalService.setActiveHotel(hotel.id, changeIsActiveHotel).subscribe({
       next: (res) => {
         if (res.ret && res.ret[0].code !== 0) {
           this.notificationService.showNotification(Constant.ERROR, 'Thiết lập trạng thái khách sạn không thành công');

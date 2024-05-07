@@ -40,6 +40,8 @@ import { AngularEditorModule } from '@kolkov/angular-editor';
 import { BookingHotelStatusPipe } from './pipe/booking-hotel-status.pipe';
 import { DxDateBoxModule } from 'devextreme-angular';
 import { PassengerTypesPipe } from './pipe/passenger-type.pipe';
+import { NzSwitchModule } from 'ng-zorro-antd/switch';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -67,10 +69,11 @@ import { PassengerTypesPipe } from './pipe/passenger-type.pipe';
     QRCodeModule,
     NzTagModule,
     NzUploadModule,
-    NzCheckboxModule,
     NzAlertModule,
     NzImageModule,
     NzMessageModule,
+    NzSwitchModule,
+    NzCheckboxModule,
     DxDateBoxModule,
     AngularEditorModule
   ],
@@ -110,6 +113,7 @@ import { PassengerTypesPipe } from './pipe/passenger-type.pipe';
     MViewPdfComponent,
     NzImageModule,
     NzMessageModule,
+    NzSwitchModule,
     AngularEditorModule,
     DxDateBoxModule,
     BookingHotelStatusPipe,
