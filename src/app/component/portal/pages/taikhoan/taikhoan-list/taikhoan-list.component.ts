@@ -205,7 +205,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
     let changeIsActiveUser = !user.status;
     user.isLoadingActiveUser = true;
     this.modalService.confirm({
-      nzTitle: `<b>Bạn có chắc muốn ${ changeIsActiveUser ? "Active" : "Inactive" } tài khoản này?</b>`,
+      nzTitle: `<b>Bạn có chắc muốn ${changeIsActiveUser ? "Active" : "Inactive"} tài khoản này?</b>`,
       nzContent: 'Ấn đồng ý để tiếp tục',
       nzOkDanger: true,
       nzOkText: 'Đồng ý',
@@ -215,7 +215,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
     });
   }
 
-  private cancelActiveUserConfirm(user: any){
+  private cancelActiveUserConfirm(user: any) {
     user.isLoadingActiveUser = false;
   }
   setStatusUser(user: any, changeIsActiveUser: boolean) {
@@ -235,10 +235,10 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
       complete: () => {
         this.getListData().then(() => {
           this.notificationService.showNotification(Constant.SUCCESS, `${changeIsActiveUser ? 'Active' : 'Inactive'} tài khoản thành công`);
-          user.isLoadingActiveUser = false;
         });
       }
-    }).add(() => { });
+
+    }).add(() => { user.isLoadingActiveUser = false; });
   }
 
   showModalAdd() {

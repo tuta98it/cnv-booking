@@ -1009,10 +1009,10 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
       complete: () => {
         this.getListData().then(() => {
           this.notificationService.showNotification(Constant.SUCCESS, `${changeIsActiveHotel ? 'Active' : 'Inactive'} khách sạn thành công`);
-          hotel.loadingActiveHotel = false;
-
         });
       }
-    }).add(() => { });
+    }).add(() => {
+      hotel.loadingActiveHotel = false;
+    });
   }
 }

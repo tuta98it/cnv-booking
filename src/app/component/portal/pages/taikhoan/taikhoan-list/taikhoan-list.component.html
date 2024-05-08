@@ -5,7 +5,6 @@
   </div>
   <div class="form-group" style="float: right; display: flex; align-items: center;">
     <!-- Tìm kiếm -->
-    <!-- [(ngModel)]="searchText" (keyup.enter)="onSearch()"-->
     <input style="width: 200px; border-radius: 4px; height: 32px;" class="mgr10" nzSize="small" nz-input type="text"
       [(ngModel)]="searchText" (keyup)="onSearch()" placeholder="Tìm kiếm theo tên, username, ...">
 
@@ -42,12 +41,7 @@
   <dxi-column caption="Chức vụ" [width]="200" dataField="position" [fixed]="true"></dxi-column>
   <dxi-column caption="Phòng ban" [width]="200" dataField="department"></dxi-column>
   <dxi-column caption="Mã nhân viên" [width]="200" dataField="staffCode"></dxi-column>
-  <!-- <dxi-column caption="User ID	" [width]="80" dataField="id"></dxi-column> -->
   <div *dxTemplate="let item of 'cellBtnTemplate'" style="display: flex; justify-content: space-evenly;">
-    <button title="Xóa tài khoản" nz-button nzSize="small" nzType="default" class="btn-right button-update ant-btn-red"
-      (click)="showIsActiveUserConfirm(item.data.id)" [disabled]="!item.data.status">
-      <span class="fa fa-times fa-fw"></span>
-    </button>
 
     <button title="Chỉnh sửa thông tin tài khoản" nz-button nzSize="small" nzType="default"
       (click)="showModalUpdate(item.data)" [disabled]="!item.data.status">
@@ -69,47 +63,6 @@
     </dxi-total-item>
   </dxo-summary>
 </dx-data-grid>
-
-<!--<nz-table #basic [nzData]="datas"
-          (nzCurrentPageDataChange)="currentPageDataChange($event)"
-          [nzPageSizeOptions]="pageSize" [nzPageSize]="defaultPage"
-          nzShowSizeChanger [nzShowTotal]="rangeTemplate" [nzLoading]="loading">
-  <thead>
-  <tr>
-    <th class="text-nowrap text-center" width="50px">#</th>
-    <th class="text-nowrap">Họ tên</th>
-    <th class="text-nowrap">Tài khoản</th>
-    <th class="text-nowrap">Tỉnh/TP</th>
-    <th class="text-nowrap">Quận/Huyện</th>
-    <th class="text-nowrap">User ID</th>
-    <th class="text-nowrap">Phân quyền</th>
-    <th class="text-nowrap">Số điện thoại</th>
-    <th class="text-nowrap">Email</th>
-    &lt;!&ndash; <th class="text-nowrap">Status</th> &ndash;&gt;
-    <th nzWidth="180px" class="text-nowrap text-center">Action</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr *ngFor="let data of basic.data;let i = index;">
-    <td class="text-nowrap  text-center">{{getRowIndex(i, basic.nzPageIndex, basic.nzPageSize)}}</td>
-    <td class="text-nowrap">{{ data.fullname }}</td>
-    <td class="text-nowrap">{{ data.username }}</td>
-    <td class="text-nowrap">{{ data.tinhThanh?.name }}</td>
-    <td class="text-nowrap">{{ data.quanHuyen?.name }}</td>
-    <td class="text-nowrap">{{ data.id }}</td>
-    <td class="text-nowrap crop-long-text">{{ getQuyen(data.userroles) }}</td>
-    <td class="text-nowrap">{{ data.phoneNo }}</td>
-    <td class="text-nowrap">{{ data.email }}</td>
-    &lt;!&ndash; <td class="text-nowrap">{{ getUserStatus(data.status) }}</td> &ndash;&gt;
-    <td class="text">
-
-    </td>
-  </tr>
-  </tbody>
-</nz-table>
-<ng-template #rangeTemplate let-range="range" let-total>
-  {{ range[0] }}-{{ range[1] }} {{'of' | translate }} {{ total }} {{'items' | translate }}
-</ng-template>-->
 
 <form [formGroup]="formAdd" (ngSubmit)="handleOk()">
   <nz-modal [(nzVisible)]="isVisibleAdd" nzClosable="false" [nzTitle]="title" nzMaskClosable="false">
@@ -145,44 +98,20 @@
         </div>
       </div>
 
-
-
-
-      <!-- Chức vụ -->
-      <!-- }  -->
       <div class="input-wrap">
-        <!-- <label class="title-detail">Chức vụ<em class="fa fa-asterisk required"></em></label>
-        <nz-select nzMode="multiple" nzPlaceHolder="--Chọn quyền--" formControlName="roles"
-          style="width: 19.7rem; margin-left: 2.6rem;" [ngClass]="{ 'is-invalid': submitted && submitted && ((formAdd.controls['roles'].value) | isEmpty) }">
-          <nz-option [nzValue]="1" nzLabel="Quản trị"></nz-option>
-          <nz-option [nzValue]="2" nzLabel="Xem danh sách nhân sự"></nz-option>
-          <nz-option [nzValue]="3" nzLabel="Quản lý phòng ban"></nz-option>
-          <nz-option [nzValue]="4" nzLabel="Sửa chi tiết nhân sự"></nz-option>
-          <nz-option [nzValue]="5" nzLabel="Quản lý user"></nz-option>
-          <nz-option [nzValue]="6" nzLabel="Quản lý group user"></nz-option>
-          <nz-option [nzValue]="7" nzLabel="Duyệt xin nghỉ"></nz-option>
-          <nz-option [nzValue]="8" nzLabel="Chấm công"></nz-option>
-        </nz-select> -->
-
         <label class="title-detail" nz-col [nzSpan]="8">Chức vụ<em class="fas fa-asterisk required"></em></label>
         <div nz-col [nzSpan]="16">
-          <!-- [ngClass]="{ 'is-invalid': submitted && f.staffCode.errors }"  -->
           <input nz-input formControlName="position"
             [ngClass]="{ 'is-invalid': submitted && f.email.errors?.required }" />
         </div>
       </div>
 
-
-
-
       <div class="input-wrap" nz-row>
         <label class="title-detail" nz-col [nzSpan]="8">Phòng ban</label>
         <div nz-col [nzSpan]="16">
-          <!-- [ngClass]="{ 'is-invalid': submitted && f.staffCode.errors }"  -->
           <input nz-input formControlName="department" />
         </div>
       </div>
-
 
       <div class="input-wrap" nz-row>
         <label class="title-detail" nz-col [nzSpan]="8">Mã nhân viên<em class="fas fa-asterisk required"></em></label>
@@ -192,19 +121,6 @@
         </div>
       </div>
 
-
-      <!-- <div class="input-wrap" nz-row>
-        <label class="title-detail" nz-col [nzSpan]="8">Tỉnh thành</label>
-        <div nz-col [nzSpan]="16">
-          <input nz-input name="province" formControlName="province" />
-        </div>
-      </div> -->
-      <!-- <div class="input-wrap" nz-row>
-        <label class="title-detail" nz-col [nzSpan]="8">Quận huyện</label>
-        <div nz-col [nzSpan]="16">
-          <input nz-input name="district" formControlName="district" />
-        </div>
-      </div> -->
       <div class="input-wrap" nz-row [hidden]=updated>
         <label class="title-detail" nz-col [nzSpan]="8">Tài khoản<em class="fa fa-asterisk required"></em></label>
         <div nz-col [nzSpan]="16">
@@ -242,14 +158,6 @@
           </div>
         </div>
       </div>
-      <!-- <div class="input-wrap" nz-row>
-        <label class="title-detail" nz-col [nzSpan]="8">Danh sách quyền riêng</label>
-        <div nz-col [nzSpan]="16">
-          <nz-select nzMode="multiple" nzPlaceHolder="--Chọn quyền--" formControlName="roles" style="width:200px">
-            <nz-option *ngFor="let item of allRoles" nzLabel="{{item.name}}" [nzValue]="item.id"></nz-option>
-          </nz-select>
-        </div>
-      </div> -->
     </div>
     <!-- Footer -->
     <div *nzModalFooter>
