@@ -47,7 +47,9 @@
   <dxi-column caption="Công nợ còn lại" [width]="200" dataField="debtRemain" [format]="formatCurrencyVND"></dxi-column>
   <dxi-column caption="Giấy phép kinh doanh" [width]="450" cellTemplate="cellBusinessLicenses"></dxi-column>
   <dxi-column caption="Hợp đồng" [width]="450" cellTemplate="cellContract"></dxi-column>
-  <dxi-column caption="Ghi chú" [width]="500" dataField="note"></dxi-column>
+  <dxi-column caption="Ghi chú" [width]="350" dataField="note"></dxi-column>
+  <dxi-column caption="Thời gian đăng ký" dataField="dateCreated" [width]="150" dataType="date"  format="dd/MM/yyyy"> </dxi-column>
+
 
 
   <div *dxTemplate="let partner of 'cellBusinessLicenses'">
