@@ -7,8 +7,8 @@
         [(ngModel)]="searchText" (keyup)="onSearch()" placeholder="Tìm kiếm">
     </div>
   </div>
-  
-  
+
+
   <dx-data-grid id="gridContainer" [dataSource]="filteredDatas" #ListAccount [showColumnLines]="true"
     [showRowLines]="true" [height]="dxGridHeight" [rowAlternationEnabled]="true" [showBorders]="true"
     [allowColumnResizing]="true" columnResizingMode="widget" [columnMinWidth]="50" [columnAutoWidth]="true">
@@ -26,13 +26,13 @@
     <dxi-column caption="Email" [width]="250" dataField="email"></dxi-column>
     <dxi-column caption="Địa chỉ" dataField="address"></dxi-column>
     <dxi-column caption="Đơn vị công tác" dataField="companyName" [width]="250"></dxi-column>
+    <dxi-column caption="Thời gian đăng ký" dataField="createDate" [width]="150" dataType="date"  format="dd/MM/yyyy"> </dxi-column>
     <dxi-column caption="Trạng thái" dataField="status" [width]="200" cellTemplate="cellStatus" [allowFiltering]="false"></dxi-column>
     <div *dxTemplate="let item of 'cellStatus'" (click)="showUpdateConfirm(item.data)" class="status" [ngClass]="{'confirmed': item.data.status == 1, 'not-confirmed': item.data.status == 0}">
         {{item.data.status == 0 ? 'Chưa duyệt' : 'Đã duyệt'}}
-    </div>    
+    </div>
     <dxo-summary>
       <dxi-total-item column="lastName" displayFormat="Số bản ghi: {0}" summaryType="count">
       </dxi-total-item>
     </dxo-summary>
   </dx-data-grid>
-  
