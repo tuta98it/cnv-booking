@@ -41,6 +41,7 @@ import { BookingHotelStatusPipe } from './pipe/booking-hotel-status.pipe';
 import { DxDateBoxModule } from 'devextreme-angular';
 import { PassengerTypesPipe } from './pipe/passenger-type.pipe';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
+import { NzRateModule } from 'ng-zorro-antd/rate';
 
 @NgModule({
   imports: [
@@ -73,6 +74,7 @@ import { NzSwitchModule } from 'ng-zorro-antd/switch';
     NzImageModule,
     NzMessageModule,
     NzSwitchModule,
+    NzRateModule,
     NzCheckboxModule,
     DxDateBoxModule,
     AngularEditorModule
@@ -114,6 +116,7 @@ import { NzSwitchModule } from 'ng-zorro-antd/switch';
     NzImageModule,
     NzMessageModule,
     NzSwitchModule,
+    NzRateModule,
     AngularEditorModule,
     DxDateBoxModule,
     BookingHotelStatusPipe,

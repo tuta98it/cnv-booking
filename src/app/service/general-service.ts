@@ -393,7 +393,7 @@ export class GeneralService extends BaseService {
     return this.delete(UrlConstant.LIST_TAIKHOAN + '/' + id, null);
   }
   setStatusTaikhoan(idUser: number, newStatus: boolean): any {
-    return this.put(`/${UrlConstant.LIST_TAIKHOAN}/SetStatusUser/${idUser}?isActive=${newStatus}`, '');
+    return this.put(`${UrlConstant.LIST_TAIKHOAN}/SetStatusUser/${idUser}?isActive=${newStatus}`, '');
   }
   addTaikhoan(item: any): any {
     return this.post(UrlConstant.LIST_TAIKHOAN, item);

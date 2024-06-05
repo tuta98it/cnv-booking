@@ -197,14 +197,14 @@
           </div>
 
 
-          <div class="input-wrap" nz-row>
+          <!-- <div class="input-wrap" nz-row>
             <label class="title-detail" nz-col [nzSpan]="8">Mã khách sạn<em
                 class="fas fa-asterisk required"></em></label>
             <div nz-col [nzSpan]="16">
               <input nz-input formControlName="code" type="text"
                 [ngClass]="{ 'is-invalid': submitted && formControlHotel.code.errors?.required }" />
             </div>
-          </div>
+          </div> -->
 
 
           <div class="input-wrap" nz-row>
@@ -261,8 +261,10 @@
           <div class="input-wrap" nz-row>
             <label class="title-detail" nz-col [nzSpan]="8">Số phòng<em class="fas fa-asterisk required"></em></label>
             <div nz-col [nzSpan]="16">
-              <input nz-input formControlName="numRooms" type="number"
-                [ngClass]="{ 'is-invalid': submitted && formControlHotel.numRooms.errors?.required }" />
+              <input nz-input formControlName="numRooms" type="number"/>
+
+                <!-- <input nz-input formControlName="numRooms" type="number"
+                [ngClass]="{ 'is-invalid': submitted && formControlHotel.numRooms.errors?.required }" /> -->
             </div>
           </div>
 

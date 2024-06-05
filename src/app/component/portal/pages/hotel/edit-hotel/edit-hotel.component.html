@@ -6,6 +6,7 @@
       </div>
     </div>
 
+
     <div class="content">
       <div style="display: flex;">
         <div style="width: 40%;">
@@ -17,14 +18,14 @@
                 [ngClass]="{ 'is-invalid': submitted && formControlHotel.name.errors?.required }" />
             </div>
           </div>
-          <div class="input-wrap" nz-row>
+          <!-- <div class="input-wrap" nz-row>
             <label class="title-detail" nz-col [nzSpan]="6">Mã khách sạn<em
                 class="fas fa-asterisk required"></em></label>
             <div nz-col [nzSpan]="16">
               <input nz-input formControlName="code" type="text"
                 [ngClass]="{ 'is-invalid': submitted && formControlHotel.code.errors?.required }" />
             </div>
-          </div>
+          </div> -->
           <div class="input-wrap" nz-row>
             <label class="title-detail" nz-col [nzSpan]="6">Số điện thoại<em
                 class="fa fa-asterisk required"></em></label>
@@ -64,16 +65,20 @@
           </div>
           <div class="input-wrap" nz-row>
             <label class="title-detail" nz-col [nzSpan]="6">Hạng<em class="fas fa-asterisk required"></em></label>
+
             <div nz-col [nzSpan]="16">
-              <input nz-input formControlName="ratingStar" type="number"
-                [ngClass]="{ 'is-invalid': submitted && formControlHotel.ratingStar.errors?.required }" />
+              <nz-rate formControlName="ratingStar" [nzTooltips]="tooltipRatingStars" nzAllowHalf [ngModelOptions]="
+              {standalone: true}"></nz-rate>
+              <!-- <input nz-input formControlName="ratingStar" type="number"
+                [ngClass]="{ 'is-invalid': submitted && formControlHotel.ratingStar.errors?.required }" /> -->
             </div>
           </div>
           <div class="input-wrap" nz-row>
-            <label class="title-detail" nz-col [nzSpan]="6">Số phòng<em class="fas fa-asterisk required"></em></label>
+            <label class="title-detail" nz-col [nzSpan]="6">Số phòng</label>
             <div nz-col [nzSpan]="16">
-              <input nz-input formControlName="numRooms" type="number"
-                [ngClass]="{ 'is-invalid': submitted && formControlHotel.numRooms.errors?.required }" />
+              <input nz-input formControlName="numRooms" type="number" />
+              <!-- <input nz-input formControlName="numRooms" type="number"
+                [ngClass]="{ 'is-invalid': submitted && formControlHotel.numRooms.errors?.required }" /> -->
             </div>
           </div>
           <div class="input-wrap" nz-row>
