@@ -261,9 +261,9 @@
           <div class="input-wrap" nz-row>
             <label class="title-detail" nz-col [nzSpan]="8">Số phòng<em class="fas fa-asterisk required"></em></label>
             <div nz-col [nzSpan]="16">
-              <input nz-input formControlName="numRooms" type="number"/>
+              <input nz-input formControlName="numRooms" type="number" />
 
-                <!-- <input nz-input formControlName="numRooms" type="number"
+              <!-- <input nz-input formControlName="numRooms" type="number"
                 [ngClass]="{ 'is-invalid': submitted && formControlHotel.numRooms.errors?.required }" /> -->
             </div>
           </div>
@@ -319,46 +319,50 @@
       <div style="display: flex; justify-content: space-between;">
         <div style="width: 26%;">
           <div class="input-wrap" nz-row>
-            <label class="title-detail" nz-col [nzSpan]="8">Loại phòng<em class="fas fa-asterisk required"></em></label>
+            <label class="title-detail" nz-col [nzSpan]="8">Loại phòng:<em class="fas fa-asterisk required"></em></label>
             <div nz-col [nzSpan]="16">
               <input nz-input formControlName="name"
                 [ngClass]="{ 'is-invalid': submitted && formControlRoom.name.errors?.required }" />
             </div>
           </div>
           <div class="input-wrap" nz-row>
-            <label class="title-detail" nz-col [nzSpan]="8">Số khách</label>
+            <label class="title-detail" nz-col [nzSpan]="8">Số khách:</label>
             <div nz-col [nzSpan]="16">
               <!-- [ngClass]="{ 'is-invalid': submitted && formControlRoom.numberOfPeople.errors?.required }"  -->
               <dx-number-box formControlName="numberOfPeople" format="#,##0"></dx-number-box>
             </div>
           </div>
           <div class="input-wrap" nz-row>
-            <label class="title-detail" nz-col [nzSpan]="8">Diện tích phòng</label>
+            <label class="title-detail" nz-col [nzSpan]="8">Diện tích phòng:</label>
             <div nz-col [nzSpan]="16">
               <!-- [ngClass]="{ 'is-invalid': submitted && formControlRoom.roomArea.errors?.required }"  -->
               <dx-number-box formControlName="roomArea" format="#,##0 m2"></dx-number-box>
             </div>
           </div>
           <div class="input-wrap" nz-row>
-            <label class="title-detail" nz-col [nzSpan]="8">Giường phụ</label>
+            <label class="title-detail" nz-col [nzSpan]="8">Giường phụ:<em
+              class="fas fa-asterisk required"></em></label>
             <div nz-col [nzSpan]="16">
-              <dx-number-box formControlName="extraBed" format="#,##0"></dx-number-box>
+              <dx-number-box formControlName="extraBed" format="#,##0"
+                [ngClass]="{ 'is-invalid': submitted && (formControlRoom.extraBed.errors?.required || formControlRoom.extraBed.value == 0 ) }"></dx-number-box>
             </div>
           </div>
           <div class="input-wrap" nz-row>
-            <label class="title-detail" nz-col [nzSpan]="8">Giá giường phụ</label>
+            <label class="title-detail" nz-col [nzSpan]="8">Giá giường phụ <em
+                class="fas fa-asterisk required"></em></label>
             <div nz-col [nzSpan]="16">
-              <dx-number-box formControlName="extraBedPrice" format="#,##0"></dx-number-box>
+              <dx-number-box formControlName="extraBedPrice" format="#,##0"
+                [ngClass]="{ 'is-invalid': submitted && (formControlRoom.extraBedPrice.errors?.required || formControlRoom.extraBedPrice.value == 0)}"></dx-number-box>
             </div>
           </div>
           <div class="input-wrap" nz-row>
-            <label class="title-detail" nz-col [nzSpan]="8">Phụ phí người lớn</label>
+            <label class="title-detail" nz-col [nzSpan]="8">Phụ phí người lớn:</label>
             <div nz-col [nzSpan]="16">
               <dx-number-box formControlName="adultSurcharge" format="#,##0"></dx-number-box>
             </div>
           </div>
           <div class="input-wrap" nz-row>
-            <label class="title-detail" nz-col [nzSpan]="8">Phụ phí trẻ em</label>
+            <label class="title-detail" nz-col [nzSpan]="8">Phụ phí trẻ em:</label>
             <div nz-col [nzSpan]="16">
               <dx-number-box formControlName="childSurcharge" format="#,##0"></dx-number-box>
             </div>
@@ -367,7 +371,8 @@
             <label class="title-detail" nz-col [nzSpan]="8">Tiện ích phòng:<em
                 class="fas fa-asterisk required"></em></label>
             <div nz-col [nzSpan]="16">
-              <nz-select nzMode="multiple" nzPlaceHolder="--Tiện ích phòng--" formControlName="utilitieIds">
+              <nz-select nzMode="multiple" nzPlaceHolder="--Tiện ích phòng--" formControlName="utilitieIds"
+                [ngClass]="{ 'is-invalid': submitted && formControlRoom.utilitieIds.errors?.required }">
                 <nz-option *ngFor="let room of listUtilityRoom" nzLabel="{{room.name}}" [nzValue]="room.id"></nz-option>
               </nz-select>
             </div>
@@ -375,7 +380,7 @@
         </div>
         <div style="width: 72%;  max-height: 32rem; overflow: auto;">
           <div class="input-wrap" nz-row>
-            <label class="title-detail" nz-col [nzSpan]="4">Giá phòng mặc định<em
+            <label class="title-detail" nz-col [nzSpan]="4">Giá phòng mặc định:<em
                 class="fas fa-asterisk required"></em></label>
             <div nz-col [nzSpan]="20">
               <dx-number-box formControlName="price"
@@ -442,9 +447,10 @@
           <div class="input-wrap" style="justify-content: end;" nz-row>
             <label class="title-detail" nz-col [nzSpan]="2">Ảnh phòng<em class="fas fa-asterisk required"></em></label>
             <div nz-col [nzSpan]="22">
-              <nz-upload class="upload-list-inline" style="padding: 5px;" nzListType="picture" [nzMultiple]="true" [nzAction]="uploadUrl"
-                nzName="postedFile" [nzHeaders]="uploadHeader" (nzChange)="handleChangeImages($event, 'room')"
-                [nzRemove]="handleRemoveImageRoom" [nzFileList]="fileList">
+              <nz-upload class="upload-list-inline" style="padding: 5px;" nzListType="picture" [nzMultiple]="true"
+                [nzAction]="uploadUrl" nzName="postedFile" [nzHeaders]="uploadHeader"
+                (nzChange)="handleChangeImages($event, 'room')" [nzRemove]="handleRemoveImageRoom"
+                [nzFileList]="fileList">
                 <button nz-button>
                   <span nz-icon nzType="upload"></span>
                   Nhấn để tải ảnh

@@ -1472,8 +1472,8 @@ h1 {
 .is-invalid {
   border-color: #dc3545 !important;
 
-  nz-select-top-control.ng-tns-c11-1.ant-select-selector {
-    border-color: #dc3545;
+  nz-select-top-control {
+    border-color: #dc3545 !important;
   }
 
   .angular-editor {

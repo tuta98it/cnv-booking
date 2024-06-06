@@ -156,14 +156,14 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
       roomNumber: [0],
       floorNumber: [0],
       price: [null, [Validators.required]],
-      extraBed: [null],
-      extraBedPrice: [null],
+      extraBed: [null, [Validators.required]],
+      extraBedPrice: [null, [Validators.required]],
       adultSurcharge: [null],
       childSurcharge: [null],
       roomFiles: [[]],
       roomFileIds: [[]],
       prices: [[]],
-      utilitieIds: [null],
+      utilitieIds: [null, [Validators.required]],
     });
 
     this.uploadHeader = {
