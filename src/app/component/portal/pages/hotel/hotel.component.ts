@@ -556,13 +556,15 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
   onSearch() {
     const keyword = removeAccents(this.searchText.trim().toLowerCase());
     this.filteredDatas = this.datas.filter((en) =>
-      removeAccents(en.name?.toString().trim()).toLowerCase().includes(keyword) ||
-      removeAccents(en.address?.trim()).toLowerCase().includes(keyword) ||
-      removeAccents(en.phoneNo?.trim()).toLowerCase().includes(keyword) ||
-      removeAccents(en.websiteUrl?.trim()).toLowerCase().includes(keyword) ||
-      removeAccents(en.contactEmail?.trim()).toLowerCase().includes(keyword) ||
-      removeAccents(en.facebook?.trim()).toLowerCase().includes(keyword) ||
-      removeAccents(en.ratingStar?.trim()).toLowerCase().includes(keyword)
+      removeAccents((en.name?? "").toString()).trim().toLowerCase().includes(keyword) ||
+      removeAccents(en.address?? "").trim().toLowerCase().includes(keyword) ||
+      removeAccents(en.phoneNo?? "").trim().toLowerCase().includes(keyword) ||
+      removeAccents(en.websiteUrl?? "").trim().toLowerCase().includes(keyword) ||
+      removeAccents(en.contactEmail?? "").trim().toLowerCase().includes(keyword) ||
+      removeAccents(en.facebook?? "").trim().toLowerCase().includes(keyword) ||
+      removeAccents((en.ratingStar?? "").toString()).trim().toLowerCase().includes(keyword) ||
+      removeAccents(en.province?.name?? "").trim().toLowerCase().includes(keyword) ||
+      removeAccents(en.district?.name?? "").trim().toLowerCase().includes(keyword)
     );
   }
 

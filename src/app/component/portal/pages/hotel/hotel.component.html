@@ -42,7 +42,8 @@
   <dxi-column caption="Tên khách sạn" [width]="200" dataField="name" [fixed]="true"></dxi-column>
   <dxi-column caption="Mã khách sạn" [width]="200" dataField="code" [fixed]="true"></dxi-column>
   <dxi-column caption="Địa chỉ" [width]="200" dataField="address"></dxi-column>
-  <dxi-column caption="Tỉnh thành" [width]="200" dataField="province.name"></dxi-column>
+  <dxi-column caption="Tỉnh/Thành" [width]="150" dataField="province.name"></dxi-column>
+  <dxi-column caption="Quận/Huyện" [width]="150" dataField="district.name"></dxi-column>
   <dxi-column caption="Số điện thoại" [width]="200" dataField="phoneNo"
     [format]="phoneUtils.phoneNumberFormat"></dxi-column>
   <dxi-column caption="Email" [width]="300" dataField="contactEmail"></dxi-column>
