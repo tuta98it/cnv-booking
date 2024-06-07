@@ -54,7 +54,7 @@
             <div nz-col [nzSpan]="16">
               <nz-select nzShowSearch nzMode="default" nzPlaceHolder="--Tỉnh thành phố--" formControlName="provinceId"
                 [ngClass]="{ 'is-invalid': submitted && formControlHotel.provinceId.errors?.required }"
-                (ngModelChange)="getListDistrictById($event)">
+                (ngModelChange)="getDistrictsById($event)">
                 <nz-option *ngFor="let pro of provinces" nzLabel="{{pro.name}}" [nzValue]="pro.id"></nz-option>
               </nz-select>
             </div>

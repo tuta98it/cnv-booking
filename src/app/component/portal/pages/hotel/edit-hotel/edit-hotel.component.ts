@@ -102,6 +102,7 @@ export class EditHotelComponent implements OnInit {
       utilitieIds: [null],
       // facebook: [null, [Validators.required]],
       ratingStar: [null, [Validators.required]],
+      isActive: [true],
       numRooms: [null],
       hotelFile: [[]],
       hotelFileIds: [[]],
@@ -139,17 +140,20 @@ export class EditHotelComponent implements OnInit {
     });
   }
 
-  getListDistrictById(idProvince: number) {
-    this.districts = [];
+  getDistrictsById(idProvince: number) {
     this.formAddHotel.controls['districtId'].setValue(null);
-    if (idProvince && idProvince > 0) {
-      this.generalService.getDistricsByProvinces(idProvince).subscribe(
-        (res: any) => {
-          this.districts = res;
-        }
-      );
-    }
-    console.log('this.districts: ', this.districts);
+    return new Promise<any>((resolve, reject) => {
+      this.districts = [];
+      if (idProvince && idProvince > 0) {
+        this.generalService.getDistricsByProvinces(idProvince).subscribe(
+          (res: any) => {
+            this.districts = res;
+            resolve(true);
+          }
+        );
+      }
+    });
+
   }
 
   get formControlHotel() {
@@ -178,6 +182,7 @@ export class EditHotelComponent implements OnInit {
       hotelFileIds: [],
       provinceId: null,
       districtId: null,
+      isActive : true
     });
     this.fileList = [];
     this.listURLFiles = [];
@@ -206,9 +211,10 @@ export class EditHotelComponent implements OnInit {
       hotelFile: item.hotelFile,
       hotelFileIds: [],
       provinceId: item.province?.id,
-      districtId: item.district?.id
+      districtId: item.district?.id,
+      isActive : item.isActive
     });
-
+    this.getDistrictsById(item.province?.id).then((r) => this.formAddHotel.controls['districtId'].setValue(item.district?.id));
     this.fileList = [];
     for (const hotel of item.hotelFile) {
       const objHotel = {
@@ -232,6 +238,7 @@ export class EditHotelComponent implements OnInit {
   saveHotel() {
     this.submitted = true;
     let formValue = this.formAddHotel.value;
+
     const checkEmail = this.validateEmail(formValue.contactEmail);
     if (!checkEmail) {
       this.notificationService.showNotification(Constant.ERROR, 'Email không đúng định dạng!');

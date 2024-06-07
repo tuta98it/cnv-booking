@@ -495,7 +495,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
     // const idsUtilityHotels = formValue.utilitieIds;
     // formValue.utilityHotels = this.listUtilityHotel.filter(utilityHotel => idsUtilityHotels.includes(utilityHotel.id));
 
-    if (formValue.id === 0) {
+    if (formValue.id == 0 || formValue.id == null || formValue.id == undefined) {
       delete formValue.id;
       delete formValue.hotelFile;
       /// add
@@ -669,7 +669,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
     // Sử dụng phương thức filter để lọc các phần tử có id trong danh sách idsUtilityRooms
     // formValue.utilityRooms = this.listUtilityRoom.filter(utilityRoom => idsUtilityRooms.includes(utilityRoom.id));
 
-    if (formValue.id === 0) {
+    if (formValue.id === 0 || formValue.id == null || formValue.id == undefined) {
       this.addNewRoom(formValue);
     } else {
       this.updateRoom(formValue);
