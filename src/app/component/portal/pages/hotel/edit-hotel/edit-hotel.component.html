@@ -63,7 +63,8 @@
             <label class="title-detail" nz-col [nzSpan]="6">Quận/Huyện:<em
                 class="fas fa-asterisk required"></em></label>
             <div nz-col [nzSpan]="16">
-              <nz-select nzShowSearch nzMode="default" nzPlaceHolder="--Quận/Huyện--" formControlName="districtId"
+              <nz-select nzShowSearch nzMode="default" nzPlaceHolder="--Quận/Huyện--" [nzDisabled]="!districts"
+                formControlName="districtId"
                 [ngClass]="{ 'is-invalid': submitted && formControlHotel.districtId.errors?.required }">
                 <nz-option *ngFor="let dis of districts" nzLabel="{{dis.name}}" [nzValue]="dis.id"></nz-option>
               </nz-select>
