@@ -27,7 +27,7 @@
             </div>
           </div> -->
           <div class="input-wrap" nz-row>
-            <label class="title-detail" nz-col [nzSpan]="6">Số điện thoại<em
+            <label class="title-detail" nz-col [nzSpan]="6">Số điện thoại:<em
                 class="fa fa-asterisk required"></em></label>
             <div nz-col [nzSpan]="16">
               <input nz-input formControlName="phoneNo" type="tel"
@@ -35,36 +35,49 @@
             </div>
           </div>
           <div class="input-wrap" nz-row>
-            <label class="title-detail" nz-col [nzSpan]="6">Email<em class="fa fa-asterisk required"></em></label>
+            <label class="title-detail" nz-col [nzSpan]="6">Email:<em class="fa fa-asterisk required"></em></label>
             <div nz-col [nzSpan]="16">
               <input type="email" nz-input formControlName="contactEmail" type="text"
                 [ngClass]="{ 'is-invalid': submitted && formControlHotel.contactEmail.errors?.required }" />
             </div>
           </div>
           <div class="input-wrap" nz-row>
-            <label class="title-detail" nz-col [nzSpan]="6">Địa chỉ<em class="fas fa-asterisk required"></em></label>
+            <label class="title-detail" nz-col [nzSpan]="6">Địa chỉ:<em class="fas fa-asterisk required"></em></label>
             <div nz-col [nzSpan]="16">
               <input nz-input formControlName="address" type="text"
                 [ngClass]="{ 'is-invalid': submitted && formControlHotel.address.errors?.required }" />
             </div>
           </div>
           <div class="input-wrap" nz-row>
-            <label class="title-detail" nz-col [nzSpan]="6">Tỉnh thành<em class="fas fa-asterisk required"></em></label>
+            <label class="title-detail" nz-col [nzSpan]="6">Tỉnh/Thành:<em
+                class="fas fa-asterisk required"></em></label>
             <div nz-col [nzSpan]="16">
-              <nz-select nzShowSearch nzMode="default" nzPlaceHolder="--Tỉnh thành phố--" formControlName="provinceId">
+              <nz-select nzShowSearch nzMode="default" nzPlaceHolder="--Tỉnh thành phố--" formControlName="provinceId"
+                [ngClass]="{ 'is-invalid': submitted && formControlHotel.provinceId.errors?.required }"
+                (ngModelChange)="getListDistrictById($event)">
                 <nz-option *ngFor="let pro of provinces" nzLabel="{{pro.name}}" [nzValue]="pro.id"></nz-option>
               </nz-select>
             </div>
           </div>
           <div class="input-wrap" nz-row>
-            <label class="title-detail" nz-col [nzSpan]="6">Website<em class="fas fa-asterisk required"></em></label>
+            <label class="title-detail" nz-col [nzSpan]="6">Quận/Huyện:<em
+                class="fas fa-asterisk required"></em></label>
+            <div nz-col [nzSpan]="16">
+              <nz-select nzShowSearch nzMode="default" nzPlaceHolder="--Quận/Huyện--" formControlName="districtId"
+                [ngClass]="{ 'is-invalid': submitted && formControlHotel.districtId.errors?.required }">
+                <nz-option *ngFor="let dis of districts" nzLabel="{{dis.name}}" [nzValue]="dis.id"></nz-option>
+              </nz-select>
+            </div>
+          </div>
+          <div class="input-wrap" nz-row>
+            <label class="title-detail" nz-col [nzSpan]="6">Website:<em class="fas fa-asterisk required"></em></label>
             <div nz-col [nzSpan]="16">
               <input nz-input formControlName="websiteUrl" type="text"
                 [ngClass]="{ 'is-invalid': submitted && formControlHotel.websiteUrl.errors?.required }" />
             </div>
           </div>
           <div class="input-wrap" nz-row>
-            <label class="title-detail" nz-col [nzSpan]="6">Hạng<em class="fas fa-asterisk required"></em></label>
+            <label class="title-detail" nz-col [nzSpan]="6">Hạng:<em class="fas fa-asterisk required"></em></label>
 
             <div nz-col [nzSpan]="16">
               <nz-rate formControlName="ratingStar" [nzTooltips]="tooltipRatingStars" nzAllowHalf [ngModelOptions]="
@@ -74,7 +87,7 @@
             </div>
           </div>
           <div class="input-wrap" nz-row>
-            <label class="title-detail" nz-col [nzSpan]="6">Số phòng</label>
+            <label class="title-detail" nz-col [nzSpan]="6">Số phòng:</label>
             <div nz-col [nzSpan]="16">
               <input nz-input formControlName="numRooms" type="number" />
               <!-- <input nz-input formControlName="numRooms" type="number"
@@ -85,7 +98,8 @@
             <label class="title-detail" nz-col [nzSpan]="6">Tiện ích khách sạn:<em
                 class="fas fa-asterisk required"></em></label>
             <div nz-col [nzSpan]="16">
-              <nz-select nzMode="multiple" nzPlaceHolder="--Tiện ích khách sạn--" formControlName="utilitieIds">
+              <nz-select nzMode="multiple" nzPlaceHolder="--Tiện ích khách sạn--" formControlName="utilitieIds"
+                [ngClass]="{ 'is-invalid': submitted && formControlHotel.websiteUrl.errors?.required }">
                 <nz-option *ngFor="let hotel of listUtilityHotel" nzLabel="{{hotel.name}}"
                   [nzValue]="hotel.id"></nz-option>
               </nz-select>

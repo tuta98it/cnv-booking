@@ -771,6 +771,10 @@ export class GeneralService extends BaseService {
     return this.get(`/api/Province`);
   }
 
+  getDistricsByProvinces(idProvince: number): Observable<any[]> {
+    return this.get(`/api/Province/${idProvince}`);
+  }
+
 
   createRoomPriceDetail(newItemPriceDetail: any): Observable<any> {
     if (newItemPriceDetail.id === 0) {

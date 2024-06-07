@@ -73,6 +73,7 @@ export class EditHotelComponent implements OnInit {
     toolbarHiddenButtons: [],
   };
   provinces: any[];
+  districts: any[];
   receivedData: any;
   valueRatingStar: number = 0;
   tooltipRatingStars = ['terrible', 'bad', 'normal', 'good', 'wonderful'];
@@ -95,6 +96,7 @@ export class EditHotelComponent implements OnInit {
       contactEmail: [null, [Validators.required]],
       address: [null, [Validators.required]],
       provinceId: [null, [Validators.required]],
+      districtId: [null, [Validators.required]],
       description: [null],
       websiteUrl: [null, [Validators.required]],
       utilitieIds: [null],
@@ -136,6 +138,20 @@ export class EditHotelComponent implements OnInit {
       this.provinces = res;
     });
   }
+
+  getListDistrictById(idProvince: number) {
+    this.districts = [];
+    this.formAddHotel.controls['districtId'].setValue(null);
+    if (idProvince && idProvince > 0) {
+      this.generalService.getDistricsByProvinces(idProvince).subscribe(
+        (res: any) => {
+          this.districts = res;
+        }
+      );
+    }
+    console.log('this.districts: ', this.districts);
+  }
+
   get formControlHotel() {
     return this.formAddHotel.controls;
   }
@@ -160,7 +176,8 @@ export class EditHotelComponent implements OnInit {
       numRooms: '',
       hotelFile: [],
       hotelFileIds: [],
-      provinceId: null
+      provinceId: null,
+      districtId: null,
     });
     this.fileList = [];
     this.listURLFiles = [];
@@ -188,7 +205,8 @@ export class EditHotelComponent implements OnInit {
       numRooms: item.numRooms,
       hotelFile: item.hotelFile,
       hotelFileIds: [],
-      provinceId: item.province?.id
+      provinceId: item.province?.id,
+      districtId: item.district?.id
     });
 
     this.fileList = [];
@@ -228,7 +246,7 @@ export class EditHotelComponent implements OnInit {
     // const idsUtilityHotels = formValue.utilitieIds;
     // formValue.utilityHotels = this.listUtilityHotel.filter(utilityHotel => idsUtilityHotels.includes(utilityHotel.id));
 
-    if (formValue.id === 0 || formValue.id === undefined) {
+    if (formValue.id === 0 || formValue.id === undefined || formValue.id === null) {
       delete formValue.id;
       delete formValue.hotelFile;
       /// add
