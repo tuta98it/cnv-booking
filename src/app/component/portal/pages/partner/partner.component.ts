@@ -155,7 +155,6 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
           en.stt = ++stt;
         });
         this.filteredDatas = this.datas;
-        console.log(this.datas);
         super.setListOfAllData(this.datas);
       }
     }, error => {
@@ -445,7 +444,6 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
 
   onSearch() {
     const keyword = removeAccents(this.searchText.trim().toLowerCase());
-    console.log(keyword);
     this.filteredDatas = this.datas.filter((en) =>
       removeAccents(en.id?.toString().trim()).toLowerCase().includes(keyword) ||
       removeAccents(en.name?.trim()).toLowerCase().includes(keyword) ||
@@ -566,7 +564,6 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
     if (info.file.status !== 'uploading') {
     }
     if (info.file.status === 'done') {
-      console.log(info.file.response);
       const file = {
         fileName: info.file.response.fileName,
         filePath: info.file.response.path

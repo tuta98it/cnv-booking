@@ -242,7 +242,6 @@ export class UtilitHotelComponent extends TableSelectionAbstract implements OnIn
 
   onSearch() {
     const keyword = removeAccents(this.searchText.trim().toLowerCase());
-    console.log(keyword);
     this.filteredDatas = this.datas.filter((en) =>
       removeAccents(en.name?.toString().trim()).toLowerCase().includes(keyword)
     );

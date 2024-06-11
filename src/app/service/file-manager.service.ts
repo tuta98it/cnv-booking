@@ -442,7 +442,6 @@ export class FileManagerService extends BaseService {
   }
 
   reportChungLoaiTheoTinh(tinhThanhId: any): Observable<any> {
-    console.log('tinhThanhId', tinhThanhId);
     // tslint:disable-next-line:use-isnan
     if (!tinhThanhId || tinhThanhId === NaN) {
       return this.get(`/DmChungLoai/ReportChungLoaiTheoTinh`);

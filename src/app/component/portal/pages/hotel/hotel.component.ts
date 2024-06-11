@@ -31,6 +31,9 @@ import { StringUtils } from 'src/app/shared/utils/string-utils.class';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 import { DataService } from 'src/app/service/data.service';
 import { Router } from '@angular/router';
+import { PhoneUtils } from 'src/app/shared/utils/phone-utils.class';
+import { AreaUtils } from 'src/app/shared/utils/area-utils.class';
+import { PipeUtils } from 'src/app/shared/utils/pipe-utils.class';
 
 @Component({
   selector: 'app-hotel',
@@ -122,6 +125,8 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
     private nzImageService: NzImageService,
     private msg: NzMessageService,
     private dataService: DataService,
+    public phoneUtils: PhoneUtils,
+    public areaUtils: AreaUtils,
   ) {
     super('id');
     this.formAddHotel = this.fb.group({
@@ -145,18 +150,20 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
       id: [null],
       hotelId: [null],
       name: [null, [Validators.required]],
+      numberOfPeople: [null],
+      roomArea: [null],
       description: [null],
       roomNumber: [0],
       floorNumber: [0],
       price: [null, [Validators.required]],
-      extraBed: [null],
-      extraBedPrice: [null],
+      extraBed: [null, [Validators.required]],
+      extraBedPrice: [null, [Validators.required]],
       adultSurcharge: [null],
       childSurcharge: [null],
       roomFiles: [[]],
       roomFileIds: [[]],
       prices: [[]],
-      utilitieIds: [null],
+      utilitieIds: [null, [Validators.required]],
     });
 
     this.uploadHeader = {
@@ -439,7 +446,6 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
   };
 
   handleRemoveImageRoom = async (file: NzUploadFile): Promise<void> => {
-    console.log('xoá file: ', file);
     const idHotelImage = file.uid;
     this.generalService.deleteRoomImageByID(idHotelImage).subscribe(
       {
@@ -489,7 +495,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
     // const idsUtilityHotels = formValue.utilitieIds;
     // formValue.utilityHotels = this.listUtilityHotel.filter(utilityHotel => idsUtilityHotels.includes(utilityHotel.id));
 
-    if (formValue.id === 0) {
+    if (formValue.id == 0 || formValue.id == null || formValue.id == undefined) {
       delete formValue.id;
       delete formValue.hotelFile;
       /// add
@@ -549,15 +555,16 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
 
   onSearch() {
     const keyword = removeAccents(this.searchText.trim().toLowerCase());
-    console.log(keyword);
     this.filteredDatas = this.datas.filter((en) =>
-      removeAccents(en.name?.toString().trim()).toLowerCase().includes(keyword) ||
-      removeAccents(en.address?.trim()).toLowerCase().includes(keyword) ||
-      removeAccents(en.phoneNo?.trim()).toLowerCase().includes(keyword) ||
-      removeAccents(en.websiteUrl?.trim()).toLowerCase().includes(keyword) ||
-      removeAccents(en.contactEmail?.trim()).toLowerCase().includes(keyword) ||
-      removeAccents(en.facebook?.trim()).toLowerCase().includes(keyword) ||
-      removeAccents(en.ratingStar?.trim()).toLowerCase().includes(keyword)
+      removeAccents((en.name?? "").toString()).trim().toLowerCase().includes(keyword) ||
+      removeAccents(en.address?? "").trim().toLowerCase().includes(keyword) ||
+      removeAccents(en.phoneNo?? "").trim().toLowerCase().includes(keyword) ||
+      removeAccents(en.websiteUrl?? "").trim().toLowerCase().includes(keyword) ||
+      removeAccents(en.contactEmail?? "").trim().toLowerCase().includes(keyword) ||
+      removeAccents(en.facebook?? "").trim().toLowerCase().includes(keyword) ||
+      removeAccents((en.ratingStar?? "").toString()).trim().toLowerCase().includes(keyword) ||
+      removeAccents(en.province?.name?? "").trim().toLowerCase().includes(keyword) ||
+      removeAccents(en.district?.name?? "").trim().toLowerCase().includes(keyword)
     );
   }
 
@@ -584,10 +591,13 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
     this.isVisibleAddRoom = true;
     this.submitted = false;
     this.titleFormRoom = 'Thêm mới phòng';
+    this.updated = false;
     this.formAddRoom.reset();
     this.formAddRoom.patchValue({
       id: 0,
       name: '',
+      numberOfPeople: '',
+      roomArea: '',
       description: '',
       hotelId: idHotel,
       hotelName: '',
@@ -598,6 +608,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
       extraBedPrice: '',
       adultSurcharge: '',
       childSurcharge: '',
+      prices: [],
       roomFiles: [],
       roomFileIds: [],
       utilitieIds: [],
@@ -618,6 +629,8 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
       id: this.item.id,
       hotelId: idHotel,
       name: this.item.name,
+      numberOfPeople: this.item.numberOfPeople,
+      roomArea: this.item.roomArea,
       description: this.item.description,
       roomNumber: 0,
       floorNumber: 0,
@@ -647,7 +660,6 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
   saveRoom() {
     this.submitted = true;
     const formValue = this.formAddRoom.value;
-
     if (this.formAddRoom.invalid) {
       this.notificationService.showNotification(Constant.ERROR, 'Tồn tại thông tin khách sạn chưa điền!');
       return;
@@ -657,43 +669,63 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
     // Sử dụng phương thức filter để lọc các phần tử có id trong danh sách idsUtilityRooms
     // formValue.utilityRooms = this.listUtilityRoom.filter(utilityRoom => idsUtilityRooms.includes(utilityRoom.id));
 
-    if (formValue.id === 0) {
-      // add
-      delete formValue.id;
-      delete formValue.roomFiles;
-      delete formValue.prices;
-      this.generalService.addRoom(formValue).subscribe((res: any) => {
-        if (res.ret && res.ret[0].code !== 0) {
-          this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
-        } else {
-          this.getListData();
-          this.isVisibleAddRoom = false;
-          this.notificationService.showNotification(Constant.SUCCESS, Constant.MESSAGE_ADD_SUCCESS);
-        }
-      }, (error: any) => {
-
-      });
+    if (formValue.id === 0 || formValue.id == null || formValue.id == undefined) {
+      this.addNewRoom(formValue);
     } else {
-      // / update
-      delete formValue.roomFiles;
-      delete formValue.roomFileIds;
-      delete formValue.prices;
-      this.generalService.updateRoomByID(formValue.id, formValue).subscribe((res: any) => {
-        if (res.ret && res.ret[0].code !== 0) {
-          this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
-        } else {
-          this.getListData();
-          this.isVisibleAddRoom = false;
-          this.notificationService.showNotification(Constant.SUCCESS, Constant.MESSAGE_UPDATE_SUCCESS);
-        }
-      }, error => {
-
-      });
+      this.updateRoom(formValue);
     }
   }
 
+  private addNewRoom(roomNew: any) {
+    // add
+    delete roomNew.id;
+    delete roomNew.roomFiles;
+    roomNew.prices.forEach((price: any) => {
+      delete price.id;
+    });
+
+
+    this.generalService.addRoom(roomNew).subscribe(
+      {
+        next: (res: any) => {
+          if (res.ret && res.ret[0].code !== 0) {
+            this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
+          } else {
+            this.getListData();
+            this.isVisibleAddRoom = false;
+            this.notificationService.showNotification(Constant.SUCCESS, `Thêm mới phòng thành công`);
+          }
+        },
+        error: (error: any) => {
+          this.notificationService.showNotification(Constant.ERROR, `Đã có lỗi khi thêm mới phòng`);
+        },
+        complete: () => {
+
+        }
+      });
+  }
+
+  private updateRoom(roomUpdate: any) {
+    // / update
+    delete roomUpdate.roomFiles;
+    delete roomUpdate.roomFileIds;
+    delete roomUpdate.prices;
+    this.generalService.updateRoomByID(roomUpdate.id, roomUpdate).subscribe((res: any) => {
+      if (res.ret && res.ret[0].code !== 0) {
+        this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
+      } else {
+        this.getListData();
+        this.isVisibleAddRoom = false;
+        this.notificationService.showNotification(Constant.SUCCESS, Constant.MESSAGE_UPDATE_SUCCESS);
+      }
+    }, error => {
+
+    });
+  }
+
+
+
   previewImages(images: any) {
-    console.log('image: ', images);
     let arrImage: any[] = [];
     if (typeof images === 'string') {
       let objImage = {
@@ -721,9 +753,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
     const status = file.status;
     if (status === 'done') {
       this.msg.success(`file ${file.name} tải lên thành công.`);
-      console.log(file, fileList);
       this.fileList = fileList;
-      console.log('this.fileList', this.fileList);
       if (form === 'hotel') {
         setTimeout(() => {
           if (this.fileList.length > 0) {
@@ -740,7 +770,6 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
           }
         }, 200);
         this.listURLFiles.push(file.response.hotelFileId);
-        console.log('this.listURLFiles: ', this.listURLFiles);
         this.formAddHotel.controls['hotelFileIds'].setValue(this.listURLFiles);
       } else if (form === 'room') {
         setTimeout(() => {
@@ -750,7 +779,6 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
           }
         }, 200);
         this.listURLFiles.push(file.response.roomFileId);
-        console.log('this.listURLFiles: ', this.listURLFiles);
         this.formAddRoom.controls['roomFileIds'].setValue(this.listURLFiles);
       }
     } else if (status === 'error') {
@@ -794,17 +822,17 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
 
   logEvent(eventName: any) {
     // this.events.unshift(eventName);
-    console.log('eventName: ', eventName);
   }
 
   onInitNewRowPriceDetail(event: any) {
-    console.log('onInitNewRowPriceDetail: ', event);
   }
 
   onRowInsertingPriceDetail(event: any, roomId: any) {
-    console.log('onRowInsertingPriceDetail: ', event);
-    console.log('onRowInsertingPriceDetail id: ', roomId);
-    let newData = event.data;
+
+    if (!this.updated) {
+      return;
+    }
+    let newData = event.data === null ? event : event.data;
     let newPriceDetail = {
       id: 0,
       roomId: roomId,
@@ -851,6 +879,8 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
           id: this.item.id,
           hotelId: this.item.hotelId,
           name: this.item.name,
+          numberOfPeople: this.item.numberOfPeople,
+          roomArea: this.item.roomArea,
           description: this.item.description,
           roomNumber: 0,
           floorNumber: 0,
@@ -869,22 +899,17 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
   }
 
   onRowInsertedPriceDetail(event: any) {
-    console.log('onRowInsertedPriceDetail: ', event);
   }
 
   onRowUpdatingPriceDetail(event: any) {
-    console.log('onRowUpdatingPriceDetail: ', event);
+    if (!this.updated) {
+      return;
+    }
     let oldData = event.oldData;
     let newData = event.newData;
-    let updateData = {
-
-    };
+    let updateData = {};
 
     Object.assign(updateData, oldData, newData);
-
-    console.log('oldData: ', oldData);
-    console.log('updateData: ', updateData);
-
 
     this.generalService.updateRoomPriceDetailByID(updateData).subscribe({
       next: (res) => {
@@ -912,14 +937,15 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
   }
 
   onRowUpdatedPriceDetail(event: any) {
-    console.log('onRowUpdatedPriceDetail: ', event);
     let newPriceDetail = {
 
     }
   }
 
   onRowRemovingdPriceDetail(event: any) {
-    console.log('onRowRemovingdPriceDetail: ', event);
+    if (!this.updated) {
+      return;
+    }
     let idRecordPriceDetail = event.data.id;
     this.generalService.removeRoomPriceDetail(idRecordPriceDetail).subscribe({
       next: (res) => {
@@ -947,7 +973,6 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
   }
 
   onSavingPriceDetail(event: any) {
-    console.log('onSavingPriceDetail: ', event);
   }
 
   phoneNumberFormat(value: any) {
@@ -971,7 +996,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
   onChangeActiveHotel(hotel: any) {
     hotel.loadingActiveHotel = true;
     let changeIsActiveHotel = !hotel.isActive;
-    this.generalService.setetActiveHotel(hotel.id, changeIsActiveHotel).subscribe({
+    this.generalService.setActiveHotel(hotel.id, changeIsActiveHotel).subscribe({
       next: (res) => {
         if (res.ret && res.ret[0].code !== 0) {
           this.notificationService.showNotification(Constant.ERROR, 'Thiết lập trạng thái khách sạn không thành công');
@@ -985,11 +1010,11 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
 
       complete: () => {
         this.getListData().then(() => {
-          this.notificationService.showNotification(Constant.SUCCESS, `${changeIsActiveHotel ? 'Active' : 'Inactive' } khách sạn thành công`);
-          hotel.loadingActiveHotel = false;
-
+          this.notificationService.showNotification(Constant.SUCCESS, `${changeIsActiveHotel ? 'Active' : 'Inactive'} khách sạn thành công`);
         });
       }
-    }).add(() => { });
+    }).add(() => {
+      hotel.loadingActiveHotel = false;
+    });
   }
 }

@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import * as FileSaver from 'file-saver';
 import {
   ApexAxisChartSeries,
@@ -14,14 +14,20 @@ import {
   ApexTooltip,
   ApexNonAxisChartSeries,
   ApexResponsive,
+  ApexTitleSubtitle,
+  ApexMarkers,
+  ApexGrid
 } from 'ng-apexcharts';
-import {Constant} from '../../../../shared/constants/constant.class';
-import {ActivatedRoute} from '@angular/router';
-import {FileManagerService} from '../../../../service/file-manager.service';
-import {NotificationService} from '../../../../service/notification.service';
-import {TableSelectionAbstract} from '../../../../shared/component/table/table-selection.abstract';
-import {AppConfigService} from '../../../../../app-config.service';
+import { Constant } from 'src/app/shared/constants/constant.class';
+import { ActivatedRoute } from '@angular/router';
+import { FileManagerService } from '../../../../service/file-manager.service';
+import { NotificationService } from '../../../../service/notification.service';
+import { TableSelectionAbstract } from '../../../../shared/component/table/table-selection.abstract';
+import { AppConfigService } from '../../../../../app-config.service';
 import { NzIconService } from 'ng-zorro-antd/icon';
+import { GeneralService } from 'src/app/service/general-service';
+import { DateFormatPipe } from 'src/app/shared/pipe/format-date.pipe';
+
 export interface ChartOptions1 {
 
   series: ApexAxisChartSeries;
@@ -59,13 +65,77 @@ export interface ChartOptionsLine {
   legend: ApexLegend;
 }
 
+export type PieChartOptions = {
+  series: ApexNonAxisChartSeries;
+  chart: ApexChart;
+  responsive: ApexResponsive[];
+  labels: any;
+  dataLabels: ApexDataLabels;
+  tooltip: ApexTooltip;
+  title: ApexTitleSubtitle;
+};
+
+
+export type BarChartOptions = {
+  series: ApexAxisChartSeries;
+  chart: ApexChart;
+  dataLabels: ApexDataLabels;
+  plotOptions: ApexPlotOptions;
+  responsive: ApexResponsive[];
+  xaxis: ApexXAxis;
+  yaxis: ApexYAxis;
+  legend: ApexLegend;
+  fill: ApexFill;
+  title: ApexTitleSubtitle;
+};
+
+export type LineChartOptions = {
+  series: ApexAxisChartSeries;
+  chart: ApexChart;
+  xaxis: ApexXAxis;
+  stroke: ApexStroke;
+  dataLabels: ApexDataLabels;
+  markers: ApexMarkers;
+  colors: string[];
+  yaxis: ApexYAxis;
+  grid: ApexGrid;
+  legend: ApexLegend;
+  title: ApexTitleSubtitle;
+  fill: ApexFill;
+};
+
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent extends TableSelectionAbstract implements OnInit {
-  userInfo : any;
+  @ViewChild("pieChart") pieChart: ChartComponent;
+  public pieChartOptions: Partial<PieChartOptions>;
+
+  @ViewChild("barChart") barChart: ChartComponent;
+  public barChartOptions: Partial<BarChartOptions>;
+
+  @ViewChild("chartSale") barChartSale: ChartComponent;
+  public barChartSaleOptions: Partial<BarChartOptions>;
+
+  @ViewChild("lineChart") lineChart: ChartComponent;
+  public lineChartOptions: Partial<LineChartOptions>;
+
+  userInfo: any;
+  TIME_RANGE_FILTER = Constant.TIME_RANGE_FILTER;
+  search = {
+    type: 1,
+    fromDate: null,
+    toDate: null,
+  };
+
+  objRevenue: any = {
+    totalSales: 0,
+  };
+
+
+
   @ViewChild('chart') chart: ChartComponent;
   public chartOptions: Partial<ChartOptions>;
   @ViewChild('chart1') chart1: ChartComponent;
@@ -80,9 +150,9 @@ export class DashboardComponent extends TableSelectionAbstract implements OnInit
   total: number;
   pageSize: number;
   professions: any[] = [
-    {id: 0, name: ''},
-    {id: 1, name: 'FC'},
-    {id: 2, name: 'CC'},
+    { id: 0, name: '' },
+    { id: 1, name: 'FC' },
+    { id: 2, name: 'CC' },
   ];
   charFilter: any;
   selectedTinhThanhId: any;
@@ -94,9 +164,11 @@ export class DashboardComponent extends TableSelectionAbstract implements OnInit
     private fileManagerService: FileManagerService,
     private notificationService: NotificationService,
     private configService: AppConfigService,
-    private iconService: NzIconService
-  ) {
+    private iconService: NzIconService,
+    private generalService: GeneralService,
+    private dateFormatPipe: DateFormatPipe,
 
+  ) {
     super('id');
     this.pageIndex = 1;
     this.pageSize = 20;
@@ -104,6 +176,7 @@ export class DashboardComponent extends TableSelectionAbstract implements OnInit
       from: null,
       to: null,
     };
+
     this.filterData = {
       page: this.pageIndex,
       pageSize: this.pageSize,
@@ -224,8 +297,7 @@ export class DashboardComponent extends TableSelectionAbstract implements OnInit
 
   ngOnInit(): void {
     this.userInfo = JSON.parse(localStorage.getItem(Constant.USER_INFO));
-    console.log('this.userInfo ',this.userInfo);
-
+    this.doSearch();
 
     // this.searchPieChart();
     this.gridHeight = (window.innerHeight - 330) + 'px';
@@ -234,6 +306,170 @@ export class DashboardComponent extends TableSelectionAbstract implements OnInit
     // this.searchData(true);
     // this.showNotification();
   }
+
+  private getDataSalesReport() {
+    let payloadSalesReport = { ...this.search };
+    this.generalService.salesReport(payloadSalesReport).subscribe((res) => {
+      if (res) {
+        this.objRevenue.totalSales = res.tongDoanhSo;
+
+        let dataSales = [];
+        const top10Seller = res.data.slice(0, 10);
+        for (let i = 0; i < top10Seller.length; i++) {
+          const seller = res.data[i];
+          dataSales.push({ x: [seller.code, seller.name], y: seller.doanhSo });
+        }
+        let sales = {
+          name: "Tổng doanh thu",
+          data: dataSales,
+        }
+
+        let series = [];
+        series.push(sales);
+
+        this.barChartSaleOptions = {
+          series: series,
+          chart: {
+            type: "bar",
+            height: 350,
+          },
+          title: {
+            text: "Top Sale có doanh thu cao nhất",
+            align: "left",
+          },
+          plotOptions: {
+            bar: {
+              horizontal: false,
+            },
+          },
+          dataLabels: {
+            enabled: false,
+          },
+          yaxis: {
+            labels: {
+              formatter(value) {
+                const item = value
+                  .toString()
+                  .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+                return item;
+              },
+            },
+          },
+          xaxis: {
+            labels: {
+              rotate: 0,
+              hideOverlappingLabels: false,
+              trim: true,
+            },
+          },
+        };
+
+      }
+    });
+  }
+
+  private getDataSalesReportByDay() {
+    let payloadSalesReportByDay = { ...this.search };
+    payloadSalesReportByDay.type = (payloadSalesReportByDay.type === 1 || payloadSalesReportByDay.type === 2) ? 5 : payloadSalesReportByDay.type;
+    this.generalService.salesReportByDay(payloadSalesReportByDay).subscribe((res) => {
+      if (res) {
+
+        let dataSales = [];
+        let xCategories = []
+        res.forEach((objSalesDay: any) => {
+          dataSales.push(objSalesDay.doanhSo);
+          xCategories.push(this.dateFormatPipe.transform(objSalesDay.ngay, "YYYY-MM-dd"));
+        });
+        const series = [];
+        let sales = {
+          name: "Doanh số",
+          data: dataSales,
+        }
+        series.push(sales);
+        this.lineChartOptions = {
+          series,
+          chart: {
+            height: 350,
+            type: "area",
+            stacked: false,
+            dropShadow: {
+              enabled: true,
+              color: "#000",
+              top: 18,
+              left: 7,
+              blur: 10,
+              opacity: 0.2,
+            },
+            toolbar: {
+              show: false,
+            },
+          },
+          // colors: ['#77B6EA', '#545454'],
+          dataLabels: {
+            enabled: false,
+          },
+          stroke: {
+            curve: "smooth",
+          },
+          title: {
+            text: "Thống kê doanh thu theo ngày",
+            align: "left",
+          },
+          grid: {
+            borderColor: "#e7e7e7",
+            row: {
+              colors: ["#f3f3f3", "transparent"], // takes an array which will be repeated on columns
+              opacity: 0.5,
+            },
+          },
+          markers: {
+            size: 1,
+          },
+          xaxis: {
+            categories: xCategories,
+            type: "datetime",
+          },
+          fill: {
+            type: "gradient",
+            gradient: {
+              shadeIntensity: 1,
+              inverseColors: false,
+              opacityFrom: 0.5,
+              opacityTo: 0,
+              stops: [0, 90, 100],
+            },
+          },
+          yaxis: {
+            labels: {
+              formatter(val) {
+                const item = val
+                  .toString()
+                  .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+                return item;
+              },
+            },
+            title: {
+              text: "Số tiền",
+            },
+            /*min: 5,
+            max: 40*/
+          },
+          legend: {
+            position: "top",
+            horizontalAlign: "right",
+            floating: true,
+            offsetY: -25,
+            offsetX: -5,
+          },
+        };
+      }
+    });
+  }
+  doSearch() {
+    this.getDataSalesReport();
+    this.getDataSalesReportByDay();
+  }
+
 
   showNotification() {
     const payload = {
@@ -275,7 +511,6 @@ export class DashboardComponent extends TableSelectionAbstract implements OnInit
       sender: this.filterData.sender,
       reader: this.filterData.reader
     };
-    console.log(payload);
     this.fileManagerService.reportChungLoaiTheoTinh(this.selectedTinhThanhId).subscribe(res => {
       if (res !== null) {
         this.datas = res.data;
@@ -415,7 +650,6 @@ export class DashboardComponent extends TableSelectionAbstract implements OnInit
     // seriesS.splice(3, 1);
     const labelS = [this.datas[0].name, this.datas[1].name, this.datas[2].name];
     // labelS.splice(3, 1);
-    // console.log(seriesS);
     this.chartOptions = {
       series: seriesS,
       labels: labelS,

@@ -392,6 +392,9 @@ export class GeneralService extends BaseService {
   deleteTaikhoan(id: number): Observable<any> {
     return this.delete(UrlConstant.LIST_TAIKHOAN + '/' + id, null);
   }
+  setStatusTaikhoan(idUser: number, newStatus: boolean): any {
+    return this.put(`${UrlConstant.LIST_TAIKHOAN}/SetStatusUser/${idUser}?isActive=${newStatus}`, '');
+  }
   addTaikhoan(item: any): any {
     return this.post(UrlConstant.LIST_TAIKHOAN, item);
   }
@@ -562,11 +565,20 @@ export class GeneralService extends BaseService {
   }
 
 
-  markCanceledSystemTicketFlightExport(idTicket: any): Observable<any> {
-    console.log('idTicket: ', idTicket);
-
-    return this.post(`/api${UrlConstant.BOOKING}/MarkCanceled/${idTicket}`, idTicket);
+  markCanceledSystemTicketFlightExport(idTicket: any, payload: any): Observable<any> {
+    return this.post(`/api${UrlConstant.BOOKING}/MarkCanceled/${idTicket}`, payload);
   }
+
+
+  salesReport(payload: any): Observable<any> {
+    return this.post(`/api${UrlConstant.BOOKING}/BaoCaoDoanhSo`, payload);
+  }
+
+
+  salesReportByDay(payload: any): Observable<any> {
+    return this.post(`/api${UrlConstant.BOOKING}/BaoCaoDoanhSoTheoNgay`, payload);
+  }
+
 
 
   //TestResult
@@ -626,7 +638,7 @@ export class GeneralService extends BaseService {
   }
 
   // setActiveHotel/{id}
-  setetActiveHotel(idHotel: number, isActive: boolean): Observable<any> {
+  setActiveHotel(idHotel: number, isActive: boolean): Observable<any> {
     return this.put(`/api${UrlConstant.HOTEL}/SetActiveHotel/${idHotel}?isActive=${isActive}`, '');
   }
 
@@ -652,6 +664,10 @@ export class GeneralService extends BaseService {
     return this.get(`/api${UrlConstant.BOOKING_HOTEL}/GetBookingHotelById/${idBoooking}`);
   }
 
+  markCanceledSystemBookingHotelExport(idBookingHotel: any, nodeSystemCancelled: any): Observable<any> {
+    return this.post(`/api${UrlConstant.BOOKING_HOTEL}/MarkCanceled/${idBookingHotel}`, nodeSystemCancelled);
+  }
+
   // Email
   // /api/Email/SendEmailConfirmedBookingHotel
   sendEmailConfirmedBookingHotel(payload: any): Observable<any> {
@@ -674,6 +690,9 @@ export class GeneralService extends BaseService {
   deleteNewsByID(idNews: any): Observable<any> {
     return this.delete(`/api${UrlConstant.NEWS}/${idNews}`, idNews);
   }
+
+
+
 
   // Utility
   private getListUtilityByType(utilityType: any): Observable<any> {
@@ -750,6 +769,10 @@ export class GeneralService extends BaseService {
 
   getProvinces(): Observable<any[]> {
     return this.get(`/api/Province`);
+  }
+
+  getDistricsByProvinces(idProvince: number): Observable<any[]> {
+    return this.get(`/api/Province/${idProvince}`);
   }
 
 

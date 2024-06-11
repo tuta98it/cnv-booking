@@ -242,7 +242,6 @@ export class UtilitRoomComponent extends TableSelectionAbstract implements OnIni
 
   onSearch() {
     const keyword = removeAccents(this.searchText.trim().toLowerCase());
-    console.log(keyword);
     this.filteredDatas = this.datas.filter((en) =>
       removeAccents(en.name?.toString().trim()).toLowerCase().includes(keyword)
     );

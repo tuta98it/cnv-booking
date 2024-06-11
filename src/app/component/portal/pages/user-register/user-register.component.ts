@@ -55,7 +55,6 @@ export class UserRegisterComponent extends TableSelectionAbstract implements OnI
   showUpdateConfirm(data): void {
     this.selectedRow = data;
     this.currentStatus = data.status;
-    console.log(this.selectedRow);
     this.modalService.confirm({
       nzTitle: 'Xác nhận',
       nzContent: 'Bạn có muốn cập nhật trạng thái không?',
@@ -81,7 +80,6 @@ export class UserRegisterComponent extends TableSelectionAbstract implements OnI
 
   onSearch() {
     const keyword = removeAccents(this.searchText.trim().toLowerCase());
-    console.log(keyword);
     this.filteredDatas = this.datas.filter((en) =>
       removeAccents(en.firstName?.trim()).toLowerCase().includes(keyword) ||
       removeAccents(en.lastName?.trim()).toLowerCase().includes(keyword) ||

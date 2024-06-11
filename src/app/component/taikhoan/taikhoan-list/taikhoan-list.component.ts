@@ -98,7 +98,6 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
   get() {
     this.translate.use(this.translate.currentLang).subscribe(data => {
       this.data = data;
-      console.log(this.data);
     });
   }
 
@@ -165,7 +164,6 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
 
   handleOk() {
     const formValue = this.formAdd.value;
-    // console.log(formValue);
 
     delete formValue.id;
     this.generalService.addTaikhoan(formValue).subscribe(res => {
@@ -188,7 +186,6 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
 
   handleOkUpdate() {
     const formValue = this.formUpdate.value;
-    // console.log(formValue);
     this.generalService.updateTaikhoan(formValue).subscribe(res => {
       if (res !== null && res.ret !== undefined && res.ret.code != 0) {
         this.notificationService.showNotification(Constant.ERROR, res.ret.message);
@@ -208,7 +205,6 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
 
   handleOkPassword() {
     const formValue = this.formPassword.value;
-    // console.log(formValue);
     this.generalService.updateUserPassword(formValue).subscribe(res => {
       if (res !== null && res !== undefined && res.ret !== null && res.ret !== undefined && res.ret.code != 0) {
         this.notificationService.showNotification(Constant.ERROR, res.ret.message);
@@ -268,7 +264,6 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
   }
 
   showModalGroup(data) {
-    console.log(data);
     this.isVisibleGroup = true;
     this.item = data;
   }

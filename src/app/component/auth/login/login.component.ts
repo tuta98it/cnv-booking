@@ -60,7 +60,6 @@ export class LoginComponent implements OnInit , OnDestroy {
         localStorage.setItem(Constant.TOKEN, res.token);
         localStorage.setItem(Constant.USER_INFO, JSON.stringify(res));
         const expireDate = new Date().getTime() + expiresIn;
-        // console.log(expireDate);
         Cookie.set(Constant.TOKEN, res.token, expireDate);
         localStorage.setItem(Constant.TINHTHANH, res.tinhThanhId);
         if (res.quanHuyenId) {

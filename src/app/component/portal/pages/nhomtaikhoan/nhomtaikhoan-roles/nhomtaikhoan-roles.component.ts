@@ -89,7 +89,6 @@ export class NhomtaikhoanRolesComponent extends TableSelectionAbstract implement
   get() {
     this.translate.use(this.translate.currentLang).subscribe(data => {
       this.data = data;
-      console.log(this.data);
     });
   }
 
@@ -148,7 +147,6 @@ export class NhomtaikhoanRolesComponent extends TableSelectionAbstract implement
 
   handleOk() {
     const formValue = this.formAdd.value;
-    // console.log(formValue);
     if (formValue.id === 0) {
       delete formValue.id;
       this.generalService.addGroup(formValue).subscribe(res => {
@@ -210,13 +208,11 @@ export class NhomtaikhoanRolesComponent extends TableSelectionAbstract implement
       }
     }
     group.enable = true;
-    console.log(group);
   }
 
   saveUserGroup(data) {
     const itemUpdate = {groupId: data.id, roles: data.roles};
     this.generalService.updateGroupRole(itemUpdate).subscribe(res => {
-      console.log(res.ret.code);
       if (res && res.ret && res.ret[0].code !== 0) {
         this.notificationService.showNotification(Constant.ERROR, res.ret.message);
       } else {

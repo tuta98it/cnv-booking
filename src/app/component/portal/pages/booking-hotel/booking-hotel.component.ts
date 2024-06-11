@@ -52,6 +52,8 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   isVisibleAddRoom: boolean;
   isVisibleUpdate: boolean;
   isVisiblePassword: boolean;
+  nzVisibleCancelSystem: boolean = false;
+  loadingSystemStatus: boolean = false;
   item: any;
   loading: boolean;
   total = 0;
@@ -77,6 +79,10 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
     textValueNoteConfirm: '',
     approvalCodeConfirm: '',
 
+  }
+
+  systemCancelBookingHotel = {
+    nodeSystemCancelled: '',
   }
 
   textValueNoteRefuse = '';
@@ -134,6 +140,8 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   };
 
   imageLogoVHL = '';
+
+  valueTrue = true;
   constructor(
     private router: Router,
     private modalService: NzModalService,
@@ -211,7 +219,6 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
 
   getUserInfo() {
     this.userInfor = JSON.parse(localStorage.getItem(Constant.USER_INFO));
-    // console.log('this.userInfor: ', this.userInfor);
   }
 
   getListData() {
@@ -223,7 +230,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
           let stt = 0;
           this.datas.forEach((en: any) => {
             en.stt = ++stt;
-            en.bookingStatusText =  (new BookingHotelStatusPipe()).transform(en.bookingStatus);
+            en.bookingStatusText = (new BookingHotelStatusPipe()).transform(en.bookingStatus);
             let sttx = 0;
             en.bookingHotelDetails.forEach(element => {
               en.isOnSendEmailLoading = false;
@@ -249,7 +256,6 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   getListUtilityHotels() {
     this.generalService.getListUtilityHotel().subscribe((res: any) => {
       this.listUtilityHotel = res.data;
-      // console.log("this.listUtilityHotel: ", this.listUtilityHotel);
     });
   }
 
@@ -720,8 +726,12 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
     return inerHTMLCustomerInfoVontentName;
   }
   private resetConfirmBookingHotel() {
-    this.confirmBookingHotel.approvalCodeConfirm = '',
-      this.confirmBookingHotel.textValueNoteConfirm = ''
+    this.confirmBookingHotel.approvalCodeConfirm = '';
+    this.confirmBookingHotel.textValueNoteConfirm = '';
+  }
+
+  private resetConfirmSystemCancel() {
+    this.systemCancelBookingHotel.nodeSystemCancelled = '';
   }
 
   onRefuseBookingHotel(booking: any) {
@@ -748,13 +758,20 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
     this.isVisibleRefuseBooking = false;
     this.isVisibleConfirmSendEmaiBooking = false;
     this.isConfirmSendEmailLoading = false;
+    this.nzVisibleCancelSystem = false;
     this.formAddHotel.reset();
     this.formAddRoom.reset();
   }
 
-  handleCancelConfirmBooking(){
+  handleCancelConfirmBooking() {
     this.isVisibleConfirmBooking = false;
     this.resetConfirmBookingHotel();
+  }
+
+  handleCancelConfirmCancelSystem() {
+    this.submitted = false;
+    this.nzVisibleCancelSystem = false;
+    this.resetConfirmSystemCancel();
   }
 
   handleRemoveImageHotel = async (file: NzUploadFile): Promise<void> => {
@@ -791,7 +808,6 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   }
 
   handleRemoveImageRoom = async (file: NzUploadFile): Promise<void> => {
-    console.log('xoá file: ', file);
     const idHotelImage = file.uid;
     this.generalService.deleteRoomImageByID(idHotelImage).subscribe(
       {
@@ -933,7 +949,6 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
 
   onSearch() {
     const keyword = removeAccents(this.searchText.trim().toLowerCase());
-    console.log(keyword);
     this.filteredDatas = this.datas.filter((en) =>
       removeAccents(en.name?.toString().trim()).toLowerCase().includes(keyword) ||
       removeAccents(en.address?.trim()).toLowerCase().includes(keyword) ||
@@ -1065,7 +1080,6 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   }
 
   previewImages(images: any) {
-    console.log('image: ', images);
     let arrImage: any[] = [];
     if (typeof images === 'string') {
       let objImage = {
@@ -1093,9 +1107,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
     const status = file.status;
     if (status === 'done') {
       this.msg.success(`file ${file.name} tải lên thành công.`);
-      console.log(file, fileList);
       this.fileList = fileList;
-      console.log('this.fileList', this.fileList);
       if (form === 'hotel') {
         setTimeout(() => {
           if (this.fileList.length > 0) {
@@ -1112,7 +1124,6 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
           }
         }, 200);
         this.listURLFiles.push(file.response.hotelFileId);
-        console.log('this.listURLFiles: ', this.listURLFiles);
         this.formAddHotel.controls['hotelFileIds'].setValue(this.listURLFiles);
       } else if (form === 'room') {
         setTimeout(() => {
@@ -1122,7 +1133,6 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
           }
         }, 200);
         this.listURLFiles.push(file.response.roomFileId);
-        console.log('this.listURLFiles: ', this.listURLFiles);
         this.formAddRoom.controls['roomFileIds'].setValue(this.listURLFiles);
       }
     } else if (status === 'error') {
@@ -1284,4 +1294,46 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   handleConfirmAndSendBookingHotel() {
     this.handleOkConfirmBookingHotel().then(() => this.onConfirmSendEmailBookingHotel(this.item));
   }
+
+  onChangeStatusBookingHotelExport(hotelFlightExport: any) {
+    this.nzVisibleCancelSystem = true;
+    this.item = hotelFlightExport;
+    // if (!hotelFlightExport.systemCancelled) {
+    //   this.modalService.confirm({
+    //     nzTitle: `Bạn có chắc KHÔNG tính chi phí khách sạn của khách hàng <strong>${hotelFlightExport.contactName? hotelFlightExport.contactName : ''}</strong> vào công nợ`,
+    //     nzContent: `<b style="color: red;">Việc KHÔNG tính chi phí khách sạn của khách hàng <strong>${hotelFlightExport.contactName? hotelFlightExport.contactName : ''} vào công nợ sẽ không thể hoàn tác. Ấn đồng ý để tiếp tục.</b>`,
+    //     nzOkDanger: true,
+    //     nzOkText: 'Đồng ý',
+    //     nzCancelText: 'Không',
+    //     nzOnOk: () => this.changeSystemStatusBookingHotelExport(hotelFlightExport.id),
+    //   });
+    // }
+  }
+
+
+  changeSystemStatusBookingHotelExport(idBookingTicketFlightExp: any, noteSystemCancelled: any) {
+    this.submitted = true;
+    if(!noteSystemCancelled){
+      this.notificationService.showNotification(Constant.ERROR, 'Nội dung ghi chú không được để trống');
+      return;
+    }
+    let payload = {noteSystemCancelled: noteSystemCancelled};
+    this.generalService.markCanceledSystemBookingHotelExport(idBookingTicketFlightExp, payload).subscribe({
+      next: (res) => {
+        if (res.ret && res.ret[0].code !== 0) {
+          this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
+        } else {
+          this.notificationService.showNotification(Constant.SUCCESS, 'Thiết lập không tính công nợ thành công');
+          this.handleCancelConfirmCancelSystem();
+        }
+      },
+      error: (error) => {
+        this.notificationService.showNotification(Constant.ERROR, 'Thiết lập không tính công nợ không thành công');
+      },
+      complete: () => {
+        this.getListData();
+      }
+    });
+  }
+
 }

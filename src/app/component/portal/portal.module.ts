@@ -30,7 +30,6 @@ import { AdminTicketComponent } from './pages/admin-ticket/admin-ticket.componen
 import { AdminHistoryHoldingTicketComponent } from './pages/admin-history-holding-ticket/admin-history-holding-ticket.component';
 import { HotelComponent } from './pages/hotel/hotel.component';
 import { NewsComponent } from './pages/news/news.component';
-import { NzSwitchModule } from 'ng-zorro-antd/switch';
 import { BookingHotelComponent } from './pages/booking-hotel/booking-hotel.component';
 import { DataStatisticsComponent } from './pages/data-statistics/data-statistics.component';
 import { DataAirlineTicketsComponent } from './pages/data-airline-tickets/data-airline-tickets.component';
@@ -79,7 +78,6 @@ const icons: IconDefinition[] = Object.keys(antDesignIcons).map(key => antDesign
     DxButtonModule,
     DxTabPanelModule,
     DxDataGridModule,
-    NzSwitchModule,
   ],
   providers: [GeneralService, FileManagerService, MenuService, SignalRService, DateFormatPipe,]
 })

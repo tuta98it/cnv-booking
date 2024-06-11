@@ -44,7 +44,6 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
   loading: boolean;
   checkDelete = true;
   checkAdd = true;
-  checkUpdate = true;
   submitted = false;
   updated: boolean;
   pageSize: any;
@@ -133,53 +132,54 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
 
   getUserInfo() {
     this.userInfor = JSON.parse(localStorage.getItem(Constant.USER_INFO));
-    console.log('this.userInfor: ', this.userInfor);
   }
 
   getListData() {
-    this.loading = true;
-    let service: any;
-    if (this.userInfor.userType === 0) {
-
-
-      // this.userInfor.userType
-      this.generalService.getUserForSysAdmin().subscribe((res: any) => {
-        if (res !== null) {
-          this.datas = res;
-          this.loading = false;
-          let stt = 0;
-          this.datas.forEach(en => {
-            stt++;
-            en.stt = stt;
-            en.roleStr = this.getQuyen(en.userroles);
-          });
-          this.filteredDatas = this.datas;
-          super.setListOfAllData(this.datas);
-        }
-      }, error => {
-      });
-    } else if (this.userInfor.userType === 1) {
-      this.generalService.getByPartnerId(this.userInfor.partnerId).subscribe((res: any) => {
-        if (res !== null) {
-          this.datas = res;
-          this.loading = false;
-          let stt = 0;
-          this.datas.forEach(en => {
-            stt++;
-            en.stt = stt;
-            en.roleStr = this.getQuyen(en.userroles);
-          });
-          this.filteredDatas = this.datas;
-          super.setListOfAllData(this.datas);
-        }
-      }, error => {
-      });;
-      // isGetAPT = true;
-    } else {
-      console.log('UserType không hợp lệ!');
-    }
-
-    // console.log('isGetAPT: ',  isGetAPT);
+    return new Promise((resolve, reject) => {
+      this.loading = true;
+      let service: any;
+      if (this.userInfor.userType === 0) {
+        // this.userInfor.userType
+        this.generalService.getUserForSysAdmin().subscribe((res: any) => {
+          if (res !== null) {
+            this.datas = res;
+            let stt = 0;
+            this.datas.forEach(en => {
+              stt++;
+              en.stt = stt;
+              en.isLoadingActiveUser = false;
+              en.roleStr = this.getQuyen(en.userroles);
+            });
+            this.filteredDatas = this.datas;
+            super.setListOfAllData(this.datas);
+            resolve(true);
+            this.loading = false;
+          }
+        }, error => {
+        });
+      } else if (this.userInfor.userType === 1) {
+        this.generalService.getByPartnerId(this.userInfor.partnerId).subscribe((res: any) => {
+          if (res !== null) {
+            this.datas = res;
+            let stt = 0;
+            this.datas.forEach(en => {
+              stt++;
+              en.stt = stt;
+              en.isLoadingActiveUser = false;
+              en.roleStr = this.getQuyen(en.userroles);
+            });
+            this.filteredDatas = this.datas;
+            super.setListOfAllData(this.datas);
+            resolve(true);
+            this.loading = false;
+          }
+        }, error => {
+        });;
+        // isGetAPT = true;
+      } else {
+        console.log('UserType không hợp lệ!');
+      }
+    });
   }
 
   validateEmail(mail) {
@@ -200,41 +200,45 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
     });
   }
 
-  showDeleteConfirm(id): void {
+  showIsActiveUserConfirm(user: any): void {
     this.get();
+    let changeIsActiveUser = !user.status;
+    user.isLoadingActiveUser = true;
     this.modalService.confirm({
-      nzTitle: 'Bạn có chắc muốn xóa tài khoản này?',
-      nzContent: '<b style="color: red;">Tài khoản sẽ không thể hoàn tác sau khi xoá. Ấn đồng ý để xoá</b>',
+      nzTitle: `<b>Bạn có chắc muốn ${changeIsActiveUser ? "Active" : "Inactive"} tài khoản này?</b>`,
+      nzContent: 'Ấn đồng ý để tiếp tục',
       nzOkDanger: true,
       nzOkText: 'Đồng ý',
       nzCancelText: 'Không',
-      nzOnOk: () => this.deleteItem(id)
+      nzOnOk: () => this.setStatusUser(user, changeIsActiveUser),
+      nzOnCancel: () => this.cancelActiveUserConfirm(user)
     });
   }
 
-  // deleteItem(id) {
-  //   this.generalService.deleteTaikhoan(id).subscribe(res => {
-  //     this.notificationService.showNotification(Constant.SUCCESS, Constant.MESSAGE_DELETE_SUCCESS);
-  //     this.getListData();
-  //   }, error => {
-
-  //   });
-  // }
-
-  deleteItem(id) {
+  private cancelActiveUserConfirm(user: any) {
+    user.isLoadingActiveUser = false;
+  }
+  setStatusUser(user: any, changeIsActiveUser: boolean) {
     // Delete workspace here
-    this.generalService.deleteTaikhoan(id).subscribe(res => {
-      // Do some logic and close the popup
-      if (res && res.ret && res.ret[0].code !== 0) {
-        this.notificationService.showNotification(Constant.ERROR, 'Không thể xóa.');
-      } else {
-        this.notificationService.showNotification(Constant.SUCCESS, 'Xóa thành công');
-        this.getListData();
+    this.generalService.setStatusTaikhoan(user.id, changeIsActiveUser).subscribe({
+      next: (res) => {
+        if (res.ret && res.ret[0].code !== 0) {
+          this.notificationService.showNotification(Constant.ERROR, 'Thiết lập trạng thái tài khoản không thành công');
+        } else {
+        }
+      },
+
+      error: (error) => {
+        this.notificationService.showNotification(Constant.ERROR, 'Thiết lập trạng thái tài khoản đã gặp lỗi');
+      },
+
+      complete: () => {
+        this.getListData().then(() => {
+          this.notificationService.showNotification(Constant.SUCCESS, `${changeIsActiveUser ? 'Active' : 'Inactive'} tài khoản thành công`);
+        });
       }
-    }, error => {
-      // Error handling and close the popup
-      this.notificationService.showNotification(Constant.ERROR, 'Đã có lỗi xảy ra!');
-    });
+
+    }).add(() => { user.isLoadingActiveUser = false; });
   }
 
   showModalAdd() {
@@ -280,7 +284,6 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
       position: this.item.position,
       partnerId: this.item.partnerId
     });
-    console.log(this.formAdd.value);
 
   }
 
@@ -518,7 +521,6 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
 
   onSearch() {
     const keyword = removeAccents(this.searchText.trim().toLowerCase());
-    console.log(keyword);
     this.filteredDatas = this.datas.filter((en) =>
       removeAccents(en.id?.toString().trim()).toLowerCase().includes(keyword) ||
       removeAccents(en.fullname?.trim()).toLowerCase().includes(keyword) ||

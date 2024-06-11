@@ -15,7 +15,6 @@ export class MViewPdfComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {
-    console.log("pdfDocumentSrc", this.pdfDocumentSrc);
   }
 
   afterLoadComplete(pdfData: any) {

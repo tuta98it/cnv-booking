@@ -40,7 +40,6 @@ export class BaseService {
    * @param data the entity to create
    */
   post(url: string, data: any, params?: {}, responseType?: string): Observable<any> {
-    console.log(this.configService.getConfig().api.baseUrl + url);
     switch (responseType) {
       case 'text':
         return this.httpClient.post(this.configService.getConfig().api.baseUrl + url, data, {

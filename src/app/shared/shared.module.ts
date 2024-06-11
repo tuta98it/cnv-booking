@@ -39,6 +39,10 @@ import { NzMessageModule } from 'ng-zorro-antd/message';
 import { AngularEditorModule } from '@kolkov/angular-editor';
 import { BookingHotelStatusPipe } from './pipe/booking-hotel-status.pipe';
 import { DxDateBoxModule } from 'devextreme-angular';
+import { PassengerTypesPipe } from './pipe/passenger-type.pipe';
+import { NzSwitchModule } from 'ng-zorro-antd/switch';
+import { NzRateModule } from 'ng-zorro-antd/rate';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -66,10 +70,12 @@ import { DxDateBoxModule } from 'devextreme-angular';
     QRCodeModule,
     NzTagModule,
     NzUploadModule,
-    NzCheckboxModule,
     NzAlertModule,
     NzImageModule,
     NzMessageModule,
+    NzSwitchModule,
+    NzRateModule,
+    NzCheckboxModule,
     DxDateBoxModule,
     AngularEditorModule
   ],
@@ -109,9 +115,12 @@ import { DxDateBoxModule } from 'devextreme-angular';
     MViewPdfComponent,
     NzImageModule,
     NzMessageModule,
+    NzSwitchModule,
+    NzRateModule,
     AngularEditorModule,
     DxDateBoxModule,
-    BookingHotelStatusPipe
+    BookingHotelStatusPipe,
+    PassengerTypesPipe
   ],
   declarations: [
     DateFormatPipe,
@@ -122,6 +131,7 @@ import { DxDateBoxModule } from 'devextreme-angular';
     OrderStatusFormatPipe,
     IsEmptyPipe,
     BookingHotelStatusPipe,
+    PassengerTypesPipe,
     MViewPdfComponent
   ],
   providers: [NotificationService],

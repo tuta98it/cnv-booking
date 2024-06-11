@@ -86,7 +86,6 @@ export class TaikhoanRolesComponent extends TableSelectionAbstract implements On
   get() {
     this.translate.use(this.translate.currentLang).subscribe(data => {
       this.data = data;
-      console.log(this.data);
     });
   }
   showConfirm(id): void {
@@ -138,7 +137,6 @@ export class TaikhoanRolesComponent extends TableSelectionAbstract implements On
   }
   handleOk() {
     const formValue = this.formAdd.value;
-    // console.log(formValue);
     if (formValue.id == 0) {
       delete formValue.id;
       this.generalService.addGroup(formValue).subscribe(res => {
@@ -157,7 +155,6 @@ export class TaikhoanRolesComponent extends TableSelectionAbstract implements On
     else {
       this.generalService.updateGroup(formValue).subscribe(res => {
         //this.isVisibleAdd = false;
-        // console.log('res', res);
         if (res !== null && res !== undefined && res.ret !== null && res.ret !== undefined && res.ret.code != 0) {
           this.notificationService.showNotification(Constant.ERROR, res.ret.message);
         }
@@ -199,7 +196,6 @@ export class TaikhoanRolesComponent extends TableSelectionAbstract implements On
         group.roles.push(roleId);
     }
     group.enable = true;
-    console.log(group.roles);
   }
   saveUserGroup(data) {
     var itemUpdate = { groupId: data.id, roles: data.roles };

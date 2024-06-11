@@ -27,31 +27,39 @@
   [allowColumnResizing]="true" columnResizingMode="widget" [columnMinWidth]="50" [columnAutoWidth]="true"
   (onExporting)="onExporting($event)">
   <dxo-load-panel [enabled]="true"></dxo-load-panel>
-  <dxo-scrolling mode="virtual"></dxo-scrolling>
   <dxo-sorting mode="multiple"></dxo-sorting>
   <dxo-header-filter [visible]="true"></dxo-header-filter>
   <dxo-filter-row [visible]="true" [applyFilter]="currentFilter"></dxo-filter-row>
+  <dxo-paging [pageSize]="10"> </dxo-paging>
+  <dxo-scrolling rowRenderingMode="virtual"> </dxo-scrolling>
+  <dxo-pager [visible]="true" [allowedPageSizes]="allowedPageSizes" [displayMode]="displayMode"
+    [showPageSizeSelector]="showPageSizeSelector" [showInfo]="showInfo"
+    [showNavigationButtons]="showNavButtons"></dxo-pager>
 
-
-  <dxi-column cssClass="text-center" caption="STT" [width]="55" dataField="stt" [fixed]="true" [allowFiltering]="false"
-    [allowSorting]="false"></dxi-column>
-  <dxi-column caption="Tên khách hàng" [width]="300" dataField="passengerName"></dxi-column>
-  <dxi-column caption="Hãng bay" dataField="airlineName" [width]="200"></dxi-column>
-  <dxi-column caption="Mã đặt chỗ" [width]="200" dataField="bookingNumber"></dxi-column>
-  <dxi-column caption="Số vé" [width]="200" dataField="ticketNumber"></dxi-column>
+  <dxi-column  caption="STT" [width]="55" dataField="stt" [fixed]="true" [allowFiltering]="false"
+    [allowSorting]="false" cssClass="vertical-align-middle text-center"></dxi-column>
+  <dxi-column caption="Tên khách hàng" [width]="300" dataField="passengerName" cssClass="vertical-align-middle"></dxi-column>
+  <dxi-column caption="Hãng bay" dataField="airlineName" [width]="200" cssClass="vertical-align-middle"></dxi-column>
+  <dxi-column caption="Mã đặt chỗ" [width]="200" dataField="bookingNumber" cssClass="vertical-align-middle"></dxi-column>
+  <dxi-column caption="Số vé" [width]="200" dataField="ticketNumber" cssClass="vertical-align-middle"></dxi-column>
   <dxi-column caption="Ngày đặt vé" [width]="200" dataField="dateCreated" dataType="date"
-    format="HH:mm dd/MM/yyyy"></dxi-column>
-  <dxi-column caption="Trạng thái hệ thống" cssClass="text-center" [width]="300"
-    cellTemplate="cellSystemCancelled"></dxi-column>
-  <dxi-column caption="Xuất vé" cssClass="text-center" cellTemplate="cellBillet"></dxi-column>
+    format="HH:mm dd/MM/yyyy" cssClass="vertical-align-middle"></dxi-column>
+  <dxi-column caption="Trạng thái hệ thống" cssClass="text-center vertical-align-middle" [width]="200"
+    cellTemplate="cellSystemCancelled" cssClass="vertical-align-middle"></dxi-column>
+  <dxi-column caption="Lý do huỷ" [width]="150" dataField="noteSystemCancelled" dataTyp="string" cssClass="vertical-align-middle"></dxi-column>
+  <dxi-column caption="Xuất vé"  cellTemplate="cellBillet" cssClass="vertical-align-middle text-center"></dxi-column>
 
   <div *dxTemplate="let ticketFlightExport of 'cellSystemCancelled'">
-    <nz-switch [ngModel]="!ticketFlightExport.data.systemCancelled" [nzControl]="true" nzCheckedChildren="Tính công nợ" nzUnCheckedChildren="Không tính công nợ" [nzLoading]="loadingSystemStatus" (click)="onChangeStatusSystemTicketExport(ticketFlightExport.data)" [nzDisabled]="ticketFlightExport.data.systemCancelled"></nz-switch>
+    <nz-switch [ngModel]="!ticketFlightExport.data.systemCancelled" [nzControl]="true" nzCheckedChildren="Tính công nợ"
+      nzUnCheckedChildren="Không tính công nợ" [nzLoading]="loadingSystemStatus"
+      (click)="onChangeStatusSystemTicketExport(ticketFlightExport.data)"
+      [nzDisabled]="ticketFlightExport.data.systemCancelled"></nz-switch>
   </div>
 
   <div *dxTemplate="let item of 'cellBillet'">
     <div *ngIf="item.data.status === 'OK'" (click)="onOpenPopupTicketDetail(item.data)">
-      <a nz-button nzType="link" nzBlock>Xem vé <span *ngIf="item.data.isLoadingViewTicket" nz-icon nzType="loading" nzTheme="outline"></span></a>
+      <a nz-button nzType="link" nzBlock>Xem vé <span *ngIf="item.data.isLoadingViewTicket" nz-icon nzType="loading"
+          nzTheme="outline"></span></a>
     </div>
 
     <div *ngIf="item.data.status === 'FAIL'">
@@ -107,15 +115,16 @@
                   <strong>{{bookingPassenger.lastName}} {{bookingPassenger.firstName}}</strong></label>
                 <label *ngIf="bookingPassenger.typeCode === 'CHD'">Hành khách: {{bookingPassenger.gender? 'Bé trai' :
                   'Bé gái'}} <strong>{{bookingPassenger.lastName}} {{bookingPassenger.firstName}}</strong></label>
-                <label *ngIf="bookingPassenger.typeCode === 'INF'">Hành khách: {{bookingPassenger.gender? 'Trẻ sơ sinh trai' : 'Trẻ sơ sinh gái'}} <strong>{{bookingPassenger.lastName}}
+                <label *ngIf="bookingPassenger.typeCode === 'INF'">Hành khách: {{bookingPassenger.gender? 'Trẻ sơ sinh
+                  trai' : 'Trẻ sơ sinh gái'}} <strong>{{bookingPassenger.lastName}}
                     {{bookingPassenger.firstName}}</strong></label>
               </div>
               <div class="passenger-ticket-info-content">
                 <div>
                   <strong>Chi tiết vé</strong>
                 </div>
-                <div >
-                  <table >
+                <div>
+                  <table>
                     <tr>
                       <th>Loại vé</th>
                       <th>Số lượng</th>
@@ -129,23 +138,26 @@
                       <td *ngIf="bookingFlight.adt > 0">{{bookingFlight.adt}}</td>
                       <td *ngIf="bookingFlight.adt > 0">{{bookingFlight.startPoint}} - {{bookingFlight.endPoint}}</td>
                       <td *ngIf="bookingFlight.adt > 0">{{bookingFlight.priceAdult | currencyFormat }} VND</td>
-                      <td *ngIf="bookingFlight.adt > 0">{{bookingFlight.taxAdult + bookingFlight.feeAdult | currencyFormat}} VND</td>
+                      <td *ngIf="bookingFlight.adt > 0">{{bookingFlight.taxAdult + bookingFlight.feeAdult |
+                        currencyFormat}} VND</td>
                       <td *ngIf="bookingFlight.adt > 0">{{bookingFlight.totalPrice | currencyFormat}} VND</td>
 
                       <td *ngIf="bookingFlight.chd > 0">Trẻ em 2 - 11 tuổi</td>
                       <td *ngIf="bookingFlight.chd > 0">{{bookingFlight.chd}}</td>
                       <td *ngIf="bookingFlight.chd > 0">{{bookingFlight.startPoint}} - {{bookingFlight.endPoint}}</td>
                       <td *ngIf="bookingFlight.chd > 0">{{bookingFlight.priceChild | currencyFormat }} VND</td>
-                      <td *ngIf="bookingFlight.chd > 0">{{bookingFlight.taxChild + bookingFlight.feeChild | currencyFormat}} VND</td>
+                      <td *ngIf="bookingFlight.chd > 0">{{bookingFlight.taxChild + bookingFlight.feeChild |
+                        currencyFormat}} VND</td>
                       <td *ngIf="bookingFlight.chd > 0">{{bookingFlight.totalPrice | currencyFormat}} VND</td>
 
 
-                      <td  *ngIf="bookingFlight.inf > 0">Trẻ sơ sinh</td>
-                      <td  *ngIf="bookingFlight.inf > 0">{{bookingFlight.inf}}</td>
-                      <td   *ngIf="bookingFlight.inf > 0">{{bookingFlight.startPoint}} - {{bookingFlight.endPoint}}</td>
-                      <td  *ngIf="bookingFlight.inf > 0">{{bookingFlight.priceInfant | currencyFormat }} VND</td>
-                      <td  *ngIf="bookingFlight.inf > 0">{{bookingFlight.taxInfant + bookingFlight.feeInfant | currencyFormat}} VND</td>
-                      <td  *ngIf="bookingFlight.inf > 0">{{bookingFlight.totalPrice | currencyFormat}} VND</td>
+                      <td *ngIf="bookingFlight.inf > 0">Trẻ sơ sinh</td>
+                      <td *ngIf="bookingFlight.inf > 0">{{bookingFlight.inf}}</td>
+                      <td *ngIf="bookingFlight.inf > 0">{{bookingFlight.startPoint}} - {{bookingFlight.endPoint}}</td>
+                      <td *ngIf="bookingFlight.inf > 0">{{bookingFlight.priceInfant | currencyFormat }} VND</td>
+                      <td *ngIf="bookingFlight.inf > 0">{{bookingFlight.taxInfant + bookingFlight.feeInfant |
+                        currencyFormat}} VND</td>
+                      <td *ngIf="bookingFlight.inf > 0">{{bookingFlight.totalPrice | currencyFormat}} VND</td>
                     </tr>
                     <tr>
                       <td></td>
@@ -170,7 +182,8 @@
               </div>
 
               <div class="flight-info-content">
-                <div class="flight-schedule"  *ngFor="let bookingFlight of bookingTicketDetail.bookingFlights; let i = index;">
+                <div class="flight-schedule"
+                  *ngFor="let bookingFlight of bookingTicketDetail.bookingFlights; let i = index;">
                   <div class="flight-schedule-title">
                     <label>
                       Hành trình : <strong>{{toNameAirportByCode(bookingFlight.startPoint)}} -
@@ -223,6 +236,48 @@
     </div>
   </ng-template>
   <div *nzModalFooter>
-    <button nz-button nzType="default" (click)="handleCancelPopup()">Huỷ</button>
+    <button nz-button nzType="default" (click)="handleCancelPopup()">Đóng</button>
   </div>
+</nz-modal>
+
+
+<nz-modal [(nzVisible)]="nzVisibleCancelSystem" nzOkDanger="true" nzOkText="Đồng ý" nzCancelText="Không"
+  (nzOnCancel)="handleCancelConfirmCancelSystem()"
+  (nzOnOk)="changeSystemStatusTicketExport(item.bookingId, systemCancelBookingFligh.nodeSystemCancelled)">
+  <div *nzModalTitle style="display: flex; align-items: baseline;">
+    <span nz-icon nzType="question-circle" nzTheme="outline" style="color: #faad14; float: left;
+      margin-right: 16px; font-size: 22px;"></span>
+    <div>
+      KHÔNG tính chi phí vé máy bay
+    </div>
+
+  </div>
+  <ng-container *nzModalContent>
+    <div>
+      <label>Ghi chú<span style="color: #dc3545;">*</span></label>
+      <div>
+        <nz-input-group [nzSuffix]="inputClearTpl"
+          [ngClass]="{ 'is-invalid': (systemCancelBookingFligh.submitted && !systemCancelBookingFligh.nodeSystemCancelled)}">
+          <input nz-input type="text" [(ngModel)]="systemCancelBookingFligh.nodeSystemCancelled"
+            placeholder="Nội dung ghi chú..." />
+
+        </nz-input-group>
+        <ng-template #inputClearTpl>
+          <span nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle"
+            *ngIf="systemCancelBookingFligh.nodeSystemCancelled"
+            (click)="systemCancelBookingFligh.nodeSystemCancelled = null"></span> </ng-template>
+      </div>
+      <span><i style="font-size: x-small; opacity: 0.8;">(*Lý do tại sao yêu cầu đặt vé máy bay bị huỷ)</i></span>
+    </div>
+
+    <p style="margin-top: 1rem;">Bạn có chắc KHÔNG tính chi phí vé máy bay của khách hàng <strong>{{item.contactName?
+        item.contactName : ''}}</strong> vào công nợ?</p>
+    <span>
+      <b style="color: #dc3545;">Việc KHÔNG tính chi phí vé máy bay của khách hàng
+        {{item.contactName? item.contactName : ''}} vào công nợ sẽ không thể hoàn tác.</b>
+    </span>
+    <span>
+      Ấn đồng ý để tiếp tục.
+    </span>
+  </ng-container>
 </nz-modal>

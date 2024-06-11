@@ -49,9 +49,7 @@
   <dxo-header-filter [visible]="true"></dxo-header-filter>
   <dxo-filter-row [visible]="true" [applyFilter]="currentFilter"></dxo-filter-row>
   <dxo-paging [pageSize]="10"> </dxo-paging>
-
-  <dxo-scrolling mode="virtual" rowRenderingMode="virtual" columnRenderingMode="virtual"> </dxo-scrolling>
-
+  <dxo-scrolling rowRenderingMode="virtual"> </dxo-scrolling>
   <dxo-pager [visible]="true" [allowedPageSizes]="allowedPageSizes" [displayMode]="displayMode"
     [showPageSizeSelector]="showPageSizeSelector" [showInfo]="showInfo"
     [showNavigationButtons]="showNavButtons"></dxo-pager>
@@ -71,12 +69,16 @@
   <dxi-column caption="Hành trình" [width]="130" dataField="flightRoute" dataType="string"></dxi-column>
   <dxi-column caption="Giá vé" [width]="200" dataField="totalNetPriceFormat" dataType="string"></dxi-column>
   <dxi-column caption="VAT" [width]="100" dataField="totalNetPriceVATFormat" dataType="string"></dxi-column>
-  <dxi-column caption="Phân loại khách hàng" [width]="180" dataField="" dataType="string"></dxi-column>
-  <dxi-column caption="Người đặt" [width]="150" dataField="contactName" dataType="string"></dxi-column>
+  <dxi-column caption="Phân loại khách hàng" [fixed]="true" fixedPosition="right" cssClass="text-center" [width]="180" dataField="passengerType" [format]="pipeUtils.pipePassengerType"></dxi-column>
+  <dxi-column caption="Người đặt" [fixed]="true" fixedPosition="right"  cssClass="text-center" [width]="150" dataField="contactName" dataType="string"></dxi-column>
+
+  <!-- <div *dxTemplate="let passengerType of 'cellPassengerType'">
+    {{passengerType.value | passengerType}}
+  </div> -->
   <dxo-summary [calculateCustomSummary]="calculateSelectedRowPrice">
 
-    <dxi-total-item name="SelectedRowsSumPrice" showInColumn="totalNetPriceFormat" displayFormat="Tổng: {0}" [valueFormat]="formatCurrencyVND"
-      summaryType="custom">
+    <dxi-total-item name="SelectedRowsSumPrice" showInColumn="totalNetPriceFormat" displayFormat="Tổng: {0}"
+      [valueFormat]="formatCurrencyVND" summaryType="custom">
     </dxi-total-item>
     <dxi-total-item name="SelectedRowsVAT" summaryType="custom" [valueFormat]="formatCurrencyVND"
       displayFormat="VAT: {0}" showInColumn="totalNetPriceFormat">
@@ -164,5 +166,3 @@
     <button nz-button nzType="dashed" nzDanger (click)="handleOkRefuse()" [nzLoading]="isRefuseLoading">Từ chối</button>
   </div>
 </nz-modal>
-
-

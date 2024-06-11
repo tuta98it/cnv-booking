@@ -79,7 +79,6 @@ export class NhomtaikhoanListComponent extends TableSelectionAbstract implements
   get() {
     this.translate.use(this.translate.currentLang).subscribe(data => {
       this.data = data;
-      console.log(this.data);
     });
   }
 
@@ -138,7 +137,6 @@ export class NhomtaikhoanListComponent extends TableSelectionAbstract implements
 
   handleOk() {
     const formValue = this.formAdd.value;
-    // console.log(formValue);
     if (formValue.id === 0) {
       delete formValue.id;
       this.generalService.addGroup(formValue).subscribe(res => {
@@ -154,7 +152,6 @@ export class NhomtaikhoanListComponent extends TableSelectionAbstract implements
       });
     } else {
       this.generalService.updateGroup(formValue).subscribe(res => {
-        // console.log('res', res);
         if (res && res.ret && res.ret[0].code !== 0) {
           this.notificationService.showNotification(Constant.ERROR, res.ret.message);
         } else {

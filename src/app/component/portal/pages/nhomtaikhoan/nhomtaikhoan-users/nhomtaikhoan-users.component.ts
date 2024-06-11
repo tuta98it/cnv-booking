@@ -96,10 +96,8 @@ export class NhomtaikhoanUsersComponent implements OnInit, OnChanges {
   getListUserOfGroup(groupId: any) {
     this.generalService.getUserOfGroup(groupId).subscribe(res => {
       if (res !== null) {
-        // console.log("vao day");
         this.users = res.usersNotInGroup;
         this.usersInGroup = res.usersInGroup;
-        console.log(this.users, this.usersInGroup);
       }
     }, error => {
 

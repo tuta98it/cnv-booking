@@ -23,7 +23,6 @@ export class SelectUnitComponent implements OnInit {
     this.getTinhThanh();
     this.tinhThanhId = +localStorage.getItem(Constant.TINHTHANH);
     this.quanHuyenId = +localStorage.getItem(Constant.QUANHUYEN);
-    console.log(this.tinhThanhId, this.quanHuyenId);
     if (this.tinhThanhId) {
       this.getQuanHuyen(this.tinhThanhId);
     }

@@ -32,6 +32,18 @@ export class AdminTicketComponent extends TableSelectionAbstract implements OnIn
   filteredDatas: any[] = [];
   searchText = '';
   isVisibleTicketDetail: boolean = false;
+  nzVisibleCancelSystem: boolean = false;
+  systemCancelBookingFligh = {
+    submitted:  false,
+    nodeSystemCancelled: '',
+  }
+  item: any;
+  readonly allowedPageSizes = [5, 10, 20, 'all'];
+  displayMode = 'full';
+  showPageSizeSelector = true;
+  showInfo = true;
+  showNavButtons = true;
+
 
   constructor(
     public translate: TranslateService,
@@ -57,7 +69,7 @@ export class AdminTicketComponent extends TableSelectionAbstract implements OnIn
     this.loading = true;
     const payload = {
       "page": 1,
-      "pageSize": 100
+      "pageSize": 500
     }
     this.generalService.getAdminTicket(payload).subscribe(
       (res: any) => {
@@ -70,7 +82,6 @@ export class AdminTicketComponent extends TableSelectionAbstract implements OnIn
             en.isLoadingViewTicket = false;
           });
           this.filteredDatas = this.datas;
-          // console.log(this.datas);
           super.setListOfAllData(this.datas);
         }
       },
@@ -116,7 +127,6 @@ export class AdminTicketComponent extends TableSelectionAbstract implements OnIn
 
   onSearch() {
     const keyword = removeAccents(this.searchText.trim().toLowerCase());
-    console.log(keyword);
     this.filteredDatas = this.datas.filter((en) =>
       removeAccents(en.passengerName?.trim()).toLowerCase().includes(keyword) ||
       removeAccents(en.airlineName?.trim()).toLowerCase().includes(keyword) ||
@@ -142,9 +152,6 @@ export class AdminTicketComponent extends TableSelectionAbstract implements OnIn
             i++;
           });
           this.bookingTicketDetail.totalPricebookingFlight = bookingFlightTotalPrice;
-
-          console.log('this.bookingTicketDetail.bookingFlights: ', this.bookingTicketDetail.bookingFlights);
-
         } else {
           this.notificationService.showNotification(Constant.ERROR, `Dữ liệu vé máy bay của khách hàng <strong>${booking.passengerName}</strong> không tồn tại`);
         }
@@ -187,27 +194,45 @@ export class AdminTicketComponent extends TableSelectionAbstract implements OnIn
     this.isVisibleTicketDetail = false;
   }
 
-
-  onChangeStatusSystemTicketExport(ticketFlightExp: any) {
-    if (!ticketFlightExp.systemCancelled) {
-      this.modalService.confirm({
-        nzTitle: `Bạn có chắc KHÔNG tính chi phí vé máy bay của khách hàng <strong>${ticketFlightExp.passengerName}</strong> vào công nợ`,
-        nzContent: `<b style="color: red;">Việc KHÔNG tính chi phí vé máy bay của khách hàng <strong>${ticketFlightExp.passengerName} vào công nợ sẽ không thể hoàn tác. Ấn đồng ý để tiếp tục</b>`,
-        nzOkDanger: true,
-        nzOkText: 'Đồng ý',
-        nzCancelText: 'Không',
-        nzOnOk: () => this.changeSystemStatusTicketExport(ticketFlightExp.bookingId),
-      });
-    }
-
+  handleCancelConfirmCancelSystem() {
+    this.nzVisibleCancelSystem = false;
+    this.resetConfirmSystemCancel();
   }
 
-  changeSystemStatusTicketExport(idBookingTicketFlightExp: any) {
-    this.generalService.markCanceledSystemTicketFlightExport(idBookingTicketFlightExp).subscribe({
+  private resetConfirmSystemCancel() {
+    this.systemCancelBookingFligh.nodeSystemCancelled = '';
+    this.systemCancelBookingFligh.submitted = false;
+  }
+
+  onChangeStatusSystemTicketExport(ticketFlightExp: any) {
+    this.nzVisibleCancelSystem = true;
+    this.resetConfirmSystemCancel();
+    this.item = ticketFlightExp;
+    // if (!ticketFlightExp.systemCancelled) {
+    //   this.modalService.confirm({
+    //     nzTitle: `Bạn có chắc KHÔNG tính chi phí vé máy bay của khách hàng <strong>${ticketFlightExp.passengerName}</strong> vào công nợ`,
+    //     nzContent: `<b style="color: red;">Việc KHÔNG tính chi phí vé máy bay của khách hàng <strong>${ticketFlightExp.passengerName} vào công nợ sẽ không thể hoàn tác. Ấn đồng ý để tiếp tục</b>`,
+    //     nzOkDanger: true,
+    //     nzOkText: 'Đồng ý',
+    //     nzCancelText: 'Không',
+    //     nzOnOk: () => this.changeSystemStatusTicketExport(ticketFlightExp.bookingId),
+    //   });
+    // }
+  }
+
+  changeSystemStatusTicketExport(idBookingTicketFlightExp: any, noteSystemCancelled: any) {
+    this.systemCancelBookingFligh.submitted = true;
+    if(!noteSystemCancelled){
+      this.notificationService.showNotification(Constant.ERROR, 'Nội dung ghi chú không được để trống');
+      return;
+    }
+    let payload = {noteSystemCancelled: noteSystemCancelled};
+    this.generalService.markCanceledSystemTicketFlightExport(idBookingTicketFlightExp, payload).subscribe({
       next: (res) => {
         if (res.ret && res.ret[0].code !== 0) {
           this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
         } else {
+          this.handleCancelConfirmCancelSystem();
           this.notificationService.showNotification(Constant.SUCCESS, 'Thiết lập không tính công nợ thành công');
         }
       },

@@ -8,7 +8,6 @@ export class ShopUtils {
       return '/uploads/' + imgSrc;
   }
   static  toUnitName(unit, data) {
-    console.log(data, unit);
     return data.find(x => x.id === unit).name;
   }
   static toStatus(status) {

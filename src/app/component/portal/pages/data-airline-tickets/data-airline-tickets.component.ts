@@ -15,6 +15,7 @@ import { saveAs } from 'file-saver-es';
 import { NzImageService } from 'ng-zorro-antd/image';
 // import { removeAccents } from ;
 import { removeAccents } from 'src/app/shared/utils/filters/remove-accents';
+
 import {
   DxDataGridComponent,
   DxTemplateDirective,
@@ -31,6 +32,7 @@ import { AngularEditorConfig } from '@kolkov/angular-editor';
 import { DataService } from 'src/app/service/data.service';
 import { Router } from '@angular/router';
 import { stringify } from 'querystring';
+import { PipeUtils } from 'src/app/shared/utils/pipe-utils.class';
 @Component({
   selector: 'app-data-airline-tickets',
   templateUrl: './data-airline-tickets.component.html',
@@ -130,16 +132,11 @@ export class DataAirlineTicketsComponent extends TableSelectionAbstract implemen
     page: 1,
     pageSize: 1000
   };
-  readonly allowedPageSizes = [5, 10, 20, 'all'];
-
+  readonly allowedPageSizes = [5, 10, 15, 20, 'all'];
   readonly displayModes = [{ text: "Display Mode 'full'", value: 'full' }, { text: "Display Mode 'compact'", value: 'compact' }];
-
   displayMode = 'full';
-
   showPageSizeSelector = true;
-
   showInfo = true;
-
   showNavButtons = true;
   partnerInfo: any;
   constructor(
@@ -154,6 +151,7 @@ export class DataAirlineTicketsComponent extends TableSelectionAbstract implemen
     private nzImageService: NzImageService,
     private msg: NzMessageService,
     private dataService: DataService,
+    public pipeUtils: PipeUtils,
   ) {
     super('id');
     this.formAddHotel = this.fb.group({
@@ -210,7 +208,6 @@ export class DataAirlineTicketsComponent extends TableSelectionAbstract implemen
 
   getUserInfo() {
     this.userInfor = JSON.parse(localStorage.getItem(Constant.USER_INFO));
-    // console.log('this.userInfor: ', this.userInfor);
   }
 
   getListData() {
@@ -256,7 +253,6 @@ export class DataAirlineTicketsComponent extends TableSelectionAbstract implemen
   getListUtilityHotels() {
     this.generalService.getListUtilityHotel().subscribe((res: any) => {
       this.listUtilityHotel = res.data;
-      // console.log("this.listUtilityHotel: ", this.listUtilityHotel);
     });
   }
 
@@ -457,7 +453,6 @@ export class DataAirlineTicketsComponent extends TableSelectionAbstract implemen
   }
 
   handleRemoveImageRoom = async (file: NzUploadFile): Promise<void> => {
-    console.log('xoá file: ', file);
     const idHotelImage = file.uid;
     this.generalService.deleteRoomImageByID(idHotelImage).subscribe(
       {
@@ -712,7 +707,6 @@ export class DataAirlineTicketsComponent extends TableSelectionAbstract implemen
 
   onSearch() {
     const keyword = removeAccents(this.searchText.trim().toLowerCase());
-    console.log(keyword);
     this.filteredDatas = this.datas.filter((en) =>
       removeAccents(en.name?.toString().trim()).toLowerCase().includes(keyword) ||
       removeAccents(en.address?.trim()).toLowerCase().includes(keyword) ||
@@ -843,7 +837,6 @@ export class DataAirlineTicketsComponent extends TableSelectionAbstract implemen
   }
 
   previewImages(images: any) {
-    console.log('image: ', images);
     let arrImage: any[] = [];
     if (typeof images === 'string') {
       let objImage = {
@@ -871,9 +864,7 @@ export class DataAirlineTicketsComponent extends TableSelectionAbstract implemen
     const status = file.status;
     if (status === 'done') {
       this.msg.success(`file ${file.name} tải lên thành công.`);
-      console.log(file, fileList);
       this.fileList = fileList;
-      console.log('this.fileList', this.fileList);
       if (form === 'hotel') {
         setTimeout(() => {
           if (this.fileList.length > 0) {
@@ -890,7 +881,6 @@ export class DataAirlineTicketsComponent extends TableSelectionAbstract implemen
           }
         }, 200);
         this.listURLFiles.push(file.response.hotelFileId);
-        console.log('this.listURLFiles: ', this.listURLFiles);
         this.formAddHotel.controls['hotelFileIds'].setValue(this.listURLFiles);
       } else if (form === 'room') {
         setTimeout(() => {
@@ -900,7 +890,6 @@ export class DataAirlineTicketsComponent extends TableSelectionAbstract implemen
           }
         }, 200);
         this.listURLFiles.push(file.response.roomFileId);
-        console.log('this.listURLFiles: ', this.listURLFiles);
         this.formAddRoom.controls['roomFileIds'].setValue(this.listURLFiles);
       }
     } else if (status === 'error') {

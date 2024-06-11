@@ -40,7 +40,6 @@ export class RoleComponent implements OnInit {
         //   return this.compareObjects(book1, book2, 'description');
         // })
         this.loading = false;
-        console.log(this.datas);
       }
     }, error => {
 
@@ -60,7 +59,6 @@ export class RoleComponent implements OnInit {
   //   return 0;
   // }
   handleCancel(): void {
-    console.log('Button cancel clicked!');
     this.isVisible = false;
   }
   showModal(data: any): void {
@@ -81,7 +79,6 @@ export class RoleComponent implements OnInit {
     }
     this.isDisbled = true;
     this.selectionData.switchtelcode = this.switchValue ? 1 : 0;
-    console.log(this.selectionData);
     if (this.selectionData.id === -1) {
       delete this.selectionData.id;
       this.fileManagerService.addRole(this.selectionData).subscribe(res => {

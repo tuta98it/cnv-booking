@@ -55,7 +55,6 @@ export class NhansuGroupsComponent implements OnInit, OnChanges {
     this.generalService.getGroup().subscribe(res => {
       if (res !== null) {
         this.groups = res;
-        console.log('groups', res);
       }
     }, error => {
 
@@ -99,7 +98,6 @@ export class NhansuGroupsComponent implements OnInit, OnChanges {
           groupAddItem
         ];
 
-        console.log(this.groupsInUser);
         this.formAdd.patchValue({
           groupId: null,
         });

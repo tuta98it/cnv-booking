@@ -108,7 +108,6 @@ export class NhansuListComponent extends TableSelectionAbstract implements OnIni
   getListData() {
     this.loading = true;
     this.generalService.getStaff().subscribe(res => {
-      console.log(res);
       if (res !== null) {
         this.datas = res;
         this.loading = false;
@@ -131,7 +130,6 @@ export class NhansuListComponent extends TableSelectionAbstract implements OnIni
     this.generalService.getWorkRole().subscribe(res => {
       if (res !== null) {
         this.workRoles = res;
-        console.log(res)
       }
     }, error => {
 
@@ -142,7 +140,6 @@ export class NhansuListComponent extends TableSelectionAbstract implements OnIni
     workRoleId : idRole
     }
     this.staffWorkRole.push(item);
-    console.log("staffWorkRole", this.staffWorkRole);
     }
   get() {
     this.translate.use(this.translate.currentLang).subscribe(data => {
@@ -227,7 +224,6 @@ export class NhansuListComponent extends TableSelectionAbstract implements OnIni
   {
     const formValue = this.formAdd.value;
     formValue.staffWorkRole = this.staffWorkRole;
-    console.log(formValue);
     if (formValue.id == 0) {
       delete formValue.id;
       this.generalService.addStaff(formValue).subscribe(res => {
@@ -248,7 +244,6 @@ export class NhansuListComponent extends TableSelectionAbstract implements OnIni
       this.generalService.updateStaff(formValue).subscribe(res => {
         if (res !== null && res !== undefined && res.ret !== null && res.ret !== undefined && res.ret.code != 0) {
           this.notificationService.showNotification(Constant.ERROR, res.ret.message);
-          console.log('update',res);
         }
         else {
           this.getListData();
@@ -293,7 +288,6 @@ export class NhansuListComponent extends TableSelectionAbstract implements OnIni
 
     });
     this.staff = data;
-    console.log(this.staff);
     this.formAddTaiKhoan.patchValue({
       id: this.staff.id,
       ho: this.staff.firstName,
@@ -312,7 +306,6 @@ export class NhansuListComponent extends TableSelectionAbstract implements OnIni
         this.notificationService.showNotification(Constant.ERROR, res.ret.message);
       }
       else {
-        console.log('id',res.id);
         this.formAdd.patchValue({
           id: this.staff.id,
           firstName : this.staff.firstName,
@@ -334,7 +327,6 @@ export class NhansuListComponent extends TableSelectionAbstract implements OnIni
           userId: res.id
         });
         this.generalService.updateStaff(this.formAdd.value).subscribe(res => {
-          console.log('loi',res);
           if (res !== null && res !== undefined && res.ret !== null && res.ret !== undefined && res.ret.code != 0) {
 
             this.notificationService.showNotification(Constant.ERROR, res.ret.message);
@@ -350,7 +342,6 @@ export class NhansuListComponent extends TableSelectionAbstract implements OnIni
     });
   }
   showModalGroup(data) {
-    console.log(data);
     this.isVisibleGroup = true;
     this.item = data;
     //this.users = this.item.userGroup;

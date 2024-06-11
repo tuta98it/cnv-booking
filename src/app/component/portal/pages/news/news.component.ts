@@ -270,7 +270,6 @@ export class NewsComponent extends TableSelectionAbstract implements OnInit, OnD
 
   onSearch() {
     const keyword = removeAccents(this.searchText.trim().toLowerCase());
-    console.log(keyword);
     this.filteredDatas = this.datas.filter((en) =>
       removeAccents(en.title?.toString().trim()).toLowerCase().includes(keyword) ||
       removeAccents(en.content?.trim()).toLowerCase().includes(keyword) ||
@@ -279,7 +278,6 @@ export class NewsComponent extends TableSelectionAbstract implements OnInit, OnD
     );
   }
   previewImagesNews(image: any) {
-    console.log('image: ', image);
     let arrImage: any[] = [];
     if (typeof image === 'string') {
       let objCurrent = {
