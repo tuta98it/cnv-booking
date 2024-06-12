@@ -50,7 +50,7 @@
   <dxi-column caption="Website" [width]="200" dataField="websiteUrl" cellTemplate="cellWebsite"></dxi-column>
   <dxi-column caption="Facebook" [width]="200" dataField="facebook" cellTemplate="cellFacebook"
     [visible]="false"></dxi-column>
-  <dxi-column caption="Hạng" cssClass="text-center" [width]="150" dataField="ratingStar"></dxi-column>
+  <dxi-column caption="Xếp hạng sao" cssClass="text-center" [width]="150" dataField="ratingStar"></dxi-column>
   <dxi-column caption="Số phòng" cssClass="text-left" [width]="150" dataField="numRooms"></dxi-column>
   <dxi-column caption="Hình ảnh khách sạn" [width]="250" dataField="hotelFile" cellTemplate="cellImages"></dxi-column>
   <dxi-column caption="Tiện ích khách sạn" cssClass="text-center" [width]="200"
@@ -250,7 +250,7 @@
 
 
           <div class="input-wrap" nz-row>
-            <label class="title-detail" nz-col [nzSpan]="8">Hạng<em class="fas fa-asterisk required"></em></label>
+            <label class="title-detail" nz-col [nzSpan]="8">Xếp hạng sao<em class="fas fa-asterisk required"></em></label>
             <div nz-col [nzSpan]="16">
               <input nz-input formControlName="ratingStar" type="number"
                 [ngClass]="{ 'is-invalid': submitted && formControlHotel.ratingStar.errors?.required }" />

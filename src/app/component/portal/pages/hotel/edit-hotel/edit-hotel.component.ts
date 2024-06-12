@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { GeneralService } from 'src/app/service/general-service';
 import { NzUploadFile } from 'ng-zorro-antd/upload';
@@ -78,6 +78,10 @@ export class EditHotelComponent implements OnInit {
   valueRatingStar: number = 0;
   tooltipRatingStars = ['terrible', 'bad', 'normal', 'good', 'wonderful'];
 
+
+  valueNumberPhone = '';
+  title = 'Input a number';
+  @ViewChild('inputElementNumberPhone', { static: false }) inputElementNumberPhone?: ElementRef;
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -127,6 +131,45 @@ export class EditHotelComponent implements OnInit {
         this.showModalUpdateHotel(item);
       }
     }
+  }
+  onChangeNumberPhone(value: string): void {
+    this.updateValueNumberPhone(value);
+  }
+
+  // '.' at the end or only '-' in the input box.
+  onBlurNumberPhone(): void {
+    if (this.valueNumberPhone.charAt(this.valueNumberPhone.length - 1) === '.' || this.valueNumberPhone === '-') {
+      this.updateValueNumberPhone(this.valueNumberPhone.slice(0, -1));
+    }
+  }
+
+  updateValueNumberPhone(value: string): void {
+    const reg = /^[0-9 | + | * | ( | ) | #]*$/;
+    if (reg.test(value) || value === '') {
+      this.valueNumberPhone = value;
+    }
+    this.inputElementNumberPhone!.nativeElement.value = this.valueNumberPhone;
+    // this.updateTitle();
+  }
+
+  updateTitle(): void {
+    this.title = (this.valueNumberPhone !== '-' ? this.formatNumber(this.valueNumberPhone) : '-') || 'Input a number';
+  }
+
+  formatNumber(value: string): string {
+    const stringValue = `${value}`;
+    const list = stringValue.split('.');
+    const prefix = list[0].charAt(0) === '-' ? '-' : '';
+    let num = prefix ? list[0].slice(1) : list[0];
+    let result = '';
+    while (num.length > 3) {
+      result = `,${num.slice(-3)}${result}`;
+      num = num.slice(0, num.length - 3);
+    }
+    if (num) {
+      result = num + result;
+    }
+    return `${prefix}${result}${list[1] ? `.${list[1]}` : ''}`;
   }
 
   getListUtilityHotels() {
@@ -182,7 +225,7 @@ export class EditHotelComponent implements OnInit {
       hotelFileIds: [],
       provinceId: null,
       districtId: null,
-      isActive : true
+      isActive: true
     });
     this.fileList = [];
     this.listURLFiles = [];
@@ -212,7 +255,7 @@ export class EditHotelComponent implements OnInit {
       hotelFileIds: [],
       provinceId: item.province?.id,
       districtId: item.district?.id,
-      isActive : item.isActive
+      isActive: item.isActive
     });
     this.getDistrictsById(item.province?.id).then((r) => this.formAddHotel.controls['districtId'].setValue(item.district?.id));
     this.fileList = [];
