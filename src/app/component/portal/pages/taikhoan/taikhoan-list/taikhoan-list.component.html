@@ -37,7 +37,8 @@
   <dxi-column caption="Tên nhân viên" dataField="fullname" [fixed]="true"></dxi-column>
   <dxi-column caption="Username" dataField="username" [fixed]="true"></dxi-column>
   <dxi-column caption="Chức vụ" [width]="200" dataField="position" [fixed]="true"></dxi-column>
-  <dxi-column caption="Thời gian đăng ký" dataField="createDate" [width]="150" dataType="date"  format="dd/MM/yyyy"> </dxi-column>
+  <dxi-column caption="Thời gian đăng ký" dataField="createDate" [width]="150" dataType="date" format="dd/MM/yyyy">
+  </dxi-column>
   <dxi-column caption="SĐT" [width]="150" dataField="phoneNo"></dxi-column>
   <dxi-column caption="Email" [width]="250" dataField="email"></dxi-column>
   <dxi-column caption="Phòng ban" [width]="150" dataField="department"></dxi-column>
@@ -54,8 +55,9 @@
       <span class="fa fa-key fa-fw"></span>
     </button>
 
-    <nz-switch [ngModel]="item.data.status" [nzControl]="true" [nzCheckedChildren]="checkedTemplateUser" [nzUnCheckedChildren]="unCheckedTemplateUser"
-      [nzLoading]="item.data.isLoadingActiveUser" (click)="showIsActiveUserConfirm(item.data)"></nz-switch>
+    <nz-switch [ngModel]="item.data.status" [nzControl]="true" [nzCheckedChildren]="checkedTemplateUser"
+      [nzUnCheckedChildren]="unCheckedTemplateUser" [nzLoading]="item.data.isLoadingActiveUser"
+      (click)="showIsActiveUserConfirm(item.data)"></nz-switch>
     <ng-template #checkedTemplateUser><span nz-icon nzType="user"></span></ng-template>
     <ng-template #unCheckedTemplateUser><span nz-icon nzType="user-delete"></span></ng-template>
   </div>
@@ -86,7 +88,8 @@
       <div class="input-wrap" nz-row>
         <label class="title-detail" nz-col [nzSpan]="8">Số điện thoại<em class="fa fa-asterisk required"></em></label>
         <div nz-col [nzSpan]="16">
-          <input nz-input formControlName="phoneNo" type="tel"
+          <input nz-input formControlName="phoneNo" #inputElementNumberPhone
+            (ngModelChange)="onChangeNumberPhone($event)"
             [ngClass]="{ 'is-invalid': submitted && f.phoneNo.errors?.required }" />
         </div>
       </div>

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { GeneralService } from 'src/app/service/general-service';
@@ -26,6 +26,8 @@ import {
 })
 export class PartnerComponent extends TableSelectionAbstract implements OnInit, OnDestroy {
   @ViewChild("ListAccount") dataGridDetail: DxDataGridComponent;
+  valueNumberPhone = '';
+  @ViewChild('inputElementNumberPhone', { static: false }) inputElementNumberPhone?: ElementRef;
   datas: any[] = [];
   passwordVisible: boolean;
   repeatpasswordVisible: boolean;
@@ -125,7 +127,18 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
     this.uploadUrl = `${this.configService.getConfig().api.baseUrl}/Upload/UploadFile`;
     this.baseImageurl = this.configService.getConfig().api.baseUrl + '/Uploads/';
   }
+  onChangeNumberPhone(value: string): void {
+    this.updateValueNumberPhone(value);
+  }
 
+  updateValueNumberPhone(value: string): void {
+    const reg = /^[0-9 | + | * | ( | ) | #]*$/;
+    if (reg.test(value) || value === '') {
+      this.valueNumberPhone = value;
+    }
+    this.inputElementNumberPhone!.nativeElement.value = this.valueNumberPhone;
+    // this.updateTitle();
+  }
   ngOnInit(): void {
     this.pageSize = this.configService.getConfig().pageSize;
     this.page = this.configService.getConfig().page;

@@ -31,7 +31,7 @@
                 class="fa fa-asterisk required"></em></label>
             <div nz-col [nzSpan]="16">
               <input nz-input formControlName="phoneNo" #inputElementNumberPhone
-                (ngModelChange)="onChangeNumberPhone($event)" (blur)="onBlurNumberPhone()"
+                (ngModelChange)="onChangeNumberPhone($event)"
                 [ngClass]="{ 'is-invalid': submitted && formControlHotel.phoneNo.errors?.required }" />
             </div>
           </div>

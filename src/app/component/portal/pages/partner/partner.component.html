@@ -48,7 +48,8 @@
   <dxi-column caption="Giấy phép kinh doanh" [width]="450" cellTemplate="cellBusinessLicenses"></dxi-column>
   <dxi-column caption="Hợp đồng" [width]="450" cellTemplate="cellContract"></dxi-column>
   <dxi-column caption="Ghi chú" [width]="350" dataField="note"></dxi-column>
-  <dxi-column caption="Thời gian đăng ký" dataField="dateCreated" [width]="150" dataType="date"  format="dd/MM/yyyy"> </dxi-column>
+  <dxi-column caption="Thời gian đăng ký" dataField="dateCreated" [width]="150" dataType="date" format="dd/MM/yyyy">
+  </dxi-column>
 
 
 
@@ -147,7 +148,8 @@
       <div class="input-wrap" nz-row>
         <label class="title-detail" nz-col [nzSpan]="8">Số điện thoại</label>
         <div nz-col [nzSpan]="16">
-          <input nz-input formControlName="phone" type="tel">
+          <input nz-input formControlName="phone" #inputElementNumberPhone
+            (ngModelChange)="onChangeNumberPhone($event)">
         </div>
       </div>
       <div class="input-wrap" nz-row>
