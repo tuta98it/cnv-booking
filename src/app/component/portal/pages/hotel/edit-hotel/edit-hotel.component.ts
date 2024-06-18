@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { GeneralService } from 'src/app/service/general-service';
 import { NzUploadFile } from 'ng-zorro-antd/upload';
@@ -78,6 +78,9 @@ export class EditHotelComponent implements OnInit {
   valueRatingStar: number = 0;
   tooltipRatingStars = ['terrible', 'bad', 'normal', 'good', 'wonderful'];
 
+
+  valueNumberPhone = '';
+  @ViewChild('inputElementNumberPhone', { static: false }) inputElementNumberPhone?: ElementRef;
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -127,6 +130,18 @@ export class EditHotelComponent implements OnInit {
         this.showModalUpdateHotel(item);
       }
     }
+  }
+  onChangeNumberPhone(value: string): void {
+    this.updateValueNumberPhone(value);
+  }
+
+  updateValueNumberPhone(value: string): void {
+    const reg = /^[0-9 | + | * | ( | ) | #]*$/;
+    if (reg.test(value) || value === '') {
+      this.valueNumberPhone = value;
+    }
+    this.inputElementNumberPhone!.nativeElement.value = this.valueNumberPhone;
+    // this.updateTitle();
   }
 
   getListUtilityHotels() {
@@ -182,7 +197,7 @@ export class EditHotelComponent implements OnInit {
       hotelFileIds: [],
       provinceId: null,
       districtId: null,
-      isActive : true
+      isActive: true
     });
     this.fileList = [];
     this.listURLFiles = [];
@@ -212,7 +227,7 @@ export class EditHotelComponent implements OnInit {
       hotelFileIds: [],
       provinceId: item.province?.id,
       districtId: item.district?.id,
-      isActive : item.isActive
+      isActive: item.isActive
     });
     this.getDistrictsById(item.province?.id).then((r) => this.formAddHotel.controls['districtId'].setValue(item.district?.id));
     this.fileList = [];

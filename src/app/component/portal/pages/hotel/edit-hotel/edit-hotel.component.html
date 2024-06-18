@@ -30,7 +30,8 @@
             <label class="title-detail" nz-col [nzSpan]="6">Số điện thoại:<em
                 class="fa fa-asterisk required"></em></label>
             <div nz-col [nzSpan]="16">
-              <input nz-input formControlName="phoneNo" type="tel"
+              <input nz-input formControlName="phoneNo" #inputElementNumberPhone
+                (ngModelChange)="onChangeNumberPhone($event)"
                 [ngClass]="{ 'is-invalid': submitted && formControlHotel.phoneNo.errors?.required }" />
             </div>
           </div>
@@ -78,7 +79,8 @@
             </div>
           </div>
           <div class="input-wrap" nz-row>
-            <label class="title-detail" nz-col [nzSpan]="6">Hạng:<em class="fas fa-asterisk required"></em></label>
+            <label class="title-detail" nz-col [nzSpan]="6">Xếp hạng sao:<em
+                class="fas fa-asterisk required"></em></label>
 
             <div nz-col [nzSpan]="16">
               <nz-rate formControlName="ratingStar" [nzTooltips]="tooltipRatingStars" nzAllowHalf [ngModelOptions]="

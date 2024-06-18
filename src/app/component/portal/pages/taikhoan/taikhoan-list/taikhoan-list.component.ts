@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActionsSubject, select, Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { NzModalService } from 'ng-zorro-antd/modal';
@@ -30,7 +30,8 @@ import { IsEmptyPipe } from 'src/app/shared/pipe/is-empty.pipe';
 export class TaikhoanListComponent extends TableSelectionAbstract implements OnInit, OnDestroy {
   @ViewChild("ListAccount") dataGridDetail: DxDataGridComponent;
   // @ViewChild(DxDataGridComponent, { static: false }) dataGrid: DxDataGridComponent;
-
+  valueNumberPhone = '';
+  @ViewChild('inputElementNumberPhone', { static: false }) inputElementNumberPhone?: ElementRef
 
   datas: any[] = [];
   data: any;
@@ -124,7 +125,18 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
     this.getUserInfo();
     this.getListData();
   }
+  onChangeNumberPhone(value: string): void {
+    this.updateValueNumberPhone(value);
+  }
 
+  updateValueNumberPhone(value: string): void {
+    const reg = /^[0-9 | + | * | ( | ) | #]*$/;
+    if (reg.test(value) || value === '') {
+      this.valueNumberPhone = value;
+    }
+    this.inputElementNumberPhone!.nativeElement.value = this.valueNumberPhone;
+    // this.updateTitle();
+  }
   ngOnDestroy(): void {
 
   }
