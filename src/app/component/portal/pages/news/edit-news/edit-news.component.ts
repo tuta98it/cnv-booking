@@ -116,7 +116,7 @@ export class EditNewsComponent implements OnInit {
     this.titleFormNews = 'Thêm mới bài đăng';
     this.formAddNews.reset();
     this.formAddNews.patchValue({
-      id: 0,
+      id: null,
       title: '',
       imageUrl: '',
       content: '',
@@ -156,7 +156,8 @@ export class EditNewsComponent implements OnInit {
       this.notificationService.showNotification(Constant.ERROR, 'Tồn tại mục tin tức chưa nhập!');
       return;
     }
-    if (formValue.id === 0) {
+
+    if (formValue.id === null || formValue.id === undefined || formValue.id === 0) {
       delete formValue.id;
       /// add
       this.generalService.addNews(formValue).subscribe((res: any) => {
@@ -203,8 +204,7 @@ export class EditNewsComponent implements OnInit {
       },];
       this.formAddNews.controls['imageUrl'].setValue(`${this.configService.getConfig().api.baseUrl}/${info.file.response.path}`);
     } else if (info.file.status === 'error') {
-      this.msg.error(`${info.file.name} file upload failed.`);
+      this.msg.error(`${info.file.name} file upload failed`);
     }
   }
-
 }
