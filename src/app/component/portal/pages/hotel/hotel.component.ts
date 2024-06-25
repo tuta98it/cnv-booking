@@ -604,7 +604,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
       roomNumber: 0,
       floorNumber: 0,
       price: '',
-      extraBed: '',
+      extraBed: 1,
       extraBedPrice: '',
       adultSurcharge: '',
       childSurcharge: '',

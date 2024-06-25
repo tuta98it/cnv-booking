@@ -330,11 +330,19 @@
             <label class="title-detail" nz-col [nzSpan]="8">Số khách:</label>
             <div nz-col [nzSpan]="16">
               <!-- [ngClass]="{ 'is-invalid': submitted && formControlRoom.numberOfPeople.errors?.required }"  -->
-              <dx-number-box formControlName="numberOfPeople" format="#,##0"></dx-number-box>
+              <!--<dx-number-box formControlName="numberOfPeople" format="#,##0"></dx-number-box>-->
+              <nz-select nzShowSearch nzMode="default" formControlName="numberOfPeople">
+                <nz-option nzLabel="1 khách" [nzValue]="1"></nz-option>
+                <nz-option nzLabel="2 khách" [nzValue]="2"></nz-option>
+                <nz-option nzLabel="3 khách" [nzValue]="3"></nz-option>
+                <nz-option nzLabel="4 khách" [nzValue]="4"></nz-option>
+                <nz-option nzLabel="5 khách" [nzValue]="5"></nz-option>
+                <nz-option nzLabel="6 khách" [nzValue]="6"></nz-option>
+              </nz-select>
             </div>
           </div>
           <div class="input-wrap" nz-row>
-            <label class="title-detail" nz-col [nzSpan]="8">Diện tích phòng:</label>
+            <label class="title-detail" nz-col [nzSpan]="8">Diện tích phòng (m2):</label>
             <div nz-col [nzSpan]="16">
               <!-- [ngClass]="{ 'is-invalid': submitted && formControlRoom.roomArea.errors?.required }"  -->
               <dx-number-box formControlName="roomArea" format="#,##0 m2"></dx-number-box>
@@ -344,12 +352,20 @@
             <label class="title-detail" nz-col [nzSpan]="8">Giường phụ:<em
               class="fas fa-asterisk required"></em></label>
             <div nz-col [nzSpan]="16">
-              <dx-number-box formControlName="extraBed" format="#,##0"
-                [ngClass]="{ 'is-invalid': submitted && (formControlRoom.extraBed.errors?.required || formControlRoom.extraBed.value == 0 ) }"></dx-number-box>
+
+              <nz-select nzShowSearch nzMode="default" formControlName="extraBed">
+                <nz-option nzLabel="1 giường" [nzValue]="1"></nz-option>
+                <nz-option nzLabel="2 giường" [nzValue]="2"></nz-option>
+                <nz-option nzLabel="3 giường" [nzValue]="3"></nz-option>
+                <nz-option nzLabel="4 giường" [nzValue]="4"></nz-option>
+              </nz-select>
+
+              <!--<dx-number-box formControlName="extraBed" format="#,##0"
+                [ngClass]="{ 'is-invalid': submitted && (formControlRoom.extraBed.errors?.required || formControlRoom.extraBed.value == 0 ) }"></dx-number-box>-->
             </div>
           </div>
           <div class="input-wrap" nz-row>
-            <label class="title-detail" nz-col [nzSpan]="8">Giá giường phụ <em
+            <label class="title-detail" nz-col [nzSpan]="8">Giá giường phụ (VNĐ):<em
                 class="fas fa-asterisk required"></em></label>
             <div nz-col [nzSpan]="16">
               <dx-number-box formControlName="extraBedPrice" format="#,##0"
@@ -357,7 +373,7 @@
             </div>
           </div>
           <div class="input-wrap" nz-row>
-            <label class="title-detail" nz-col [nzSpan]="8">Phụ phí người lớn:</label>
+            <label class="title-detail" nz-col [nzSpan]="8">Phụ phí người lớn (VNĐ):</label>
             <div nz-col [nzSpan]="16">
               <dx-number-box formControlName="adultSurcharge" format="#,##0"></dx-number-box>
             </div>
