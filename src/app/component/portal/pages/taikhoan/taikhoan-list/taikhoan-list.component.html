@@ -2,7 +2,7 @@
   <div class="form-group" style="float: left">
     <div style="display: flex;">
       <h1>Danh sách tài khoản</h1>
-      <div style="margin-left: 0.25rem;">
+      <div style="margin-left: 0.5rem;">
         <nz-select nzShowSearch nzMode="default" nzPlaceHolder="--Đối tượng user--" style="width: 200px;" [(ngModel)]="userType" (ngModelChange)="getListData()">
           <nz-option nzLabel="--Tất cả--" [nzValue]="userTypeEnum.All"></nz-option>
           <nz-option nzLabel="TK Quản trị Hệ thống" [nzValue]="userTypeEnum.SysAdmin"></nz-option>
