@@ -1256,7 +1256,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
     let tempDivString = serializer.serializeToString(tempDiv);
     let payloadSendEmailConfirmedBookingHotel = {
       toEmail: emailContact,
-      subject: 'Xác nhận đặt phòng khách sạn',
+      subject: `Xác nhận đặt phòng với VHL – Mã đặt phòng: ${this.item.bookingCode}}`,
       content: tempDivString,
       bookingHotelId: bookingHotelId
     }
