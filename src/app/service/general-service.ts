@@ -435,8 +435,8 @@ export class GeneralService extends BaseService {
   }
 
 
-  getByUserType(userType: any): Observable<any> {
-    return this.get(UrlConstant.LIST_USER + `/GetByUserType/${userType}`);
+  queryByUserType(userTypeRequest: any): Observable<any> {
+    return this.post(UrlConstant.LIST_USER + `/QueryByUserType`, userTypeRequest);
   }
 
   getUserForSysAdmin(): Observable<any> {

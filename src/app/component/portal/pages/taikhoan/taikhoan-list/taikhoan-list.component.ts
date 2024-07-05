@@ -12,7 +12,6 @@ import { Workbook } from 'exceljs';
 import { DateFormatPipe } from 'src/app/shared/pipe/format-date.pipe';
 import { exportDataGrid } from 'devextreme/excel_exporter';
 import { saveAs } from 'file-saver-es';
-
 // import { removeAccents } from ;
 import { removeAccents } from 'src/app/shared/utils/filters/remove-accents'
 import {
@@ -22,6 +21,7 @@ import {
   DxTooltipModule,
 } from "devextreme-angular";
 import { IsEmptyPipe } from 'src/app/shared/pipe/is-empty.pipe';
+import { UserType } from 'src/app/enums/user-type.enum';
 @Component({
   selector: 'app-taikhoan-list',
   templateUrl: './taikhoan-list.component.html',
@@ -34,6 +34,8 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
   @ViewChild('inputElementNumberPhone', { static: false }) inputElementNumberPhone?: ElementRef
 
   datas: any[] = [];
+  userTypeEnum = UserType;
+  userType : UserType = this.userTypeEnum.All;
   data: any;
   passwordVisible: boolean;
   repeatpasswordVisible: boolean;
@@ -152,7 +154,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
       let service: any;
       if (this.userInfor.userType === 0) {
         // this.userInfor.userType
-        this.generalService.getUserForSysAdmin().subscribe((res: any) => {
+        this.generalService.queryByUserType({userType : this.userType}).subscribe((res: any) => {
           if (res !== null) {
             this.datas = res;
             let stt = 0;

@@ -1,7 +1,18 @@
 <div class="action-button" style="clear: bottom;overflow: hidden;">
   <div class="form-group" style="float: left">
-    <h1>Danh sách tài khoản</h1>
-
+    <div style="display: flex;">
+      <h1>Danh sách tài khoản</h1>
+      <div style="margin-left: 0.25rem;">
+        <nz-select nzShowSearch nzMode="default" nzPlaceHolder="--Đối tượng user--" style="width: 200px;" [(ngModel)]="userType" (ngModelChange)="getListData()">
+          <nz-option nzLabel="--Tất cả--" [nzValue]="userTypeEnum.All"></nz-option>
+          <nz-option nzLabel="TK Quản trị Hệ thống" [nzValue]="userTypeEnum.SysAdmin"></nz-option>
+          <nz-option nzLabel="TK Nhân viên" [nzValue]="userTypeEnum.StaffVhl"></nz-option>
+          <nz-option nzLabel="TK Đối tác" [nzValue]="userTypeEnum.Partner"></nz-option>
+          <nz-option nzLabel="TK khách hàng" [nzValue]="userTypeEnum.User"></nz-option>
+          <!--[(ngModel)]="searchData.partnerId" <nz-option *ngFor="let partner of partners" nzLabel="{{partner.name}}" [nzValue]="partner.id"></nz-option> -->
+        </nz-select>
+      </div>
+    </div>
   </div>
   <div class="form-group" style="float: right; display: flex; align-items: center;">
     <!-- Tìm kiếm -->
@@ -10,7 +21,7 @@
 
     <!-- Nút thêm -->
     <button nz-button nzType="primary" class="ant-btn-primary" type="button" (click)="showModalAdd()" *ngIf="checkAdd">
-      <em class="fas fa-plus fa-fw" style="margin-right: 4px;"></em> Thêm</button>
+      <em class="fas fa-plus fa-fw" ></em> Thêm</button>
 
     <!-- Nút xuất Excel -->
     <button nz-button nzType="primary" class="btn-green mgr10" (click)="exportData()">
