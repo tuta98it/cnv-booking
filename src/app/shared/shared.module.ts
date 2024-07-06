@@ -42,7 +42,6 @@ import { DxDateBoxModule } from 'devextreme-angular';
 import { PassengerTypesPipe } from './pipe/passenger-type.pipe';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
 import { NzRateModule } from 'ng-zorro-antd/rate';
-
 @NgModule({
   imports: [
     CommonModule,
@@ -95,6 +94,7 @@ import { NzRateModule } from 'ng-zorro-antd/rate';
     NzIconModule,
     NzCollapseModule,
     NzNotificationModule,
+    NzLayoutModule,
     I18nModule,
     SelectLanguageComponent,
     NzFormModule,

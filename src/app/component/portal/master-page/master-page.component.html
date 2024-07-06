@@ -1,16 +1,18 @@
 <div class="header_top">
   <div class="container">
     <div class="row">
-      <div class="col-md-4">
-        <div style="display: flex;align-items: center">
+      <div class="col-md-10" style="display: flex; align-items: flex-end;">
+        <!-- <div style="display: flex;align-items: center">
           <img src="/assets/image/machine.png" style="width: auto; height: 40px">
-          <span style="color: #333;margin-left: 10px;">BOOKING - BACKEND</span>
+          <span style="color: #333;margin-left: 10px;">BOOKING - BACKEND - VHL</span>
+        </div> -->
+        <div style="display: flex;align-items: center">
+          <span nz-icon nzType="setting" style="font-size: x-large;" nzTheme="outline" [nzSpin]="false"></span>
+          <!-- <img src="/assets/image/machine.png" style="width: auto; height: 40px;"> -->
+          <span style="color: #333; margin-left: 10px;">BOOKING - BACKEND - VHL</span>
         </div>
       </div>
-      <!--<div class="col-md-6">
-        <app-select-unit></app-select-unit>
-      </div>-->
-      <div class="col-md-8 text-right">
+      <div class="col-md-2 text-right">
         <div class="dropdown-toggle header-icon" nz-dropdown [nzDropdownMenu]="menu"
           style="margin-top: 8px;color: #333">
           <nz-avatar nzIcon="user" nzSize="small"></nz-avatar>
@@ -27,65 +29,135 @@
     </div>
   </div>
 </div>
-<div class="header_menu">
-  <div class="container">
-    <ul nz-menu nzMode="horizontal">
+<!-- class="container" class="header_menu"  -->
+<nz-layout class="menu-vhl">
+  <nz-sider nzCollapsible nzWidth="280px">
+    <!-- <div class="logo"></div> -->
+    <!-- <nz-switch [(ngModel)]="modeMenu"></nz-switch> -->
+    <ul nz-menu nzTheme="" [nzMode]="modeMenu ? 'vertical' : 'inline'">
       <li nz-menu-item [nzSelected]="url === '/dashboard' || url === '/'">
-        <a routerLink="/dashboard">Trang chủ</a>
+        <i nz-icon nzType="home"></i>
+        <span>
+          <a routerLink="/dashboard">Trang chủ</a>
+        </span>
       </li>
       <!--<li *ngIf="DANH_MUC_TB" nz-menu-item [nzSelected]="url === '/thiet-bi' || url.includes('thiet-bi/')">
         <a routerLink="/thiet-bi">Danh mục Thiết bị</a>
       </li>-->
-      <li nz-menu-item [nzSelected]="url === '/news'"><a routerLink="/news">Tin tức</a></li>
+      <li nz-menu-item [nzSelected]="url === '/news'">
+        <i nz-icon nzType="file-text"></i>
+        <span>
+          <a routerLink="/news">Tin tức</a>
+        </span>
 
-      <li *ngIf="PHAN_QUYEN_TAI_KHOAN" nz-submenu nzTitle="Khách sạn">
+      </li>
+
+      <li *ngIf="PHAN_QUYEN_TAI_KHOAN" nz-submenu nzTitle="Khách sạn" nzIcon="hdd">
         <ul>
-          <li nz-menu-item [nzSelected]="url === '/hotel'"><a routerLink="/hotel">DS khách sạn</a></li>
-          <li nz-menu-item [nzSelected]="url === '/booking-hotel'"><a routerLink="/booking-hotel">QL đặt khách sạn</a>
+          <li nz-menu-item [nzSelected]="url === '/hotel'">
+            <i nz-icon nzType="info-circle"></i>
+            <span>
+              <a routerLink="/hotel">DS khách sạn</a>
+            </span>
           </li>
-          <li nz-submenu nzTitle="Tiện ích">
+          <li nz-menu-item [nzSelected]="url === '/booking-hotel'">
+            <i nz-icon nzType="info-circle"></i>
+            <span>
+              <a routerLink="/booking-hotel">QL đặt khách sạn</a>
+            </span>
+          </li>
+          <li nz-submenu nzTitle="Tiện ích" nzIcon="ellipsis">
             <ul>
-              <li nz-menu-item [nzSelected]="url === '/utility-hotel'"><a routerLink="/utility-hotel">Tiện ích khách
-                  sạn</a></li>
-              <li nz-menu-item [nzSelected]="url === '/utility-room'"><a routerLink="/utility-room">Tiện ích phòng</a>
+              <li nz-menu-item [nzSelected]="url === '/utility-hotel'">
+                <i nz-icon nzType="plus"></i>
+                <span>
+                  <a routerLink="/utility-hotel">Tiện ích khách sạn</a>
+                </span>
+              </li>
+              <li nz-menu-item [nzSelected]="url === '/utility-room'">
+                <i nz-icon nzType="plus"></i>
+                <span>
+                  <a routerLink="/utility-room">Tiện ích phòng</a>
+                </span>
               </li>
             </ul>
           </li>
         </ul>
       </li>
 
-      <li *ngIf="PHAN_QUYEN_TAI_KHOAN" nz-submenu nzTitle="Vé máy bay">
+      <li *ngIf="PHAN_QUYEN_TAI_KHOAN" nz-submenu nzTitle="Vé máy bay" nzIcon="send">
         <ul>
-          <li nz-menu-item [nzSelected]="url === '/admin-history-holding-ticket'"><a
-              routerLink="/admin-history-holding-ticket">Quản lý giữ vé</a></li>
-          <li nz-menu-item [nzSelected]="url === '/admin-ticket'"><a routerLink="/admin-ticket">Quản lý xuất vé</a></li>
-          <li nz-menu-item [nzSelected]="url === '/admin-void-ticket'"><a routerLink="/admin-void-ticket">Quản lý huỷ
-              vé</a></li>
+          <li nz-menu-item [nzSelected]="url === '/admin-history-holding-ticket'">
+            <i nz-icon nzType="tag"></i>
+            <span>
+              <a routerLink="/admin-history-holding-ticket">Quản lý giữ vé</a>
+            </span>
+          </li>
+          <li nz-menu-item [nzSelected]="url === '/admin-ticket'">
+            <i nz-icon nzType="tag"></i>
+            <span>
+              <a routerLink="/admin-ticket">Quản lý xuất vé</a>
+            </span>
+          </li>
+          <li nz-menu-item [nzSelected]="url === '/admin-void-ticket'">
+            <i nz-icon nzType="tag"></i>
+            <span>
+              <a routerLink="/admin-void-ticket">Quản lý huỷ vé</a>
+            </span>
+          </li>
         </ul>
       </li>
 
-      <li *ngIf="PHAN_QUYEN_TAI_KHOAN" nz-submenu nzTitle="Thông kê dữ liệu">
+      <li *ngIf="PHAN_QUYEN_TAI_KHOAN" nz-submenu nzTitle="Thông kê dữ liệu" nzIcon="line-chart">
         <ul>
           <!-- <li nz-menu-item [nzSelected]="url === '/data-statistics'"><a routerLink="/data-statistics">Tổng hợp dữ liệu</a></li> -->
-          <li nz-menu-item [nzSelected]="url === '/data-airline-tickets'"><a routerLink="/data-airline-tickets">Bảng kê
-              chi tiết vé máy bay</a></li>
-          <li nz-menu-item [nzSelected]="url === '/data-hotels'"><a routerLink="/data-hotels">Bảng kê chi tiết khách
-              sạn</a></li>
+          <li nz-menu-item [nzSelected]="url === '/data-airline-tickets'">
+            <i nz-icon nzType="monitor"></i>
+            <span>
+              <a routerLink="/data-airline-tickets">Bảng kê chi tiết vé máy bay</a>
+            </span>
+          </li>
+          <li nz-menu-item [nzSelected]="url === '/data-hotels'">
+            <i nz-icon nzType="monitor"></i>
+            <span>
+              <a routerLink="/data-hotels">Bảng kê chi tiết khách sạn</a>
+            </span>
+          </li>
         </ul>
       </li>
 
-      <li *ngIf="PHAN_QUYEN_TAI_KHOAN" nz-submenu nzTitle="Quản trị hệ thống">
+      <li *ngIf="PHAN_QUYEN_TAI_KHOAN" nz-submenu nzTitle="Quản trị hệ thống" nzIcon="solution">
         <ul>
-          <li nz-menu-item [nzSelected]="url === '/tai-khoan'"><a routerLink="/tai-khoan">Danh sách tài khoản</a></li>
-          <li nz-menu-item [nzSelected]="url === '/user-register'"><a routerLink="/user-register">Danh sách đăng kí</a>
+          <li nz-menu-item [nzSelected]="url === '/tai-khoan'">
+            <i nz-icon nzType="team"></i>
+            <span>
+              <a routerLink="/tai-khoan">Danh sách tài khoản</a>
+            </span>
           </li>
-          <li *ngIf='userInfo.userType == 0' nz-menu-item [nzSelected]="url === '/doi-tac'"><a
-              routerLink="/doi-tac">Danh sách đối tác</a></li>
+          <li nz-menu-item [nzSelected]="url === '/user-register'">
+            <i nz-icon nzType="team"></i>
+            <span>
+              <a routerLink="/user-register">Danh sách đăng kí</a>
+            </span>
+          </li>
+          <li *ngIf='userInfo.userType == 0' nz-menu-item [nzSelected]="url === '/doi-tac'">
+            <i nz-icon nzType="user-switch"></i>
+            <span>
+              <a routerLink="/doi-tac">Danh sách đối tác</a>
+            </span>
+          </li>
         </ul>
       </li>
     </ul>
-  </div>
-</div>
+  </nz-sider>
+
+
+
+</nz-layout>
+
+
+
+
 <div class="container">
   <div class="main">
     <router-outlet></router-outlet>
@@ -140,11 +212,11 @@
     </button>
   </div>
 </nz-modal>
-<footer>
+<!-- <footer>
   <div>
     Điện thoại: 09034388xx
   </div>
   <div>
     <span class="fa fa-fw fa-phone"></span> Cao Nguyên Việt ©
   </div>
-</footer>
+</footer> -->

@@ -49,6 +49,7 @@ export class MasterPageComponent implements OnInit, OnDestroy {
   username: string;
   sub: Subscription;
   menus: Menu[] = [];
+  modeMenu = false;
   pageName: string;
   roleIds: any[];
   // profile
