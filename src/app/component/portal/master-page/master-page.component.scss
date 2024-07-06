@@ -1,12 +1,10 @@
 body {
   font: Roboto, "sans-serif", helvetica, verdana, sans-serif !important;
 }
+
 $height-logo-box: 0px;
-.logo {
-  height: 32px;
-  // background: rgba(255, 255, 255, 0.2);
-  margin: 16px;
-}
+
+
 
 .dx-theme-generic-typography {
   font: Roboto, RobotoFallback, "Noto Kufi Arabic", Helvetica, Arial, sans-serif !important;
@@ -34,7 +32,9 @@ h1 {
   top: 0px;
   background: #22577A
 }
+
 $height-top-header: 50px;
+
 .header_top {
   display: flex;
   width: 100%;
@@ -138,12 +138,37 @@ $height-top-header: 50px;
 // }
 
 ::ng-deep {
-  nz-layout.menu-vhl {
-    position: absolute;
-    top: $height-top-header;
-    height: calc(100% - #{$height-top-header});
+  nz-layout.layout-vhl {
+    height: 100%;
 
-    nz-sider {
+    nz-sider.menu-vhl {
+      // position: absolute;
+      // top: $height-top-header;
+      // height: calc(100% - #{$height-top-header});
+      height: 100%;
+
+      .logo {
+        display: flex;
+        align-items: center;
+        height: 32px;
+        background-color: #FAFAFA;
+        margin: 16px;
+
+        span.icon-vhl {
+          font-size: xx-large;
+          color: rgb(24, 141, 71);
+        }
+
+        span.text-vhl {
+          margin-left: 15px;
+          font-size: xx-large;
+          display: flex;
+          align-items: center;
+          color: rgb(24, 141, 71);
+          font-family: 'icomoon';
+        }
+      }
+
       &.ant-layout-sider {
         background: #FAFAFA;
       }
@@ -176,10 +201,37 @@ $height-top-header: 50px;
         }
       }
     }
-  }
-  nz-layout.content-vhl {
-    position: absolute;
-    left: 280px;
+
+    nz-layout.container-vhl {
+      nz-header {
+        display: flex;
+        justify-content: flex-end;
+        background: #FAFAFA;
+        font-size: 14px;
+      }
+
+      nz-content {
+        display: block;
+        height: 100%;
+        overflow: auto;
+
+        div.content-vhl {
+          padding: 0.5rem;
+        }
+      }
+
+      nz-footer {
+        background: #FAFAFA;
+
+        div.contact-vhl {
+          display: flex;
+          justify-content: flex-end;
+        }
+      }
+    }
+
+
+
   }
 }
 

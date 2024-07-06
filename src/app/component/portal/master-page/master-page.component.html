@@ -1,14 +1,11 @@
+<!-- <img src="/assets/image/machine.png" style="width: auto; height: 40px;">
 <div class="header_top">
   <div class="container">
     <div class="row">
       <div class="col-md-10" style="display: flex; align-items: flex-end;">
-        <!-- <div style="display: flex;align-items: center">
-          <img src="/assets/image/machine.png" style="width: auto; height: 40px">
-          <span style="color: #333;margin-left: 10px;">BOOKING - BACKEND - VHL</span>
-        </div> -->
         <div style="display: flex;align-items: center">
           <span nz-icon nzType="setting" style="font-size: x-large;" nzTheme="outline" [nzSpin]="false"></span>
-          <!-- <img src="/assets/image/machine.png" style="width: auto; height: 40px;"> -->
+
           <span style="color: #333; margin-left: 10px;">BOOKING - BACKEND - VHL</span>
         </div>
       </div>
@@ -28,11 +25,15 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->
 <!-- class="container" class="header_menu"  -->
-<nz-layout class="menu-vhl">
-  <nz-sider nzCollapsible nzWidth="280px">
-    <!-- <div class="logo"></div> -->
+
+<nz-layout class="layout-vhl">
+  <nz-sider class="menu-vhl" nzCollapsible nzWidth="280px">
+    <div class="logo">
+      <span nz-icon nzType="setting" class="icon-vhl" nzTheme="outline" [nzSpin]="false"></span>
+      <span class="text-vhl">VHL.VN</span>
+    </div>
     <!-- <nz-switch [(ngModel)]="modeMenu"></nz-switch> -->
     <ul nz-menu nzTheme="" [nzMode]="modeMenu ? 'vertical' : 'inline'">
       <li nz-menu-item [nzSelected]="url === '/dashboard' || url === '/'">
@@ -150,19 +151,52 @@
       </li>
     </ul>
   </nz-sider>
+  <nz-layout class="container-vhl">
+    <nz-header>
+
+
+      <div class="col-md-2 text-right">
+        <div class="dropdown-toggle header-icon" nz-dropdown [nzDropdownMenu]="menu"
+          style="margin-top: 8px;color: #333">
+          <nz-avatar nzIcon="user" nzSize="small"></nz-avatar>
+          <span class="d-none d-sm-inline-block" style="width: 5px;"></span>
+          <span class="d-none d-sm-inline-block user-info">{{username}}</span>
+        </div>
+        <nz-dropdown-menu #menu="nzDropdownMenu" style="width: 120px;margin-right: 10px">
+          <ul nz-menu>
+            <li nz-menu-item (click)="logout()"><span class="fa fa-sign-out"></span>&nbsp;Đăng xuất</li>
+            <li nz-menu-item (click)="showModalUser()">Tài khoản</li>
+          </ul>
+        </nz-dropdown-menu>
+      </div>
 
 
 
+    </nz-header>
+    <nz-content>
+      <div class="content-vhl">
+          <router-outlet></router-outlet>
+      </div>
+    </nz-content>
+    <nz-footer>
+      <div class="contact-vhl">
+        <span> Điện thoại: 09034388xx </span>
+        <span class="fa fa-fw fa-phone"></span> Cao Nguyên Việt ©
+      </div>
+    </nz-footer>
+  </nz-layout>
 </nz-layout>
 
 
 
 
-<div class="container">
+
+
+<!-- <div class="container">
   <div class="main">
     <router-outlet></router-outlet>
   </div>
-</div>
+</div> -->
 <!--profile-->
 <nz-modal nzWidth="800px" *ngIf="selectionData" [(nzVisible)]="isVisibleUser" [nzTitle]="modalTitle"
   nzMaskClosable="false" (nzOnCancel)="handleCancel()">
