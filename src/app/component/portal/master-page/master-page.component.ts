@@ -16,6 +16,7 @@ import {AuthService} from '../../../service/auth.service';
 import {TranslateService} from '@ngx-translate/core';
 import {AdminLayoutComponent} from '../../admin-layout/admin-layout.component';
 import {FileManagerService} from '../../../service/file-manager.service';
+import { UserType } from 'src/app/enums/user-type.enum';
 
 @Component({
   selector: 'app-master-page',
@@ -23,6 +24,7 @@ import {FileManagerService} from '../../../service/file-manager.service';
   styleUrls: ['./master-page.component.scss']
 })
 export class MasterPageComponent implements OnInit, OnDestroy {
+  userTypeEnum = UserType;
   static readonly ROUTE_DATA_PAGENAME = 'pagename';
   formSearch: FormGroup;
   isVisiblePopupChonMon: boolean;

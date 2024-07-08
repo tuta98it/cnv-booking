@@ -39,18 +39,142 @@
       <li nz-menu-item [nzSelected]="url === '/dashboard' || url === '/'">
         <i nz-icon nzType="home"></i>
         <span>
-          <a routerLink="/dashboard">Trang chủ</a>
+          <a routerLink="/dashboard">Dashboard</a>
         </span>
       </li>
+
+      <li nz-submenu nzTitle="Quản lý khách hàng" nzIcon="solution">
+        <ul>
+          <li nz-menu-item [nzSelected]="url === '/companies'">
+            <i nz-icon nzType="team" ></i>
+            <span>
+              <a routerLink="/companies">Danh sách công ty</a>
+            </span>
+          </li>
+          <li nz-menu-item [nzSelected]="url === '/user-register'">
+            <i nz-icon nzType="usergroup-add"></i>
+            <span>
+              <a routerLink="/user-register">Danh sách đăng ký</a>
+            </span>
+          </li>
+        </ul>
+      </li>
+
+
+      <li nz-submenu nzTitle="Quản lý Booking dịch vụ" nzIcon="customer-service">
+        <ul>
+          <li nz-submenu nzTitle="Danh sách book vé" nzIcon="send">
+            <ul>
+              <li nz-menu-item [nzSelected]="url === '/admin-history-holding-ticket'">
+                <i nz-icon nzType="tag"></i>
+                <span>
+                  <a routerLink="/admin-history-holding-ticket">Quản lý giữ vé</a>
+                </span>
+              </li>
+              <li nz-menu-item [nzSelected]="url === '/admin-ticket'">
+                <i nz-icon nzType="tag"></i>
+                <span>
+                  <a routerLink="/admin-ticket">Quản lý xuất vé</a>
+                </span>
+              </li>
+              <li nz-menu-item [nzSelected]="url === '/admin-void-ticket'">
+                <i nz-icon nzType="tag"></i>
+                <span>
+                  <a routerLink="/admin-void-ticket">Quản lý huỷ vé</a>
+                </span>
+              </li>
+            </ul>
+          </li>
+          <li nz-submenu nzTitle="Danh sách book lưu trú" nzIcon="hdd">
+            <ul>
+              <li nz-menu-item [nzSelected]="url === '/hotel'">
+                <i nz-icon nzType="info-circle"></i>
+                <span>
+                  <a routerLink="/hotel">DS khách sạn</a>
+                </span>
+              </li>
+              <li nz-menu-item [nzSelected]="url === '/booking-hotel'">
+                <i nz-icon nzType="info-circle"></i>
+                <span>
+                  <a routerLink="/booking-hotel">QL đặt khách sạn</a>
+                </span>
+              </li>
+              <li nz-submenu nzTitle="Tiện ích" nzIcon="ellipsis">
+                <ul>
+                  <li nz-menu-item [nzSelected]="url === '/utility-hotel'">
+                    <i nz-icon nzType="plus"></i>
+                    <span>
+                      <a routerLink="/utility-hotel">Tiện ích khách sạn</a>
+                    </span>
+                  </li>
+                  <li nz-menu-item [nzSelected]="url === '/utility-room'">
+                    <i nz-icon nzType="plus"></i>
+                    <span>
+                      <a routerLink="/utility-room">Tiện ích phòng</a>
+                    </span>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li nz-menu-item [nzSelected]="url === '/booking-transport'">
+            <i nz-icon nzType="car"></i>
+            <span>
+              <a routerLink="/booking-transport">Vận chuyển</a>
+            </span>
+          </li>
+          <li nz-menu-item [nzSelected]="url === '/booking-restaurant'">
+            <i nz-icon nzType="shop"></i>
+            <span>
+              <a routerLink="/booking-restaurant">Nhà hàng</a>
+            </span>
+          </li>
+        </ul>
+      </li>
+
+
+      <li nz-submenu nzTitle="Quản lý đối tác" nzIcon="user-switch">
+        <ul>
+          <li nz-menu-item [nzSelected]="url === '/airline-ticket-agent'">
+            <i nz-icon nzType="shop"></i>
+            <span>
+              <a routerLink="/airline-ticket-agents">Đại lý vé máy bay</a>
+            </span>
+          </li>
+
+          <li *ngIf='userInfo.userType == userTypeEnum.SysAdmin' nz-menu-item [nzSelected]="url === '/doi-tac'">
+            <i nz-icon nzType="user-switch"></i>
+            <span>
+              <a routerLink="/doi-tac">Đối tác lưu trú</a>
+            </span>
+          </li>
+
+          <li nz-menu-item [nzSelected]="url === '/partner-transport'">
+            <i nz-icon nzType="car"></i>
+            <span>
+              <a routerLink="/partner-transport">Vận chuyển</a>
+            </span>
+          </li>
+
+          <li nz-menu-item [nzSelected]="url === '/partner-restaurant'">
+            <i nz-icon nzType="shop"></i>
+            <span>
+              <a routerLink="/partner-restaurant">Nhà hàng</a>
+            </span>
+          </li>
+        </ul>
+      </li>
+
+
+
       <li nz-menu-item [nzSelected]="url === '/news'">
         <i nz-icon nzType="file-text"></i>
         <span>
           <a routerLink="/news">Tin tức</a>
         </span>
-
       </li>
 
-      <li *ngIf="PHAN_QUYEN_TAI_KHOAN" nz-submenu nzTitle="Khách sạn" nzIcon="hdd">
+      <li nz-submenu nzTitle="Khách sạn" nzIcon="hdd">
         <ul>
           <li nz-menu-item [nzSelected]="url === '/hotel'">
             <i nz-icon nzType="info-circle"></i>
@@ -83,7 +207,7 @@
         </ul>
       </li>
 
-      <li *ngIf="PHAN_QUYEN_TAI_KHOAN" nz-submenu nzTitle="Vé máy bay" nzIcon="send">
+      <li nz-submenu nzTitle="Vé máy bay" nzIcon="send">
         <ul>
           <li nz-menu-item [nzSelected]="url === '/admin-history-holding-ticket'">
             <i nz-icon nzType="tag"></i>
@@ -106,7 +230,7 @@
         </ul>
       </li>
 
-      <li *ngIf="PHAN_QUYEN_TAI_KHOAN" nz-submenu nzTitle="Thông kê dữ liệu" nzIcon="line-chart">
+      <li nz-submenu nzTitle="Thông kê dữ liệu" nzIcon="line-chart">
         <ul>
           <li nz-menu-item [nzSelected]="url === '/data-airline-tickets'">
             <i nz-icon nzType="monitor"></i>
@@ -123,7 +247,7 @@
         </ul>
       </li>
 
-      <li *ngIf="PHAN_QUYEN_TAI_KHOAN" nz-submenu nzTitle="Quản trị hệ thống" nzIcon="solution">
+      <li nz-submenu nzTitle="Quản trị hệ thống" nzIcon="solution">
         <ul>
           <li nz-menu-item [nzSelected]="url === '/tai-khoan'">
             <i nz-icon nzType="team"></i>
@@ -137,7 +261,7 @@
               <a routerLink="/user-register">Danh sách đăng kí</a>
             </span>
           </li>
-          <li *ngIf='userInfo.userType == 0' nz-menu-item [nzSelected]="url === '/doi-tac'">
+          <li *ngIf='userInfo.userType == userTypeEnum.SysAdmin' nz-menu-item [nzSelected]="url === '/doi-tac'">
             <i nz-icon nzType="user-switch"></i>
             <span>
               <a routerLink="/doi-tac">Danh sách đối tác</a>
@@ -145,6 +269,7 @@
           </li>
         </ul>
       </li>
+
     </ul>
   </nz-sider>
   <nz-layout class="container-vhl">
