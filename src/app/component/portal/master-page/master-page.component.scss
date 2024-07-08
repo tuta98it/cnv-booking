@@ -142,11 +142,7 @@ $height-top-header: 50px;
     height: 100%;
 
     nz-sider.menu-vhl {
-      // position: absolute;
-      // top: $height-top-header;
-      // height: calc(100% - #{$height-top-header});
       height: 100%;
-
       .logo {
         display: flex;
         align-items: center;
@@ -159,7 +155,7 @@ $height-top-header: 50px;
           color: rgb(24, 141, 71);
         }
 
-        span.text-vhl {
+        span.logo-image-vhl {
           margin-left: 15px;
           font-size: xx-large;
           display: flex;

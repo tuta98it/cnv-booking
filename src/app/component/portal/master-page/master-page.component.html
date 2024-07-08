@@ -31,8 +31,8 @@
 <nz-layout class="layout-vhl">
   <nz-sider class="menu-vhl" nzCollapsible nzWidth="280px">
     <div class="logo">
-      <span nz-icon nzType="setting" class="icon-vhl" nzTheme="outline" [nzSpin]="false"></span>
-      <span class="text-vhl">VHL.VN</span>
+      <img class="logo-image-vhl" src="/assets/image/logo-vhl-green.svg" style="width: auto; height: 40px;">
+      <!-- <span nz-icon nzType="setting" class="icon-vhl" nzTheme="outline" [nzSpin]="false"></span> -->
     </div>
     <!-- <nz-switch [(ngModel)]="modeMenu"></nz-switch> -->
     <ul nz-menu nzTheme="" [nzMode]="modeMenu ? 'vertical' : 'inline'">
@@ -42,9 +42,6 @@
           <a routerLink="/dashboard">Trang chủ</a>
         </span>
       </li>
-      <!--<li *ngIf="DANH_MUC_TB" nz-menu-item [nzSelected]="url === '/thiet-bi' || url.includes('thiet-bi/')">
-        <a routerLink="/thiet-bi">Danh mục Thiết bị</a>
-      </li>-->
       <li nz-menu-item [nzSelected]="url === '/news'">
         <i nz-icon nzType="file-text"></i>
         <span>
@@ -111,7 +108,6 @@
 
       <li *ngIf="PHAN_QUYEN_TAI_KHOAN" nz-submenu nzTitle="Thông kê dữ liệu" nzIcon="line-chart">
         <ul>
-          <!-- <li nz-menu-item [nzSelected]="url === '/data-statistics'"><a routerLink="/data-statistics">Tổng hợp dữ liệu</a></li> -->
           <li nz-menu-item [nzSelected]="url === '/data-airline-tickets'">
             <i nz-icon nzType="monitor"></i>
             <span>
@@ -153,8 +149,6 @@
   </nz-sider>
   <nz-layout class="container-vhl">
     <nz-header>
-
-
       <div class="col-md-2 text-right">
         <div class="dropdown-toggle header-icon" nz-dropdown [nzDropdownMenu]="menu"
           style="margin-top: 8px;color: #333">
@@ -169,9 +163,6 @@
           </ul>
         </nz-dropdown-menu>
       </div>
-
-
-
     </nz-header>
     <nz-content>
       <div class="content-vhl">
