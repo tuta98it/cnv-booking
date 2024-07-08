@@ -698,7 +698,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
                       105H/15 Hồ Thị Kỷ, phường 1, quận 10, Tp. HCM</p>
                   <div style="display: inline-block;">
                       <sapn style="margin-right: 8px;">
-                          Số điện thoại: 0868 456 9
+                          Số điện thoại: 028 3620 2800
                       </sapn>
                       <sapn style="margin-left: 8px; margin-right: 8px;">
                           Email: <a href="mailto:happy@vhl.vn">happy@vhl.vn</a>
