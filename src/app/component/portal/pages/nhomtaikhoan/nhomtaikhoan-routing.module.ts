@@ -1,14 +1,14 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AuthGuard } from 'src/app/shared/guards/guards.class';
 import { NhomtaikhoanListComponent } from './nhomtaikhoan-list/nhomtaikhoan-list.component';
 import {NhomtaikhoanRolesComponent} from './nhomtaikhoan-roles/nhomtaikhoan-roles.component';
-import {AuthGuard} from '../../../../shared/guards/guards.class';
 
 const routes: Routes = [
   { path: '', component: NhomtaikhoanListComponent , canActivate: [AuthGuard]},
   { path: 'roles', component: NhomtaikhoanRolesComponent , canActivate: [AuthGuard], data: {
-      pagename: 'Phân quyền nhóm tài khoản',
-      breadcrumb: 'Phân quyền'
+      pagename: 'Group user management',
+      breadcrumb: 'Group user management'
     }
   }
 ]

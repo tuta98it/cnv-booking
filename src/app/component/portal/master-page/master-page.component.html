@@ -29,7 +29,7 @@
 <!-- class="container" class="header_menu"  -->
 
 <nz-layout class="layout-vhl">
-  <nz-sider class="menu-vhl" nzCollapsible nzWidth="280px">
+  <nz-sider class="menu-vhl" nzCollapsible nzWidth="300px">
     <div class="logo">
       <img class="logo-image-vhl" src="/assets/image/logo-vhl-green.svg" style="width: auto; height: 40px;">
       <!-- <span nz-icon nzType="setting" class="icon-vhl" nzTheme="outline" [nzSpin]="false"></span> -->
@@ -51,14 +51,14 @@
               <li nz-submenu nzTitle="Tài khoản" nzIcon="solution">
                 <ul>
                   <li nz-menu-item [nzSelected]="url === '/tai-khoan'">
-                    <i nz-icon nzType="team"></i>
+                    <i nz-icon nzType="user"></i>
                     <span>
                       <a routerLink="/tai-khoan">Danh sách tài khoản</a>
                     </span>
                   </li>
 
                   <li nz-menu-item [nzSelected]="url === '/tai-khoan/roles'">
-                    <i nz-icon nzType="team"></i>
+                    <i nz-icon nzType="user"></i>
                     <span>
                       <a routerLink="/tai-khoan/roles">Xem quyền tài khoản</a>
                     </span>
@@ -66,6 +66,25 @@
                 </ul>
               </li>
 
+
+
+              <li nz-submenu nzTitle="Nhóm tài khoản" nzIcon="solution">
+                <ul>
+                  <li nz-menu-item [nzSelected]="url === '/nhom-tai-khoan'">
+                    <i nz-icon nzType="team"></i>
+                    <span>
+                      <a routerLink="/nhom-tai-khoan">Danh sách tài khoản</a>
+                    </span>
+                  </li>
+
+                  <li nz-menu-item [nzSelected]="url === '/nhom-tai-khoan/roles'">
+                    <i nz-icon nzType="team"></i>
+                    <span>
+                      <a routerLink="/nhom-tai-khoan/roles">Xem quyền tài khoản</a>
+                    </span>
+                  </li>
+                </ul>
+              </li>
 
 
               <li *ngIf='userInfo.userType == userTypeEnum.SysAdmin' nz-menu-item [nzSelected]="url === '/doi-tac'">

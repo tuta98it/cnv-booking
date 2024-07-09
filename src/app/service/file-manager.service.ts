@@ -203,8 +203,8 @@ export class FileManagerService extends BaseService {
     return this.delete(`/api/Group/${id}`, null);
   }
 
-  addUser2Group(item: any): any {
-    return this.post('/api/Group/AddUser2Group', item);
+  addUserToGroup(item: any): any {
+    return this.post('/api/Group/AddUserToGroup', item);
   }
 
   getUserOfGroup(groupId): Observable<any> {

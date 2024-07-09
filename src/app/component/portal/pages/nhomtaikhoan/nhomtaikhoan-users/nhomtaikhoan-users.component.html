@@ -13,7 +13,8 @@
                      formControlName="userId"
                      nzPlaceHolder="Tài khoản.." class="input-search"
                      [nzShowArrow]="true">
-            <nz-option *ngFor="let o of users" [nzLabel]="o.fullname" [nzValue]="o.id">
+            <nz-option  nzCustomContent *ngFor="let o of users" nzLabel="{{o.fullname}}" [nzValue]="o.id">
+              {{o.fullname}}
             </nz-option>
           </nz-select>
         </div>
@@ -30,19 +31,17 @@
             <thead>
             <tr>
               <th class="text-nowrap" width="50px">#</th>
-              <th class="text-nowrap">Họ tên</th>
-              <th class="text-nowrap">Tên đăng nhập</th>
-              <th class="text-nowrap"></th>
+              <th class="text-nowrap">Tên</th>
+              <th nzWidth="50px" class="text-nowrap text-center"></th>
             </tr>
             </thead>
             <tbody>
             <tr *ngFor="let data of basicTable.data;let i = index;">
               <td class="text-nowrap">{{getRowIndex(i, basicTable.nzPageIndex, basicTable.nzPageSize)}}</td>
-              <td class="text-nowrap">{{data.fullname}}</td>
-              <td class="text-nowrap">{{data.username}}</td>
-              <td class="text-nowrap">
-                <button title="Xóa nhóm" nz-button nzSize="small" nzType="default" class="btn-right button-update"
-                        (click)="showConfirm(data.id)">
+              <td class="text-nowrap">{{data.fullname }}</td>
+              <td class="text-nowrap text-center">
+                <!--<button class="right" nz-button nzType="danger" (click)="showConfirm(data.id)">Xóa</button>-->
+                <button nz-button nzSize="small" nzType="default" class="btn-right" (click)="showConfirm(data.id)">
                   <span class="fa fa-times fa-fw"></span>
                 </button>
               </td>
