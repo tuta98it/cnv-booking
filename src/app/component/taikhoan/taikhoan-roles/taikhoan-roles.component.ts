@@ -1,14 +1,13 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {TableSelectionAbstract} from '../../../shared/component/table/table-selection.abstract';
+import {TableSelectionAbstract} from 'src/app/shared/component/table/table-selection.abstract';
 import {FormBuilder, FormGroup} from '@angular/forms';
-import {ActionsSubject, Store} from '@ngrx/store';
-import * as fromRole from '../../role/redux/role.reducer';
+import {ActionsSubject} from '@ngrx/store';
 import {TranslateService} from '@ngx-translate/core';
-import {NotificationService} from '../../../service/notification.service';
-import {GeneralService} from '../../../service/general-service';
-import {AppConfigService} from '../../../../app-config.service';
-import {Constant} from '../../../shared/constants/constant.class';
 import {NzModalService} from 'ng-zorro-antd/modal';
+import {GeneralService} from 'src/app/service/general-service';
+import { Constant } from 'src/app/shared/constants/constant.class';
+import { AppConfigService } from 'src/app-config.service';
+import { NotificationService } from 'src/app/service/notification.service';
 
 @Component({
   selector: 'app-taikhoan-roles',
@@ -33,8 +32,12 @@ export class TaikhoanRolesComponent extends TableSelectionAbstract implements On
   defaultPage: any;
   formAdd: FormGroup;
   allRoles: any[];
+  groupRoles = [];
+  searchText = "";
+  filteredDatas = [];
+  scrollX = "";
+
   constructor(
-    public store: Store<fromRole.AppState>,
     public translate: TranslateService,
     private modalService: NzModalService,
     private notificationService: NotificationService,
@@ -58,6 +61,7 @@ export class TaikhoanRolesComponent extends TableSelectionAbstract implements On
     this.getListData();
     this.getAllRole();
     this.get();
+    this.initTableHeight(1500);
   }
   ngOnDestroy(): void {
 
@@ -67,6 +71,7 @@ export class TaikhoanRolesComponent extends TableSelectionAbstract implements On
     this.generalService.getTaikhoan().subscribe(res => {
       if (res !== null) {
         this.datas = res;
+        this.filteredDatas = res;
         this.loading = false;
         super.setListOfAllData(this.datas);
       }
@@ -78,6 +83,23 @@ export class TaikhoanRolesComponent extends TableSelectionAbstract implements On
     this.generalService.getRole().subscribe(res => {
       if (res !== null) {
         this.allRoles = res;
+        this.scrollX = this.allRoles.length*100 + 350 +'px';
+        this.allRoles.sort((a,b) => a.groupName.localeCompare(b.groupName));
+        //console.log("this.allRoles", this.allRoles);
+        //let groupRoles = [];
+        this.allRoles.forEach(en => {
+          if (en.groupName) {
+            let exist = this.groupRoles.find(x => x.groupName == en.groupName);
+            if (exist) {
+              exist.roles = [...exist.roles, en];
+              exist.thWidth += 100;
+            }
+            else {
+              this.groupRoles.push({groupName: en.groupName, roles: [en], thWidth: 100});
+            }
+          }
+        })
+        console.log("roles", this.groupRoles);
       }
     }, error => {
 
@@ -92,7 +114,7 @@ export class TaikhoanRolesComponent extends TableSelectionAbstract implements On
     this.get();
     this.modalService.confirm({
       nzTitle: 'Confirm',
-      nzContent: 'Bạn có muốn xóa hay không.',
+      nzContent: 'Bạn có muốn xóa hay không?',
       nzOkText: 'Đồng ý',
       nzCancelText: 'Bỏ qua',
       nzOnOk: () => this.deleteItem(id)
@@ -140,8 +162,8 @@ export class TaikhoanRolesComponent extends TableSelectionAbstract implements On
     if (formValue.id == 0) {
       delete formValue.id;
       this.generalService.addGroup(formValue).subscribe(res => {
-        if (res !== null && res !== undefined && res.ret !== null && res.ret !== undefined && res.ret.code != 0) {
-          this.notificationService.showNotification(Constant.ERROR, res.ret.message);
+        if (res.ret && res.ret[0].code !== 0) {
+          this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
         }
         else {
           this.getListData();
@@ -154,9 +176,8 @@ export class TaikhoanRolesComponent extends TableSelectionAbstract implements On
     }
     else {
       this.generalService.updateGroup(formValue).subscribe(res => {
-        //this.isVisibleAdd = false;
-        if (res !== null && res !== undefined && res.ret !== null && res.ret !== undefined && res.ret.code != 0) {
-          this.notificationService.showNotification(Constant.ERROR, res.ret.message);
+        if (res.ret && res.ret[0].code !== 0) {
+          this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
         }
         else {
           this.getListData();
@@ -179,13 +200,13 @@ export class TaikhoanRolesComponent extends TableSelectionAbstract implements On
   }
 
   checkUserReport(roleId, user) {
-    return user.userRole.filter( item => item.roleId === roleId).length >= 1;
+    return user.userRoles.filter( item => item.roleId === roleId).length >= 1;
   }
   updateUserGroup(group, roleId, status) {
     if (!group.roles){
       group.roles = [];
-      for (let i = 0; i < group.groupRole.length; i++) {
-        group.roles.push((group.groupRole[i].roleId));
+      for (let i = 0; i < group.groupRoles.length; i++) {
+        group.roles.push((group.groupRoles[i].roleId));
       }
     }
     if (status === 0) {
@@ -200,8 +221,8 @@ export class TaikhoanRolesComponent extends TableSelectionAbstract implements On
   saveUserGroup(data) {
     var itemUpdate = { groupId: data.id, roles: data.roles };
     this.generalService.updateGroupRole(itemUpdate).subscribe(res => {
-      if (res !== null && res !== undefined && res.ret !== null && res.ret !== undefined && res.ret.code != 0) {
-        this.notificationService.showNotification(Constant.ERROR, res.ret.message);
+      if (res.ret && res.ret[0].code !== 0) {
+        this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
       }
       else {
         data.enable = false;
@@ -211,4 +232,11 @@ export class TaikhoanRolesComponent extends TableSelectionAbstract implements On
 
     });
   }
+  onSearch() {
+    let keyword = this.searchText.trim();
+    this.filteredDatas = this.datas.filter((en) =>
+    en.fullname.trim().toLowerCase().includes(keyword) ||
+    en.username.trim().toLowerCase().includes(keyword))
+  }
 }
+

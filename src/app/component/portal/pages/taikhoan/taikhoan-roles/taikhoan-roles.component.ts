@@ -32,6 +32,11 @@ export class TaikhoanRolesComponent extends TableSelectionAbstract implements On
   defaultPage: any;
   formAdd: FormGroup;
   allRoles: any[];
+  groupRoles = [];
+  searchText = "";
+  filteredDatas = [];
+  scrollX = "";
+
   constructor(
     public translate: TranslateService,
     private modalService: NzModalService,
@@ -56,6 +61,7 @@ export class TaikhoanRolesComponent extends TableSelectionAbstract implements On
     this.getListData();
     this.getAllRole();
     this.get();
+    this.initTableHeight(1500);
   }
   ngOnDestroy(): void {
 
@@ -65,6 +71,7 @@ export class TaikhoanRolesComponent extends TableSelectionAbstract implements On
     this.generalService.getTaikhoan().subscribe(res => {
       if (res !== null) {
         this.datas = res;
+        this.filteredDatas = res;
         this.loading = false;
         super.setListOfAllData(this.datas);
       }
@@ -76,6 +83,23 @@ export class TaikhoanRolesComponent extends TableSelectionAbstract implements On
     this.generalService.getRole().subscribe(res => {
       if (res !== null) {
         this.allRoles = res;
+        this.scrollX = this.allRoles.length*100 + 350 +'px';
+        this.allRoles.sort((a,b) => a.groupName.localeCompare(b.groupName));
+        //console.log("this.allRoles", this.allRoles);
+        //let groupRoles = [];
+        this.allRoles.forEach(en => {
+          if (en.groupName) {
+            let exist = this.groupRoles.find(x => x.groupName == en.groupName);
+            if (exist) {
+              exist.roles = [...exist.roles, en];
+              exist.thWidth += 100;
+            }
+            else {
+              this.groupRoles.push({groupName: en.groupName, roles: [en], thWidth: 100});
+            }
+          }
+        })
+        console.log("roles", this.groupRoles);
       }
     }, error => {
 
@@ -176,7 +200,7 @@ export class TaikhoanRolesComponent extends TableSelectionAbstract implements On
   }
 
   checkUserReport(roleId, user) {
-    return user.userroles.filter( item => item.roleId === roleId).length >= 1;
+    return user.userRoles.filter( item => item.roleId === roleId).length >= 1;
   }
   updateUserGroup(group, roleId, status) {
     if (!group.roles){
@@ -208,4 +232,11 @@ export class TaikhoanRolesComponent extends TableSelectionAbstract implements On
 
     });
   }
+  onSearch() {
+    let keyword = this.searchText.trim();
+    this.filteredDatas = this.datas.filter((en) =>
+    en.fullname.trim().toLowerCase().includes(keyword) ||
+    en.username.trim().toLowerCase().includes(keyword))
+  }
 }
+

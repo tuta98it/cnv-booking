@@ -1,29 +1,38 @@
-<button nz-button nzType="primary" class="btn-add-asset" type="button" (click)="showModalAdd()" *ngIf="checkAdd">
-  <em class="fas fa-plus"></em> {{'add_user' | translate }}
-</button>
+<div class="div-action-top">
+  <div class="left">
+    <div class="form-filter ant-form ant-form-inline">
+      <input style="width: 300px" class="mgr10" nzSize="small" nz-input [(ngModel)]="searchText" (keyup.enter)="onSearch()" type="text" placeholder="Tìm kiếm theo tên hoặc username">
+    </div>
+  </div>
+</div>
 <div class="data-table">
-  <nz-table #basicTable [nzData]="datas"
+  <nz-table #basicTable [nzData]="filteredDatas"
             (nzCurrentPageDataChange)="currentPageDataChange($event)"
             [nzPageSizeOptions]="pageSize" [nzPageSize]="defaultPage" nzSize="small"
-            nzShowSizeChanger [nzShowTotal]="rangeTemplate" [nzLoading]="loading">
+            nzShowSizeChanger [nzShowTotal]="rangeTemplate" [nzLoading]="loading" [nzScroll]="{x: scrollX, y: 'calc(100vh - 250px)'}" nzBordered>
     <thead>
     <tr>
-      <th class="text-nowrap" width="50px">#</th>
-      <th class="text-nowrap">Tên nhóm</th>
-      <th class="text-nowrap">Ghi chú</th>
-      <th *ngFor="let role of this.allRoles; let i = index" [attr.data-index]="i" class="editable-row">
-        {{role.name}}
+      <th rowspan="2" nzLeft class="text-nowrap text-center" nzWidth="50px">#</th>
+      <th rowspan="2" nzLeft nzWidth="150px">Tên</th>
+      <th rowspan="2" nzLeft nzWidth="150px">Ghi chú</th>
+      <th [colspan]="group.roles.length" [ngStyle]="{'width': group.thWidth + 'px'}" *ngFor="let group of this.groupRoles">
+        {{group.groupName}}
+      </th>
+    </tr>
+    <tr>
+      <th nzWidth="100px" *ngFor="let role of this.allRoles; let i = index" [attr.data-index]="i" class="editable-row" style="text-align: center;">
+        {{role.nameForDisplay}}
       </th>
     </tr>
     </thead>
     <tbody>
     <tr *ngFor="let data of basicTable.data;let i = index;">
-      <td class="text-nowrap">{{getRowIndex(i, basicTable.nzPageIndex, basicTable.nzPageSize)}}</td>
-      <td class="text-nowrap">{{ data | fullNameFormat }}</td>
-      <td class="text-nowrap">{{ data.description }}</td>
-      <td *ngFor="let role of this.allRoles; let i = index" [attr.data-index]="i" class="editable-row">
-        <ng-container *ngIf="checkUserReport(role.id, data) == true;else elseBlock">
-          <label  nzChecked="checked" nz-checkbox></label>
+      <td nzLeft class="text-nowrap text-center">{{getRowIndex(i, basicTable.nzPageIndex, basicTable.nzPageSize)}}</td>
+      <td nzLeft>{{ data.fullname }}</td>
+      <td nzLeft>{{ data.description }}</td>
+      <td nzWidth="100px" *ngFor="let role of this.allRoles; let i = index" [attr.data-index]="i" class="editable-row" [nzAlign]="'center'">
+        <ng-container *ngIf="checkUserReport(role.id, data);else elseBlock">
+          <input type="checkbox" disabled checked>
         </ng-container>
         <ng-template #elseBlock>
         </ng-template>
