@@ -8,7 +8,7 @@ import { Constant } from 'src/app/shared/constants/constant.class';
 import { AppConfigService } from 'src/app-config.service';
 import { NotificationService } from 'src/app/service/notification.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
+import { removeAccents } from 'src/app/shared/utils/filters/remove-accents';
 @Component({
   selector: 'app-nhomtaikhoan-list',
   templateUrl: './nhomtaikhoan-list.component.html',
@@ -172,8 +172,8 @@ export class NhomtaikhoanListComponent extends TableSelectionAbstract implements
     return manager.firstName + ' ' + manager.lastName;
   }
   onSearch() {
-    let keyword = this.searchText.trim();
+    let keyword = removeAccents(this.searchText.trim());
     this.filteredDatas = this.datas.filter((en) =>
-    en.name.trim().toLowerCase().includes(keyword))
+    removeAccents(en.name.trim()).toLowerCase().includes(keyword))
   }
 }

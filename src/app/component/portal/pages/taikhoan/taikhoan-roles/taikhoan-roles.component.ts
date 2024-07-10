@@ -1,13 +1,14 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {TableSelectionAbstract} from 'src/app/shared/component/table/table-selection.abstract';
-import {FormBuilder, FormGroup} from '@angular/forms';
-import {ActionsSubject} from '@ngrx/store';
-import {TranslateService} from '@ngx-translate/core';
-import {NzModalService} from 'ng-zorro-antd/modal';
-import {GeneralService} from 'src/app/service/general-service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { TableSelectionAbstract } from 'src/app/shared/component/table/table-selection.abstract';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { ActionsSubject } from '@ngrx/store';
+import { TranslateService } from '@ngx-translate/core';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { GeneralService } from 'src/app/service/general-service';
 import { Constant } from 'src/app/shared/constants/constant.class';
 import { AppConfigService } from 'src/app-config.service';
 import { NotificationService } from 'src/app/service/notification.service';
+import { removeAccents } from 'src/app/shared/utils/filters/remove-accents'
 
 @Component({
   selector: 'app-taikhoan-roles',
@@ -83,8 +84,8 @@ export class TaikhoanRolesComponent extends TableSelectionAbstract implements On
     this.generalService.getRole().subscribe(res => {
       if (res !== null) {
         this.allRoles = res;
-        this.scrollX = this.allRoles.length*100 + 350 +'px';
-        this.allRoles.sort((a,b) => a.groupName.localeCompare(b.groupName));
+        this.scrollX = this.allRoles.length * 100 + 350 + 'px';
+        this.allRoles.sort((a, b) => a.groupName.localeCompare(b.groupName));
         //console.log("this.allRoles", this.allRoles);
         //let groupRoles = [];
         this.allRoles.forEach(en => {
@@ -95,7 +96,7 @@ export class TaikhoanRolesComponent extends TableSelectionAbstract implements On
               exist.thWidth += 100;
             }
             else {
-              this.groupRoles.push({groupName: en.groupName, roles: [en], thWidth: 100});
+              this.groupRoles.push({ groupName: en.groupName, roles: [en], thWidth: 100 });
             }
           }
         })
@@ -137,7 +138,7 @@ export class TaikhoanRolesComponent extends TableSelectionAbstract implements On
       description: '',
     });
   }
-  showModalUser(data){
+  showModalUser(data) {
     this.isVisibleUser = true;
     this.item = data;
     this.users = this.item.userGroup;
@@ -200,19 +201,19 @@ export class TaikhoanRolesComponent extends TableSelectionAbstract implements On
   }
 
   checkUserReport(roleId, user) {
-    return user.userRoles.filter( item => item.roleId === roleId).length >= 1;
+    return user.userRoles.filter(item => item.roleId === roleId).length >= 1;
   }
   updateUserGroup(group, roleId, status) {
-    if (!group.roles){
+    if (!group.roles) {
       group.roles = [];
       for (let i = 0; i < group.groupRoles.length; i++) {
         group.roles.push((group.groupRoles[i].roleId));
       }
     }
     if (status === 0) {
-      group.roles = group.roles.filter( item => item !== roleId);
+      group.roles = group.roles.filter(item => item !== roleId);
     } else {
-      var role = group.roles.filter( item => item === roleId);
+      var role = group.roles.filter(item => item === roleId);
       if (role.length === 0)
         group.roles.push(roleId);
     }
@@ -233,10 +234,10 @@ export class TaikhoanRolesComponent extends TableSelectionAbstract implements On
     });
   }
   onSearch() {
-    let keyword = this.searchText.trim();
+    let keyword = removeAccents(this.searchText.trim());
     this.filteredDatas = this.datas.filter((en) =>
-    en.fullname.trim().toLowerCase().includes(keyword) ||
-    en.username.trim().toLowerCase().includes(keyword))
+      removeAccents(en.fullname.trim()).toLowerCase().includes(keyword) ||
+      removeAccents(en.username.trim()).toLowerCase().includes(keyword))
   }
 }
 

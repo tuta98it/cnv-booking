@@ -117,7 +117,7 @@ export class GeneralService extends BaseService {
 
 
   addUserToGroup(item: any): any {
-    return this.post(UrlConstant.LIST_NHOMTAIKHOAN + '/AddUser2Group', item);
+    return this.post(UrlConstant.LIST_NHOMTAIKHOAN + '/AddUserToGroup', item);
   }
   removeUserFromGroup(item: any): any {
     return this.post(UrlConstant.LIST_NHOMTAIKHOAN + '/RemoveUserFromGroup', item);

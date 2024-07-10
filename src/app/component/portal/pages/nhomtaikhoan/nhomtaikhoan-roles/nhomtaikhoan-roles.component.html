@@ -2,14 +2,14 @@
   <h1>Phân quyền nhóm</h1>
   <div class="form-filter ant-form ant-form-inline">
     <input style="width: 300px; margin-right: 10px;"  nzSize="small" nz-input [(ngModel)]="searchText"
-      (keyup.enter)="onSearch()" type="text" placeholder="Tìm kiếm theo tên hoặc username">
+      (keyup.enter)="onSearch()" type="text" placeholder="Tìm kiếm theo tên nhóm">
   </div>
 </div>
 
 <div class="data-table">
-  <nz-table #basicTable [nzData]="datas" (nzCurrentPageDataChange)="currentPageDataChange($event)"
+  <nz-table #basicTable [nzData]="filteredDatas" (nzCurrentPageDataChange)="currentPageDataChange($event)"
     [nzPageSizeOptions]="pageSize" [nzPageSize]="defaultPage" nzSize="small" nzShowSizeChanger
-    [nzShowTotal]="rangeTemplate" [nzLoading]="loading" [nzScroll]="{x: scrollX, y: 'calc(100vh - 250px)'}" nzBordered>
+    [nzShowTotal]="rangeTemplate" [nzLoading]="loading" nzBordered>
     <thead>
       <tr>
         <th rowspan="2" nzLeft nzWidth="50px" class="text-nowrap text-center">STT</th>

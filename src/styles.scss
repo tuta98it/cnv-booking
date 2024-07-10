@@ -1488,3 +1488,9 @@ h1 {
     border-color: #dc3545;
   }
 }
+
+.text-nowrap {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
