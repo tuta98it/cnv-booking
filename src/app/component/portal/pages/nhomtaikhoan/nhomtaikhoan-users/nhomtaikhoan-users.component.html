@@ -1,7 +1,7 @@
 <form [formGroup]="formAdd" (ngSubmit)="handleOk()">
   <nz-modal [(nzVisible)]="isVisible" nzTitle="Danh sách tài khoản" nzClosable="false" [nzTitle]="title" nzMaskClosable="false">
     <ng-template #title>
-      Danh sách tài khoản
+      Danh sách tài khoản của nhóm "{{nhomtaikhoan.name}}"
       <div class="pull-right icon-close">
         <em (click)="handleCancel()" nz-icon nzType="close" nzTheme="outline"></em>
       </div>
