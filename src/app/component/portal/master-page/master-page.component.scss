@@ -178,7 +178,7 @@ $height-top-header: 50px;
       }
 
       ul {
-        max-height: calc(100% - #{$height-logo-box} - 64px);
+        max-height: calc(100% - #{$height-logo-box} - 115px);
         overflow: auto;
 
         li.ant-menu-item {
