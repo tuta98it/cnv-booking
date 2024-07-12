@@ -37,13 +37,14 @@
     <!-- <nz-switch [(ngModel)]="modeMenu"></nz-switch> -->
 
 
-    <ul nz-menu nzTheme="" [nzMode]="modeMenu ? 'vertical' : 'inline'">
+    <!-- Menu trả về từ backend theoo quyền user -->
+    <!-- <ul nz-menu nzTheme="" [nzMode]="modeMenu ? 'vertical' : 'inline'">
       <div *ngFor="let menu of menus;let i = index;">
         <li *ngIf="menu.children.length == 0" nz-menu-item
           [nzSelected]="url === '{{menu.path}}' || url === '/'">
           <i nz-icon nzType="{{menu.iconType}}"></i>
           <span>
-            <a routerLink="{{menu.path}}">{{menu.name}}</a>
+            <a routerLink="{{menu.children.path}}">{{menu.name}}</a>
           </span>
         </li>
 
@@ -60,9 +61,10 @@
           </ul>
         </li>
       </div>
-    </ul>
+    </ul> -->
 
 
+    <!-- Menu full adminportal -->
     <ul nz-menu nzTheme="" [nzMode]="modeMenu ? 'vertical' : 'inline'">
       <li nz-menu-item [nzSelected]="url === '/dashboard' || url === '/'">
         <i nz-icon nzType="home"></i>
