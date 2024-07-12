@@ -50,7 +50,8 @@ export class MasterPageComponent implements OnInit, OnDestroy {
 
   username: string;
   sub: Subscription;
-  menus: Menu[] = [];
+  // menus: Menu[] = [];
+  menus: any[] = [];
   modeMenu = false;
   pageName: string;
   roleIds: any[];
@@ -142,6 +143,7 @@ export class MasterPageComponent implements OnInit, OnDestroy {
     this.loginUserID = this.userInfo.id;
     this.username = this.userInfo.fullname;
     this.roleIds = this.userInfo.roles;
+    this.menus = this.userInfo.menus;
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd),
       map(() => this.getPageInfo())).subscribe((pageName: string) => {

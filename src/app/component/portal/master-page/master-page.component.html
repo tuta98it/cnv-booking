@@ -35,6 +35,34 @@
       <!-- <span nz-icon nzType="setting" class="icon-vhl" nzTheme="outline" [nzSpin]="false"></span> -->
     </div>
     <!-- <nz-switch [(ngModel)]="modeMenu"></nz-switch> -->
+
+
+    <ul nz-menu nzTheme="" [nzMode]="modeMenu ? 'vertical' : 'inline'">
+      <div *ngFor="let menu of menus;let i = index;">
+        <li *ngIf="menu.children.length == 0" nz-menu-item
+          [nzSelected]="url === '{{menu.path}}' || url === '/'">
+          <i nz-icon nzType="{{menu.iconType}}"></i>
+          <span>
+            <a routerLink="{{menu.path}}">{{menu.name}}</a>
+          </span>
+        </li>
+
+        <li *ngIf="menu.children.length >= 0" nz-submenu nzTitle="{{menu.name}}" nzIcon="solution">
+          <ul>
+            <div *ngFor="let child of menu.children">
+              <li nz-menu-item [nzSelected]="url === '{{child.path}}'">
+                <i nz-icon nzType="{{child.iconType}}"></i>
+                <span>
+                  <a routerLink="{{child.path}}">{{child.name}}</a>
+                </span>
+              </li>
+            </div>
+          </ul>
+        </li>
+      </div>
+    </ul>
+
+
     <ul nz-menu nzTheme="" [nzMode]="modeMenu ? 'vertical' : 'inline'">
       <li nz-menu-item [nzSelected]="url === '/dashboard' || url === '/'">
         <i nz-icon nzType="home"></i>
