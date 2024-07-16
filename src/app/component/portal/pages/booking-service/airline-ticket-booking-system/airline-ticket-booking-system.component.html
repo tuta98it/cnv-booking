@@ -1,0 +1,62 @@
+<div style="display: flex; justify-content: space-between;">
+  <h1>Xem quyền tài khoản</h1>
+  <input style="width: 300px; margin-right: 10px;" nzSize="small" nz-input [(ngModel)]="searchText"
+    (keyup.enter)="onSearch()" type="text" placeholder="Tìm kiếm theo tên hoặc username">
+</div>
+
+<!-- / search -->
+
+<!-- <div class="div-action-top">
+  <div class="left">
+    <div class="form-filter ant-form ant-form-inline">
+      <input style="width: 300px" class="mgr10" nzSize="small" nz-input [(ngModel)]="searchText" (keyup.enter)="onSearch()" type="text" placeholder="Tìm kiếm theo tên hoặc username">
+    </div>
+  </div>
+</div> -->
+
+
+<div class="data-table">
+  <nz-table #basicTable [nzData]="filteredDatas" (nzCurrentPageDataChange)="currentPageDataChange($event)"
+    [nzPageSizeOptions]="pageSize" [nzPageSize]="defaultPage" nzSize="small" nzShowSizeChanger
+    [nzShowTotal]="rangeTemplate" [nzLoading]="loading" nzBordered>
+    <thead>
+      <tr>
+        <th rowspan="2" nzLeft class="text-nowrap text-center" nzWidth="50px">STT</th>
+        <th rowspan="2" nzLeft nzWidth="150px">Tên</th>
+        <th rowspan="2" nzLeft nzWidth="150px">Ghi chú</th>
+        <th [colspan]="group.roles.length" [ngStyle]="{'width': group.thWidth + 'px'}"
+          *ngFor="let group of this.groupRoles">
+          {{group.groupName}}
+        </th>
+      </tr>
+      <tr>
+        <th nzWidth="100px" *ngFor="let role of this.allRoles; let i = index" [attr.data-index]="i" class="editable-row"
+          style="text-align: center;">
+          {{role.nameForDisplay}}
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of basicTable.data;let i = index;">
+        <td nzLeft class="text-nowrap text-center">{{getRowIndex(i, basicTable.nzPageIndex, basicTable.nzPageSize)}}
+        </td>
+        <td nzLeft>{{ data.fullname }}</td>
+        <td nzLeft>{{ data.description }}</td>
+        <td nzWidth="100px" *ngFor="let role of this.allRoles; let i = index" [attr.data-index]="i" class="editable-row"
+          [nzAlign]="'center'">
+          <ng-container *ngIf="checkUserReport(role.id, data);else elseBlock">
+            <input type="checkbox" disabled checked>
+          </ng-container>
+          <ng-template #elseBlock>
+          </ng-template>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+  <ng-template #rangeTemplate let-range="range" let-total>
+    {{ range[0] }}-{{ range[1] }} {{'of' | translate }} {{ total }} {{'items' | translate }}
+  </ng-template>
+</div>
+
+<app-nhomtaikhoan-users (closeModal)="closeModalUsers()" [isVisible]="isVisibleUser"
+  [nhomtaikhoan]="item"></app-nhomtaikhoan-users>

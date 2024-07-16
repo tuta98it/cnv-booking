@@ -88,8 +88,17 @@ const routes: Routes = [
           breadcrumb: 'Quản lý giữ vé'
         }
       },
-
-
+      {
+        path: 'booking-service',
+        loadChildren: () =>
+          import('./pages/booking-service/booking-service.module').then(
+            (m) => m.BookingServiceModule
+          ),
+        data: {
+          pagename: 'Danh sách book vé',
+          breadcrumb: 'Danh sách book vé',
+        },
+      },
       {
         path: 'admin-ticket',
         component: AdminTicketComponent,

@@ -94,6 +94,12 @@
         <ul>
           <li nz-submenu nzTitle="Danh sách book vé" nzIcon="snippets">
             <ul>
+              <li nz-menu-item [nzSelected]="url === '/booking-service/airline-ticket-booking-request'">
+                <i nz-icon nzType="tag"></i>
+                <span>
+                  <a routerLink="/booking-service/airline-ticket-booking-request">Book vé yêu cầu</a>
+                </span>
+              </li>
               <li nz-menu-item [nzSelected]="url === '/admin-history-holding-ticket'">
                 <i nz-icon nzType="tag"></i>
                 <span>
