@@ -34,7 +34,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   titleFormPartner = '';
   isVisibleDetailTransactionHistoryTickets: boolean = false;
   listDetailTicket: any[];
-  readonly allowedPageSizes = [5, 10, 15, 20, 'all'];
+  readonly allowedPageSizes = [10, 20, 50, 100, 200, 'all'];
   displayMode = 'full';
   showPageSizeSelector = true;
   showInfo = true;
