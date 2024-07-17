@@ -43,16 +43,42 @@
 
   <dxi-column caption="STT" [width]="55" dataField="stt" [fixed]="true" [allowFiltering]="false" [allowSorting]="false"
     cssClass="text-center vertical-align-middle"></dxi-column>
-  <dxi-column caption="Tên người đặt vé" [width]="250" dataField="contactName"
-    cssClass="vertical-align-middle"></dxi-column>
-  <dxi-column caption="SĐT" dataField="contactPhone" [width]="250" cssClass="vertical-align-middle"></dxi-column>
-  <dxi-column caption="Email" [width]="250" dataField="contactEmail" cssClass="vertical-align-middle"></dxi-column>
-  <dxi-column caption="Ngày đặt vé" dataField="dateCreated" dataType="date" format="HH:mm dd/MM/yy"
-    cssClass="vertical-align-middle"></dxi-column>
-  <dxi-column caption="Thông tin vé" [width]="200" cellTemplate="cellInfoTickets"
-    cssClass="text-center vertical-align-middle"></dxi-column>
-  <div *dxTemplate="let item of 'cellInfoTickets'">
-    <a nz-button nzType="link" (click)="previewDetailTransactionHistoryTickets(item.data)" nzBlock>«Chi tiết»</a>
+
+  <dxi-column caption="Mã booking" [width]="150" dataField="contactName" cssClass="vertical-align-middle"></dxi-column>
+
+  <dxi-column caption="Mã phê duyệt" dataField="contactPhone" [width]="150" cssClass="vertical-align-middle"></dxi-column>
+
+  <dxi-column caption="Trạng thái" [width]="150" dataField="contactEmail" cssClass="vertical-align-middle"></dxi-column>
+
+  <dxi-column caption="Chi phí vé" [width]="150" dataField="dateCreated" dataType="date" format="HH:mm dd/MM/yy" cssClass="vertical-align-middle"></dxi-column>
+
+  <dxi-column caption="Chi phí hoàn vé" [width]="150" cellTemplate="contactName" cssClass="text-center vertical-align-middle"></dxi-column>
+
+  <dxi-column caption="Chi phí huỷ vé" [width]="150" cellTemplate="contactName" cssClass="text-center vertical-align-middle"></dxi-column>
+
+  <dxi-column caption="Chi phí đổi vé" [width]="150" cellTemplate="contactName" cssClass="text-center vertical-align-middle"></dxi-column>
+
+  <dxi-column caption="Chi phí thêm hành lý" [width]="150" cellTemplate="contactName" cssClass="text-center vertical-align-middle"></dxi-column>
+
+  <dxi-column caption="Thao tác" [width]="250" cellTemplate="cellBtnTemplate" cssClass="text-center vertical-align-middle"></dxi-column>
+
+  <div *dxTemplate="let item of 'cellBtnTemplate'" style="display: flex; justify-content: space-evenly;">
+
+    <!-- <button title="Chỉnh sửa thông tin tài khoản" nz-button nzSize="small" nzType="default"
+      (click)="showModalUpdate(item.data)" [disabled]="!item.data.status">
+      <span class="fa fa-edit fa-fw"></span>
+    </button>
+
+    <button title="Đổi mật khẩu" nz-button nzSize="small" nzType="default" (click)="showModalPassword(item.data)"
+      [disabled]="!item.data.status">
+      <span class="fa fa-key fa-fw"></span>
+    </button>
+
+    <nz-switch [ngModel]="item.data.status" [nzControl]="true" [nzCheckedChildren]="checkedTemplateUser"
+      [nzUnCheckedChildren]="unCheckedTemplateUser" [nzLoading]="item.data.isLoadingActiveUser"
+      (click)="showIsActiveUserConfirm(item.data)"></nz-switch>
+    <ng-template #checkedTemplateUser><span nz-icon nzType="user"></span></ng-template>
+    <ng-template #unCheckedTemplateUser><span nz-icon nzType="user-delete"></span></ng-template> -->
   </div>
 
   <dxo-summary>
