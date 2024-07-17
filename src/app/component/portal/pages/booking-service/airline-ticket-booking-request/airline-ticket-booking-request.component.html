@@ -50,19 +50,38 @@
 
   <dxi-column caption="Trạng thái" [width]="150" dataField="contactEmail" cssClass="vertical-align-middle"></dxi-column>
 
-  <dxi-column caption="Chi phí vé" [width]="150" dataField="dateCreated" dataType="date" format="HH:mm dd/MM/yy" cssClass="vertical-align-middle"></dxi-column>
+  <dxi-column caption="Chi phí vé" [width]="150" dataField="dateCreated" [format]="formatCurrencyVND" cssClass="vertical-align-middle"></dxi-column>
 
-  <dxi-column caption="Chi phí hoàn vé" [width]="150" cellTemplate="contactName" cssClass="text-center vertical-align-middle"></dxi-column>
+  <dxi-column caption="Chi phí hoàn vé" [width]="150" cellTemplate="contactName" [format]="formatCurrencyVND" cssClass="text-center vertical-align-middle"></dxi-column>
 
-  <dxi-column caption="Chi phí huỷ vé" [width]="150" cellTemplate="contactName" cssClass="text-center vertical-align-middle"></dxi-column>
+  <dxi-column caption="Chi phí huỷ vé" [width]="150" cellTemplate="contactName" [format]="formatCurrencyVND" cssClass="text-center vertical-align-middle"></dxi-column>
 
-  <dxi-column caption="Chi phí đổi vé" [width]="150" cellTemplate="contactName" cssClass="text-center vertical-align-middle"></dxi-column>
+  <dxi-column caption="Chi phí đổi vé" [width]="150" cellTemplate="contactName" [format]="formatCurrencyVND" cssClass="text-center vertical-align-middle"></dxi-column>
 
-  <dxi-column caption="Chi phí thêm hành lý" [width]="150" cellTemplate="contactName" cssClass="text-center vertical-align-middle"></dxi-column>
+  <dxi-column caption="Chi phí thêm hành lý" [width]="150" cellTemplate="contactName" [format]="formatCurrencyVND" cssClass="text-center vertical-align-middle"></dxi-column>
 
-  <dxi-column caption="Thao tác" [width]="250" cellTemplate="cellBtnTemplate" cssClass="text-center vertical-align-middle"></dxi-column>
+  <dxi-column caption="Thao tác" [width]="250" cellTemplate="cellBtnTemplate"  cssClass="text-center vertical-align-middle"></dxi-column>
 
   <div *dxTemplate="let item of 'cellBtnTemplate'" style="display: flex; justify-content: space-evenly;">
+
+    <!-- (click)="showModalUpdate(item.data)" -->
+
+
+    <button title="Xem" nz-button nzSize="small" nzType="default">
+      <span class="fa fa-eye fa-fw"></span>
+    </button>
+
+    <button title="Chỉnh sửa" nz-button nzSize="small" nzType="default">
+      <span class="fa fa-edit fa-fw"></span>
+    </button>
+
+    <button title="Vé máy bay" nz-button nzSize="small" nzType="default">
+      <span class="fa fa-ticket-alt fa-fw"></span>
+    </button>
+
+    <button title="Lịch sử" nz-button nzSize="small" nzType="default">
+      <span class="fa fa-history fa-fw"></span>
+    </button>
 
     <!-- <button title="Chỉnh sửa thông tin tài khoản" nz-button nzSize="small" nzType="default"
       (click)="showModalUpdate(item.data)" [disabled]="!item.data.status">

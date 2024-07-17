@@ -260,4 +260,10 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     );
   }
 
+  formatCurrencyVND(value) {
+    if (!value) {
+      return '0 đ';
+    }
+    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' đ';
+  }
 }
