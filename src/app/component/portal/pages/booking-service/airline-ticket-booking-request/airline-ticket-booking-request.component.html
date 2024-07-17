@@ -1,20 +1,22 @@
 <div class="action-button" style="clear: bottom;overflow: hidden;">
   <div class="form-group" style="float: left">
-    <div style="display: flex;">
-      <h1>Danh sách book vé yêu cầu</h1>
-      <div style="margin-left: 0.5rem;">
-        <!-- <nz-select nzShowSearch nzMode="default" nzPlaceHolder="--Đối tượng user--" style="width: 200px;"
-          [(ngModel)]="userType" (ngModelChange)="getListData()">
-          <nz-option nzLabel="--Tất cả--" [nzValue]="userTypeEnum.All"></nz-option>
-          <nz-option nzLabel="TK Quản trị Hệ thống" [nzValue]="userTypeEnum.SysAdmin"></nz-option>
-          <nz-option nzLabel="TK Nhân viên" [nzValue]="userTypeEnum.StaffVhl"></nz-option>
-          <nz-option nzLabel="TK Đối tác" [nzValue]="userTypeEnum.Partner"></nz-option>
-          <nz-option nzLabel="TK khách hàng" [nzValue]="userTypeEnum.User"></nz-option>
-        </nz-select> -->
-      </div>
-    </div>
+    <h1>Danh sách book vé yêu cầu</h1>
+    <nz-select nzShowSearch nzMode="default" nzPlaceHolder="Trạng thái" style="width: 200px;">
+      <nz-option nzLabel="--Tất cả--" [nzValue]="'0'"></nz-option>
+      <nz-option nzLabel="Trạng thái 1" [nzValue]="'0'"></nz-option>
+      <nz-option nzLabel="Trạng thái 2" [nzValue]="'0'"></nz-option>
+      <nz-option nzLabel="Trạng thái 3" [nzValue]="'0'"></nz-option>
+      <nz-option nzLabel="Trạng thái 4" [nzValue]="'0'"></nz-option>
+    </nz-select>
   </div>
-
+  <!-- <nz-select nzShowSearch nzMode="default" nzPlaceHolder="--Đối tượng user--" style="width: 200px;"
+    [(ngModel)]="userType" (ngModelChange)="getListData()">
+    <nz-option nzLabel="--Tất cả--" [nzValue]="userTypeEnum.All"></nz-option>
+    <nz-option nzLabel="TK Quản trị Hệ thống" [nzValue]="userTypeEnum.SysAdmin"></nz-option>
+    <nz-option nzLabel="TK Nhân viên" [nzValue]="userTypeEnum.StaffVhl"></nz-option>
+    <nz-option nzLabel="TK Đối tác" [nzValue]="userTypeEnum.Partner"></nz-option>
+    <nz-option nzLabel="TK khách hàng" [nzValue]="userTypeEnum.User"></nz-option>
+  </nz-select> -->
   <div class="form-group" style="float: right; display: flex; float: right">
     <!-- Tìm kiếm -->
     <input style="width: 200px; border-radius: 4px; height: 32px;" class="mgr10" nzSize="small" nz-input type="text"
@@ -46,21 +48,28 @@
 
   <dxi-column caption="Mã booking" [width]="150" dataField="contactName" cssClass="vertical-align-middle"></dxi-column>
 
-  <dxi-column caption="Mã phê duyệt" dataField="contactPhone" [width]="150" cssClass="vertical-align-middle"></dxi-column>
+  <dxi-column caption="Mã phê duyệt" dataField="contactPhone" [width]="150"
+    cssClass="vertical-align-middle"></dxi-column>
 
   <dxi-column caption="Trạng thái" [width]="150" dataField="contactEmail" cssClass="vertical-align-middle"></dxi-column>
 
-  <dxi-column caption="Chi phí vé" [width]="150" dataField="dateCreated" [format]="formatCurrencyVND" cssClass="vertical-align-middle"></dxi-column>
+  <dxi-column caption="Chi phí vé" [width]="150" dataField="dateCreated" [format]="formatCurrencyVND"
+    cssClass="vertical-align-middle"></dxi-column>
 
-  <dxi-column caption="Chi phí hoàn vé" [width]="150" cellTemplate="contactName" [format]="formatCurrencyVND" cssClass="text-center vertical-align-middle"></dxi-column>
+  <dxi-column caption="Chi phí hoàn vé" [width]="150" cellTemplate="contactName" [format]="formatCurrencyVND"
+    cssClass="text-center vertical-align-middle"></dxi-column>
 
-  <dxi-column caption="Chi phí huỷ vé" [width]="150" cellTemplate="contactName" [format]="formatCurrencyVND" cssClass="text-center vertical-align-middle"></dxi-column>
+  <dxi-column caption="Chi phí huỷ vé" [width]="150" cellTemplate="contactName" [format]="formatCurrencyVND"
+    cssClass="text-center vertical-align-middle"></dxi-column>
 
-  <dxi-column caption="Chi phí đổi vé" [width]="150" cellTemplate="contactName" [format]="formatCurrencyVND" cssClass="text-center vertical-align-middle"></dxi-column>
+  <dxi-column caption="Chi phí đổi vé" [width]="150" cellTemplate="contactName" [format]="formatCurrencyVND"
+    cssClass="text-center vertical-align-middle"></dxi-column>
 
-  <dxi-column caption="Chi phí thêm hành lý" [width]="150" cellTemplate="contactName" [format]="formatCurrencyVND" cssClass="text-center vertical-align-middle"></dxi-column>
+  <dxi-column caption="Chi phí thêm hành lý" [width]="150" cellTemplate="contactName" [format]="formatCurrencyVND"
+    cssClass="text-center vertical-align-middle"></dxi-column>
 
-  <dxi-column caption="Thao tác" [width]="250" cellTemplate="cellBtnTemplate"  cssClass="text-center vertical-align-middle"></dxi-column>
+  <dxi-column caption="Thao tác" [width]="250" cellTemplate="cellBtnTemplate"
+    cssClass="text-center vertical-align-middle"></dxi-column>
 
   <div *dxTemplate="let item of 'cellBtnTemplate'" style="display: flex; justify-content: space-evenly;">
 
