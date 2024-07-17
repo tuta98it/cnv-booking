@@ -132,6 +132,12 @@ export class MasterPageComponent implements OnInit, OnDestroy {
     });
     // this.getTinhThanh();
   }
+
+  ngAfterViewInit() {
+    this.userInfo = JSON.parse(localStorage.getItem(Constant.USER_INFO));
+    this.menus = this.userInfo.menus;
+  }
+
   ngOnInit(): void {
     this.selectionPassword = {};
     this.userInfo = JSON.parse(localStorage.getItem(Constant.USER_INFO));
@@ -143,7 +149,6 @@ export class MasterPageComponent implements OnInit, OnDestroy {
     this.loginUserID = this.userInfo.id;
     this.username = this.userInfo.fullname;
     this.roleIds = this.userInfo.roles;
-    this.menus = this.userInfo.menus;
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd),
       map(() => this.getPageInfo())).subscribe((pageName: string) => {

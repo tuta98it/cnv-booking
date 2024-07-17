@@ -6,11 +6,16 @@ import {NhomtaikhoanRolesComponent} from './nhomtaikhoan-roles/nhomtaikhoan-role
 
 const routes: Routes = [
   { path: '', component: NhomtaikhoanListComponent , canActivate: [AuthGuard]},
-  { path: 'roles', component: NhomtaikhoanRolesComponent , canActivate: [AuthGuard], data: {
-      pagename: 'Group user management',
-      breadcrumb: 'Group user management'
+  { path: 'account-group-list', component: NhomtaikhoanListComponent , canActivate: [AuthGuard], data: {
+      pagename: 'Nhóm tài khoản',
+      breadcrumb: 'Danh sách nhóm tài khoản'
     }
+  },
+  { path: 'account-group-permissions', component: NhomtaikhoanRolesComponent , canActivate: [AuthGuard], data: {
+    pagename: 'Nhóm tài khoản',
+    breadcrumb: 'Phân quyền nhóm tài khoản'
   }
+}
 ]
 
 @NgModule({

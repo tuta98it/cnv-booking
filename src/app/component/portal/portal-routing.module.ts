@@ -40,7 +40,7 @@ const routes: Routes = [
         }
       },
       {
-        path: 'tai-khoan',
+        path: 'employee-management',
         loadChildren: () =>
           import('./pages/taikhoan/taikhoan.module').then(
             (m) => m.TaikhoanModule
@@ -51,7 +51,7 @@ const routes: Routes = [
         },
       },
       {
-        path: 'nhom-tai-khoan',
+        path: 'group-management',
         loadChildren: () =>
           import('./pages/nhomtaikhoan/nhomtaikhoan.module').then(
             (m) => m.NhomtaikhoanModule
@@ -159,7 +159,7 @@ const routes: Routes = [
         }
       },
       {
-        path: 'data-airline-tickets',
+        path: 'data-statistics/airline-ticket-booking',
         loadChildren: () => import('./pages/data-airline-tickets/data-airline-tickets.module').then(m => m.DataAirlineTicketsModule),
         data: {
           pagename: 'Bảng kê chi tiết',
@@ -167,7 +167,7 @@ const routes: Routes = [
         }
       },
       {
-        path: 'data-hotels',
+        path: 'data-statistics/accommodation-booking',
         loadChildren: () => import('./pages/data-hotels/data-hotels.module').then(m => m.DataHotelsModule),
         data: {
           pagename: 'Bảng kê chi tiết',

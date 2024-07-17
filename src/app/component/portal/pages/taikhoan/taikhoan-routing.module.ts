@@ -7,9 +7,15 @@ import { TaikhoanRolesComponent } from './taikhoan-roles/taikhoan-roles.componen
 const routes: Routes = [
   { path: '', component: TaikhoanListComponent, canActivate: [AuthGuard] },
   {
-    path: 'roles', component: TaikhoanRolesComponent, canActivate: [AuthGuard], data: {
-      pagename: 'User role',
-      breadcrumb: 'List role'
+    path: 'acccount-list', component: TaikhoanListComponent, canActivate: [AuthGuard], data: {
+      pagename: 'Tài khoản',
+      breadcrumb: 'Danh sách tài khoản'
+    }
+  },
+  {
+    path: 'account-permissions', component: TaikhoanRolesComponent, canActivate: [AuthGuard], data: {
+      pagename: 'Tài khoản',
+      breadcrumb: 'Xem quyền tài khoản'
     }
   }
 ];
