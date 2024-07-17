@@ -3,9 +3,10 @@ import { TranslateService } from '@ngx-translate/core';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { GeneralService } from 'src/app/service/general-service';
 import { TableSelectionAbstract } from 'src/app/shared/component/table/table-selection.abstract';
-import { Constant } from 'src/app/shared/constants/constant.class';
+import { Constant, UserRegisterConfig } from 'src/app/shared/constants/constant.class';
 import { NotificationService } from 'src/app/service/notification.service';
 import { removeAccents } from 'src/app/shared/utils/filters/remove-accents';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-register',
@@ -20,18 +21,29 @@ export class UserRegisterComponent extends TableSelectionAbstract implements OnI
   selectedRow: any;
   searchText = '';
   currentStatus: boolean = false;
+  intervalIdUserRegister: NodeJS.Timeout;
 
   constructor(
     public translate: TranslateService,
     private modalService: NzModalService,
     private notificationService: NotificationService,
     private generalService: GeneralService,
+     private router: Router
   ) {
     super('id');
   }
 
   ngOnInit(): void {
     this.getListData();
+    this.intervalIdUserRegister = setInterval(() => {
+      setTimeout(() => {
+        if (this.router.url === '/user-register') {
+          this.getListData();
+        } else {
+          clearInterval(this.intervalIdUserRegister);
+        }
+      }, 200);
+    }, UserRegisterConfig.TIME_UPDATE_DATAS);
   }
 
   getListData() {
