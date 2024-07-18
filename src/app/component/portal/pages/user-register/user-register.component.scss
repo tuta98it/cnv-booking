@@ -9,3 +9,10 @@
 .not-confirmed {
     color: #d37e7e;
 }
+
+::ng-deep dx-data-grid {
+  &#gridContainer {
+    // height: 100%;
+    height: calc(100% - 38px) !important;
+  }
+}
