@@ -10,6 +10,7 @@ import { Workbook } from 'exceljs';
 import { DateFormatPipe } from 'src/app/shared/pipe/format-date.pipe';
 import { exportDataGrid } from 'devextreme/excel_exporter';
 import { saveAs } from 'file-saver-es';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import {
   DxDataGridComponent,
@@ -17,6 +18,8 @@ import {
   DxTooltipComponent,
   DxTooltipModule,
 } from "devextreme-angular";
+import { OptionAirlineTicketPopup } from 'src/app/enums/option-airline-ticket-popup.enum';
+import { TypeAirlineTicket } from 'src/app/enums/type-airline-ticket.enum';
 @Component({
   selector: 'airline-ticket-booking-request',
   templateUrl: './airline-ticket-booking-request.component.html',
@@ -25,6 +28,13 @@ import {
 export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract implements OnInit, OnDestroy {
   @ViewChild("ListAccount") dataGridDetail: DxDataGridComponent;
   datas: any[] = [];
+  OptionAirlineTicketInfoEnum = OptionAirlineTicketPopup;
+  optionAirlineTicketInfo: OptionAirlineTicketPopup = OptionAirlineTicketPopup.View;
+
+  formAirlineTicketPopup: FormGroup;
+  TypeAirlineTicketEnum = TypeAirlineTicket;
+
+
   data: any;
   item: any;
   loading: boolean;
@@ -39,7 +49,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   showPageSizeSelector = true;
   showInfo = true;
   showNavButtons = true;
-  isVisibleTicketDetail: boolean = false;
+  isVisibleAirlineTicketInfo: boolean = true;
   itemTicketHistoryTicket: any;
   airports: any[] = [];
   constructor(
@@ -48,9 +58,15 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     private generalService: GeneralService,
     private configService: AppConfigService,
     private dateFormatPipe: DateFormatPipe,
+    private formBuilder: FormBuilder,
   ) {
     super('id');
-
+    this.formAirlineTicketPopup = this.formBuilder.group({
+      id: [null],
+      airlineTicketOption: [TypeAirlineTicket.OneWay, [Validators.required]],
+      roles: [null],
+      phoneNo: [null, [Validators.required]],
+    });
 
   }
 
@@ -170,7 +186,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
 
       complete: () => {
         booking.isLoadingViewTicket = false;
-        this.isVisibleTicketDetail = true;
+        this.isVisibleAirlineTicketInfo = true;
       }
     })
   }
@@ -194,6 +210,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     });
     return result;
   }
+
   toNameAirportByCode(code: String) {
     let mameAirport = '';
     if (code) {
@@ -204,6 +221,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     }
     return mameAirport;
   }
+
   toAirlineNameByCode(codeAirline: string) {
     switch (codeAirline) {
       case "VN":
@@ -221,8 +239,8 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     this.isVisibleDetailTransactionHistoryTickets = false;
   }
 
-  handleCancelPopup() {
-    this.isVisibleTicketDetail = false;
+  handleCancelArilineTicketPopup() {
+    this.isVisibleAirlineTicketInfo = false;
 
   }
 
@@ -265,5 +283,10 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
       return '0 đ';
     }
     return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' đ';
+  }
+
+  showPopupAirlineTicket(itemData: any, opPopupAirlineTicket: OptionAirlineTicketPopup) {
+    this.isVisibleAirlineTicketInfo = true;
+    this.optionAirlineTicketInfo = opPopupAirlineTicket;
   }
 }

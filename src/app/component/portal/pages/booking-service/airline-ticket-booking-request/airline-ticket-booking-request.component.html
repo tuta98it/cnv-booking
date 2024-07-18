@@ -1,13 +1,7 @@
 <div class="action-button" style="clear: bottom;overflow: hidden;">
   <div class="form-group" style="float: left">
     <h1>Danh sách book vé yêu cầu</h1>
-    <nz-select nzShowSearch nzMode="default" nzPlaceHolder="Trạng thái" style="width: 200px;">
-      <nz-option nzLabel="--Tất cả--" [nzValue]="'0'"></nz-option>
-      <nz-option nzLabel="Trạng thái 1" [nzValue]="'0'"></nz-option>
-      <nz-option nzLabel="Trạng thái 2" [nzValue]="'0'"></nz-option>
-      <nz-option nzLabel="Trạng thái 3" [nzValue]="'0'"></nz-option>
-      <nz-option nzLabel="Trạng thái 4" [nzValue]="'0'"></nz-option>
-    </nz-select>
+
   </div>
   <!-- <nz-select nzShowSearch nzMode="default" nzPlaceHolder="--Đối tượng user--" style="width: 200px;"
     [(ngModel)]="userType" (ngModelChange)="getListData()">
@@ -19,8 +13,18 @@
   </nz-select> -->
   <div class="form-group" style="float: right; display: flex; float: right">
     <!-- Tìm kiếm -->
-    <input style="width: 200px; border-radius: 4px; height: 32px;" class="mgr10" nzSize="small" nz-input type="text"
-      [(ngModel)]="searchText" (keyup)="onSearch()" placeholder="Tìm kiếm theo Tên người đặt vé, SĐT, Email ...">
+    <input style="width: 200px; border-radius: 4px; height: 32px; margin-right: 10px;" nzSize="small" nz-input
+      type="text" [(ngModel)]="searchText" (keyup)="onSearch()"
+      placeholder="Tìm kiếm theo Tên người đặt vé, SĐT, Email ...">
+
+    <nz-select class="mgr10" nzShowSearch nzMode="default" nzPlaceHolder="Trạng thái" style="width: 200px;">
+      <nz-option nzLabel="--Tất cả--" [nzValue]="'0'"></nz-option>
+      <nz-option nzLabel="Trạng thái 1" [nzValue]="'0'"></nz-option>
+      <nz-option nzLabel="Trạng thái 2" [nzValue]="'0'"></nz-option>
+      <nz-option nzLabel="Trạng thái 3" [nzValue]="'0'"></nz-option>
+      <nz-option nzLabel="Trạng thái 4" [nzValue]="'0'"></nz-option>
+    </nz-select>
+
     <!-- Nút xuất Excel -->
     <button nz-button nzType="primary" class="btn-green mgr10" (click)="exportData()">
       <span class="fa fa-fw fa-file-excel" style="margin-right: 4px;"></span>
@@ -46,7 +50,7 @@
   <dxi-column caption="STT" [width]="55" dataField="stt" [fixed]="true" [allowFiltering]="false" [allowSorting]="false"
     cssClass="text-center vertical-align-middle"></dxi-column>
 
-  <dxi-column caption="Mã booking" [width]="150" dataField="contactName" cssClass="vertical-align-middle"></dxi-column>
+  <dxi-column caption="Mã booking" dataField="contactName" cssClass="vertical-align-middle"></dxi-column>
 
   <dxi-column caption="Mã phê duyệt" dataField="contactPhone" [width]="150"
     cssClass="vertical-align-middle"></dxi-column>
@@ -68,19 +72,18 @@
   <dxi-column caption="Chi phí thêm hành lý" [width]="150" cellTemplate="contactName" [format]="formatCurrencyVND"
     cssClass="text-center vertical-align-middle"></dxi-column>
 
-  <dxi-column caption="Thao tác" [width]="250" cellTemplate="cellBtnTemplate"
+  <dxi-column caption="Thao tác" [width]="200" cellTemplate="cellBtnTemplate"
     cssClass="text-center vertical-align-middle"></dxi-column>
 
   <div *dxTemplate="let item of 'cellBtnTemplate'" style="display: flex; justify-content: space-evenly;">
 
-    <!-- (click)="showModalUpdate(item.data)" -->
-
-
-    <button title="Xem" nz-button nzSize="small" nzType="default">
+    <button title="Xem thông tin đặt vé" nz-button nzSize="small" nzType="default"
+      (click)="showPopupAirlineTicket(item.data, OptionAirlineTicketInfoEnum.View)">
       <span class="fa fa-eye fa-fw"></span>
     </button>
 
-    <button title="Chỉnh sửa" nz-button nzSize="small" nzType="default">
+    <button title="Chỉnh sửa" nz-button nzSize="small" nzType="default"
+      (click)="showPopupAirlineTicket(item.data, OptionAirlineTicketInfoEnum.Update)">
       <span class="fa fa-edit fa-fw"></span>
     </button>
 
@@ -91,22 +94,6 @@
     <button title="Lịch sử" nz-button nzSize="small" nzType="default">
       <span class="fa fa-history fa-fw"></span>
     </button>
-
-    <!-- <button title="Chỉnh sửa thông tin tài khoản" nz-button nzSize="small" nzType="default"
-      (click)="showModalUpdate(item.data)" [disabled]="!item.data.status">
-      <span class="fa fa-edit fa-fw"></span>
-    </button>
-
-    <button title="Đổi mật khẩu" nz-button nzSize="small" nzType="default" (click)="showModalPassword(item.data)"
-      [disabled]="!item.data.status">
-      <span class="fa fa-key fa-fw"></span>
-    </button>
-
-    <nz-switch [ngModel]="item.data.status" [nzControl]="true" [nzCheckedChildren]="checkedTemplateUser"
-      [nzUnCheckedChildren]="unCheckedTemplateUser" [nzLoading]="item.data.isLoadingActiveUser"
-      (click)="showIsActiveUserConfirm(item.data)"></nz-switch>
-    <ng-template #checkedTemplateUser><span nz-icon nzType="user"></span></ng-template>
-    <ng-template #unCheckedTemplateUser><span nz-icon nzType="user-delete"></span></ng-template> -->
   </div>
 
   <dxo-summary>
@@ -176,159 +163,69 @@
   <ng-template #footer> </ng-template>
 </nz-modal>
 
-<nz-modal [(nzVisible)]="isVisibleTicketDetail" [nzContent]="contentConfirm" nzWidth="1500px"
-  (nzOnCancel)="handleCancelPopup()">
-  <div *nzModalTitle>
-    Chi tiết vé máy bay
-  </div>
-  <ng-template #contentConfirm>
-    <div class="ticket-detail">
-      <div class="ticket-title">
-        <span>Thông tin vé</span>
-      </div>
-      <div class="ticket-content">
-        <div class="ticket-general-info">
-          <div *ngFor="let ticket of itemTicketHistoryTicket.bookingReservations; let i = index;">
-            <div class="ticket-code">
-              <label for="">Mã đặt chỗ: <strong>{{ticket.bookingCode}}</strong></label>
-            </div>
-          </div>
-        </div>
-        <div class="ticket-main-info">
-          <div class="passenger-info">
-            <div class="passenger-info-title">
-              <div>
-                <strong>Thông tin hành khách</strong>
-              </div>
-            </div>
-            <div class="passenger-ticket-info-detail"
-              *ngFor="let bookingPassenger of itemTicketHistoryTicket.bookingPassengers">
-              <div class="passenger-ticket-name">
-                <label *ngIf="bookingPassenger.typeCode === 'ADT'">Hành khách: {{bookingPassenger.gender? 'Ông' : 'Bà'}}
-                  <strong>{{bookingPassenger.lastName}} {{bookingPassenger.firstName}}</strong></label>
-                <label *ngIf="bookingPassenger.typeCode === 'CHD'">Hành khách: {{bookingPassenger.gender? 'Bé trai' :
-                  'Bé gái'}} <strong>{{bookingPassenger.lastName}} {{bookingPassenger.firstName}}</strong></label>
-                <label *ngIf="bookingPassenger.typeCode === 'INF'">Hành khách: {{bookingPassenger.gender? 'Trẻ sơ sinh
-                  trai' : 'Trẻ sơ sinh gái'}} <strong>{{bookingPassenger.lastName}}
-                    {{bookingPassenger.firstName}}</strong></label>
-              </div>
-              <div class="passenger-ticket-info-content">
-                <div>
-                  <strong>Chi tiết vé</strong>
-                </div>
-                <div>
-                  <table>
-                    <tr>
-                      <th>Loại vé</th>
-                      <th>Số lượng</th>
-                      <th>Hành trình</th>
-                      <th>Giá vé</th>
-                      <th>Thuế phí</th>
-                      <th>Tổng giá</th>
-                    </tr>
-                    <tr *ngFor="let bookingFlight of itemTicketHistoryTicket.bookingFlights; let i = index;">
-                      <td *ngIf="bookingFlight.adt > 0">Người lớn</td>
-                      <td *ngIf="bookingFlight.adt > 0">{{bookingFlight.adt}}</td>
-                      <td *ngIf="bookingFlight.adt > 0">{{bookingFlight.startPoint}} - {{bookingFlight.endPoint}}</td>
-                      <td *ngIf="bookingFlight.adt > 0">{{bookingFlight.priceAdult | currencyFormat }} VND</td>
-                      <td *ngIf="bookingFlight.adt > 0">{{bookingFlight.taxAdult + bookingFlight.feeAdult |
-                        currencyFormat}} VND</td>
-                      <td *ngIf="bookingFlight.adt > 0">{{bookingFlight.totalPrice | currencyFormat}} VND</td>
-
-                      <td *ngIf="bookingFlight.chd > 0">Trẻ em 2 - 11 tuổi</td>
-                      <td *ngIf="bookingFlight.chd > 0">{{bookingFlight.chd}}</td>
-                      <td *ngIf="bookingFlight.chd > 0">{{bookingFlight.startPoint}} - {{bookingFlight.endPoint}}</td>
-                      <td *ngIf="bookingFlight.chd > 0">{{bookingFlight.priceChild | currencyFormat }} VND</td>
-                      <td *ngIf="bookingFlight.chd > 0">{{bookingFlight.taxChild + bookingFlight.feeChild |
-                        currencyFormat}} VND</td>
-                      <td *ngIf="bookingFlight.chd > 0">{{bookingFlight.totalPrice | currencyFormat}} VND</td>
-
-
-                      <td *ngIf="bookingFlight.inf > 0">Trẻ sơ sinh</td>
-                      <td *ngIf="bookingFlight.inf > 0">{{bookingFlight.inf}}</td>
-                      <td *ngIf="bookingFlight.inf > 0">{{bookingFlight.startPoint}} - {{bookingFlight.endPoint}}</td>
-                      <td *ngIf="bookingFlight.inf > 0">{{bookingFlight.priceInfant | currencyFormat }} VND</td>
-                      <td *ngIf="bookingFlight.inf > 0">{{bookingFlight.taxInfant + bookingFlight.feeInfant |
-                        currencyFormat}} VND</td>
-                      <td *ngIf="bookingFlight.inf > 0">{{bookingFlight.totalPrice | currencyFormat}} VND</td>
-                    </tr>
-                    <tr>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td><strong>Tổng giá vé</strong></td>
-                      <td>{{itemTicketHistoryTicket.totalPricebookingFlight| currencyFormat}} VND</td>
-                    </tr>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="flight-contact-info">
-            <div class="flight-info">
-              <div class="flight-info-title">
-                <strong>
-                  Thông tin chuyến bay
-                </strong>
-
-              </div>
-
-              <div class="flight-info-content">
-                <div class="flight-schedule"
-                  *ngFor="let bookingFlight of itemTicketHistoryTicket.bookingFlights; let i = index;">
-                  <div class="flight-schedule-title">
-                    <label>
-                      Hành trình : <strong>{{toNameAirportByCode(bookingFlight.startPoint)}} -
-                        {{toNameAirportByCode(bookingFlight.endPoint)}}</strong>
-                    </label>
-                  </div>
-                  <div>
-                    <label for="">Ngày bay: <strong>{{bookingFlight.startTime | date:"HH:MM dd-MM-yyyy"}}</strong></label>
-                  </div>
-                  <div>
-                    <label for="">Ngày đến:</label> <strong>{{bookingFlight.endTime | date:"HH:MM dd-MM-yyyy"}}</strong>
-                  </div>
-                  <div>
-                    <label for="">Hãng hàng không:
-                      <strong>{{toAirlineNameByCode(bookingFlight.airlineCode)}}</strong></label>
-                  </div>
-                  <div>
-                    <label for="">Hãng đặt chỗ: <strong>{{bookingFlight.groupClass}}</strong>. Số hiệu chuyến bay:
-                      <strong>{{bookingFlight.flightNumber}}</strong></label>
-                  </div>
-                  <div>
-                    <label for="">Hành lý xách tay: <strong>{{bookingFlight.carryon}}</strong>. Hành lý ký gửi:
-                      <strong>{{bookingFlight.freebag}}</strong></label>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="contact-info">
-              <div class="contact-info-title">
-                <strong>
-                  Thông tin liên hệ
-                </strong>
-              </div>
-              <div class="contact-info-content">
-                <div>
-                  <label for="">Người liên hệ: <strong>{{itemTicketHistoryTicket.contactName}}</strong></label>
-                </div>
-                <div>
-                  <label for="">Số điện thoại: <strong>{{itemTicketHistoryTicket.contactPhone}}</strong></label>
-
-                </div>
-                <div>
-                  <label for="">Email: <strong>{{itemTicketHistoryTicket.contactEmail}}</strong></label>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+<!-- Popup View/Update thông tin vé máy bay -->
+<form [formGroup]="formAirlineTicketPopup">
+  <!-- [(nzVisible)]="isVisibleAirlineTicketInfo" -->
+  <nz-modal [(nzVisible)]="isVisibleAirlineTicketInfo" [nzContent]="contentAirlineTicketInfo" nzWidth="1500px"
+    (nzOnCancel)="handleCancelArilineTicketPopup()">
+    <div *nzModalTitle>
+      {{optionAirlineTicketInfo == OptionAirlineTicketInfoEnum.View ? "Xem" : "Cập nhật"}} thông tin vé máy bay
     </div>
-  </ng-template>
-  <div *nzModalFooter>
-    <button nz-button nzType="default" (click)="handleCancelPopup()">Đóng</button>
-  </div>
-</nz-modal>
+    <ng-template #contentAirlineTicketInfo>
+      <div>
+        <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
+          <div nz-col nzSpan="2">
+            <label for="">Loại vé
+              <em class="fa fa-asterisk required" style="line-height: revert;"></em>
+            </label>
+          </div>
+          <div nz-col nzSpan="4">
+            <nz-select nzShowSearch nzMode="default" nzPlaceHolder="--Loại vé--" formControlName="airlineTicketOption">
+              <nz-option nzLabel="Một chiều" [nzValue]="TypeAirlineTicketEnum.OneWay"></nz-option>
+              <nz-option nzLabel="Khứ hội" [nzValue]="TypeAirlineTicketEnum.RoundTrip"></nz-option>
+            </nz-select>
+          </div>
+          <div nz-col nzSpan="2">
+            <label for="">Hành trình
+              <em class="fa fa-asterisk required" style="line-height: revert;"></em>
+            </label>
+          </div>
+          <div nz-col nzSpan="4">
+          </div>
+        </div>
+        <div nz-row>
+          <div nz-col nzSpan="8">col-8</div>
+          <div nz-col nzSpan="8">col-8</div>
+          <div nz-col nzSpan="8">col-8</div>
+        </div>
+        <div nz-row>
+          <div nz-col nzSpan="6">col-6</div>
+          <div nz-col nzSpan="6">col-6</div>
+          <div nz-col nzSpan="6">col-6</div>
+          <div nz-col nzSpan="6">col-6</div>
+        </div>
+        <div>
+          <!-- (ngModelChange)="getListData()" -->
+        </div>
+
+
+      </div>
+    </ng-template>
+    <div *nzModalFooter>
+      <button nz-button nzType="default" (click)="handleCancelArilineTicketPopup()">
+        <div style="display: flex; align-items: center;">
+          <span nz-icon nzType="close"></span>
+          <span style="margin-left: 4px; line-height: normal;">Đóng</span>
+        </div>
+      </button>
+
+      <button *ngIf="optionAirlineTicketInfo == OptionAirlineTicketInfoEnum.Update" nz-button nzType="primary"
+        (click)="handleCancelArilineTicketPopup()">
+        <div style="display: flex; align-items: center;">
+          <span nz-icon nzType="save"></span>
+          <span style="margin-left: 6px; line-height: normal;">Lưu</span>
+        </div>
+      </button>
+    </div>
+  </nz-modal>
+</form>
