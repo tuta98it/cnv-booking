@@ -20,6 +20,13 @@
   }
 }
 
+::ng-deep {
+  nz-upload-list {
+    display: flex;
+  }
+}
+
+
 .ticket-detail {
   .ticket-title {
     color: #fff;

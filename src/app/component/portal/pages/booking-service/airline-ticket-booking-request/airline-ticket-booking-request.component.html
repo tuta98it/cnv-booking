@@ -166,7 +166,7 @@
 <!-- Popup View/Update thông tin vé máy bay -->
 <form [formGroup]="formAirlineTicketPopup">
   <!-- [(nzVisible)]="isVisibleAirlineTicketInfo" -->
-  <nz-modal [(nzVisible)]="isVisibleAirlineTicketInfo" [nzContent]="contentAirlineTicketInfo" nzWidth="1068px"
+  <nz-modal [(nzVisible)]="isVisibleAirlineTicketInfo" [nzContent]="contentAirlineTicketInfo" nzWidth="1506px" [nzStyle]="{ top: '20px' }"
     (nzOnCancel)="handleCancelArilineTicketPopup()">
     <div *nzModalTitle>
       {{optionAirlineTicketInfo == OptionAirlineTicketInfoEnum.View ? "Xem" : "Cập nhật"}} thông tin vé máy bay
@@ -174,14 +174,14 @@
     <ng-template #contentAirlineTicketInfo>
       <div>
         <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
-          <div nz-col class="gutter-row" nzSpan="4">
+          <div nz-col class="gutter-row" nzSpan="2">
             <div class="inner-box">
               <label for="">Loại vé
                 <em class="fa fa-asterisk required" style="line-height: revert;"></em>
               </label>
             </div>
           </div>
-          <div nz-col class="gutter-row" nzSpan="8">
+          <div nz-col class="gutter-row" nzSpan="6">
             <div class="inner-box">
               <nz-select nzShowSearch nzMode="default" nzPlaceHolder="--Loại vé--"
                 formControlName="airlineTicketOption">
@@ -190,28 +190,28 @@
               </nz-select>
             </div>
           </div>
-          <div nz-col class="gutter-row" nzSpan="3">
-            <div class="inner-box">
+          <div nz-col class="gutter-row" nzSpan="2">
+            <div class="inner-box" style="float: right;">
               <label for="">Hành trình
                 <em class="fa fa-asterisk required" style="line-height: revert;"></em>
               </label>
             </div>
           </div>
-          <div nz-col class="gutter-row" nzSpan="9">
+          <div nz-col class="gutter-row" nzSpan="14">
             <div class="inner-box">
               <input style="border-radius: 4px;" nz-input nzSize="default" placeholder="">
             </div>
           </div>
         </div>
         <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
-          <div nz-col class="gutter-row" nzSpan="4">
+          <div nz-col class="gutter-row" nzSpan="2">
             <div class="inner-box">
               <label for="">Hành khách
                 <em class="fa fa-asterisk required" style="line-height: revert;"></em>
               </label>
             </div>
           </div>
-          <div nz-col class="gutter-row" nzSpan="20">
+          <div nz-col class="gutter-row" nzSpan="22">
             <div class="inner-box">
               <nz-select [nzMaxTagCount]="3" [nzMaxTagPlaceholder]="tagPlaceHolder" nzMode="multiple"
                 nzPlaceHolder="-- Khách hàng --" [(ngModel)]="listOfSelectedValue">
@@ -225,27 +225,27 @@
         <!-- 1. Thời điểm đi -->
         <div>
           <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
-            <div nz-col class="gutter-row" nzSpan="4">
+            <div nz-col class="gutter-row" nzSpan="2">
               <div class="inner-box">
                 <label for="">1. Thời gian đi
                   <em class="fa fa-asterisk required" style="line-height: revert;"></em>
                 </label>
               </div>
             </div>
-            <div nz-col class="gutter-row" nzSpan="10">
+            <div nz-col class="gutter-row" nzSpan="14">
               <div class="inner-box">
-                <nz-range-picker [nzShowTime]="true" [(ngModel)]="date"
+                <nz-range-picker [nzShowTime]="true" [(ngModel)]="date" style="width: 100%;"
                   (ngModelChange)="onChangeStartTime($event)"></nz-range-picker>
               </div>
             </div>
-            <div nz-col class="gutter-row" nzSpan="3">
-              <div class="inner-box">
+            <div nz-col class="gutter-row" nzSpan="2">
+              <div class="inner-box" style="float: right;">
                 <label for="">Hãng bay
                   <em class="fa fa-asterisk required" style="line-height: revert;"></em>
                 </label>
               </div>
             </div>
-            <div nz-col class="gutter-row" nzSpan="7">
+            <div nz-col class="gutter-row" nzSpan="6">
               <div class="inner-box">
                 <nz-select nzShowSearch nzMode="default" nzPlaceHolder="--Loại vé--" formControlName="airlineCompany">
                   <nz-option nzLabel="Vietnamairline" [nzValue]="AirlineCompanyEnum.Vietnamairline"></nz-option>
@@ -255,20 +255,20 @@
             </div>
           </div>
           <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
-            <div nz-col class="gutter-row" nzSpan="4">
+            <div nz-col class="gutter-row" nzSpan="2">
               <div class="inner-box">
-                <label for="">Mã đặt chỗ đi
+                <label for="">Mã đặt chỗ về
                   <em class="fa fa-asterisk required" style="line-height: revert;"></em>
                 </label>
               </div>
             </div>
-            <div nz-col class="gutter-row" nzSpan="4">
+            <div nz-col class="gutter-row" nzSpan="6">
               <div class="inner-box">
                 <input style="border-radius: 4px;" nz-input nzSize="default" placeholder="">
               </div>
             </div>
             <div nz-col class="gutter-row" nzSpan="2">
-              <div class="inner-box">
+              <div class="inner-box" style="float: right;">
                 <label for="">Mã CB
                   <em class="fa fa-asterisk required" style="line-height: revert;"></em>
                 </label>
@@ -279,78 +279,78 @@
                 <input style="border-radius: 4px;" nz-input nzSize="default" placeholder="">
               </div>
             </div>
-            <div nz-col class="gutter-row" nzSpan="3">
-              <div class="inner-box">
+            <div nz-col class="gutter-row" nzSpan="2">
+              <div class="inner-box" style="float: right;">
                 <label for="">Hạn giữ vé
                   <em class="fa fa-asterisk required" style="line-height: revert;"></em>
                 </label>
               </div>
             </div>
-            <div nz-col class="gutter-row" nzSpan="5">
+            <div nz-col class="gutter-row" nzSpan="6">
               <div class="inner-box">
                 <input style="border-radius: 4px;" nz-input nzSize="default" placeholder="">
               </div>
             </div>
           </div>
           <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
-            <div nz-col class="gutter-row" nzSpan="4">
+            <div nz-col class="gutter-row" nzSpan="2">
               <div class="inner-box">
                 <label for="">Giá vé
                   <em class="fa fa-asterisk required" style="line-height: revert;"></em>
                 </label>
               </div>
             </div>
-            <div nz-col class="gutter-row" nzSpan="8">
+            <div nz-col class="gutter-row" nzSpan="10">
               <div class="inner-box">
                 <input style="border-radius: 4px;" nz-input nzSize="default" placeholder="">
               </div>
             </div>
-            <div nz-col class="gutter-row" nzSpan="4">
-              <div class="inner-box">
+            <div nz-col class="gutter-row" nzSpan="3">
+              <div class="inner-box" style="float: right;">
                 <label for="">Phí thêm hành lý
                   <em class="fa fa-asterisk required" style="line-height: revert;"></em>
                 </label>
               </div>
             </div>
-            <div nz-col class="gutter-row" nzSpan="8">
+            <div nz-col class="gutter-row" nzSpan="9">
               <div class="inner-box">
                 <input style="border-radius: 4px;" nz-input nzSize="default" placeholder="">
               </div>
             </div>
           </div>
           <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
-            <div nz-col class="gutter-row" nzSpan="4">
+            <div nz-col class="gutter-row" nzSpan="2">
               <div class="inner-box">
                 <label for="">Phí hoàn vé
                   <em class="fa fa-asterisk required" style="line-height: revert;"></em>
                 </label>
               </div>
             </div>
-            <div nz-col class="gutter-row" nzSpan="4">
+            <div nz-col class="gutter-row" nzSpan="6">
               <div class="inner-box">
                 <input style="border-radius: 4px;" nz-input nzSize="default" placeholder="">
               </div>
             </div>
-            <div nz-col class="gutter-row" nzSpan="3">
-              <div class="inner-box">
+            <div nz-col class="gutter-row" nzSpan="2">
+              <div class="inner-box" style="float: right;">
                 <label for="">Phí huỷ vé
                   <em class="fa fa-asterisk required" style="line-height: revert;"></em>
                 </label>
               </div>
             </div>
-            <div nz-col class="gutter-row" nzSpan="5">
+            <div nz-col class="gutter-row" nzSpan="6">
               <div class="inner-box">
                 <input style="border-radius: 4px;" nz-input nzSize="default" placeholder="">
               </div>
             </div>
-            <div nz-col class="gutter-row" nzSpan="3">
-              <div class="inner-box">
+            <div nz-col class="gutter-row" nzSpan="2">
+              <div class="inner-box" style="float: right;">
                 <label for="">Phí đổi vé
                   <em class="fa fa-asterisk required" style="line-height: revert;"></em>
                 </label>
               </div>
             </div>
-            <div nz-col class="gutter-row" nzSpan="5">
+            <div nz-col class="gutter-row" nzSpan="6">
               <div class="inner-box">
                 <input style="border-radius: 4px;" nz-input nzSize="default" placeholder="">
               </div>
@@ -361,27 +361,27 @@
         <!-- 2. Thời điểm về -->
         <div>
           <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
-            <div nz-col class="gutter-row" nzSpan="4">
+            <div nz-col class="gutter-row" nzSpan="2">
               <div class="inner-box">
-                <label for="">2. Thời gian đến
+                <label for="">2. Thời gian về
                   <em class="fa fa-asterisk required" style="line-height: revert;"></em>
                 </label>
               </div>
             </div>
-            <div nz-col class="gutter-row" nzSpan="10">
+            <div nz-col class="gutter-row" nzSpan="14">
               <div class="inner-box">
-                <nz-range-picker [nzShowTime]="true" [(ngModel)]="date"
+                <nz-range-picker [nzShowTime]="true" [(ngModel)]="date" style="width: 100%;"
                   (ngModelChange)="onChangeStartTime($event)"></nz-range-picker>
               </div>
             </div>
-            <div nz-col class="gutter-row" nzSpan="3">
-              <div class="inner-box">
+            <div nz-col class="gutter-row" nzSpan="2">
+              <div class="inner-box" style="float: right;">
                 <label for="">Hãng bay
                   <em class="fa fa-asterisk required" style="line-height: revert;"></em>
                 </label>
               </div>
             </div>
-            <div nz-col class="gutter-row" nzSpan="7">
+            <div nz-col class="gutter-row" nzSpan="6">
               <div class="inner-box">
                 <nz-select nzShowSearch nzMode="default" nzPlaceHolder="--Loại vé--" formControlName="airlineCompany">
                   <nz-option nzLabel="Vietnamairline" [nzValue]="AirlineCompanyEnum.Vietnamairline"></nz-option>
@@ -391,20 +391,20 @@
             </div>
           </div>
           <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
-            <div nz-col class="gutter-row" nzSpan="4">
+            <div nz-col class="gutter-row" nzSpan="2">
               <div class="inner-box">
                 <label for="">Mã đặt chỗ đi
                   <em class="fa fa-asterisk required" style="line-height: revert;"></em>
                 </label>
               </div>
             </div>
-            <div nz-col class="gutter-row" nzSpan="4">
+            <div nz-col class="gutter-row" nzSpan="6">
               <div class="inner-box">
                 <input style="border-radius: 4px;" nz-input nzSize="default" placeholder="">
               </div>
             </div>
             <div nz-col class="gutter-row" nzSpan="2">
-              <div class="inner-box">
+              <div class="inner-box" style="float: right;">
                 <label for="">Mã CB
                   <em class="fa fa-asterisk required" style="line-height: revert;"></em>
                 </label>
@@ -415,96 +415,94 @@
                 <input style="border-radius: 4px;" nz-input nzSize="default" placeholder="">
               </div>
             </div>
-            <div nz-col class="gutter-row" nzSpan="3">
-              <div class="inner-box">
+            <div nz-col class="gutter-row" nzSpan="2">
+              <div class="inner-box" style="float: right;">
                 <label for="">Hạn giữ vé
                   <em class="fa fa-asterisk required" style="line-height: revert;"></em>
                 </label>
               </div>
             </div>
-            <div nz-col class="gutter-row" nzSpan="5">
+            <div nz-col class="gutter-row" nzSpan="6">
               <div class="inner-box">
                 <input style="border-radius: 4px;" nz-input nzSize="default" placeholder="">
               </div>
             </div>
           </div>
           <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
-            <div nz-col class="gutter-row" nzSpan="4">
+            <div nz-col class="gutter-row" nzSpan="2">
               <div class="inner-box">
                 <label for="">Giá vé
                   <em class="fa fa-asterisk required" style="line-height: revert;"></em>
                 </label>
               </div>
             </div>
-            <div nz-col class="gutter-row" nzSpan="8">
+            <div nz-col class="gutter-row" nzSpan="10">
               <div class="inner-box">
                 <input style="border-radius: 4px;" nz-input nzSize="default" placeholder="">
               </div>
             </div>
-            <div nz-col class="gutter-row" nzSpan="4">
-              <div class="inner-box">
+            <div nz-col class="gutter-row" nzSpan="3">
+              <div class="inner-box" style="float: right;">
                 <label for="">Phí thêm hành lý
                   <em class="fa fa-asterisk required" style="line-height: revert;"></em>
                 </label>
               </div>
             </div>
-            <div nz-col class="gutter-row" nzSpan="8">
+            <div nz-col class="gutter-row" nzSpan="9">
               <div class="inner-box">
                 <input style="border-radius: 4px;" nz-input nzSize="default" placeholder="">
               </div>
             </div>
           </div>
           <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
-            <div nz-col class="gutter-row" nzSpan="4">
+            <div nz-col class="gutter-row" nzSpan="2">
               <div class="inner-box">
                 <label for="">Phí hoàn vé
                   <em class="fa fa-asterisk required" style="line-height: revert;"></em>
                 </label>
               </div>
             </div>
-            <div nz-col class="gutter-row" nzSpan="4">
+            <div nz-col class="gutter-row" nzSpan="6">
               <div class="inner-box">
                 <input style="border-radius: 4px;" nz-input nzSize="default" placeholder="">
               </div>
             </div>
-            <div nz-col class="gutter-row" nzSpan="3">
-              <div class="inner-box">
+            <div nz-col class="gutter-row" nzSpan="2">
+              <div class="inner-box" style="float: right;">
                 <label for="">Phí huỷ vé
                   <em class="fa fa-asterisk required" style="line-height: revert;"></em>
                 </label>
               </div>
             </div>
-            <div nz-col class="gutter-row" nzSpan="5">
+            <div nz-col class="gutter-row" nzSpan="6">
               <div class="inner-box">
                 <input style="border-radius: 4px;" nz-input nzSize="default" placeholder="">
               </div>
             </div>
-            <div nz-col class="gutter-row" nzSpan="3">
-              <div class="inner-box">
+            <div nz-col class="gutter-row" nzSpan="2">
+              <div class="inner-box" style="float: right;">
                 <label for="">Phí đổi vé
                   <em class="fa fa-asterisk required" style="line-height: revert;"></em>
                 </label>
               </div>
             </div>
-            <div nz-col class="gutter-row" nzSpan="5">
+            <div nz-col class="gutter-row" nzSpan="6">
               <div class="inner-box">
                 <input style="border-radius: 4px;" nz-input nzSize="default" placeholder="">
               </div>
             </div>
           </div>
         </div>
-
         <div style="width: 100%; height: 1px; background-color: #f5f5f5; margin: 1.5rem 0rem;"></div>
-
         <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
-          <div nz-col class="gutter-row" nzSpan="4">
+          <div nz-col class="gutter-row" nzSpan="2">
             <div class="inner-box">
               <label for="">File vé máy bay
                 <em class="fa fa-asterisk required" style="line-height: revert;"></em>
               </label>
             </div>
           </div>
-          <div nz-col class="gutter-row" nzSpan="20">
+          <div nz-col class="gutter-row" nzSpan="22">
             <div class="inner-box">
 
 
@@ -529,8 +527,6 @@
             </div>
           </div>
         </div>
-
-
       </div>
     </ng-template>
     <div *nzModalFooter>
