@@ -125,7 +125,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
       "page": 1,
       "pageSize": 500
     }
-    this.generalService.getAdminHistoryBooking(payload).subscribe((res: any) => {
+    this.generalService.adminRequestBooking(payload).subscribe((res: any) => {
       if (res !== null) {
         this.datas = res.data;
         this.loading = false;

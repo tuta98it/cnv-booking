@@ -557,7 +557,10 @@ export class GeneralService extends BaseService {
     return this.post(`/api${UrlConstant.BOOKING}/ReportDebtStatistics`, payload);
   }
 
-
+  // BookingV2
+  adminRequestBooking(payload: any): Observable<any> {
+    return this.post(`/api${UrlConstant.BOOKINGV2}/adminRequestBooking`, payload);
+  }
 
 
   getBookingByID(idBooking: any): Observable<any> {
