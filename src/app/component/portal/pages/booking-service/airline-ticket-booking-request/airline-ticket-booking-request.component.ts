@@ -20,19 +20,39 @@ import {
 } from "devextreme-angular";
 import { OptionAirlineTicketPopup } from 'src/app/enums/option-airline-ticket-popup.enum';
 import { TypeAirlineTicket } from 'src/app/enums/type-airline-ticket.enum';
+import { AirlineCompany } from 'src/app/enums/airline-company.enum';
+import { NzUploadFile } from 'ng-zorro-antd/upload';
 @Component({
   selector: 'airline-ticket-booking-request',
   templateUrl: './airline-ticket-booking-request.component.html',
   styleUrls: ['./airline-ticket-booking-request.component.scss']
 })
 export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract implements OnInit, OnDestroy {
+
+
+
+
   @ViewChild("ListAccount") dataGridDetail: DxDataGridComponent;
   datas: any[] = [];
   OptionAirlineTicketInfoEnum = OptionAirlineTicketPopup;
   optionAirlineTicketInfo: OptionAirlineTicketPopup = OptionAirlineTicketPopup.View;
 
-  formAirlineTicketPopup: FormGroup;
   TypeAirlineTicketEnum = TypeAirlineTicket;
+
+  AirlineCompanyEnum = AirlineCompany;
+
+  formAirlineTicketPopup: FormGroup;
+
+  listOfOption: string[] = [];
+  listOfSelectedValue = ['a10', 'c12'];
+
+  date = null;
+  onChangeStartTime(result: Date[]): void {
+    console.log('onChange: ', result);
+  }
+
+  uploading = false;
+  fileList: NzUploadFile[] = [];
 
 
   data: any;
@@ -64,6 +84,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     this.formAirlineTicketPopup = this.formBuilder.group({
       id: [null],
       airlineTicketOption: [TypeAirlineTicket.OneWay, [Validators.required]],
+      airlineCompany: [AirlineCompany.Vietnamairline, [Validators.required]],
       roles: [null],
       phoneNo: [null, [Validators.required]],
     });
@@ -74,6 +95,12 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     this.getListData();
     this.getUserInfo();
     this.getAirport();
+
+    const children: string[] = [];
+    for (let i = 10; i < 36; i++) {
+      children.push(`${i.toString(36)}${i}`);
+    }
+    this.listOfOption = children;
   }
 
   ngOnDestroy(): void {
@@ -115,6 +142,39 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     });
   }
 
+
+  beforeUpload = (file: NzUploadFile): boolean => {
+    this.fileList = this.fileList.concat(file);
+    return false;
+  };
+
+
+  handleUpload(): void {
+    // const formData = new FormData();
+    // // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // this.fileList.forEach((file: any) => {
+    //   formData.append('files[]', file);
+    // });
+    // this.uploading = true;
+    // // You can use any AJAX library you like
+    // const req = new HttpRequest('POST', 'https://www.mocky.io/v2/5cc8019d300000980a055e76', formData, {
+    //   // reportProgress: true
+    // });
+    // this.http
+    //   .request(req)
+    //   .pipe(filter(e => e instanceof HttpResponse))
+    //   .subscribe(
+    //     () => {
+    //       this.uploading = false;
+    //       this.fileList = [];
+    //       this.msg.success('upload successfully.');
+    //     },
+    //     () => {
+    //       this.uploading = false;
+    //       this.msg.error('upload failed.');
+    //     }
+    //   );
+  }
 
   previewDetailTransactionHistoryTickets(historyTransaction: any) {
     this.isVisibleDetailTransactionHistoryTickets = true;

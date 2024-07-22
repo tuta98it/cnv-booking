@@ -14,6 +14,12 @@
   }
 }
 
+::ng-deep {
+  .inner-box {
+    padding: 8px 0;
+  }
+}
+
 .ticket-detail {
   .ticket-title {
     color: #fff;
