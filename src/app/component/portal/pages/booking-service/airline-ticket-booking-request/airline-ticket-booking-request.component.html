@@ -214,7 +214,7 @@
           <div nz-col class="gutter-row" nzSpan="6">
             <div class="inner-box">
               <nz-select nzShowSearch nzMode="default" nzPlaceHolder="--Loại vé--"
-                formControlName="airlineTicketOption">
+                formControlName="typeTicket">
                 <nz-option nzLabel="Một chiều" [nzValue]="TypeAirlineTicketEnum.OneWay"></nz-option>
                 <nz-option nzLabel="Khứ hội" [nzValue]="TypeAirlineTicketEnum.RoundTrip"></nz-option>
               </nz-select>
@@ -243,11 +243,12 @@
           </div>
           <div nz-col class="gutter-row" nzSpan="22">
             <div class="inner-box">
-              <nz-select [nzMaxTagCount]="3" [nzMaxTagPlaceholder]="tagPlaceHolder" nzMode="multiple"
-                nzPlaceHolder="-- Khách hàng --" [(ngModel)]="listOfSelectedValue">
+              <input style="border-radius: 4px;" nz-input nzSize="default" formControlName="passengers">
+              <!-- <nz-select [nzMaxTagCount]="3" [nzMaxTagPlaceholder]="tagPlaceHolder" nzMode="multiple"
+                nzPlaceHolder="-- Khách hàng --" formControlName="passengers">
                 <nz-option *ngFor="let item of listOfOption" [nzLabel]="item" [nzValue]="item"></nz-option>
               </nz-select>
-              <ng-template #tagPlaceHolder let-selectedList>và {{ selectedList.length }} khách hàng nữa...</ng-template>
+              <ng-template #tagPlaceHolder let-selectedList>và {{ selectedList.length }} khách hàng nữa...</ng-template> -->
             </div>
           </div>
         </div>
@@ -264,7 +265,8 @@
             </div>
             <div nz-col class="gutter-row" nzSpan="14">
               <div class="inner-box">
-                <nz-range-picker [nzShowTime]="true" [(ngModel)]="date" style="width: 100%;"
+                <!-- [(ngModel)]="date" -->
+                <nz-range-picker [nzShowTime]="true"  style="width: 100%;"
                   (ngModelChange)="onChangeStartTime($event)"></nz-range-picker>
               </div>
             </div>
@@ -400,7 +402,43 @@
             </div>
             <div nz-col class="gutter-row" nzSpan="14">
               <div class="inner-box">
-                <nz-range-picker [nzShowTime]="true" [(ngModel)]="date" style="width: 100%;"
+                <!-- airline-ticket-booki….component.html:267 ERROR
+Error:
+      ngModel cannot be used to register form controls with a parent formGroup directive.  Try using
+      formGroup's partner directive "formControlName" instead.  Example:
+
+
+    <div [formGroup]="myGroup">
+      <input formControlName="firstName">
+    </div>
+
+    In your class:
+
+    this.myGroup = new FormGroup({
+       firstName: new FormControl()
+    });
+
+      Or, if you'd like to avoid registering this form control, indicate that it's standalone in ngModelOptions:
+
+      Example:
+
+
+    <div [formGroup]="myGroup">
+       <input formControlName="firstName">
+       <input [(ngModel)]="showMoreControls" [ngModelOptions]="{standalone: true}">
+    </div>
+
+    at TemplateDrivenErrors.modelParentException (forms.js:4757:1)
+    at NgModel._checkParentType (forms.js:5070:1)
+    at NgModel._checkForErrors (forms.js:5059:1)
+    at NgModel.ngOnChanges (forms.js:5000:1)
+    at checkAndUpdateDirectiveInline (core.js:24385:1)
+    at checkAndUpdateNodeInline (core.js:31559:1)
+    at checkAndUpdateNode (core.js:31521:1)
+    at debugCheckAndUpdateNode (core.js:32148:1)
+    at debugCheckDirectivesFn (core.js:32112:1)
+    at Object.updateDirectives (airline-ticket-booki…mponent.html:267:17) -->
+                <nz-range-picker [nzShowTime]="true"  style="width: 100%;"
                   (ngModelChange)="onChangeStartTime($event)"></nz-range-picker>
               </div>
             </div>

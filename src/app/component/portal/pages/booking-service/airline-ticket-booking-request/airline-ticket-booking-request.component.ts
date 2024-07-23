@@ -91,7 +91,9 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     super('id');
     this.formAirlineTicketPopup = this.formBuilder.group({
       id: [null],
-      airlineTicketOption: [TypeAirlineTicket.OneWay, [Validators.required]],
+      typeTicket: [TypeAirlineTicket.OneWay, [Validators.required]],
+      passengers: [[], [Validators.required]],
+
       airlineCompany: [AirlineCompany.Vietnamairline, [Validators.required]],
       roles: [null],
       phoneNo: [null, [Validators.required]],
@@ -351,26 +353,39 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' đ';
   }
 
-  formatStatusAirlineBookingReturn(value) {
-    console.log("value formatStatusAirlineBookingReturn", value);
-
-    if (!value) {
-      return '';
-    }
-    switch (value) {
-      case 1:
-      return 'Đã hoàn thành';
-        break;
-
-      default:
-      return 'Đã hoàn thành';
-
-        break;
-    }
-  }
-
   showPopupAirlineTicket(itemData: any, opPopupAirlineTicket: OptionAirlineTicketPopup) {
+    console.log("this.itemData : ", itemData);
+
     this.isVisibleAirlineTicketInfo = true;
     this.optionAirlineTicketInfo = opPopupAirlineTicket;
+    this.formAirlineTicketPopup.patchValue({
+      typeTicket : itemData.typeTicket,
+      passengers : itemData.passengers.map(passenger => passenger.fullName)
+      // passengers : ['a10', 'c12'],
+
+
+    });
+
+    console.log("this.formAirlineTicketPopup : ", this.formAirlineTicketPopup.value);
+
+    // this.formAddHotel.patchValue({
+    //   id: 0,
+    //   name: '',
+    //   code: '',
+    //   phoneNo: '',
+    //   contactEmail: '',
+    //   address: '',
+    //   description: '',
+    //   websiteUrl: '',
+    //   utilitieIds: [],
+    //   // facebook: '',
+    //   ratingStar: '',
+    //   numRooms: '',
+    //   hotelFile: [],
+    //   hotelFileIds: []
+    // });
+    // this.fileList = [];
+    // this.listURLFiles = [];
+    // this.uploadUrl = `${this.configService.getConfig().api.baseUrl}/Upload/UploadHotelImage?hotelId=0`;
   }
 }
