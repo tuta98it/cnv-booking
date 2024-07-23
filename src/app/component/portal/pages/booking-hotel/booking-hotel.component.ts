@@ -77,7 +77,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   isConfirmSendEmailLoading: boolean = false;
   confirmBookingHotel = {
     textValueNoteConfirm: '',
-    approvalCodeConfirm: '',
+    reservationCodeCodeConfirm: '',
 
   }
 
@@ -392,7 +392,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   onConfirmBookingHotel(booking: any) {
     this.item = booking;
     this.isVisibleConfirmBooking = true;
-    this.confirmBookingHotel.approvalCodeConfirm = booking.approvalCode;
+    this.confirmBookingHotel.reservationCodeCodeConfirm = booking.reservationCode;
     this.confirmBookingHotel.textValueNoteConfirm = booking.bookingNote;
     this.submitted = false;
     // this.resetConfirmBookingHotel();
@@ -726,7 +726,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
     return inerHTMLCustomerInfoVontentName;
   }
   private resetConfirmBookingHotel() {
-    this.confirmBookingHotel.approvalCodeConfirm = '';
+    this.confirmBookingHotel.reservationCodeCodeConfirm = '';
     this.confirmBookingHotel.textValueNoteConfirm = '';
   }
 
@@ -1179,7 +1179,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
       this.isConfirmLoading = true;
       this.submitted = true;
       this.generalService
-        .confirmBooking({ id: this.item.id, note: this.confirmBookingHotel.textValueNoteConfirm, approvalCode: this.confirmBookingHotel.approvalCodeConfirm })
+        .confirmBooking({ id: this.item.id, note: this.confirmBookingHotel.textValueNoteConfirm, reservationCode: this.confirmBookingHotel.reservationCodeCodeConfirm })
         .subscribe({
           next: (res) => {
             if (res.isValid) {

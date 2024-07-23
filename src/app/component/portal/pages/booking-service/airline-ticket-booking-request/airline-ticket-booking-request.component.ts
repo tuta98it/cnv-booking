@@ -22,14 +22,13 @@ import { OptionAirlineTicketPopup } from 'src/app/enums/option-airline-ticket-po
 import { TypeAirlineTicket } from 'src/app/enums/type-airline-ticket.enum';
 import { AirlineCompany } from 'src/app/enums/airline-company.enum';
 import { NzUploadFile } from 'ng-zorro-antd/upload';
+import { AIRLINE_TICKET_BOOKING_REQUEST_STATUS_OPTIONS, AirlineTicketBookingRequestStatus } from 'src/app/enums/airline-ticket-booking-request-status.enum';
 @Component({
   selector: 'airline-ticket-booking-request',
   templateUrl: './airline-ticket-booking-request.component.html',
   styleUrls: ['./airline-ticket-booking-request.component.scss']
 })
 export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract implements OnInit, OnDestroy {
-
-
 
 
   @ViewChild("ListAccount") dataGridDetail: DxDataGridComponent;
@@ -40,6 +39,10 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   TypeAirlineTicketEnum = TypeAirlineTicket;
 
   AirlineCompanyEnum = AirlineCompany;
+
+  AirlineTicketBookingRequestStatusEnum = AirlineTicketBookingRequestStatus
+
+  AIRLINE_TICKET_BOOKING_REQUEST_STATUS_OPTIONS = AIRLINE_TICKET_BOOKING_REQUEST_STATUS_OPTIONS;
 
   formAirlineTicketPopup: FormGroup;
 
@@ -60,6 +63,11 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   loading: boolean;
   filteredDatas: any[] = [];
   searchText = '';
+  payloadAdminrequestbooking = {
+    "page": 1,
+    "pageSize": 500,
+    "status": AirlineTicketBookingRequestStatus.ALL
+  }
   userInfor: any;
   titleFormPartner = '';
   isVisibleDetailTransactionHistoryTickets: boolean = false;
@@ -69,7 +77,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   showPageSizeSelector = true;
   showInfo = true;
   showNavButtons = true;
-  isVisibleAirlineTicketInfo: boolean = true;
+  isVisibleAirlineTicketInfo: boolean = false;
   itemTicketHistoryTicket: any;
   airports: any[] = [];
   constructor(
@@ -121,11 +129,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   }
   getListData() {
     this.loading = true;
-    const payload = {
-      "page": 1,
-      "pageSize": 500
-    }
-    this.generalService.adminRequestBooking(payload).subscribe((res: any) => {
+    this.generalService.adminRequestBooking(this.payloadAdminrequestbooking).subscribe((res: any) => {
       if (res !== null) {
         this.datas = res.data;
         this.loading = false;
@@ -339,10 +343,30 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   }
 
   formatCurrencyVND(value) {
+    console.log("value formatCurrencyVND", value);
+
     if (!value) {
       return '0 đ';
     }
     return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' đ';
+  }
+
+  formatStatusAirlineBookingReturn(value) {
+    console.log("value formatStatusAirlineBookingReturn", value);
+
+    if (!value) {
+      return '';
+    }
+    switch (value) {
+      case 1:
+      return 'Đã hoàn thành';
+        break;
+
+      default:
+      return 'Đã hoàn thành';
+
+        break;
+    }
   }
 
   showPopupAirlineTicket(itemData: any, opPopupAirlineTicket: OptionAirlineTicketPopup) {

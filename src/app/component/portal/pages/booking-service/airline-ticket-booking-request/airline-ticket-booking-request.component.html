@@ -2,6 +2,14 @@
   <div class="form-group" style="float: left">
     <h1>Danh sách book vé yêu cầu</h1>
 
+    <div style="display: flex; justify-content: center;">
+      <div style="display: flex; align-items: center; font-size: larger;">Trạng thái</div>
+      <nz-select nzShowSearch nzMode="default" nzPlaceHolder="Trạng thái" style="width: 200px; margin-left: 0.5rem;"
+        [(ngModel)]="payloadAdminrequestbooking.status" (ngModelChange)="getListData()">
+        <nz-option *ngFor="let option of AIRLINE_TICKET_BOOKING_REQUEST_STATUS_OPTIONS" [nzLabel]="option.label"
+          [nzValue]="option.value"></nz-option>
+      </nz-select>
+    </div>
   </div>
   <!-- <nz-select nzShowSearch nzMode="default" nzPlaceHolder="--Đối tượng user--" style="width: 200px;"
     [(ngModel)]="userType" (ngModelChange)="getListData()">
@@ -17,13 +25,7 @@
       type="text" [(ngModel)]="searchText" (keyup)="onSearch()"
       placeholder="Tìm kiếm theo Tên người đặt vé, SĐT, Email ...">
 
-    <nz-select class="mgr10" nzShowSearch nzMode="default" nzPlaceHolder="Trạng thái" style="width: 200px;">
-      <nz-option nzLabel="--Tất cả--" [nzValue]="'0'"></nz-option>
-      <nz-option nzLabel="Trạng thái 1" [nzValue]="'0'"></nz-option>
-      <nz-option nzLabel="Trạng thái 2" [nzValue]="'0'"></nz-option>
-      <nz-option nzLabel="Trạng thái 3" [nzValue]="'0'"></nz-option>
-      <nz-option nzLabel="Trạng thái 4" [nzValue]="'0'"></nz-option>
-    </nz-select>
+
 
     <!-- Nút xuất Excel -->
     <button nz-button nzType="primary" class="btn-green mgr10" (click)="exportData()">
@@ -50,31 +52,59 @@
   <dxi-column caption="STT" [width]="55" dataField="stt" [fixed]="true" [allowFiltering]="false" [allowSorting]="false"
     cssClass="text-center vertical-align-middle"></dxi-column>
 
-  <dxi-column caption="Mã booking" dataField="contactName" cssClass="vertical-align-middle"></dxi-column>
+  <dxi-column caption="Mã booking" dataField="bookingCode" cssClass="text-left vertical-align-middle"></dxi-column>
 
-  <dxi-column caption="Mã phê duyệt" dataField="contactPhone" [width]="150"
-    cssClass="vertical-align-middle"></dxi-column>
+  <dxi-column caption="Mã phê duyệt" dataField="approvalCode" cssClass="vertical-align-middle"
+    [width]="150"></dxi-column>
 
-  <dxi-column caption="Trạng thái" [width]="150" dataField="contactEmail" cssClass="vertical-align-middle"></dxi-column>
 
-  <dxi-column caption="Chi phí vé" [width]="150" dataField="dateCreated" [format]="formatCurrencyVND"
-    cssClass="vertical-align-middle"></dxi-column>
+  <dxi-column caption="Trạng thái" [width]="200" dataField="status" cssClass="text-left vertical-align-middle"
+    cellTemplate="cellStatus"></dxi-column>
+  <div *dxTemplate="let status of 'cellStatus'" style="display: flex;">
+    <container-element [ngSwitch]="status.value">
+      <some-element *ngSwitchCase="AirlineTicketBookingRequestStatusEnum.SubmitRequest">
+        Gửi yêu cầu
+      </some-element>
 
-  <dxi-column caption="Chi phí hoàn vé" [width]="150" cellTemplate="contactName" [format]="formatCurrencyVND"
+      <some-element *ngSwitchCase="AirlineTicketBookingRequestStatusEnum.ReserveSeat">
+        Đang giữ chỗ
+      </some-element>
+
+      <some-element *ngSwitchCase="AirlineTicketBookingRequestStatusEnum.ReceivedTicket">
+        Đã nhận vé
+      </some-element>
+
+      <some-element *ngSwitchCase="AirlineTicketBookingRequestStatusEnum.ExpiredTicket">
+        Hết hạn giữ vé
+      </some-element>
+
+      <some-element *ngSwitchCase="AirlineTicketBookingRequestStatusEnum.IssuedTicket">
+        Đã xuất vé
+      </some-element>
+
+      <some-element *ngSwitchDefault>
+        Không xác định
+      </some-element>
+    </container-element>
+  </div>
+
+  <dxi-column caption="Chi phí vé" [width]="150" dataField="ticketPrice" [format]="formatCurrencyVND"
+    cssClass="text-center  vertical-align-middle"></dxi-column>
+
+  <dxi-column caption="Chi phí hoàn vé" [width]="150" dataField="refundFee" [format]="formatCurrencyVND"
     cssClass="text-center vertical-align-middle"></dxi-column>
 
-  <dxi-column caption="Chi phí huỷ vé" [width]="150" cellTemplate="contactName" [format]="formatCurrencyVND"
+  <dxi-column caption="Chi phí huỷ vé" [width]="150" dataField="cancelFee" [format]="formatCurrencyVND"
     cssClass="text-center vertical-align-middle"></dxi-column>
 
-  <dxi-column caption="Chi phí đổi vé" [width]="150" cellTemplate="contactName" [format]="formatCurrencyVND"
+  <dxi-column caption="Chi phí đổi vé" [width]="150" dataField="changeFee" [format]="formatCurrencyVND"
     cssClass="text-center vertical-align-middle"></dxi-column>
 
-  <dxi-column caption="Chi phí thêm hành lý" [width]="150" cellTemplate="contactName" [format]="formatCurrencyVND"
+  <dxi-column caption="Chi phí thêm hành lý" [width]="200" dataField="baggageFee" [format]="formatCurrencyVND"
     cssClass="text-center vertical-align-middle"></dxi-column>
 
   <dxi-column caption="Thao tác" [width]="200" cellTemplate="cellBtnTemplate"
     cssClass="text-center vertical-align-middle"></dxi-column>
-
   <div *dxTemplate="let item of 'cellBtnTemplate'" style="display: flex; justify-content: space-evenly;">
 
     <button title="Xem thông tin đặt vé" nz-button nzSize="small" nzType="default"
@@ -166,8 +196,8 @@
 <!-- Popup View/Update thông tin vé máy bay -->
 <form [formGroup]="formAirlineTicketPopup">
   <!-- [(nzVisible)]="isVisibleAirlineTicketInfo" -->
-  <nz-modal [(nzVisible)]="isVisibleAirlineTicketInfo" [nzContent]="contentAirlineTicketInfo" nzWidth="1506px" [nzStyle]="{ top: '20px' }"
-    (nzOnCancel)="handleCancelArilineTicketPopup()">
+  <nz-modal [(nzVisible)]="isVisibleAirlineTicketInfo" [nzContent]="contentAirlineTicketInfo" nzWidth="1506px"
+    [nzStyle]="{ top: '20px' }" (nzOnCancel)="handleCancelArilineTicketPopup()">
     <div *nzModalTitle>
       {{optionAirlineTicketInfo == OptionAirlineTicketInfoEnum.View ? "Xem" : "Cập nhật"}} thông tin vé máy bay
     </div>
@@ -512,14 +542,8 @@
                   Select File
                 </button>
               </nz-upload>
-              <button
-                nz-button
-                [nzType]="'primary'"
-                [nzLoading]="uploading"
-                (click)="handleUpload()"
-                [disabled]="fileList.length === 0"
-                style="margin-top: 16px"
-              >
+              <button nz-button [nzType]="'primary'" [nzLoading]="uploading" (click)="handleUpload()"
+                [disabled]="fileList.length === 0" style="margin-top: 16px">
                 {{ uploading ? 'Uploading' : 'Start Upload' }}
               </button>
 

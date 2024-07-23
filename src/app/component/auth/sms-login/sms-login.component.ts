@@ -62,7 +62,7 @@ export class SmsLoginComponent implements OnInit {
         if (res.quanHuyenId) {
           localStorage.setItem(Constant.QUANHUYEN, res.quanHuyenId);
         }
-        this.router.navigateByUrl("/tai-khoan");
+        this.router.navigateByUrl("/employee-management/acccount-list");
       } else {
         this.notificationService.showNotification(Constant.ERROR, res.message);
       }

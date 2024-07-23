@@ -23,22 +23,24 @@
 
   <dxi-column cssClass="text-center" caption="STT" [width]="55" dataField="stt" [fixed]="true" [allowFiltering]="false"
     [allowSorting]="false"></dxi-column>
+  <dxi-column caption="Mã yêu cầu" [width]="150" dataField="bookingCode" [fixed]="true" [width]="150"
+    fixedPosition="left" dataType="string"></dxi-column>
   <dxi-column cssClass="text-center" caption="Action" [fixed]="true" [width]="175" fixedPosition="right"
     cellTemplate="cellBtnTemplate"></dxi-column>
-  <dxi-column caption="Trạng thái" cssClass="text-center" [width]="200" dataField="bookingStatusText"
-    fixedPosition="left" cellTemplate="cellBookingStatus"></dxi-column>
-  <dxi-column caption="Mã phê duyệt" dataField="approvalCode" fixedPosition="left"></dxi-column>
-  <dxi-column caption="Họ tên người đặt" dataField="contactName" fixedPosition="left"></dxi-column>
+  <dxi-column caption="Trạng thái" [fixed]="true" fixedPosition="left" cssClass="text-center" [width]="200" dataField="bookingStatusText"
+     cellTemplate="cellBookingStatus"></dxi-column>
+  <dxi-column caption="Mã phê duyệt" [width]="150" dataField="approvalCode"></dxi-column>
+  <dxi-column caption="Mã đặt khách sạn" [width]="200"  dataField="reservationCode"></dxi-column>
+  <dxi-column caption="Họ tên người đặt" dataField="contactName"></dxi-column>
   <dxi-column caption="Số điện thoại" [width]="200" dataField="contactPhone"
     [format]="phoneUtils.phoneNumberFormat"></dxi-column>
   <dxi-column caption="Email" [width]="200" dataField="contactEmail"></dxi-column>
-  <dxi-column caption="Mã đặt KS" [width]="100" dataField="bookingCode"></dxi-column>
   <dxi-column caption="Ngày đặt" [width]="150" dataField="dateCreated" dataType="date"
     format="HH:mm dd/MM/yy"></dxi-column>
   <dxi-column caption="Khẩn cấp" [width]="150" dataField="isUrgent" cellTemplate="cellIsUrgent"></dxi-column>
   <dxi-column caption="Trạng thái hệ thống" cssClass="text-center" [width]="200"
     cellTemplate="cellSystemCancelled"></dxi-column>
-  <dxi-column caption="Lý do huỷ" [width]="150" dataField="noteSystemCancelled"dataTyp="string"></dxi-column>
+  <dxi-column caption="Lý do huỷ" [width]="150" dataField="noteSystemCancelled" dataTyp="string"></dxi-column>
 
   <div *dxTemplate="let bookingStatus of 'cellBookingStatus'">
     <div style="
@@ -199,14 +201,14 @@
       <label>Mã xác nhận đặt phòng<span style="color: #dc3545;">*</span></label>
       <div>
         <nz-input-group [nzSuffix]="inputClearTpl"
-          [ngClass]="{ 'is-invalid': (submitted && !confirmBookingHotel.approvalCodeConfirm)}">
-          <input nz-input type="text" [(ngModel)]="confirmBookingHotel.approvalCodeConfirm"
+          [ngClass]="{ 'is-invalid': (submitted && !confirmBookingHotel.reservationCodeCodeConfirm)}">
+          <input nz-input type="text" [(ngModel)]="confirmBookingHotel.reservationCodeCodeConfirm"
             placeholder="Mã đặt chỗ do khách sạn cung cấp..." />
         </nz-input-group>
         <ng-template #inputClearTpl>
           <span nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle"
-            *ngIf="confirmBookingHotel.approvalCodeConfirm"
-            (click)="confirmBookingHotel.approvalCodeConfirm = null"></span> </ng-template>
+            *ngIf="confirmBookingHotel.reservationCodeCodeConfirm"
+            (click)="confirmBookingHotel.reservationCodeCodeConfirm = null"></span> </ng-template>
       </div>
     </div>
 
