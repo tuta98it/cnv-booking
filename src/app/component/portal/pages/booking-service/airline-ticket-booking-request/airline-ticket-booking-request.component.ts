@@ -66,7 +66,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   payloadAdminrequestbooking = {
     "page": 1,
     "pageSize": 500,
-    "status": AirlineTicketBookingRequestStatus.ALL
+    "status": AirlineTicketBookingRequestStatus.All
   }
   userInfor: any;
   titleFormPartner = '';

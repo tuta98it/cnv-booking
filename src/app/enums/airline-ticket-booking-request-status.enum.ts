@@ -4,11 +4,11 @@ export enum AirlineTicketBookingRequestStatus {
   ReceivedTicket = 3,
   ExpiredTicket = 4,
   IssuedTicket = 5,
-  ALL = undefined,
+  All = 999,
 }
 
 export const AIRLINE_TICKET_BOOKING_REQUEST_STATUS_OPTIONS = [
-  { label: '--Tất cả--', value: AirlineTicketBookingRequestStatus.ALL },
+  { label: '--Tất cả--', value: AirlineTicketBookingRequestStatus.All },
   { label: 'Gửi yêu cầu', value: AirlineTicketBookingRequestStatus.SubmitRequest },
   { label: 'Đang giữ chỗ', value: AirlineTicketBookingRequestStatus.ReserveSeat },
   { label: 'Đã nhận vé', value: AirlineTicketBookingRequestStatus.ReceivedTicket },
