@@ -52,6 +52,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   listOfSelectedValue = ['a10', 'c12'];
 
   date = null;
+  ticketRoundTrip: boolean;
   onChangeStartTime(result: Date[]): void {
     console.log('onChange: ', result);
   }
@@ -393,7 +394,6 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
       ticketHoldExpiryDateDeparture: itemData.ticketHoldExpiryDate,
       ticketPriceDeparture: itemData.ticketPrice,
       baggageFeeDeparture: itemData.baggageFee,
-
       refundFeeDeparture: itemData.refundFee,
       cancelFeeDeparture: itemData.cancelFee,
       changeFeeDeparture: itemData.changeFee,
@@ -412,6 +412,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
 
     });
 
+    this.ticketRoundTrip = itemData.typeTicket == this.TypeAirlineTicketEnum.RoundTrip
     console.log("this.formAirlineTicketPopup : ", this.formAirlineTicketPopup.value);
 
     // this.formAddHotel.patchValue({
