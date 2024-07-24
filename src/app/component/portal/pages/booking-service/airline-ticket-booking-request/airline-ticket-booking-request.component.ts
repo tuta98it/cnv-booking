@@ -21,9 +21,10 @@ import {
 import { OptionAirlineTicketPopup } from 'src/app/enums/option-airline-ticket-popup.enum';
 import { TypeAirlineTicket } from 'src/app/enums/type-airline-ticket.enum';
 import { AIRLINE_CODE_OPTIONS, AirlineCompany } from 'src/app/enums/airline-company.enum';
-import { NzUploadFile } from 'ng-zorro-antd/upload';
+import { NzUploadChangeParam, NzUploadFile } from 'ng-zorro-antd/upload';
 import { AIRLINE_TICKET_BOOKING_REQUEST_STATUS_OPTIONS, AirlineTicketBookingRequestStatus } from 'src/app/enums/airline-ticket-booking-request-status.enum';
 import { FlightUtils } from 'src/app/shared/utils/flight-utils.class';
+import { NzMessageService } from 'ng-zorro-antd/message';
 @Component({
   selector: 'airline-ticket-booking-request',
   templateUrl: './airline-ticket-booking-request.component.html',
@@ -51,13 +52,13 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   listOfOption: string[] = [];
   listOfSelectedValue = ['a10', 'c12'];
 
-  date = null;
   ticketRoundTrip: boolean;
-  onChangeStartTime(result: Date[]): void {
-    console.log('onChange: ', result);
-  }
+
 
   uploading = false;
+  uploadHeader: any;
+  uploadUrl = '';
+  listFileIds: any;
   fileList: NzUploadFile[] = [];
 
 
@@ -91,13 +92,18 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     private dateFormatPipe: DateFormatPipe,
     private formBuilder: FormBuilder,
     public flightUtils: FlightUtils,
+    private msg: NzMessageService,
   ) {
     super('id');
+    this.uploadHeader = {
+      Authorization: 'Bearer ' + localStorage.getItem(Constant.TOKEN),
+    };
+    this.uploadUrl = `${this.configService.getConfig().api.baseUrl}/Upload`;
     this.formAirlineTicketPopup = this.formBuilder.group({
       id: [null],
       typeTicket: [TypeAirlineTicket.OneWay, [Validators.required]],
       passengers: [[], [Validators.required]],
-
+      fileIds: [[], [Validators.required]],
       tripItineraryDeparture: [null, [Validators.required]],
       flightTimeDeparture: [[], [Validators.required]],
       airlineCodeDeparture: ['', [Validators.required]],
@@ -179,32 +185,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   };
 
 
-  handleUpload(): void {
-    // const formData = new FormData();
-    // // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    // this.fileList.forEach((file: any) => {
-    //   formData.append('files[]', file);
-    // });
-    // this.uploading = true;
-    // // You can use any AJAX library you like
-    // const req = new HttpRequest('POST', 'https://www.mocky.io/v2/5cc8019d300000980a055e76', formData, {
-    //   // reportProgress: true
-    // });
-    // this.http
-    //   .request(req)
-    //   .pipe(filter(e => e instanceof HttpResponse))
-    //   .subscribe(
-    //     () => {
-    //       this.uploading = false;
-    //       this.fileList = [];
-    //       this.msg.success('upload successfully.');
-    //     },
-    //     () => {
-    //       this.uploading = false;
-    //       this.msg.error('upload failed.');
-    //     }
-    //   );
-  }
+
 
   previewDetailTransactionHistoryTickets(historyTransaction: any) {
     this.isVisibleDetailTransactionHistoryTickets = true;
@@ -387,7 +368,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
       passengers: itemData.passengers.map(passenger => passenger.fullName),
 
       tripItineraryDeparture: `${this.flightUtils.toNameAirportByCode(this.airports, itemData.startPoint)} - ${this.flightUtils.toNameAirportByCode(this.airports, itemData.endPoint)}`,
-      flightTimeDeparture: [itemData.startTime , itemData.endTime],
+      flightTimeDeparture: [itemData.startTime, itemData.endTime],
       airlineCodeDeparture: itemData.airlineCode,
       bookingCodeDeparture: itemData.bookingCode,
       flightNumberDeparture: itemData.flightNumber,
@@ -399,7 +380,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
       changeFeeDeparture: itemData.changeFee,
 
 
-      flightTimeReturn: [itemData.returnStartTime, itemData.returnEndTime ],
+      flightTimeReturn: [itemData.returnStartTime, itemData.returnEndTime],
       airlineCodeReturn: itemData.returnAirlineCode,
       bookingCodeReturn: itemData.returnBookingCode,
       flightNumberReturn: itemData.returnFlightNumber,
@@ -414,25 +395,72 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
 
     this.ticketRoundTrip = itemData.typeTicket == this.TypeAirlineTicketEnum.RoundTrip
     console.log("this.formAirlineTicketPopup : ", this.formAirlineTicketPopup.value);
-
-    // this.formAddHotel.patchValue({
-    //   id: 0,
-    //   name: '',
-    //   code: '',
-    //   phoneNo: '',
-    //   contactEmail: '',
-    //   address: '',
-    //   description: '',
-    //   websiteUrl: '',
-    //   utilitieIds: [],
-    //   // facebook: '',
-    //   ratingStar: '',
-    //   numRooms: '',
-    //   hotelFile: [],
-    //   hotelFileIds: []
-    // });
-    // this.fileList = [];
-    // this.listURLFiles = [];
-    // this.uploadUrl = `${this.configService.getConfig().api.baseUrl}/Upload/UploadHotelImage?hotelId=0`;
+    this.listFileIds = [];
+    this.fileList = [];
+    for (const file of itemData.files) {
+      const objFile = {
+        uid: file.id.toString(),
+        name: file.fileName,
+        url: `${this.configService.getConfig().api.baseUrl}/${file.filePath}`,
+      };
+      this.fileList.push(objFile);
+    }
+    this.uploadUrl = `${this.configService.getConfig().api.baseUrl}/Upload/UploadRequestBookingFile?RequestBookingId=${itemData.id}`;
   }
+
+  handleUploadFileTicketBookingRequest({ file, fileList }: NzUploadChangeParam): void {
+    const status = file.status;
+    if (status === 'done') {
+      this.msg.success(`file ${file.name} tải lên thành công.`);
+      this.fileList = fileList;
+        setTimeout(() => {
+          if (this.fileList.length > 0) {
+            this.fileList[this.fileList.length - 1].uid = file.response.fileId.toString();
+            this.fileList[this.fileList.length - 1].url = `${this.configService.getConfig().api.baseUrl}/${file.response.path}`;
+            // this.fileList[this.fileList.length - 1] = {
+            //   uid: file.response.hotelFileId.toString(),
+            //   name: file.response.fileName,
+            //   url: `${this.configService.getConfig().api.baseUrl}/${file.response.path}`,
+            //   "status": "success",
+            //   "isUploading": false,
+            //   "showDownload": true,
+            // };
+          }
+        }, 200);
+        this.listFileIds.push(file.response.fileId);
+        this.formAirlineTicketPopup.controls['fileIds'].setValue(this.listFileIds);
+      }
+  }
+
+  handleRemoveFileTicketBookingRequest = async (file: NzUploadFile): Promise<void> => {
+    const idHotelImage = file.uid;
+    // this.generalService.deleteHotelImageByID(idHotelImage).subscribe(
+    //   {
+    //     next: (res) => {
+    //       if (res) {
+    //         if (res.ret && res.ret.length > 0) {
+    //           res.ret.forEach((el: any) => {
+    //             if (el.code === 0) {
+    //               this.msg.success(`Đã xoá file ${file.name}.`);
+    //               this.getListData();
+    //             } else if (res.code === 404) {
+    //               this.msg.error(`Không tìm thấy file ${file.name}.`);
+    //             } else {
+    //               this.msg.error(`Đã có lỗi xảy ra. Không thể xoá file ${file.name}`);
+    //             }
+    //           });
+    //         }
+    //       } else {
+    //         this.notificationService.showNotification(Constant.ERROR, `Hệ thống gặp lỗi, xoá file ${file.name} thật bại.`);
+    //       }
+    //     },
+    //     error: (error) => {
+    //       this.notificationService.showNotification(Constant.ERROR, `Hệ thống gặp lỗi, xoá file ${file.name} thật bại.`);
+    //     },
+    //     complete: () => {
+    //     },
+
+    //   }
+    // );
+  };
 }
