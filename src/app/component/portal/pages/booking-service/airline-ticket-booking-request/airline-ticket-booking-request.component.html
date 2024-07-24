@@ -318,7 +318,7 @@
             </div>
             <div nz-col class="gutter-row" nzSpan="6">
               <div class="inner-box">
-                <input style="border-radius: 4px;" nz-input nzSize="default" placeholder="">
+                <input style="border-radius: 4px;" nz-input nzSize="default"  formControlName="ticketHoldExpiryDateDeparture">
               </div>
             </div>
           </div>
@@ -332,19 +332,19 @@
             </div>
             <div nz-col class="gutter-row" nzSpan="10">
               <div class="inner-box">
-                <input style="border-radius: 4px;" nz-input nzSize="default" placeholder="">
+                <input style="border-radius: 4px;" nz-input nzSize="default" formControlName="ticketPriceDeparture">
               </div>
             </div>
             <div nz-col class="gutter-row" nzSpan="3">
               <div class="inner-box" style="float: right;">
                 <label for="">Phí thêm hành lý
-                  <em class="fa fa-asterisk required" style="line-height: revert;"></em>
+                  <em class="fa fa-asterisk required" style="line-height: revert;" ></em>
                 </label>
               </div>
             </div>
             <div nz-col class="gutter-row" nzSpan="9">
               <div class="inner-box">
-                <input style="border-radius: 4px;" nz-input nzSize="default" placeholder="">
+                <input style="border-radius: 4px;" nz-input nzSize="default" plaeholder="" cformControlName="baggageFeeDeparture">
               </div>
             </div>
           </div>
@@ -358,7 +358,7 @@
             </div>
             <div nz-col class="gutter-row" nzSpan="6">
               <div class="inner-box">
-                <input style="border-radius: 4px;" nz-input nzSize="default" placeholder="">
+                <input style="border-radius: 4px;" nz-input nzSize="default" placeholder="" formControlName="refundFeeDeparture">
               </div>
             </div>
             <div nz-col class="gutter-row" nzSpan="2">
@@ -370,7 +370,7 @@
             </div>
             <div nz-col class="gutter-row" nzSpan="6">
               <div class="inner-box">
-                <input style="border-radius: 4px;" nz-input nzSize="default" placeholder="">
+                <input style="border-radius: 4px;" nz-input nzSize="default" placeholder="" formControlName="cancelFeeDeparture">
               </div>
             </div>
             <div nz-col class="gutter-row" nzSpan="2">
@@ -382,7 +382,7 @@
             </div>
             <div nz-col class="gutter-row" nzSpan="6">
               <div class="inner-box">
-                <input style="border-radius: 4px;" nz-input nzSize="default" placeholder="">
+                <input style="border-radius: 4px;" nz-input nzSize="default" placeholder="" formControlName="changeFeeDeparture">
               </div>
             </div>
           </div>
@@ -441,7 +441,7 @@
             </div>
             <div nz-col class="gutter-row" nzSpan="6">
               <div class="inner-box">
-                <input style="border-radius: 4px;" nz-input nzSize="default" placeholder=""formControlName="flightNumberReturn">
+                <input style="border-radius: 4px;" nz-input nzSize="default" formControlName="flightNumberReturn">
               </div>
             </div>
             <div nz-col class="gutter-row" nzSpan="2">
@@ -453,7 +453,7 @@
             </div>
             <div nz-col class="gutter-row" nzSpan="6">
               <div class="inner-box">
-                <input style="border-radius: 4px;" nz-input nzSize="default" placeholder="">
+                <input style="border-radius: 4px;" nz-input nzSize="default" formControlName="ticketHoldExpiryDateReturn">
               </div>
             </div>
           </div>
@@ -467,7 +467,7 @@
             </div>
             <div nz-col class="gutter-row" nzSpan="10">
               <div class="inner-box">
-                <input style="border-radius: 4px;" nz-input nzSize="default" placeholder="">
+                <input style="border-radius: 4px;" nz-input nzSize="default" formControlName="ticketPriceReturn">
               </div>
             </div>
             <div nz-col class="gutter-row" nzSpan="3">
@@ -479,7 +479,7 @@
             </div>
             <div nz-col class="gutter-row" nzSpan="9">
               <div class="inner-box">
-                <input style="border-radius: 4px;" nz-input nzSize="default" placeholder="">
+                <input style="border-radius: 4px;" nz-input nzSize="default" formControlName="baggageFeeReturn">
               </div>
             </div>
           </div>
@@ -493,7 +493,7 @@
             </div>
             <div nz-col class="gutter-row" nzSpan="6">
               <div class="inner-box">
-                <input style="border-radius: 4px;" nz-input nzSize="default" placeholder="">
+                <input style="border-radius: 4px;" nz-input nzSize="default" placeholder="" formControlName="refundFeeReturn">
               </div>
             </div>
             <div nz-col class="gutter-row" nzSpan="2">
@@ -505,7 +505,7 @@
             </div>
             <div nz-col class="gutter-row" nzSpan="6">
               <div class="inner-box">
-                <input style="border-radius: 4px;" nz-input nzSize="default" placeholder="">
+                <input style="border-radius: 4px;" nz-input nzSize="default" placeholder="" formControlName="cancelFeeReturn">
               </div>
             </div>
             <div nz-col class="gutter-row" nzSpan="2">
@@ -517,7 +517,7 @@
             </div>
             <div nz-col class="gutter-row" nzSpan="6">
               <div class="inner-box">
-                <input style="border-radius: 4px;" nz-input nzSize="default" placeholder="">
+                <input style="border-radius: 4px;" nz-input nzSize="default" placeholder="" formControlName="changeFeeReturn">
               </div>
             </div>
           </div>
@@ -533,8 +533,6 @@
           </div>
           <div nz-col class="gutter-row" nzSpan="22">
             <div class="inner-box">
-
-
               <nz-upload [(nzFileList)]="fileList" [nzBeforeUpload]="beforeUpload">
                 <button nz-button>
                   <span nz-icon nzType="upload"></span>
@@ -545,8 +543,6 @@
                 [disabled]="fileList.length === 0" style="margin-top: 16px">
                 {{ uploading ? 'Uploading' : 'Start Upload' }}
               </button>
-
-
             </div>
           </div>
         </div>

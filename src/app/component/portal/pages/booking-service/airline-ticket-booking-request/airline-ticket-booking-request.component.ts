@@ -102,15 +102,24 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
       airlineCodeDeparture: ['', [Validators.required]],
       bookingCodeDeparture: [null, [Validators.required]],
       flightNumberDeparture: [null, [Validators.required]],
-
+      ticketHoldExpiryDateDeparture: [null, [Validators.required]],
+      ticketPriceDeparture: [null, [Validators.required]],
+      baggageFeeDeparture: [null, [Validators.required]],
+      refundFeeDeparture: [null, [Validators.required]],
+      cancelFeeDeparture: [null, [Validators.required]],
+      changeFeeDeparture: [null, [Validators.required]],
 
       flightTimeReturn: [[], [Validators.required]],
       airlineCodeReturn: ['', [Validators.required]],
       bookingCodeReturn: [null, [Validators.required]],
       flightNumberReturn: [null, [Validators.required]],
+      ticketHoldExpiryDateReturn: [null, [Validators.required]],
+      ticketPriceReturn: [null, [Validators.required]],
+      baggageFeeReturn: [null, [Validators.required]],
+      refundFeeReturn: [null, [Validators.required]],
+      cancelFeeReturn: [null, [Validators.required]],
+      changeFeeReturn: [null, [Validators.required]],
 
-      roles: [null],
-      phoneNo: [null, [Validators.required]],
     });
 
   }
@@ -380,12 +389,27 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
       flightTimeDeparture: [itemData.startTime , itemData.endTime],
       airlineCodeDeparture: itemData.airlineCode,
       bookingCodeDeparture: itemData.bookingCode,
-      flightNumberDeparture: itemData.airlineCode,
+      flightNumberDeparture: itemData.flightNumber,
+      ticketHoldExpiryDateDeparture: itemData.ticketHoldExpiryDate,
+      ticketPriceDeparture: itemData.ticketPrice,
+      baggageFeeDeparture: itemData.baggageFee,
+
+      refundFeeDeparture: itemData.refundFee,
+      cancelFeeDeparture: itemData.cancelFee,
+      changeFeeDeparture: itemData.changeFee,
+
 
       flightTimeReturn: [itemData.returnStartTime, itemData.returnEndTime ],
       airlineCodeReturn: itemData.returnAirlineCode,
       bookingCodeReturn: itemData.returnBookingCode,
       flightNumberReturn: itemData.returnFlightNumber,
+      ticketHoldExpiryDateReturn: itemData.returnTicketHoldExpiryDate,
+      ticketPriceReturn: itemData.returnTicketPrice,
+      baggageFeeReturn: itemData.returnBaggageFee,
+      refundFeeReturn: itemData.returnRefundFee,
+      cancelFeeReturn: itemData.returnCancelFee,
+      changeFeeReturn: itemData.returnChangeFee,
+
     });
 
     console.log("this.formAirlineTicketPopup : ", this.formAirlineTicketPopup.value);
