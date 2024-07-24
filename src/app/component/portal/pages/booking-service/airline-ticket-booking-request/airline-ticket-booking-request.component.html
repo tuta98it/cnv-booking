@@ -229,7 +229,7 @@
           </div>
           <div nz-col class="gutter-row" nzSpan="14">
             <div class="inner-box">
-              <input style="border-radius: 4px;" nz-input nzSize="default" placeholder="">
+              <input style="border-radius: 4px;" nz-input nzSize="default" formControlName="tripItineraryDeparture">
             </div>
           </div>
         </div>
@@ -265,8 +265,7 @@
             </div>
             <div nz-col class="gutter-row" nzSpan="14">
               <div class="inner-box">
-                <!-- [(ngModel)]="date" -->
-                <nz-range-picker [nzShowTime]="true"  style="width: 100%;"
+                <nz-range-picker [nzShowTime]="true"  style="width: 100%;" formControlName="flightTimeDeparture"
                   (ngModelChange)="onChangeStartTime($event)"></nz-range-picker>
               </div>
             </div>
@@ -279,9 +278,8 @@
             </div>
             <div nz-col class="gutter-row" nzSpan="6">
               <div class="inner-box">
-                <nz-select nzShowSearch nzMode="default" nzPlaceHolder="--Loại vé--" formControlName="airlineCompany">
-                  <nz-option nzLabel="Vietnamairline" [nzValue]="AirlineCompanyEnum.Vietnamairline"></nz-option>
-                  <nz-option nzLabel="Vietjet" [nzValue]="AirlineCompanyEnum.Vietjet"></nz-option>
+                <nz-select nzShowSearch nzMode="default" nzPlaceHolder="--Hãng bay--" formControlName="airlineCodeDeparture">
+                  <nz-option *ngFor="let op of AIRLINE_CODE_OPTIONS; let i = index;" [nzLabel]="op.label" [nzValue]="op.value"></nz-option>
                 </nz-select>
               </div>
             </div>
@@ -289,14 +287,14 @@
           <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
             <div nz-col class="gutter-row" nzSpan="2">
               <div class="inner-box">
-                <label for="">Mã đặt chỗ về
+                <label for="">Mã đặt chỗ đi
                   <em class="fa fa-asterisk required" style="line-height: revert;"></em>
                 </label>
               </div>
             </div>
             <div nz-col class="gutter-row" nzSpan="6">
               <div class="inner-box">
-                <input style="border-radius: 4px;" nz-input nzSize="default" placeholder="">
+                <input style="border-radius: 4px;" nz-input nzSize="default" formControlName="bookingCodeDeparture">
               </div>
             </div>
             <div nz-col class="gutter-row" nzSpan="2">
@@ -308,7 +306,7 @@
             </div>
             <div nz-col class="gutter-row" nzSpan="6">
               <div class="inner-box">
-                <input style="border-radius: 4px;" nz-input nzSize="default" placeholder="">
+                <input style="border-radius: 4px;" nz-input nzSize="default" formControlName="flightNumberDeparture">
               </div>
             </div>
             <div nz-col class="gutter-row" nzSpan="2">
@@ -402,43 +400,7 @@
             </div>
             <div nz-col class="gutter-row" nzSpan="14">
               <div class="inner-box">
-                <!-- airline-ticket-booki….component.html:267 ERROR
-Error:
-      ngModel cannot be used to register form controls with a parent formGroup directive.  Try using
-      formGroup's partner directive "formControlName" instead.  Example:
-
-
-    <div [formGroup]="myGroup">
-      <input formControlName="firstName">
-    </div>
-
-    In your class:
-
-    this.myGroup = new FormGroup({
-       firstName: new FormControl()
-    });
-
-      Or, if you'd like to avoid registering this form control, indicate that it's standalone in ngModelOptions:
-
-      Example:
-
-
-    <div [formGroup]="myGroup">
-       <input formControlName="firstName">
-       <input [(ngModel)]="showMoreControls" [ngModelOptions]="{standalone: true}">
-    </div>
-
-    at TemplateDrivenErrors.modelParentException (forms.js:4757:1)
-    at NgModel._checkParentType (forms.js:5070:1)
-    at NgModel._checkForErrors (forms.js:5059:1)
-    at NgModel.ngOnChanges (forms.js:5000:1)
-    at checkAndUpdateDirectiveInline (core.js:24385:1)
-    at checkAndUpdateNodeInline (core.js:31559:1)
-    at checkAndUpdateNode (core.js:31521:1)
-    at debugCheckAndUpdateNode (core.js:32148:1)
-    at debugCheckDirectivesFn (core.js:32112:1)
-    at Object.updateDirectives (airline-ticket-booki…mponent.html:267:17) -->
-                <nz-range-picker [nzShowTime]="true"  style="width: 100%;"
+                <nz-range-picker [nzShowTime]="true"  style="width: 100%;" formControlName="flightTimeReturn"
                   (ngModelChange)="onChangeStartTime($event)"></nz-range-picker>
               </div>
             </div>
@@ -451,9 +413,8 @@ Error:
             </div>
             <div nz-col class="gutter-row" nzSpan="6">
               <div class="inner-box">
-                <nz-select nzShowSearch nzMode="default" nzPlaceHolder="--Loại vé--" formControlName="airlineCompany">
-                  <nz-option nzLabel="Vietnamairline" [nzValue]="AirlineCompanyEnum.Vietnamairline"></nz-option>
-                  <nz-option nzLabel="Vietjet" [nzValue]="AirlineCompanyEnum.Vietjet"></nz-option>
+                <nz-select nzShowSearch nzMode="default" nzPlaceHolder="--Hãng bay--" formControlName="airlineCodeReturn">
+                  <nz-option *ngFor="let op of AIRLINE_CODE_OPTIONS; let i = index;" [nzLabel]="op.label" [nzValue]="op.value"></nz-option>
                 </nz-select>
               </div>
             </div>
@@ -461,14 +422,14 @@ Error:
           <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
             <div nz-col class="gutter-row" nzSpan="2">
               <div class="inner-box">
-                <label for="">Mã đặt chỗ đi
+                <label for="">Mã đặt chỗ về
                   <em class="fa fa-asterisk required" style="line-height: revert;"></em>
                 </label>
               </div>
             </div>
             <div nz-col class="gutter-row" nzSpan="6">
               <div class="inner-box">
-                <input style="border-radius: 4px;" nz-input nzSize="default" placeholder="">
+                <input style="border-radius: 4px;" nz-input nzSize="default" formControlName="bookingCodeReturn">
               </div>
             </div>
             <div nz-col class="gutter-row" nzSpan="2">
@@ -480,7 +441,7 @@ Error:
             </div>
             <div nz-col class="gutter-row" nzSpan="6">
               <div class="inner-box">
-                <input style="border-radius: 4px;" nz-input nzSize="default" placeholder="">
+                <input style="border-radius: 4px;" nz-input nzSize="default" placeholder=""formControlName="flightNumberReturn">
               </div>
             </div>
             <div nz-col class="gutter-row" nzSpan="2">

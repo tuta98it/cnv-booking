@@ -20,9 +20,10 @@ import {
 } from "devextreme-angular";
 import { OptionAirlineTicketPopup } from 'src/app/enums/option-airline-ticket-popup.enum';
 import { TypeAirlineTicket } from 'src/app/enums/type-airline-ticket.enum';
-import { AirlineCompany } from 'src/app/enums/airline-company.enum';
+import { AIRLINE_CODE_OPTIONS, AirlineCompany } from 'src/app/enums/airline-company.enum';
 import { NzUploadFile } from 'ng-zorro-antd/upload';
 import { AIRLINE_TICKET_BOOKING_REQUEST_STATUS_OPTIONS, AirlineTicketBookingRequestStatus } from 'src/app/enums/airline-ticket-booking-request-status.enum';
+import { FlightUtils } from 'src/app/shared/utils/flight-utils.class';
 @Component({
   selector: 'airline-ticket-booking-request',
   templateUrl: './airline-ticket-booking-request.component.html',
@@ -44,6 +45,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
 
   AIRLINE_TICKET_BOOKING_REQUEST_STATUS_OPTIONS = AIRLINE_TICKET_BOOKING_REQUEST_STATUS_OPTIONS;
 
+  AIRLINE_CODE_OPTIONS = AIRLINE_CODE_OPTIONS;
   formAirlineTicketPopup: FormGroup;
 
   listOfOption: string[] = [];
@@ -87,6 +89,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     private configService: AppConfigService,
     private dateFormatPipe: DateFormatPipe,
     private formBuilder: FormBuilder,
+    public flightUtils: FlightUtils,
   ) {
     super('id');
     this.formAirlineTicketPopup = this.formBuilder.group({
@@ -94,7 +97,18 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
       typeTicket: [TypeAirlineTicket.OneWay, [Validators.required]],
       passengers: [[], [Validators.required]],
 
-      airlineCompany: [AirlineCompany.Vietnamairline, [Validators.required]],
+      tripItineraryDeparture: [null, [Validators.required]],
+      flightTimeDeparture: [[], [Validators.required]],
+      airlineCodeDeparture: ['', [Validators.required]],
+      bookingCodeDeparture: [null, [Validators.required]],
+      flightNumberDeparture: [null, [Validators.required]],
+
+
+      flightTimeReturn: [[], [Validators.required]],
+      airlineCodeReturn: ['', [Validators.required]],
+      bookingCodeReturn: [null, [Validators.required]],
+      flightNumberReturn: [null, [Validators.required]],
+
       roles: [null],
       phoneNo: [null, [Validators.required]],
     });
@@ -359,11 +373,19 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     this.isVisibleAirlineTicketInfo = true;
     this.optionAirlineTicketInfo = opPopupAirlineTicket;
     this.formAirlineTicketPopup.patchValue({
-      typeTicket : itemData.typeTicket,
-      passengers : itemData.passengers.map(passenger => passenger.fullName)
-      // passengers : ['a10', 'c12'],
+      typeTicket: itemData.typeTicket,
+      passengers: itemData.passengers.map(passenger => passenger.fullName),
 
+      tripItineraryDeparture: `${this.flightUtils.toNameAirportByCode(this.airports, itemData.startPoint)} - ${this.flightUtils.toNameAirportByCode(this.airports, itemData.endPoint)}`,
+      flightTimeDeparture: [itemData.startTime , itemData.endTime],
+      airlineCodeDeparture: itemData.airlineCode,
+      bookingCodeDeparture: itemData.bookingCode,
+      flightNumberDeparture: itemData.airlineCode,
 
+      flightTimeReturn: [itemData.returnStartTime, itemData.returnEndTime ],
+      airlineCodeReturn: itemData.returnAirlineCode,
+      bookingCodeReturn: itemData.returnBookingCode,
+      flightNumberReturn: itemData.returnFlightNumber,
     });
 
     console.log("this.formAirlineTicketPopup : ", this.formAirlineTicketPopup.value);
