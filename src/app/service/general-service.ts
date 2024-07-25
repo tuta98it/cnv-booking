@@ -791,6 +791,10 @@ export class GeneralService extends BaseService {
     }
   }
 
+  deleteRequestBookingFileByID(idFile: any): Observable<any> {
+    return this.delete(`/api${UrlConstant.UPLOAD}/DeleteRequestBookingFile/${idFile}`, idFile);
+  }
+
 
   removeRoomPriceDetail(idItemPriceDetail: any): Observable<any> {
     return this.post(`/api${UrlConstant.ROOM}/RemoveRoomPriceDetail/${idItemPriceDetail}`, idItemPriceDetail);

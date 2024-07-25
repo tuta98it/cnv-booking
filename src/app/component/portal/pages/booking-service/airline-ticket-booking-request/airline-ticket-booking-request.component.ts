@@ -487,34 +487,34 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   }
 
   handleRemoveFileTicketBookingRequest = async (file: NzUploadFile): Promise<void> => {
-    const idHotelImage = file.uid;
-    // this.generalService.deleteHotelImageByID(idHotelImage).subscribe(
-    //   {
-    //     next: (res) => {
-    //       if (res) {
-    //         if (res.ret && res.ret.length > 0) {
-    //           res.ret.forEach((el: any) => {
-    //             if (el.code === 0) {
-    //               this.msg.success(`Đã xoá file ${file.name}.`);
-    //               this.getListData();
-    //             } else if (res.code === 404) {
-    //               this.msg.error(`Không tìm thấy file ${file.name}.`);
-    //             } else {
-    //               this.msg.error(`Đã có lỗi xảy ra. Không thể xoá file ${file.name}`);
-    //             }
-    //           });
-    //         }
-    //       } else {
-    //         this.notificationService.showNotification(Constant.ERROR, `Hệ thống gặp lỗi, xoá file ${file.name} thật bại.`);
-    //       }
-    //     },
-    //     error: (error) => {
-    //       this.notificationService.showNotification(Constant.ERROR, `Hệ thống gặp lỗi, xoá file ${file.name} thật bại.`);
-    //     },
-    //     complete: () => {
-    //     },
+    const idFile = file.uid;
+    this.generalService.deleteRequestBookingFileByID(idFile).subscribe(
+      {
+        next: (res) => {
+          if (res) {
+            if (res.ret && res.ret.length > 0) {
+              res.ret.forEach((el: any) => {
+                if (el.code === 0) {
+                  this.msg.success(`Đã xoá file ${file.name}.`);
+                  this.getListData();
+                } else if (res.code === 404) {
+                  this.msg.error(`Không tìm thấy file ${file.name}.`);
+                } else {
+                  this.msg.error(`Đã có lỗi xảy ra. Không thể xoá file ${file.name}`);
+                }
+              });
+            }
+          } else {
+            this.notificationService.showNotification(Constant.ERROR, `Hệ thống gặp lỗi, xoá file ${file.name} thật bại.`);
+          }
+        },
+        error: (error) => {
+          this.notificationService.showNotification(Constant.ERROR, `Hệ thống gặp lỗi, xoá file ${file.name} thật bại.`);
+        },
+        complete: () => {
+        },
 
-    //   }
-    // );
+      }
+    );
   };
 }

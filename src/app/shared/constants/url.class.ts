@@ -21,7 +21,7 @@ export class UrlConstant {
   public static readonly LIST_PARTNERS = "/Partners";
   public static readonly LIST_ACCOUNTP = "/User";
   public static readonly LIST_MONAN = '/monan';
-  public static readonly UPLOAD = '/file/upload';
+  public static readonly UPLOAD = '/Upload';
   public static readonly LIST_DONHANG = '/donHang';
   public static readonly LIST_NHOMTAIKHOAN = '/group';
   public static readonly LIST_KHO = '/warehouse';
