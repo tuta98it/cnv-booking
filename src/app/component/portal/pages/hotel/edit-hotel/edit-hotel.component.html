@@ -113,6 +113,13 @@
           <div>
             <label class="title-detail" nz-col [nzSpan]="4">Mô tả khách sạn:</label>
             <div nz-col [nzSpan]="24">
+                <textarea nz-input formControlName="shortDescription" placeholder="Mô tả ngắn"
+                          [nzAutosize]="{ minRows: 4, maxRows: 8 }"></textarea>
+            </div>
+          </div>
+          <div>
+            <label class="title-detail" nz-col [nzSpan]="4">Mô tả khách sạn:</label>
+            <div nz-col [nzSpan]="24">
               <!-- <textarea nz-input formControlName="description" placeholder="Mô tả khách sạn ..."
                 [nzAutosize]="{ minRows: 4, maxRows: 8 }"></textarea> -->
               <!-- <input nz-input formControlName="description" type="text" /> -->
