@@ -753,6 +753,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
     const status = file.status;
     if (status === 'done') {
       this.msg.success(`file ${file.name} tải lên thành công.`);
+      this.getListData();
       this.fileList = fileList;
       if (form === 'hotel') {
         setTimeout(() => {
