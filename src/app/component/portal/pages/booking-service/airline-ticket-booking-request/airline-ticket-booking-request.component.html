@@ -21,7 +21,7 @@
   </nz-select> -->
   <div class="form-group" style="float: right; display: flex; float: right">
     <!-- Tìm kiếm -->
-    <input style="width: 200px; border-radius: 4px; height: 32px; margin-right: 10px;" nzSize="small" nz-input
+    <input style="width: 200px; border-radius: 4px; height: 32px; margin-right: 10px;" nzSize="small" nz-input if
       type="text" [(ngModel)]="searchText" (keyup)="onSearch()"
       placeholder="Tìm kiếm theo Tên người đặt vé, SĐT, Email ...">
 
@@ -549,9 +549,9 @@
             <div class="inner-box">
               <div>
                 <nz-upload class="upload-list-inline" [nzMultiple]="true" [nzAction]="uploadUrl" nzName="postedFile"
-                  [nzHeaders]="uploadHeader"  [nzRemove]="handleRemoveFileTicketBookingRequest"
-                  (nzChange)="handleUploadFileTicketBookingRequest1($event)" [nzFileList]="fileList">
-                  <button nz-button>
+                  [nzHeaders]="uploadHeader" [nzRemove]="handleRemoveFileTicketBookingRequest"
+                  (nzChange)="handleUploadFileTicketBookingRequest1($event)" [nzFileList]="fileList" [nzShowUploadList] = "showUploadListOption">
+                  <button *ngIf="optionAirlineTicketInfo == OptionAirlineTicketInfoEnum.Update" nz-button>
                     <span nz-icon nzType="upload"></span>
                     Nhấn để tải ảnh
                   </button>

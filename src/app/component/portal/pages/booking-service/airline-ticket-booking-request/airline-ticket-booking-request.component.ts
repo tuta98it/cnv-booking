@@ -63,6 +63,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   listFileIds: any;
   fileList: NzUploadFile[] = [];
 
+  showUploadListOption = { showPreviewIcon: true, showRemoveIcon: true, showDownloadIcon: true };
 
   data: any;
   item: any;
@@ -366,6 +367,12 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
 
     this.isVisibleAirlineTicketInfo = true;
     this.optionAirlineTicketInfo = opPopupAirlineTicket;
+    if (this.optionAirlineTicketInfo == this.OptionAirlineTicketInfoEnum.Update) {
+      this.showUploadListOption = {...this.showUploadListOption, ...{showPreviewIcon: true, showRemoveIcon: true, showDownloadIcon: true}}
+    }
+    if (this.optionAirlineTicketInfo == this.OptionAirlineTicketInfoEnum.View) {
+      this.showUploadListOption = {...this.showUploadListOption, ...{showPreviewIcon: true, showRemoveIcon: false, showDownloadIcon: true}}
+    }
     this.formAirlineTicketPopup.patchValue({
       typeTicket: itemData.typeTicket,
       passengers: itemData.passengers.map(passenger => passenger.fullName),
@@ -419,22 +426,22 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
       this.msg.success(`file ${file.name} tải lên thành công.`);
       this.getListData();
       this.fileList = fileList;
-        setTimeout(() => {
-          if (this.fileList.length > 0) {
-            this.fileList[this.fileList.length - 1].uid = file.response.fileId.toString();
-            this.fileList[this.fileList.length - 1].url = `${this.configService.getConfig().api.baseUrl}/${file.response.path}`;
-            // this.fileList[this.fileList.length - 1] = {
-            //   uid: file.response.hotelFileId.toString(),
-            //   name: file.response.fileName,
-            //   url: `${this.configService.getConfig().api.baseUrl}/${file.response.path}`,
-            //   "status": "success",
-            //   "isUploading": false,
-            //   "showDownload": true,
-            // };
-          }
-        }, 200);
-        this.listFileIds.push(file.response.fileId);
-        this.formAirlineTicketPopup.controls['fileIds'].setValue(this.listFileIds);
+      setTimeout(() => {
+        if (this.fileList.length > 0) {
+          this.fileList[this.fileList.length - 1].uid = file.response.fileId.toString();
+          this.fileList[this.fileList.length - 1].url = `${this.configService.getConfig().api.baseUrl}/${file.response.path}`;
+          // this.fileList[this.fileList.length - 1] = {
+          //   uid: file.response.hotelFileId.toString(),
+          //   name: file.response.fileName,
+          //   url: `${this.configService.getConfig().api.baseUrl}/${file.response.path}`,
+          //   "status": "success",
+          //   "isUploading": false,
+          //   "showDownload": true,
+          // };
+        }
+      }, 200);
+      this.listFileIds.push(file.response.fileId);
+      this.formAirlineTicketPopup.controls['fileIds'].setValue(this.listFileIds);
     } else if (status === 'error') {
       this.msg.error(`file ${file.name} tải lên không thành công.`);
     }
@@ -487,34 +494,38 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   }
 
   handleRemoveFileTicketBookingRequest = async (file: NzUploadFile): Promise<void> => {
-    const idFile = file.uid;
-    this.generalService.deleteRequestBookingFileByID(idFile).subscribe(
-      {
-        next: (res) => {
-          if (res) {
-            if (res.ret && res.ret.length > 0) {
-              res.ret.forEach((el: any) => {
-                if (el.code === 0) {
-                  this.msg.success(`Đã xoá file ${file.name}.`);
-                  this.getListData();
-                } else if (res.code === 404) {
-                  this.msg.error(`Không tìm thấy file ${file.name}.`);
-                } else {
-                  this.msg.error(`Đã có lỗi xảy ra. Không thể xoá file ${file.name}`);
-                }
-              });
+    if (this.optionAirlineTicketInfo == this.OptionAirlineTicketInfoEnum.Update) {
+      const idFile = file.uid;
+      this.generalService.deleteRequestBookingFileByID(idFile).subscribe(
+        {
+          next: (res) => {
+            if (res) {
+              if (res.ret && res.ret.length > 0) {
+                res.ret.forEach((el: any) => {
+                  if (el.code === 0) {
+                    this.msg.success(`Đã xoá file ${file.name}.`);
+                    this.getListData();
+                  } else if (res.code === 404) {
+                    this.msg.error(`Không tìm thấy file ${file.name}.`);
+                  } else {
+                    this.msg.error(`Đã có lỗi xảy ra. Không thể xoá file ${file.name}`);
+                  }
+                });
+              }
+            } else {
+              this.notificationService.showNotification(Constant.ERROR, `Hệ thống gặp lỗi, xoá file ${file.name} thật bại.`);
             }
-          } else {
+          },
+          error: (error) => {
             this.notificationService.showNotification(Constant.ERROR, `Hệ thống gặp lỗi, xoá file ${file.name} thật bại.`);
-          }
-        },
-        error: (error) => {
-          this.notificationService.showNotification(Constant.ERROR, `Hệ thống gặp lỗi, xoá file ${file.name} thật bại.`);
-        },
-        complete: () => {
-        },
+          },
+          complete: () => {
+          },
 
-      }
-    );
+        }
+      );
+    } else {
+      this.notificationService.showNotification(Constant.ERROR, `Không thể xoá file khi ở chế độ View Ticket`);
+    }
   };
 }
