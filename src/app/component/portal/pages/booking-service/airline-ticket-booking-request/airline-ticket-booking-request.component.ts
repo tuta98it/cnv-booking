@@ -10,7 +10,7 @@ import { Workbook } from 'exceljs';
 import { DateFormatPipe } from 'src/app/shared/pipe/format-date.pipe';
 import { exportDataGrid } from 'devextreme/excel_exporter';
 import { saveAs } from 'file-saver-es';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 import {
   DxDataGridComponent,
@@ -48,6 +48,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
 
   AIRLINE_TICKET_BOOKING_REQUEST_STATUS_OPTIONS = AIRLINE_TICKET_BOOKING_REQUEST_STATUS_OPTIONS;
 
+
   AIRLINE_CODE_OPTIONS = AIRLINE_CODE_OPTIONS;
   formAirlineTicketPopup: FormGroup;
 
@@ -62,7 +63,6 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   uploadUrl = '';
   listFileIds: any;
   fileList: NzUploadFile[] = [];
-
   showUploadListOption = { showPreviewIcon: true, showRemoveIcon: true, showDownloadIcon: true };
 
   data: any;
@@ -87,6 +87,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   isVisibleAirlineTicketInfo: boolean = false;
   itemTicketHistoryTicket: any;
   airports: any[] = [];
+
   constructor(
     public translate: TranslateService,
     private notificationService: NotificationService,
@@ -105,31 +106,31 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     this.uploadUrl = `${this.configService.getConfig().api.baseUrl}/Upload`;
     this.formAirlineTicketPopup = this.formBuilder.group({
       id: [null],
-      typeTicket: [TypeAirlineTicket.OneWay, [Validators.required]],
-      passengers: [[], [Validators.required]],
-      fileIds: [[], [Validators.required]],
-      tripItineraryDeparture: [null, [Validators.required]],
-      flightTimeDeparture: [[], [Validators.required]],
-      airlineCodeDeparture: ['', [Validators.required]],
-      bookingCodeDeparture: [null, [Validators.required]],
-      flightNumberDeparture: [null, [Validators.required]],
-      ticketHoldExpiryDateDeparture: [null, [Validators.required]],
-      ticketPriceDeparture: [null, [Validators.required]],
-      baggageFeeDeparture: [null, [Validators.required]],
-      refundFeeDeparture: [null, [Validators.required]],
-      cancelFeeDeparture: [null, [Validators.required]],
-      changeFeeDeparture: [null, [Validators.required]],
+      typeTicket: new FormControl({value: TypeAirlineTicket.OneWay, disabled: false }, Validators.required),
+      passengers: new FormControl({value: [], disabled: false }, Validators.required),
+      fileIds: new FormControl({value: [], disabled: false }, Validators.required),
+      tripItineraryDeparture: new FormControl({value: null, disabled: false }, Validators.required),
+      flightTimeDeparture: new FormControl({value: [], disabled: false }, Validators.required),
+      airlineCodeDeparture: new FormControl({value: '', disabled: false }, Validators.required),
+      bookingCodeDeparture: new FormControl({value: null, disabled: false }, Validators.required),
+      flightNumberDeparture: new FormControl({value: null, disabled: false }, Validators.required),
+      ticketHoldExpiryDateDeparture: new FormControl({value: null, disabled: false }, Validators.required),
+      ticketPriceDeparture: new FormControl({value: null, disabled: false }, Validators.required),
+      baggageFeeDeparture: new FormControl({value: null, disabled: false }, Validators.required),
+      refundFeeDeparture: new FormControl({value: null, disabled: false }, Validators.required),
+      cancelFeeDeparture: new FormControl({value: null, disabled: false }, Validators.required),
+      changeFeeDeparture: new FormControl({value: null, disabled: false }, Validators.required),
 
-      flightTimeReturn: [[], [Validators.required]],
-      airlineCodeReturn: ['', [Validators.required]],
-      bookingCodeReturn: [null, [Validators.required]],
-      flightNumberReturn: [null, [Validators.required]],
-      ticketHoldExpiryDateReturn: [null, [Validators.required]],
-      ticketPriceReturn: [null, [Validators.required]],
-      baggageFeeReturn: [null, [Validators.required]],
-      refundFeeReturn: [null, [Validators.required]],
-      cancelFeeReturn: [null, [Validators.required]],
-      changeFeeReturn: [null, [Validators.required]],
+      flightTimeReturn: new FormControl({value: [], disabled: false }, Validators.required),
+      airlineCodeReturn: new FormControl({value: '', disabled: false }, Validators.required),
+      bookingCodeReturn: new FormControl({value: null, disabled: false }, Validators.required),
+      flightNumberReturn: new FormControl({value: null, disabled: false }, Validators.required),
+      ticketHoldExpiryDateReturn: new FormControl({value: null, disabled: false }, Validators.required),
+      ticketPriceReturn: new FormControl({value: null, disabled: false }, Validators.required),
+      baggageFeeReturn: new FormControl({value: null, disabled: false }, Validators.required),
+      refundFeeReturn: new FormControl({value: null, disabled: false }, Validators.required),
+      cancelFeeReturn: new FormControl({value: null, disabled: false }, Validators.required),
+      changeFeeReturn: new FormControl({value: null, disabled: false }, Validators.required),
 
     });
 
@@ -367,11 +368,14 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
 
     this.isVisibleAirlineTicketInfo = true;
     this.optionAirlineTicketInfo = opPopupAirlineTicket;
-    if (this.optionAirlineTicketInfo == this.OptionAirlineTicketInfoEnum.Update) {
-      this.showUploadListOption = {...this.showUploadListOption, ...{showPreviewIcon: true, showRemoveIcon: true, showDownloadIcon: true}}
-    }
+
     if (this.optionAirlineTicketInfo == this.OptionAirlineTicketInfoEnum.View) {
+      this.formAirlineTicketPopup.disable();
       this.showUploadListOption = {...this.showUploadListOption, ...{showPreviewIcon: true, showRemoveIcon: false, showDownloadIcon: true}}
+    }
+    if (this.optionAirlineTicketInfo == this.OptionAirlineTicketInfoEnum.Update) {
+      this.formAirlineTicketPopup.enable();
+      this.showUploadListOption = {...this.showUploadListOption, ...{showPreviewIcon: true, showRemoveIcon: true, showDownloadIcon: true}}
     }
     this.formAirlineTicketPopup.patchValue({
       typeTicket: itemData.typeTicket,
@@ -448,7 +452,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   }
 
 
-  handleUploadFileTicketBookingRequest2({ file, fileList }: NzUploadChangeParam): void {
+  handleUploadFileTicketBookingRequest2BeforSelect({ file, fileList }: NzUploadChangeParam): void {
     this.uploading = true;
     this.fileList.forEach((file: any) => {
       const formData = new FormData();
