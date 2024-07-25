@@ -548,6 +548,16 @@
           <div nz-col class="gutter-row" nzSpan="22">
             <div class="inner-box">
               <div>
+                <nz-upload class="upload-list-inline" [nzMultiple]="true" [nzAction]="uploadUrl" nzName="postedFile"
+                  [nzHeaders]="uploadHeader"  [nzRemove]="handleRemoveFileTicketBookingRequest"
+                  (nzChange)="handleUploadFileTicketBookingRequest1($event)" [nzFileList]="fileList">
+                  <button nz-button>
+                    <span nz-icon nzType="upload"></span>
+                    Nhấn để tải ảnh
+                  </button>
+                </nz-upload>
+              </div>
+              <!-- <div>
                 <nz-upload [nzMultiple]="true" [nzAction]="uploadUrl" nzName="postedFile" [nzHeaders]="uploadHeader"
                   [nzRemove]="handleRemoveFileTicketBookingRequest" [(nzFileList)]="fileList"
                   [nzBeforeUpload]="beforeUpload">
@@ -557,11 +567,11 @@
                   </button>
                 </nz-upload>
                 <button nz-button [nzType]="'primary'" [nzLoading]="uploading"
-                  (click)="handleUploadFileTicketBookingRequest($event)" [disabled]="fileList.length === 0"
+                  (click)="handleUploadFileTicketBookingRequest2($event)" [disabled]="fileList.length === 0"
                   style="margin-top: 16px">
                   {{ uploading ? 'Đang tải file...' : 'Bắt đầu tải file lên' }}
                 </button>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
