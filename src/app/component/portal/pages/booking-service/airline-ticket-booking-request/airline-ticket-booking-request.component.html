@@ -21,7 +21,7 @@
   </nz-select> -->
   <div class="form-group" style="float: right; display: flex; float: right">
     <!-- Tìm kiếm -->
-    <input style="width: 200px; border-radius: 4px; height: 32px; margin-right: 10px;" nzSize="small" nz-input if
+    <input style="width: 200px; border-radius: 4px; height: 32px; margin-right: 10px;" nzSize="small" nz-input
       type="text" [(ngModel)]="searchText" (keyup)="onSearch()"
       placeholder="Tìm kiếm theo Tên người đặt vé, SĐT, Email ...">
 
@@ -347,7 +347,7 @@
             <div nz-col class="gutter-row" nzSpan="9">
               <div class="inner-box">
                 <input style="border-radius: 4px;" nz-input nzSize="default" plaeholder=""
-                  cformControlName="baggageFeeDeparture">
+                  formControlName="baggageFeeDeparture">
               </div>
             </div>
           </div>
@@ -362,7 +362,7 @@
             <div nz-col class="gutter-row" nzSpan="6">
               <div class="inner-box">
                 <input style="border-radius: 4px;" nz-input nzSize="default" placeholder=""
-                  formControlName="refundFeeDeparture">
+                  formControlName="refundFeeDeparture" >
               </div>
             </div>
             <div nz-col class="gutter-row" nzSpan="2">
