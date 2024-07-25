@@ -562,6 +562,9 @@ export class GeneralService extends BaseService {
     return this.post(`/api${UrlConstant.BOOKINGV2}/adminRequestBooking`, payload);
   }
 
+  updateRequestBooking(payload: any): Observable<any> {
+    return this.post(`/api${UrlConstant.BOOKINGV2}/UpdateRequestBooking`, payload);
+  }
 
   getBookingByID(idBooking: any): Observable<any> {
     return this.get(`/api${UrlConstant.BOOKING}/getbookingbyid/${idBooking}`);

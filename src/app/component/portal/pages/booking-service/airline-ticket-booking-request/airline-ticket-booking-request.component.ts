@@ -66,7 +66,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   showUploadListOption = { showPreviewIcon: true, showRemoveIcon: true, showDownloadIcon: true };
 
   data: any;
-  item: any;
+  itemBookingRequest: any;
   loading: boolean;
   filteredDatas: any[] = [];
   searchText = '';
@@ -106,31 +106,31 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     this.uploadUrl = `${this.configService.getConfig().api.baseUrl}/Upload`;
     this.formAirlineTicketPopup = this.formBuilder.group({
       id: [null],
-      typeTicket: new FormControl({value: TypeAirlineTicket.OneWay, disabled: false }, Validators.required),
-      passengers: new FormControl({value: [], disabled: false }, Validators.required),
-      fileIds: new FormControl({value: [], disabled: false }, Validators.required),
-      tripItineraryDeparture: new FormControl({value: null, disabled: false }, Validators.required),
-      flightTimeDeparture: new FormControl({value: [], disabled: false }, Validators.required),
-      airlineCodeDeparture: new FormControl({value: '', disabled: false }, Validators.required),
-      bookingCodeDeparture: new FormControl({value: null, disabled: false }, Validators.required),
-      flightNumberDeparture: new FormControl({value: null, disabled: false }, Validators.required),
-      ticketHoldExpiryDateDeparture: new FormControl({value: null, disabled: false }, Validators.required),
-      ticketPriceDeparture: new FormControl({value: null, disabled: false }, Validators.required),
-      baggageFeeDeparture: new FormControl({value: null, disabled: false }, Validators.required),
-      refundFeeDeparture: new FormControl({value: null, disabled: false }, Validators.required),
-      cancelFeeDeparture: new FormControl({value: null, disabled: false }, Validators.required),
-      changeFeeDeparture: new FormControl({value: null, disabled: false }, Validators.required),
+      typeTicket: new FormControl({ value: TypeAirlineTicket.OneWay, disabled: false }, Validators.required),
+      passengers: new FormControl({ value: [], disabled: false }, Validators.required),
+      fileIds: new FormControl({ value: [], disabled: false }, Validators.required),
+      tripItineraryDeparture: new FormControl({ value: null, disabled: false }, Validators.required),
+      flightTimeDeparture: new FormControl({ value: [], disabled: false }, Validators.required),
+      airlineCodeDeparture: new FormControl({ value: '', disabled: false }, Validators.required),
+      bookingCodeDeparture: new FormControl({ value: null, disabled: false }, Validators.required),
+      flightNumberDeparture: new FormControl({ value: null, disabled: false }, Validators.required),
+      ticketHoldExpiryDateDeparture: new FormControl({ value: null, disabled: false }, Validators.required),
+      ticketPriceDeparture: new FormControl({ value: null, disabled: false }, Validators.required),
+      baggageFeeDeparture: new FormControl({ value: null, disabled: false }, Validators.required),
+      refundFeeDeparture: new FormControl({ value: null, disabled: false }, Validators.required),
+      cancelFeeDeparture: new FormControl({ value: null, disabled: false }, Validators.required),
+      changeFeeDeparture: new FormControl({ value: null, disabled: false }, Validators.required),
 
-      flightTimeReturn: new FormControl({value: [], disabled: false }, Validators.required),
-      airlineCodeReturn: new FormControl({value: '', disabled: false }, Validators.required),
-      bookingCodeReturn: new FormControl({value: null, disabled: false }, Validators.required),
-      flightNumberReturn: new FormControl({value: null, disabled: false }, Validators.required),
-      ticketHoldExpiryDateReturn: new FormControl({value: null, disabled: false }, Validators.required),
-      ticketPriceReturn: new FormControl({value: null, disabled: false }, Validators.required),
-      baggageFeeReturn: new FormControl({value: null, disabled: false }, Validators.required),
-      refundFeeReturn: new FormControl({value: null, disabled: false }, Validators.required),
-      cancelFeeReturn: new FormControl({value: null, disabled: false }, Validators.required),
-      changeFeeReturn: new FormControl({value: null, disabled: false }, Validators.required),
+      flightTimeReturn: new FormControl({ value: [], disabled: false }, Validators.required),
+      airlineCodeReturn: new FormControl({ value: '', disabled: false }, Validators.required),
+      bookingCodeReturn: new FormControl({ value: null, disabled: false }, Validators.required),
+      flightNumberReturn: new FormControl({ value: null, disabled: false }, Validators.required),
+      ticketHoldExpiryDateReturn: new FormControl({ value: null, disabled: false }, Validators.required),
+      ticketPriceReturn: new FormControl({ value: null, disabled: false }, Validators.required),
+      baggageFeeReturn: new FormControl({ value: null, disabled: false }, Validators.required),
+      refundFeeReturn: new FormControl({ value: null, disabled: false }, Validators.required),
+      cancelFeeReturn: new FormControl({ value: null, disabled: false }, Validators.required),
+      changeFeeReturn: new FormControl({ value: null, disabled: false }, Validators.required),
 
     });
 
@@ -315,10 +315,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     this.isVisibleDetailTransactionHistoryTickets = false;
   }
 
-  handleCancelArilineTicketPopup() {
-    this.isVisibleAirlineTicketInfo = false;
 
-  }
 
 
   exportData() {
@@ -331,7 +328,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
 
     const from = this.dateFormatPipe.transformFull(new Date(), Constant.DATE_FMT_STR);
     const dateStr = from;
-    const fileName = `DS_Giu_ve_${dateStr}`;
+    const fileName = `DS_Book_ve_yeu_cau_${dateStr}`;
     exportDataGrid({
       component: e.component,
       worksheet,
@@ -364,18 +361,19 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   }
 
   showPopupAirlineTicket(itemData: any, opPopupAirlineTicket: OptionAirlineTicketPopup) {
-    console.log("this.itemData : ", itemData);
+    // console.log("this.itemData : ", itemData);
 
+    this.itemBookingRequest = itemData;
     this.isVisibleAirlineTicketInfo = true;
     this.optionAirlineTicketInfo = opPopupAirlineTicket;
 
     if (this.optionAirlineTicketInfo == this.OptionAirlineTicketInfoEnum.View) {
       this.formAirlineTicketPopup.disable();
-      this.showUploadListOption = {...this.showUploadListOption, ...{showPreviewIcon: true, showRemoveIcon: false, showDownloadIcon: true}}
+      this.showUploadListOption = { ...this.showUploadListOption, ...{ showPreviewIcon: true, showRemoveIcon: false, showDownloadIcon: true } }
     }
     if (this.optionAirlineTicketInfo == this.OptionAirlineTicketInfoEnum.Update) {
       this.formAirlineTicketPopup.enable();
-      this.showUploadListOption = {...this.showUploadListOption, ...{showPreviewIcon: true, showRemoveIcon: true, showDownloadIcon: true}}
+      this.showUploadListOption = { ...this.showUploadListOption, ...{ showPreviewIcon: true, showRemoveIcon: true, showDownloadIcon: true } }
     }
     this.formAirlineTicketPopup.patchValue({
       typeTicket: itemData.typeTicket,
@@ -408,7 +406,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     });
 
     this.ticketRoundTrip = itemData.typeTicket == this.TypeAirlineTicketEnum.RoundTrip
-    console.log("this.formAirlineTicketPopup : ", this.formAirlineTicketPopup.value);
+    // console.log("this.formAirlineTicketPopup : ", this.formAirlineTicketPopup.value);
     this.listFileIds = [];
     this.fileList = [];
     for (const file of itemData.files) {
@@ -532,4 +530,66 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
       this.notificationService.showNotification(Constant.ERROR, `Không thể xoá file khi ở chế độ View Ticket`);
     }
   };
+
+
+
+
+  handleSavelArilineTicketPopup() {
+    let formValue = this.formAirlineTicketPopup.value;
+    let payLoad = {
+      id: this.itemBookingRequest.id,
+      approvalCode: this.itemBookingRequest.approvalCode,
+      typeTicket: formValue.typeTicket,
+      departureDay: this.itemBookingRequest.departureDay,
+      returnDay: this.itemBookingRequest.returnDay,
+      startPoint: this.itemBookingRequest.startPoint,
+      endPoint: this.itemBookingRequest.endPoint,
+      airlineId: null,
+      airlineCode: formValue.airlineCodeDeparture,
+      fareClass: this.itemBookingRequest.fareClass,
+      adt: this.itemBookingRequest.adt,
+      chd: this.itemBookingRequest.chd,
+      inf: this.itemBookingRequest.inf,
+      baggage: this.itemBookingRequest.baggage,
+
+      startTime: formValue.flightTimeDeparture[0],
+      endTime: formValue.flightTimeDeparture[1],
+      bookingCode: formValue.bookingCodeDeparture,
+      flightNumber: formValue.flightNumberDeparture,
+      ticketPrice: formValue.ticketPriceDeparture,
+      refundFee: formValue.refundFeeDeparture,
+      changeFee: formValue.changeFeeDeparture,
+      cancelFee: formValue.cancelFeeDeparture,
+      baggageFee: formValue.baggageFeeDeparture,
+      ticketHoldExpiryDate: formValue.ticketHoldExpiryDateDeparture,
+
+
+      returnStartTime: formValue.flightTimeReturn[0],
+      returnEndTime: formValue.flightTimeReturn[1],
+      returnBookingCode: formValue.bookingCodeReturn,
+      returnFlightNumber: formValue.flightNumberReturn,
+      returnTicketPrice: formValue.ticketPriceReturn,
+      returnRefundFee: formValue.refundFeeReturn,
+      returnChangeFee: formValue.changeFeeReturn,
+      returnCancelFee: formValue.cancelFeeReturn,
+      returnBaggageFee: formValue.baggageFeeReturn,
+      returnTicketHoldExpiryDate: formValue.ticketHoldExpiryDateReturn,
+      returnAirlineId: null,
+      returnAirlineCode: formValue.airlineCodeReturn,
+
+    }
+    this.generalService.updateRequestBooking(payLoad).subscribe((res: any) => {
+      if (res.ret && res.ret[0].code !== 0) {
+        this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
+      } else {
+        this.notificationService.showNotification(Constant.SUCCESS, Constant.MESSAGE_UPDATE_SUCCESS);
+      }
+    }, error => {
+
+    });
+  }
+
+  handleCancelArilineTicketPopup() {
+    this.isVisibleAirlineTicketInfo = false;
+  }
 }
