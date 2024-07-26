@@ -36,18 +36,21 @@
     [showPageSizeSelector]="showPageSizeSelector" [showInfo]="showInfo"
     [showNavigationButtons]="showNavButtons"></dxo-pager>
 
-  <dxi-column  caption="STT" [width]="55" dataField="stt" [fixed]="true" [allowFiltering]="false"
-    [allowSorting]="false" cssClass="vertical-align-middle text-center"></dxi-column>
-  <dxi-column caption="Tên khách hàng" [width]="300" dataField="passengerName" cssClass="vertical-align-middle"></dxi-column>
+  <dxi-column caption="STT" [width]="55" dataField="stt" [fixed]="true" [allowFiltering]="false" [allowSorting]="false"
+    cssClass="vertical-align-middle text-center"></dxi-column>
+  <dxi-column caption="Tên khách hàng" [width]="300" dataField="passengerName"
+    cssClass="vertical-align-middle"></dxi-column>
   <dxi-column caption="Hãng bay" dataField="airlineName" [width]="200" cssClass="vertical-align-middle"></dxi-column>
-  <dxi-column caption="Mã đặt chỗ" [width]="200" dataField="bookingNumber" cssClass="vertical-align-middle"></dxi-column>
+  <dxi-column caption="Mã đặt chỗ" [width]="200" dataField="bookingNumber"
+    cssClass="vertical-align-middle"></dxi-column>
   <dxi-column caption="Số vé" [width]="200" dataField="ticketNumber" cssClass="vertical-align-middle"></dxi-column>
-  <dxi-column caption="Ngày đặt vé" [width]="200" dataField="dateCreated" dataType="date"
-    format="HH:mm dd/MM/yyyy" cssClass="vertical-align-middle"></dxi-column>
+  <dxi-column caption="Ngày đặt vé" [width]="200" dataField="dateCreated" dataType="date" format="HH:mm dd/MM/yyyy"
+    cssClass="vertical-align-middle"></dxi-column>
   <dxi-column caption="Trạng thái hệ thống" cssClass="text-center vertical-align-middle" [width]="200"
     cellTemplate="cellSystemCancelled" cssClass="vertical-align-middle"></dxi-column>
-  <dxi-column caption="Lý do huỷ" [width]="150" dataField="noteSystemCancelled" dataTyp="string" cssClass="vertical-align-middle"></dxi-column>
-  <dxi-column caption="Xuất vé"  cellTemplate="cellBillet" cssClass="vertical-align-middle text-center"></dxi-column>
+  <dxi-column caption="Lý do huỷ" [width]="150" dataField="noteSystemCancelled" dataTyp="string"
+    cssClass="vertical-align-middle"></dxi-column>
+  <dxi-column caption="Xuất vé" cellTemplate="cellBillet" cssClass="vertical-align-middle text-center"></dxi-column>
 
   <div *dxTemplate="let ticketFlightExport of 'cellSystemCancelled'">
     <nz-switch [ngModel]="!ticketFlightExport.data.systemCancelled" [nzControl]="true" nzCheckedChildren="Tính công nợ"
@@ -97,7 +100,8 @@
               <label for="">Mã base: <strong>{{ticket.approvalCode}}</strong></label>
             </div>
             <div class="ticket-status">
-              <label for="">Tình trạng: <strong>{{ticket.status === 'OK'? 'Đã xuất vé' : 'Lỗi xuất vé'}}</strong></label>
+              <label for="">Tình trạng: <strong>{{ticket.status === 'OK'? 'Đã xuất vé' : 'Lỗi xuất
+                  vé'}}</strong></label>
             </div>
           </div>
         </div>
@@ -110,15 +114,22 @@
             </div>
             <div class="passenger-ticket-info-detail"
               *ngFor="let bookingPassenger of bookingTicketDetail.bookingPassengers">
-              <div class="passenger-ticket-name">
-                <label *ngIf="bookingPassenger.typeCode === 'ADT'">Hành khách: {{bookingPassenger.gender? 'Ông' : 'Bà'}}
-                  <strong>{{bookingPassenger.lastName}} {{bookingPassenger.firstName}}</strong></label>
-                <label *ngIf="bookingPassenger.typeCode === 'CHD'">Hành khách: {{bookingPassenger.gender? 'Bé trai' :
-                  'Bé gái'}} <strong>{{bookingPassenger.lastName}} {{bookingPassenger.firstName}}</strong></label>
-                <label *ngIf="bookingPassenger.typeCode === 'INF'">Hành khách: {{bookingPassenger.gender? 'Trẻ sơ sinh
-                  trai' : 'Trẻ sơ sinh gái'}} <strong>{{bookingPassenger.lastName}}
-                    {{bookingPassenger.firstName}}</strong></label>
+              <div style="display: flex;">
+                <div class="passenger-ticket-name">
+                  <label *ngIf="bookingPassenger.typeCode === 'ADT'">Hành khách: {{bookingPassenger.gender? 'Ông' :
+                    'Bà'}}
+                    <strong>{{bookingPassenger.lastName}} {{bookingPassenger.firstName}}</strong></label>
+                  <label *ngIf="bookingPassenger.typeCode === 'CHD'">Hành khách: {{bookingPassenger.gender? 'Bé trai' :
+                    'Bé gái'}} <strong>{{bookingPassenger.lastName}} {{bookingPassenger.firstName}}</strong></label>
+                  <label *ngIf="bookingPassenger.typeCode === 'INF'">Hành khách: {{bookingPassenger.gender? 'Trẻ sơ sinh
+                    trai' : 'Trẻ sơ sinh gái'}} <strong>{{bookingPassenger.lastName}}
+                      {{bookingPassenger.firstName}}</strong></label>
+                </div>
+                <div class="passenger-departmember-ship" style="margin-left: 2rem;">
+                  <label >Thẻ thành viên: <strong [style.color]="bookingPassenger?.departMembership ? 'black' : 'red'">{{bookingPassenger?.departMembership ? bookingPassenger.departMembership : 'Chưa có thông tin'}}</strong></label>
+                </div>
               </div>
+
               <div class="passenger-ticket-info-content">
                 <div>
                   <strong>Chi tiết vé</strong>
@@ -191,7 +202,8 @@
                     </label>
                   </div>
                   <div>
-                    <label for="">Ngày bay: <strong>{{bookingFlight.startTime | date:"HH:MM dd-MM-yyyy"}}</strong></label>
+                    <label for="">Ngày bay: <strong>{{bookingFlight.startTime | date:"HH:MM
+                        dd-MM-yyyy"}}</strong></label>
                   </div>
                   <div>
                     <label for="">Ngày đến:</label> <strong>{{bookingFlight.endTime | date:"HH:MM dd-MM-yyyy"}}</strong>
@@ -201,7 +213,8 @@
                       <strong>{{toAirlineNameByCode(bookingFlight.airlineCode)}}</strong></label>
                   </div>
                   <div>
-                    <label for="">Xếp hạng sao đặt chỗ: <strong>{{bookingFlight.groupClass}}</strong>. Số hiệu chuyến bay:
+                    <label for="">Xếp hạng sao đặt chỗ: <strong>{{bookingFlight.groupClass}}</strong>. Số hiệu chuyến
+                      bay:
                       <strong>{{bookingFlight.flightNumber}}</strong></label>
                   </div>
                   <div>
