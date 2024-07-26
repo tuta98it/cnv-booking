@@ -61,7 +61,12 @@
   <dxi-column caption="Trạng thái" [width]="200" dataField="status" cssClass="text-left vertical-align-middle"
     cellTemplate="cellStatus"></dxi-column>
   <div *dxTemplate="let status of 'cellStatus'" style="display: flex;">
-    <container-element [ngSwitch]="status.value">
+    <nz-select nzShowSearch nzMode="default" nzPlaceHolder="Trạng thái" style="width: 200px; margin-left: 0.5rem;"
+      [(ngModel)]="status.value" (ngModelChange)="handleChangeStatusByItem(status)">
+      <nz-option *ngFor="let option of AIRLINE_TICKET_BOOKING_REQUEST_STATUS_OPTIONS" [nzLabel]="option.label"
+        [nzValue]="option.value"></nz-option>
+    </nz-select>
+    <!-- <container-element [ngSwitch]="status.value">
       <some-element *ngSwitchCase="AirlineTicketBookingRequestStatusEnum.SubmitRequest">
         Gửi yêu cầu
       </some-element>
@@ -85,7 +90,7 @@
       <some-element *ngSwitchDefault>
         Không xác định
       </some-element>
-    </container-element>
+    </container-element> -->
   </div>
 
   <dxi-column caption="Chi phí vé" [width]="150" dataField="ticketPrice" [format]="formatCurrencyVND"
@@ -215,7 +220,7 @@
             <div class="inner-box">
               <nz-select nzShowSearch nzMode="default" nzPlaceHolder="--Loại vé--" formControlName="typeTicket">
                 <nz-option nzLabel="Một chiều" [nzValue]="TypeAirlineTicketEnum.OneWay"></nz-option>
-                <nz-option nzLabel="Khứ hội" [nzValue]="TypeAirlineTicketEnum.RoundTrip"></nz-option>
+                <nz-option nzLabel="Khứ hồi" [nzValue]="TypeAirlineTicketEnum.RoundTrip"></nz-option>
               </nz-select>
             </div>
           </div>

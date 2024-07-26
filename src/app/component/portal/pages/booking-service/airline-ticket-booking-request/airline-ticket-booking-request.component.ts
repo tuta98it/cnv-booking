@@ -173,6 +173,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
         let stt = 0;
         this.datas.forEach(en => {
           en.stt = ++stt;
+          en.statusOld = en.status;
           en.isLoadingViewTicket = false;
         });
         this.filteredDatas = this.datas;
@@ -360,6 +361,32 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' đ';
   }
 
+
+  handleChangeStatusByItem(status: any) {
+    let newStatus = status.value;
+    let oldStatus = status.data.statusOld;
+    switch (newStatus) {
+      case this.AirlineTicketBookingRequestStatusEnum.SubmitRequest:
+
+        break;
+      case this.AirlineTicketBookingRequestStatusEnum.ReserveSeat:
+
+        break;
+      case this.AirlineTicketBookingRequestStatusEnum.ReceivedTicket:
+
+        break;
+      case this.AirlineTicketBookingRequestStatusEnum.ExpiredTicket:
+
+        break;
+      case this.AirlineTicketBookingRequestStatusEnum.IssuedTicket:
+
+        break;
+      default:
+        break;
+    }
+    status.data.statusOld = newStatus;
+  }
+
   showPopupAirlineTicket(itemData: any, opPopupAirlineTicket: OptionAirlineTicketPopup) {
     // console.log("this.itemData : ", itemData);
 
@@ -419,8 +446,6 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     }
     this.uploadUrl = `${this.configService.getConfig().api.baseUrl}/Upload/UploadRequestBookingFile?RequestBookingId=${itemData.id}`;
   }
-
-
 
   handleUploadFileTicketBookingRequest1({ file, fileList }: NzUploadChangeParam): void {
     const status = file.status;
@@ -531,9 +556,6 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     }
   };
 
-
-
-
   handleSavelArilineTicketPopup() {
     let formValue = this.formAirlineTicketPopup.value;
     let payLoad = {
@@ -578,15 +600,16 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
       returnAirlineCode: formValue.airlineCodeReturn,
 
     }
-    this.generalService.updateRequestBooking(payLoad).subscribe((res: any) => {
-      if (res.ret && res.ret[0].code !== 0) {
-        this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
-      } else {
-        this.notificationService.showNotification(Constant.SUCCESS, Constant.MESSAGE_UPDATE_SUCCESS);
-      }
-    }, error => {
+    this.generalService.updateRequestBooking(payLoad).subscribe(
+      (res: any) => {
+        if (res.ret && res.ret[0].code !== 0) {
+          this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
+        } else {
+          this.notificationService.showNotification(Constant.SUCCESS, Constant.MESSAGE_UPDATE_SUCCESS);
+        }
+      }, error => {
 
-    });
+      });
   }
 
   handleCancelArilineTicketPopup() {
