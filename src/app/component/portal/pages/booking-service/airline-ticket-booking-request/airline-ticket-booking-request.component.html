@@ -66,17 +66,21 @@
       [(ngModel)]="status.value" (ngModelChange)="handleChangeStatusByItem(status)">
       <nz-option [nzLabel]="'Gửi yêu cầu'" [nzValue]="BookingRequestStatusEnum.SubmitRequest"
         [nzDisabled]="!(status.value == BookingRequestStatusEnum.SubmitRequest)"></nz-option>
-      <nz-option [nzLabel]="'Đang giữ chỗ'" [nzValue]="BookingRequestStatusEnum.ReserveSeat"
+
+      <nz-option [nzLabel]="'Đang giữ vé'" [nzValue]="BookingRequestStatusEnum.ReserveSeat"
         [nzDisabled]="!(status.value == BookingRequestStatusEnum.SubmitRequest || status.value == BookingRequestStatusEnum.ReserveSeat)">
       </nz-option>
-      <nz-option [nzLabel]="'Đã xác nhận vé'" [nzValue]="BookingRequestStatusEnum.ReceivedTicket"
+      <nz-option [nzLabel]="'Đã xác nhận giữ vé'" [nzValue]="BookingRequestStatusEnum.ReceivedTicket"
         [nzDisabled]="!(status.value == BookingRequestStatusEnum.ReceivedTicket)"></nz-option>
+
       <nz-option [nzLabel]="'Hết hạn giữ vé'" [nzValue]="BookingRequestStatusEnum.ExpiredTicket "
         [nzDisabled]="!(status.value == BookingRequestStatusEnum.ExpiredTicket)"></nz-option>
-      <nz-option [nzLabel]="'Xuất vé'" [nzValue]="BookingRequestStatusEnum.IssuedTicket"
-        [nzDisabled]="!(status.value == BookingRequestStatusEnum.IssuedTicket || status.value == BookingRequestStatusEnum.ReceivedTicket)"></nz-option>
+
       <nz-option [nzLabel]="'Điều chỉnh vé'" [nzValue]="BookingRequestStatusEnum.AdjustTicket"
         [nzDisabled]="!(status.value == BookingRequestStatusEnum.AdjustTicket || status.value == BookingRequestStatusEnum.ReceivedTicket)"></nz-option>
+
+      <nz-option [nzLabel]="'Xuất vé'" [nzValue]="BookingRequestStatusEnum.IssuedTicket"
+        [nzDisabled]="!(status.value == BookingRequestStatusEnum.IssuedTicket || status.value == BookingRequestStatusEnum.AdjustTicket || status.value == BookingRequestStatusEnum.ReceivedTicket)"></nz-option>
     </nz-select>
     <!-- <container-element [ngSwitch]="status.value">
       <some-element *ngSwitchCase="AirlineTicketBookingRequestStatusEnum.SubmitRequest">
