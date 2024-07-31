@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { GeneralService } from 'src/app/service/general-service';
 import { TableSelectionAbstract } from 'src/app/shared/component/table/table-selection.abstract';
-import { Constant } from 'src/app/shared/constants/constant.class';
+import { Constant, RequestBookingConfig } from 'src/app/shared/constants/constant.class';
 import { AppConfigService } from 'src/app-config.service';
 import { NotificationService } from 'src/app/service/notification.service';
 import { removeAccents } from 'src/app/shared/utils/filters/remove-accents'
@@ -27,6 +27,7 @@ import { FlightUtils } from 'src/app/shared/utils/flight-utils.class';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { HttpClient, HttpHeaders, HttpRequest, HttpResponse } from '@angular/common/http';
 import { filter } from 'rxjs/operators';
+import { Router } from '@angular/router';
 @Component({
   selector: 'airline-ticket-booking-request',
   templateUrl: './airline-ticket-booking-request.component.html',
@@ -87,6 +88,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   isVisibleAirlineTicketInfo: boolean = false;
   itemTicketHistoryTicket: any;
   airports: any[] = [];
+  intervalIdUserRegister: NodeJS.Timeout;
 
   constructor(
     public translate: TranslateService,
@@ -97,7 +99,8 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     private formBuilder: FormBuilder,
     public flightUtils: FlightUtils,
     private http: HttpClient,
-    private msg: NzMessageService
+    private msg: NzMessageService,
+    private router: Router
   ) {
     super('id');
     this.uploadHeader = {
@@ -141,11 +144,18 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     this.getUserInfo();
     this.getAirport();
 
-    const children: string[] = [];
-    for (let i = 10; i < 36; i++) {
-      children.push(`${i.toString(36)}${i}`);
-    }
-    this.listOfOption = children;
+
+    this.intervalIdUserRegister = setInterval(() => {
+      setTimeout(() => {
+        if (this.router.url === '/booking-service/airline-ticket-booking-request') {
+          this.getListData().then((r) => {
+            // cập nhất lại trạng thái quá hạn giữ chỗ
+          });
+        } else {
+          clearInterval(this.intervalIdUserRegister);
+        }
+      }, 200);
+    }, RequestBookingConfig.TIME_UPDATE_DATAS);
   }
 
   ngOnDestroy(): void {
@@ -165,23 +175,27 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     });
   }
   getListData() {
-    this.loading = true;
-    this.generalService.adminRequestBooking(this.payloadAdminrequestbooking).subscribe((res: any) => {
-      if (res !== null) {
-        this.datas = res.data;
-        this.loading = false;
-        let stt = 0;
-        this.datas.forEach(en => {
-          en.stt = ++stt;
-          en.statusOld = en.status;
-          en.isLoadingViewTicket = false;
-        });
-        this.filteredDatas = this.datas;
-        super.setListOfAllData(this.datas);
-      }
-    }, error => {
-      this.notificationService.showNotification(Constant.ERROR, 'Đã xảy ra lỗi khi tải dữ liệu');
+    return new Promise((resolve, reject) => {
+      this.loading = true;
+      this.generalService.adminRequestBooking(this.payloadAdminrequestbooking).subscribe((res: any) => {
+        if (res !== null) {
+          this.datas = res.data;
+          this.loading = false;
+          let stt = 0;
+          this.datas.forEach(en => {
+            en.stt = ++stt;
+            en.statusOld = en.status;
+            en.isLoadingViewTicket = false;
+          });
+          this.filteredDatas = this.datas;
+          super.setListOfAllData(this.datas);
+          resolve(true);
+        }
+      }, error => {
+        this.notificationService.showNotification(Constant.ERROR, 'Đã xảy ra lỗi khi tải dữ liệu');
+      });
     });
+
   }
 
 

@@ -113,3 +113,7 @@ export class Constant {
 export class UserRegisterConfig {
   public static readonly TIME_UPDATE_DATAS = 15000;
 }
+
+export class RequestBookingConfig {
+  public static readonly TIME_UPDATE_DATAS = 15000;
+}
