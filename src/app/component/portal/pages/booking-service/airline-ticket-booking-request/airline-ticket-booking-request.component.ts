@@ -44,7 +44,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
 
   AirlineCompanyEnum = AirlineCompany;
 
-  AirlineTicketBookingRequestStatusEnum = AirlineTicketBookingRequestStatus
+  BookingRequestStatusEnum = AirlineTicketBookingRequestStatus
 
   AIRLINE_TICKET_BOOKING_REQUEST_STATUS_OPTIONS = AIRLINE_TICKET_BOOKING_REQUEST_STATUS_OPTIONS;
 
@@ -365,26 +365,91 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   handleChangeStatusByItem(status: any) {
     let newStatus = status.value;
     let oldStatus = status.data.statusOld;
+    let requestBookingId = status.data.id;
+    console.log("status: ", status);
+
+    // setTimeout(() => {
+    //   status.value = oldStatus;
+    // }, 200);
     switch (newStatus) {
-      case this.AirlineTicketBookingRequestStatusEnum.SubmitRequest:
+      case this.BookingRequestStatusEnum.SubmitRequest:
 
         break;
-      case this.AirlineTicketBookingRequestStatusEnum.ReserveSeat:
+      case this.BookingRequestStatusEnum.ReserveSeat:
+        this.updateStatusRequestBooking(requestBookingId, this.BookingRequestStatusEnum.ReserveSeat).then((r) => {
+          this.generalService.sendEmailToPassengerToConfirmFlightTicket(requestBookingId).subscribe(
+            {
+              next: (res: any) => {
+                if (res.isValid) {
+
+                } else {
+                  if (res.errors && res.errors.length > 0) {
+                    res.errors.forEach((el: any) => {
+                      this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+                    });
+                  } else {
+                    this.notificationService.showNotification(Constant.ERROR, 'Thay đổi trạng thái không thành công');
+                  }
+                }
+              },
+              error: (err: any) => {
+                this.notificationService.showNotification(Constant.ERROR, 'Thay đổi trạng thái thất bại do lỗi hệ thống');
+              },
+              complete: () => {
+              }
+            }
+          ).add(() => {
+          });
+        });
+        break;
+      case this.BookingRequestStatusEnum.ReceivedTicket:
 
         break;
-      case this.AirlineTicketBookingRequestStatusEnum.ReceivedTicket:
+      case this.BookingRequestStatusEnum.ExpiredTicket:
 
         break;
-      case this.AirlineTicketBookingRequestStatusEnum.ExpiredTicket:
-
-        break;
-      case this.AirlineTicketBookingRequestStatusEnum.IssuedTicket:
+      case this.BookingRequestStatusEnum.IssuedTicket:
 
         break;
       default:
         break;
     }
     status.data.statusOld = newStatus;
+  }
+
+  updateStatusRequestBooking(requestBookingId: number, status: number) {
+    return new Promise((resolve, reject) => {
+      this.generalService.updateStatusRequestBooking(requestBookingId, status).subscribe(
+        {
+          next: (res: any) => {
+            if (res.isValid) {
+              this.notificationService.showNotification(Constant.SUCCESS, 'Thay đổi trạng thái thành công');
+              this.getListData();
+              resolve(true);
+            } else {
+              if (res.errors && res.errors.length > 0) {
+                res.errors.forEach((el: any) => {
+                  this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+                });
+              } else {
+                this.notificationService.showNotification(Constant.ERROR, 'Thay đổi trạng thái không thành công');
+              }
+            }
+          },
+          error: (err: any) => {
+            this.notificationService.showNotification(Constant.ERROR, 'Thay đổi trạng thái thất bại do lỗi hệ thống');
+          },
+          complete: () => {
+            this.getListData();
+          }
+        }
+      ).add(() => {
+        this.getListData();
+      });
+    });
+
+
+
   }
 
   showPopupAirlineTicket(itemData: any, opPopupAirlineTicket: OptionAirlineTicketPopup) {
