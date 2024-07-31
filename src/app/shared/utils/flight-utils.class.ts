@@ -14,4 +14,17 @@ export class FlightUtils {
     }
     return mameAirport;
   }
+
+  toAirlineNameByCode(codeAirline: string) {
+    switch (codeAirline) {
+      case "VN":
+        return "Vietnam Airlines";
+      case "QH":
+        return "Bamboo Airways";
+      case "VJ":
+        return "VietJet Air";
+      default:
+        return "";
+    }
+  }
 }

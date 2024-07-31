@@ -64,17 +64,19 @@
   <div *dxTemplate="let status of 'cellStatus'" style="display: flex;">
     <nz-select nzShowSearch nzMode="default" nzPlaceHolder="Trạng thái" style="width: 200px; margin-left: 0.5rem;"
       [(ngModel)]="status.value" (ngModelChange)="handleChangeStatusByItem(status)">
-      <nz-option [nzLabel]="'Gửi yêu cầu'" [nzValue]="BookingRequestStatusEnum.SubmitRequest" [nzDisabled]="!(status.value == BookingRequestStatusEnum.SubmitRequest)" ></nz-option>
-      <nz-option [nzLabel]="'Đang giữ chỗ'" [nzValue]="BookingRequestStatusEnum.ReserveSeat" [nzDisabled]="!(status.value == BookingRequestStatusEnum.SubmitRequest ||
-                                                                                                              status.value == BookingRequestStatusEnum.ReserveSeat)">
-                                                                                                            </nz-option>
-      <nz-option [nzLabel]="'Đã nhận vé'" [nzValue]="BookingRequestStatusEnum.ReceivedTicket" [nzDisabled]="!(status.value == BookingRequestStatusEnum.ReserveSeat ||
-                                                                                                              status.value == BookingRequestStatusEnum.ReceivedTicket)"></nz-option>
-      <nz-option [nzLabel]="'Hết hạn giữ vé'"
-        [nzValue]="BookingRequestStatusEnum.ExpiredTicket " [nzDisabled]="!(status.value == BookingRequestStatusEnum.ReceivedTicket ||
-                                                                            status.value == BookingRequestStatusEnum.ExpiredTicket)"></nz-option>
-      <nz-option [nzLabel]="'Xuất vé'" [nzValue]="BookingRequestStatusEnum.IssuedTicket" [nzDisabled]="!(status.value == BookingRequestStatusEnum.ExpiredTicket ||
-                                                                                                          status.value == BookingRequestStatusEnum.IssuedTicket)"></nz-option>
+      <nz-option [nzLabel]="'Gửi yêu cầu'" [nzValue]="BookingRequestStatusEnum.SubmitRequest"
+        [nzDisabled]="!(status.value == BookingRequestStatusEnum.SubmitRequest)"></nz-option>
+      <nz-option [nzLabel]="'Đang giữ chỗ'" [nzValue]="BookingRequestStatusEnum.ReserveSeat"
+        [nzDisabled]="!(status.value == BookingRequestStatusEnum.SubmitRequest || status.value == BookingRequestStatusEnum.ReserveSeat)">
+      </nz-option>
+      <nz-option [nzLabel]="'Đã xác nhận vé'" [nzValue]="BookingRequestStatusEnum.ReceivedTicket"
+        [nzDisabled]="!(status.value == BookingRequestStatusEnum.ReceivedTicket)"></nz-option>
+      <nz-option [nzLabel]="'Hết hạn giữ vé'" [nzValue]="BookingRequestStatusEnum.ExpiredTicket "
+        [nzDisabled]="!(status.value == BookingRequestStatusEnum.ExpiredTicket)"></nz-option>
+      <nz-option [nzLabel]="'Xuất vé'" [nzValue]="BookingRequestStatusEnum.IssuedTicket"
+        [nzDisabled]="!(status.value == BookingRequestStatusEnum.IssuedTicket || status.value == BookingRequestStatusEnum.ReceivedTicket)"></nz-option>
+      <nz-option [nzLabel]="'Điều chỉnh vé'" [nzValue]="BookingRequestStatusEnum.AdjustTicket"
+        [nzDisabled]="!(status.value == BookingRequestStatusEnum.AdjustTicket || status.value == BookingRequestStatusEnum.ReceivedTicket)"></nz-option>
     </nz-select>
     <!-- <container-element [ngSwitch]="status.value">
       <some-element *ngSwitchCase="AirlineTicketBookingRequestStatusEnum.SubmitRequest">

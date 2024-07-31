@@ -570,6 +570,11 @@ export class GeneralService extends BaseService {
     return this.post(`/api${UrlConstant.BOOKINGV2}/UpdateStatusRequestBooking`, { requestBookingId: requestBookingId, status: status });
   }
 
+  // RequestBooking
+  getRequestBookingByID(id: number): Observable<any> {
+    return this.get(`/api${UrlConstant.REQUEST_BOOKING}/GetRequestBookingByID/${id}`);
+  }
+
 
   getBookingByID(idBooking: any): Observable<any> {
     return this.get(`/api${UrlConstant.BOOKING}/getbookingbyid/${idBooking}`);
@@ -686,7 +691,7 @@ export class GeneralService extends BaseService {
   }
 
   sendEmailToPassengerToConfirmFlightTicket(requestBookingId: number): Observable<any> {
-    return this.post(`/api${UrlConstant.EMAIL}/sendEmailToPassengerToConfirmFlightTicket`, {requestBookingId: requestBookingId});
+    return this.post(`/api${UrlConstant.EMAIL}/sendEmailToPassengerToConfirmFlightTicket`, { requestBookingId: requestBookingId });
   }
 
 

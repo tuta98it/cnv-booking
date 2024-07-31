@@ -7,12 +7,14 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
 import { AirlineTicketBookingRequestComponent } from './airline-ticket-booking-request/airline-ticket-booking-request.component';
 import { AirlineTicketBookingSystemComponent } from './airline-ticket-booking-system/airline-ticket-booking-system.component';
 import { BookingServiceRoutingModule } from './booking-service-routing.module';
-
+import { ConfirmReserveSeatComponent } from './airline-ticket-booking-request/confirm-reserve-seat/confirm-reserve-seat.component';
 
 @NgModule({
   declarations: [
     AirlineTicketBookingRequestComponent,
-    AirlineTicketBookingSystemComponent
+    AirlineTicketBookingSystemComponent,
+    ConfirmReserveSeatComponent
+
   ],
   imports: [
     BookingServiceRoutingModule,
