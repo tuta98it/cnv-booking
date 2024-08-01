@@ -123,6 +123,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
       refundFeeDeparture: new FormControl({ value: null, disabled: false }, Validators.required),
       cancelFeeDeparture: new FormControl({ value: null, disabled: false }, Validators.required),
       changeFeeDeparture: new FormControl({ value: null, disabled: false }, Validators.required),
+      reservationCodeDeparture: new FormControl({ value: null, disabled: false }, Validators.required),
 
       flightTimeReturn: new FormControl({ value: [], disabled: false }, Validators.required),
       airlineCodeReturn: new FormControl({ value: '', disabled: false }, Validators.required),
@@ -134,6 +135,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
       refundFeeReturn: new FormControl({ value: null, disabled: false }, Validators.required),
       cancelFeeReturn: new FormControl({ value: null, disabled: false }, Validators.required),
       changeFeeReturn: new FormControl({ value: null, disabled: false }, Validators.required),
+      reservationCodeReturn: new FormControl({ value: null, disabled: false }, Validators.required),
 
     });
 
@@ -159,6 +161,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
                 }
               }
             });
+            this.getListData();
           });
         } else {
           clearInterval(this.intervalIdUserRegister);
@@ -175,6 +178,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   getUserInfo() {
     this.userInfor = JSON.parse(localStorage.getItem(Constant.USER_INFO));
   }
+
   getAirport() {
     this.generalService.getAirport().subscribe((res: any) => {
       if (res !== null) {
@@ -183,6 +187,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     }, error => {
     });
   }
+
   getListData() {
     return new Promise((resolve, reject) => {
       this.loading = true;
@@ -423,6 +428,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
             }
           ).add(() => {
           });
+          this.getListData();
         });
         break;
       case this.BookingRequestStatusEnum.ReceivedTicket:
@@ -447,7 +453,6 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
           next: (res: any) => {
             if (res.isValid) {
               this.notificationService.showNotification(Constant.SUCCESS, 'Thay đổi trạng thái thành công');
-              this.getListData();
               resolve(true);
             } else {
               if (res.errors && res.errors.length > 0) {
@@ -463,11 +468,9 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
             this.notificationService.showNotification(Constant.ERROR, 'Thay đổi trạng thái thất bại do lỗi hệ thống');
           },
           complete: () => {
-            this.getListData();
           }
         }
       ).add(() => {
-        this.getListData();
       });
     });
 
@@ -505,6 +508,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
       refundFeeDeparture: itemData.refundFee,
       cancelFeeDeparture: itemData.cancelFee,
       changeFeeDeparture: itemData.changeFee,
+      reservationCodeDeparture: itemData.reservationCode,
 
 
       flightTimeReturn: [itemData.returnStartTime, itemData.returnEndTime],
@@ -517,6 +521,8 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
       refundFeeReturn: itemData.returnRefundFee,
       cancelFeeReturn: itemData.returnCancelFee,
       changeFeeReturn: itemData.returnChangeFee,
+      reservationCodeReturn: itemData.returnReservationCode
+
 
     });
 
@@ -672,7 +678,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
       cancelFee: formValue.cancelFeeDeparture,
       baggageFee: formValue.baggageFeeDeparture,
       ticketHoldExpiryDate: formValue.ticketHoldExpiryDateDeparture,
-
+      reservationCode  : formValue.reservationCodeDeparture,
 
       returnStartTime: formValue.flightTimeReturn[0],
       returnEndTime: formValue.flightTimeReturn[1],
@@ -686,6 +692,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
       returnTicketHoldExpiryDate: formValue.ticketHoldExpiryDateReturn,
       returnAirlineId: null,
       returnAirlineCode: formValue.airlineCodeReturn,
+      returnReservationCode : formValue.reservationCodeReturn
 
     }
     this.generalService.updateRequestBooking(payLoad).subscribe(

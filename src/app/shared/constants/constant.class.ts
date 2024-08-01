@@ -115,5 +115,5 @@ export class UserRegisterConfig {
 }
 
 export class RequestBookingConfig {
-  public static readonly TIME_UPDATE_DATAS = 15000;
+  public static readonly TIME_UPDATE_DATAS = 20000;
 }

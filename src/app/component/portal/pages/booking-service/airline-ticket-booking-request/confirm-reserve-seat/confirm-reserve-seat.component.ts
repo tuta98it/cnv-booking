@@ -34,10 +34,13 @@ export class ConfirmReserveSeatComponent implements OnInit {
 
     this.getAirport().then((r) => {
       this.getRequestBookingByID().then((r) => {
-        this.reserveSeateRequestBookingById(this.requestBookingId);
+        this.reserveSeateRequestBookingById(this.requestBookingId).then((r) => {
+          this.sendEmailToAdminVHLNotifyFlightTicketConfirmed();
+        });
       });
     });
   }
+
 
   ngAfterViewChecked() {
 
@@ -90,44 +93,74 @@ export class ConfirmReserveSeatComponent implements OnInit {
   }
 
   reserveSeateRequestBookingById(id: number) {
-    if (this.requestBookingCurrent.status == this.BookingRequestStatusEnum.ReserveSeat) {
-      this.generalService.updateStatusRequestBooking(id, this.BookingRequestStatusEnum.ReceivedTicket).subscribe(
-        {
-          next: (res: any) => {
-            if (res.isValid) {
-              this.notificationService.showNotification(Constant.SUCCESS, `Đã giữ vé thành công!`);
-              this.isReservedSuccess = true;
-            } else {
-              if (res.errors && res.errors.length > 0) {
-                res.errors.forEach((el: any) => {
-                  this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+    return new Promise((resolve, reject) => {
+      if (this.requestBookingCurrent.status == this.BookingRequestStatusEnum.ReserveSeat) {
+        this.generalService.updateStatusRequestBooking(id, this.BookingRequestStatusEnum.ReceivedTicket).subscribe(
+          {
+            next: (res: any) => {
+              if (res.isValid) {
+                this.notificationService.showNotification(Constant.SUCCESS, `Đã giữ vé thành công!`);
+                this.isReservedSuccess = true;
+                resolve(true);
+              } else {
+                if (res.errors && res.errors.length > 0) {
+                  res.errors.forEach((el: any) => {
+                    this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+                    this.errorMessenger = "Giữ vé không thành công. Vui lòng kiểm tra lại thông tin."
+                    this.isReservedSuccess = false;
+                  });
+                } else {
+                  this.notificationService.showNotification(Constant.ERROR, 'Giữ vé không thành công.');
                   this.errorMessenger = "Giữ vé không thành công. Vui lòng kiểm tra lại thông tin."
                   this.isReservedSuccess = false;
-                });
-              } else {
-                this.notificationService.showNotification(Constant.ERROR, 'Giữ vé không thành công.');
-                this.errorMessenger = "Giữ vé không thành công. Vui lòng kiểm tra lại thông tin."
-                this.isReservedSuccess = false;
+                }
               }
+            },
+            error: (err: any) => {
+              this.notificationService.showNotification(Constant.ERROR, 'Giữ vé thất bại do lỗi hệ thống');
+              this.errorMessenger = "Giữ vé không thành công. Vui lòng kiểm tra lại đường truyền internet."
+              this.isReservedSuccess = false;
+            },
+            complete: () => {
             }
-          },
-          error: (err: any) => {
-            this.notificationService.showNotification(Constant.ERROR, 'Giữ vé thất bại do lỗi hệ thống');
-            this.errorMessenger = "Giữ vé không thành công. Vui lòng kiểm tra lại đường truyền internet."
-            this.isReservedSuccess = false;
-          },
-          complete: () => {
           }
+        ).add(() => {
+        });
+      } else if (this.requestBookingCurrent.status == this.BookingRequestStatusEnum.ReceivedTicket) {
+        this.notificationService.showNotification(Constant.SUCCESS, `Vé ${this.requestBookingCurrent.bookingCode} đã được xác nhận trước đó.`);
+        this.isReservedSuccess = true;
+      } else {
+        this.notificationService.showNotification(Constant.ERROR, 'Không thể xác nhận giữ vé');
+        this.errorMessenger = `Không thể xác nhận giữ vé. Vui lòng kiểm tra lại thông tin.`
+        this.isReservedSuccess = false;
+      }
+    });
+
+  }
+
+  sendEmailToAdminVHLNotifyFlightTicketConfirmed() {
+    this.generalService.sendEmailToAdminVHLNotifyFlightTicketConfirmed(this.requestBookingId).subscribe(
+      {
+        next: (res: any) => {
+          if (res.isValid) {
+
+          } else {
+            if (res.errors && res.errors.length > 0) {
+              res.errors.forEach((el: any) => {
+                this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+              });
+            } else {
+              this.notificationService.showNotification(Constant.ERROR, 'Gửi mail thông báo người dùng đã xác nhận giữ vé cho admin Cao Nguyên Viên không thành công');
+            }
+          }
+        },
+        error: (err: any) => {
+          this.notificationService.showNotification(Constant.ERROR, 'Gửi mail thông báo người dùng đã xác nhận giữ vé cho admin Cao Nguyên Viên thất bại do lỗi hệ thống');
+        },
+        complete: () => {
         }
-      ).add(() => {
-      });
-    } else if (this.requestBookingCurrent.status == this.BookingRequestStatusEnum.ReceivedTicket) {
-      this.notificationService.showNotification(Constant.SUCCESS, `Vé ${this.requestBookingCurrent.bookingCode} đã được xác nhận trước đó.`);
-      this.isReservedSuccess = true;
-    } else {
-      this.notificationService.showNotification(Constant.ERROR, 'Không thể xác nhận giữ vé');
-      this.errorMessenger = `Không thể xác nhận giữ vé. Vui lòng kiểm tra lại thông tin.`
-      this.isReservedSuccess = false;
-    }
+      }
+    ).add(() => {
+    });
   }
 }

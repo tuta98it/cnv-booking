@@ -694,6 +694,9 @@ export class GeneralService extends BaseService {
     return this.post(`/api${UrlConstant.EMAIL}/sendEmailToPassengerToConfirmFlightTicket`, { requestBookingId: requestBookingId });
   }
 
+  sendEmailToAdminVHLNotifyFlightTicketConfirmed(requestBookingId: number): Observable<any> {
+    return this.post(`/api${UrlConstant.EMAIL}/SendEmailToAdminVHLNotifyFlightTicketConfirmed`, { requestBookingId: requestBookingId });
+  }
 
   // News
   getNews(): Observable<any> {
