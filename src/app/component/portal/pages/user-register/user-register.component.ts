@@ -28,7 +28,7 @@ export class UserRegisterComponent extends TableSelectionAbstract implements OnI
     private modalService: NzModalService,
     private notificationService: NotificationService,
     private generalService: GeneralService,
-     private router: Router
+    private router: Router
   ) {
     super('id');
   }

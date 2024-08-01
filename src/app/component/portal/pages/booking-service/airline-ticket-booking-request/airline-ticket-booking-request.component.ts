@@ -150,6 +150,15 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
         if (this.router.url === '/booking-service/airline-ticket-booking-request') {
           this.getListData().then((r) => {
             // cập nhất lại trạng thái quá hạn giữ chỗ
+            this.datas.forEach(requestBooking => {
+              if (requestBooking.status == this.BookingRequestStatusEnum.ReserveSeat) {
+                const ticketHoldExpiryDate = requestBooking.ticketHoldExpiryDate != null ? new Date(requestBooking.ticketHoldExpiryDate) : new Date(0);
+                const now = new Date();
+                if (ticketHoldExpiryDate < now) {
+                  this.updateStatusRequestBooking(requestBooking.id, this.BookingRequestStatusEnum.ExpiredTicket);
+                }
+              }
+            });
           });
         } else {
           clearInterval(this.intervalIdUserRegister);
