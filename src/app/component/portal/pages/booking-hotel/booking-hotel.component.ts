@@ -196,7 +196,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
       Authorization: 'Bearer ' + localStorage.getItem(Constant.TOKEN),
     };
 
-    this.uploadUrl = `${this.configService.getConfig().api.baseUrl}/Upload`;
+    this.uploadUrl = `${this.configService.getConfig().api.baseUrl}/Upload/UploadHotelImage?hotelId=0`;
 
 
     this.contentFileConfirmBookingRoonHotel = ``
@@ -1136,7 +1136,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
         this.formAddRoom.controls['roomFileIds'].setValue(this.listURLFiles);
       }
     } else if (status === 'error') {
-      this.msg.error(`file ${file.name} tải lên không thành công.`);
+      this.msg.error(`file ${file.name} tải lên không thành công. ${file.error.error.text}`);
     }
   }
 

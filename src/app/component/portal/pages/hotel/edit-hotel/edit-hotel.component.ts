@@ -115,7 +115,7 @@ export class EditHotelComponent implements OnInit {
       Authorization: 'Bearer ' + localStorage.getItem(Constant.TOKEN),
     };
 
-    this.uploadUrl = `${this.configService.getConfig().api.baseUrl}/Upload`;
+    this.uploadUrl = `${this.configService.getConfig().api.baseUrl}/Upload/UploadHotelImage?hotelId=0`;
   }
 
   ngOnInit(): void {
@@ -319,6 +319,8 @@ export class EditHotelComponent implements OnInit {
   }
 
   handleChangeImages({ file, fileList }: NzUploadChangeParam, form: any): void {
+    console.log('file.response: ', file);
+
     const status = file.status;
     if (status === 'done') {
       this.msg.success(`file ${file.name} tải lên thành công.`);
@@ -351,7 +353,7 @@ export class EditHotelComponent implements OnInit {
         // this.formAddRoom.controls['roomFileIds'].setValue(this.listURLFiles);
       }
     } else if (status === 'error') {
-      this.msg.error(`file ${file.name} tải lên không thành công.`);
+      this.msg.error(`file ${file.name} tải lên không thành công. ${file.error.error.text}`);
     }
   }
 

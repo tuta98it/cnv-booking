@@ -783,7 +783,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
         this.formAddRoom.controls['roomFileIds'].setValue(this.listURLFiles);
       }
     } else if (status === 'error') {
-      this.msg.error(`file ${file.name} tải lên không thành công.`);
+      this.msg.error(`file ${file.name} tải lên không thành công. ${file.error.error.text}`);
     }
   }
 
