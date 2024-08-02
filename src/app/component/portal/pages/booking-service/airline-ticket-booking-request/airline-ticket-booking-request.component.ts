@@ -90,6 +90,10 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   airports: any[] = [];
   intervalIdUserRegister: NodeJS.Timeout;
 
+  isVisiblePopupUpdateNumberTicket: boolean = false;
+
+
+  listOfOptionPassengers = [];
   constructor(
     public translate: TranslateService,
     private notificationService: NotificationService,
@@ -112,31 +116,29 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
       typeTicket: new FormControl({ value: TypeAirlineTicket.OneWay, disabled: false }, Validators.required),
       passengers: new FormControl({ value: [], disabled: false }, Validators.required),
       fileIds: new FormControl({ value: [], disabled: false }, Validators.required),
-      tripItineraryDeparture: new FormControl({ value: null, disabled: false }, Validators.required),
+      tripItineraryDeparture: new FormControl({ value: null, disabled: true }),
       flightTimeDeparture: new FormControl({ value: [], disabled: false }, Validators.required),
+
       airlineCodeDeparture: new FormControl({ value: '', disabled: false }, Validators.required),
-      bookingCodeDeparture: new FormControl({ value: null, disabled: false }, Validators.required),
+      reservationCodeDeparture: new FormControl({ value: null, disabled: false }, Validators.required),
       flightNumberDeparture: new FormControl({ value: null, disabled: false }, Validators.required),
       ticketHoldExpiryDateDeparture: new FormControl({ value: null, disabled: false }, Validators.required),
       ticketPriceDeparture: new FormControl({ value: null, disabled: false }, Validators.required),
-      baggageFeeDeparture: new FormControl({ value: null, disabled: false }, Validators.required),
-      refundFeeDeparture: new FormControl({ value: null, disabled: false }, Validators.required),
-      cancelFeeDeparture: new FormControl({ value: null, disabled: false }, Validators.required),
-      changeFeeDeparture: new FormControl({ value: null, disabled: false }, Validators.required),
-      reservationCodeDeparture: new FormControl({ value: null, disabled: false }, Validators.required),
+      baggageFeeDeparture: new FormControl({ value: null, disabled: false }),
+      refundFeeDeparture: new FormControl({ value: null, disabled: false }),
+      cancelFeeDeparture: new FormControl({ value: null, disabled: false }),
+      changeFeeDeparture: new FormControl({ value: null, disabled: false }),
 
-      flightTimeReturn: new FormControl({ value: [], disabled: false }, Validators.required),
       airlineCodeReturn: new FormControl({ value: '', disabled: false }, Validators.required),
-      bookingCodeReturn: new FormControl({ value: null, disabled: false }, Validators.required),
+      reservationCodeReturn: new FormControl({ value: null, disabled: false }, Validators.required),
+      flightTimeReturn: new FormControl({ value: [], disabled: false }, Validators.required),
       flightNumberReturn: new FormControl({ value: null, disabled: false }, Validators.required),
       ticketHoldExpiryDateReturn: new FormControl({ value: null, disabled: false }, Validators.required),
       ticketPriceReturn: new FormControl({ value: null, disabled: false }, Validators.required),
-      baggageFeeReturn: new FormControl({ value: null, disabled: false }, Validators.required),
-      refundFeeReturn: new FormControl({ value: null, disabled: false }, Validators.required),
-      cancelFeeReturn: new FormControl({ value: null, disabled: false }, Validators.required),
-      changeFeeReturn: new FormControl({ value: null, disabled: false }, Validators.required),
-      reservationCodeReturn: new FormControl({ value: null, disabled: false }, Validators.required),
-
+      baggageFeeReturn: new FormControl({ value: null, disabled: false }),
+      refundFeeReturn: new FormControl({ value: null, disabled: false }),
+      cancelFeeReturn: new FormControl({ value: null, disabled: false }),
+      changeFeeReturn: new FormControl({ value: null, disabled: false }),
     });
 
   }
@@ -394,11 +396,6 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     let newStatus = status.value;
     let oldStatus = status.data.statusOld;
     let requestBookingId = status.data.id;
-    console.log("status: ", status);
-
-    // setTimeout(() => {
-    //   status.value = oldStatus;
-    // }, 200);
     switch (newStatus) {
       case this.BookingRequestStatusEnum.SubmitRequest:
 
@@ -438,7 +435,35 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
 
         break;
       case this.BookingRequestStatusEnum.IssuedTicket:
+        //Mở popup Cập nhật thông tin vé
+        this.isVisibleAirlineTicketInfo = true;
+        this.optionAirlineTicketInfo = this.OptionAirlineTicketInfoEnum.Update;
 
+
+
+        // this.generalService.sendEmailToPassengerToConfirmSuccessIssuedTicket(requestBookingId).subscribe(
+        //   {
+        //     next: (res: any) => {
+        //       if (res.isValid) {
+
+        //       } else {
+        //         if (res.errors && res.errors.length > 0) {
+        //           res.errors.forEach((el: any) => {
+        //             this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+        //           });
+        //         } else {
+        //           this.notificationService.showNotification(Constant.ERROR, 'Đã gửi email Xác nhận xuất vé máy bay đến khách hàng');
+        //         }
+        //       }
+        //     },
+        //     error: (err: any) => {
+        //       this.notificationService.showNotification(Constant.ERROR, 'Thay đổi trạng thái thất bại do lỗi hệ thống');
+        //     },
+        //     complete: () => {
+        //     }
+        //   }
+        // ).add(() => {
+        // });
         break;
       default:
         break;
@@ -493,9 +518,11 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
       this.formAirlineTicketPopup.enable();
       this.showUploadListOption = { ...this.showUploadListOption, ...{ showPreviewIcon: true, showRemoveIcon: true, showDownloadIcon: true } }
     }
+    this.listOfOptionPassengers = itemData.passengers;
     this.formAirlineTicketPopup.patchValue({
       typeTicket: itemData.typeTicket,
-      passengers: itemData.passengers.map(passenger => passenger.fullName),
+      // passengers: itemData.passengers.map(passenger => passenger.fullName),
+      passengers: itemData.passengers,
 
       tripItineraryDeparture: `${this.flightUtils.toNameAirportByCode(this.airports, itemData.startPoint)} - ${this.flightUtils.toNameAirportByCode(this.airports, itemData.endPoint)}`,
       flightTimeDeparture: [itemData.startTime, itemData.endTime],
@@ -564,7 +591,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
       this.listFileIds.push(file.response.fileId);
       this.formAirlineTicketPopup.controls['fileIds'].setValue(this.listFileIds);
     } else if (status === 'error') {
-      this.msg.error(`file ${file.name} tải lên không thành công.`);
+      this.msg.error(`File ${file.name} tải lên không thành công.`);
     }
   }
 
@@ -585,7 +612,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
         .subscribe(
           () => {
             this.uploading = false;
-            this.msg.success(`file ${file.name} tải lên thành công.`);
+            this.msg.success(`File ${file.name} tải lên thành công.`);
             this.fileList = fileList;
             setTimeout(() => {
               if (this.fileList.length > 0) {
@@ -648,66 +675,114 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     } else {
       this.notificationService.showNotification(Constant.ERROR, `Không thể xoá file khi ở chế độ View Ticket`);
     }
-  };
+  }
 
   handleSavelArilineTicketPopup() {
-    let formValue = this.formAirlineTicketPopup.value;
-    let payLoad = {
-      id: this.itemBookingRequest.id,
-      approvalCode: this.itemBookingRequest.approvalCode,
-      typeTicket: formValue.typeTicket,
-      departureDay: this.itemBookingRequest.departureDay,
-      returnDay: this.itemBookingRequest.returnDay,
-      startPoint: this.itemBookingRequest.startPoint,
-      endPoint: this.itemBookingRequest.endPoint,
-      airlineId: null,
-      airlineCode: formValue.airlineCodeDeparture,
-      fareClass: this.itemBookingRequest.fareClass,
-      adt: this.itemBookingRequest.adt,
-      chd: this.itemBookingRequest.chd,
-      inf: this.itemBookingRequest.inf,
-      baggage: this.itemBookingRequest.baggage,
+    console.log("handleSavelArilineTicketPopup formValue: ", this.formAirlineTicketPopup.value);
 
-      startTime: formValue.flightTimeDeparture[0],
-      endTime: formValue.flightTimeDeparture[1],
-      bookingCode: formValue.bookingCodeDeparture,
-      flightNumber: formValue.flightNumberDeparture,
-      ticketPrice: formValue.ticketPriceDeparture,
-      refundFee: formValue.refundFeeDeparture,
-      changeFee: formValue.changeFeeDeparture,
-      cancelFee: formValue.cancelFeeDeparture,
-      baggageFee: formValue.baggageFeeDeparture,
-      ticketHoldExpiryDate: formValue.ticketHoldExpiryDateDeparture,
-      reservationCode  : formValue.reservationCodeDeparture,
+    if (this.formAirlineTicketPopup.valid) {
+      let formValue = this.formAirlineTicketPopup.value;
 
-      returnStartTime: formValue.flightTimeReturn[0],
-      returnEndTime: formValue.flightTimeReturn[1],
-      returnBookingCode: formValue.bookingCodeReturn,
-      returnFlightNumber: formValue.flightNumberReturn,
-      returnTicketPrice: formValue.ticketPriceReturn,
-      returnRefundFee: formValue.refundFeeReturn,
-      returnChangeFee: formValue.changeFeeReturn,
-      returnCancelFee: formValue.cancelFeeReturn,
-      returnBaggageFee: formValue.baggageFeeReturn,
-      returnTicketHoldExpiryDate: formValue.ticketHoldExpiryDateReturn,
-      returnAirlineId: null,
-      returnAirlineCode: formValue.airlineCodeReturn,
-      returnReservationCode : formValue.reservationCodeReturn
 
-    }
-    this.generalService.updateRequestBooking(payLoad).subscribe(
-      (res: any) => {
-        if (res.ret && res.ret[0].code !== 0) {
-          this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
-        } else {
-          this.notificationService.showNotification(Constant.SUCCESS, Constant.MESSAGE_UPDATE_SUCCESS);
-        }
-      }, error => {
 
+
+      let payload = {
+        id: this.itemBookingRequest.id,
+        // approvalCode: this.itemBookingRequest.approvalCode,
+        typeTicket: formValue.typeTicket,
+        departureDay: this.itemBookingRequest.departureDay,
+        returnDay: this.itemBookingRequest.returnDay,
+        startPoint: this.itemBookingRequest.startPoint,
+        endPoint: this.itemBookingRequest.endPoint,
+        airlineId: null,
+        airlineCode: formValue.airlineCodeDeparture,
+        fareClass: this.itemBookingRequest.fareClass,
+        adt: this.itemBookingRequest.adt,
+        chd: this.itemBookingRequest.chd,
+        inf: this.itemBookingRequest.inf,
+        baggage: this.itemBookingRequest.baggage,
+
+        startTime: formValue.flightTimeDeparture[0],
+        endTime: formValue.flightTimeDeparture[1],
+        bookingCode: formValue.bookingCodeDeparture,
+        flightNumber: formValue.flightNumberDeparture,
+        ticketPrice: formValue.ticketPriceDeparture,
+        refundFee: formValue.refundFeeDeparture,
+        changeFee: formValue.changeFeeDeparture,
+        cancelFee: formValue.cancelFeeDeparture,
+        baggageFee: formValue.baggageFeeDeparture,
+        ticketHoldExpiryDate: formValue.ticketHoldExpiryDateDeparture,
+        reservationCode: formValue.reservationCodeDeparture,
+
+        returnStartTime: formValue.flightTimeReturn[0],
+        returnEndTime: formValue.flightTimeReturn[1],
+        returnBookingCode: formValue.bookingCodeReturn,
+        returnFlightNumber: formValue.flightNumberReturn,
+        returnTicketPrice: formValue.ticketPriceReturn,
+        returnRefundFee: formValue.refundFeeReturn,
+        returnChangeFee: formValue.changeFeeReturn,
+        returnCancelFee: formValue.cancelFeeReturn,
+        returnBaggageFee: formValue.baggageFeeReturn,
+        returnTicketHoldExpiryDate: formValue.ticketHoldExpiryDateReturn,
+        returnAirlineId: null,
+        returnAirlineCode: formValue.airlineCodeReturn,
+        returnReservationCode: formValue.reservationCodeReturn
+
+      }
+      return;
+      this.updateRequestBooking(payload).then((r) => {
+        // Mở popup cập nhật số vé
+        this.isVisiblePopupUpdateNumberTicket = true;
       });
+
+    } else {
+      // Đánh dấu tất cả các trường là đã được chạm (touched) để hiển thị lỗi
+      this.formAirlineTicketPopup.markAllAsTouched();
+      // this.notificationService.showNotification(Constant.SUCCESS, "Tồn tại trường thông tin chưa được nhập");
+      this.msg.error(`Tồn tại trường thông tin chưa được nhập`);
+    }
+
+  }
+  updateRequestBooking(payload: any) {
+    return new Promise((resolve, reject) => {
+      this.generalService.updateRequestBooking(payload).subscribe(
+        (res: any) => {
+          if (res.ret && res.ret[0].code !== 0) {
+            this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
+          } else {
+            this.notificationService.showNotification(Constant.SUCCESS, Constant.MESSAGE_UPDATE_SUCCESS);
+            return resolve(true);
+          }
+        }, error => {
+
+        });
+    });
+
   }
 
   handleCancelArilineTicketPopup() {
     this.isVisibleAirlineTicketInfo = false;
+  }
+
+  addItemPassenger(input: HTMLInputElement): void {
+    const value = input.value;
+    if (value) {
+      const newItem = {
+        "id": null,
+        "indexCode": null,
+        "fullName": value,
+        "gender": true,
+        "email": null,
+        "phone": null,
+        "membership": "",
+        "typeCode": "",
+        "dateOfBirth": "",
+        "ticketNumber": null
+      }
+      this.listOfOptionPassengers = [...this.listOfOptionPassengers, newItem || `Một ai đó`];
+    } else {
+      this.msg.error(`Tồn tại trường thông tin chưa được nhập`);
+    }
+    input.value = '';
   }
 }

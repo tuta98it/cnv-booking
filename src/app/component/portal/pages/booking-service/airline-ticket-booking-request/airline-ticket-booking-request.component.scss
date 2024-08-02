@@ -74,6 +74,18 @@
   }
 }
 
+
+:host ::ng-deep {
+  .container {
+    padding: 8px;
+  }
+
+  .add-item {
+  }
+}
+
+
+
 .ticket-detail {
   .ticket-title {
     color: #fff;

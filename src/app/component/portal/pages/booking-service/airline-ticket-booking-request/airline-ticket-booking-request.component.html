@@ -77,7 +77,7 @@
         [nzDisabled]="!(status.value == BookingRequestStatusEnum.ExpiredTicket)"></nz-option>
 
       <nz-option [nzLabel]="'Điều chỉnh vé'" [nzValue]="BookingRequestStatusEnum.AdjustTicket"
-        [nzDisabled]="!(status.value == BookingRequestStatusEnum.AdjustTicket || status.value == BookingRequestStatusEnum.ReceivedTicket)"></nz-option>
+        [nzDisabled]="!(status.value == BookingRequestStatusEnum.AdjustTicket || status.value == BookingRequestStatusEnum.ReserveSeat || status.value == BookingRequestStatusEnum.ReceivedTicket)"></nz-option>
 
       <nz-option [nzLabel]="'Xuất vé'" [nzValue]="BookingRequestStatusEnum.IssuedTicket"
         [nzDisabled]="!(status.value == BookingRequestStatusEnum.IssuedTicket || status.value == BookingRequestStatusEnum.AdjustTicket || status.value == BookingRequestStatusEnum.ReceivedTicket)"></nz-option>
@@ -217,12 +217,12 @@
 <!-- Popup View/Update thông tin vé máy bay -->
 <form [formGroup]="formAirlineTicketPopup">
   <!-- [(nzVisible)]="isVisibleAirlineTicketInfo" -->
-  <nz-modal [(nzVisible)]="isVisibleAirlineTicketInfo" [nzContent]="contentAirlineTicketInfo" nzWidth="1506px"
+  <nz-modal [(nzVisible)]="isVisibleAirlineTicketInfo" [nzContent]="contentAirlineTicketPopup" nzWidth="1506px"
     [nzStyle]="{ top: '20px' }" (nzOnCancel)="handleCancelArilineTicketPopup()">
     <div *nzModalTitle>
       {{optionAirlineTicketInfo == OptionAirlineTicketInfoEnum.View ? "Xem" : "Cập nhật"}} thông tin vé máy bay
     </div>
-    <ng-template #contentAirlineTicketInfo>
+    <ng-template #contentAirlineTicketPopup>
       <div>
         <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
           <div nz-col class="gutter-row" nzSpan="2">
@@ -263,12 +263,31 @@
           </div>
           <div nz-col class="gutter-row" nzSpan="22">
             <div class="inner-box">
-              <input style="border-radius: 4px;" nz-input nzSize="default" formControlName="passengers">
-              <!-- <nz-select [nzMaxTagCount]="3" [nzMaxTagPlaceholder]="tagPlaceHolder" nzMode="multiple"
-                nzPlaceHolder="-- Khách hàng --" formControlName="passengers">
-                <nz-option *ngFor="let item of listOfOption" [nzLabel]="item" [nzValue]="item"></nz-option>
+              <!-- <input style="border-radius: 4px;" nz-input nzSize="default" formControlName="passengers"> -->
+              <nz-select [nzMaxTagCount]="6" [nzMaxTagPlaceholder]="tagPlaceHolder" nzMode="tags"
+                [nzTokenSeparators]="[',']" nzPlaceHolder="-- Khách hàng --" [nzDropdownRender]="renderTemplate"
+                formControlName="passengers">
+                <nz-option *ngFor="let passenger of listOfOptionPassengers" [nzLabel]="passenger.fullName"
+                  [nzValue]="passenger"></nz-option>
               </nz-select>
-              <ng-template #tagPlaceHolder let-selectedList>và {{ selectedList.length }} khách hàng nữa...</ng-template> -->
+              <ng-template #tagPlaceHolder let-selectedList>và {{ selectedList.length }} khách hàng nữa...</ng-template>
+              <ng-template #renderTemplate>
+                <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }" class="container">
+                  <div nz-col class="gutter-row" nzSpan="18">
+                    <div class="inner-box">
+                      <input type="text" nz-input #inputElementPassenger />
+                    </div>
+                  </div>
+                  <div nz-col class="gutter-row" nzSpan="6">
+                    <div class="inner-box">
+                      <a class="add-item" (click)="addItemPassenger(inputElementPassenger)">
+                        <span nz-icon nzType="plus"></span>
+                        Thêm mới khách hàng
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </ng-template>
             </div>
           </div>
         </div>
@@ -360,9 +379,7 @@
             </div>
             <div nz-col class="gutter-row" nzSpan="3">
               <div class="inner-box" style="float: right;">
-                <label for="">Phí thêm hành lý
-                  <em class="fa fa-asterisk required" style="line-height: revert;"></em>
-                </label>
+                <label for="">Phí thêm hành lý</label>
               </div>
             </div>
             <div nz-col class="gutter-row" nzSpan="9">
@@ -376,7 +393,7 @@
             <div nz-col class="gutter-row" nzSpan="2">
               <div class="inner-box">
                 <label for="">Phí hoàn vé
-                  <em class="fa fa-asterisk required" style="line-height: revert;"></em>
+
                 </label>
               </div>
             </div>
@@ -388,9 +405,7 @@
             </div>
             <div nz-col class="gutter-row" nzSpan="2">
               <div class="inner-box" style="float: right;">
-                <label for="">Phí huỷ vé
-                  <em class="fa fa-asterisk required" style="line-height: revert;"></em>
-                </label>
+                <label for="">Phí huỷ vé</label>
               </div>
             </div>
             <div nz-col class="gutter-row" nzSpan="6">
@@ -401,9 +416,7 @@
             </div>
             <div nz-col class="gutter-row" nzSpan="2">
               <div class="inner-box" style="float: right;">
-                <label for="">Phí đổi vé
-                  <em class="fa fa-asterisk required" style="line-height: revert;"></em>
-                </label>
+                <label for="">Phí đổi vé</label>
               </div>
             </div>
             <div nz-col class="gutter-row" nzSpan="6">
@@ -503,9 +516,7 @@
             </div>
             <div nz-col class="gutter-row" nzSpan="3">
               <div class="inner-box" style="float: right;">
-                <label for="">Phí thêm hành lý
-                  <em class="fa fa-asterisk required" style="line-height: revert;"></em>
-                </label>
+                <label for="">Phí thêm hành lý</label>
               </div>
             </div>
             <div nz-col class="gutter-row" nzSpan="9">
@@ -517,9 +528,7 @@
           <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
             <div nz-col class="gutter-row" nzSpan="2">
               <div class="inner-box">
-                <label for="">Phí hoàn vé
-                  <em class="fa fa-asterisk required" style="line-height: revert;"></em>
-                </label>
+                <label for="">Phí hoàn vé</label>
               </div>
             </div>
             <div nz-col class="gutter-row" nzSpan="6">
@@ -530,9 +539,7 @@
             </div>
             <div nz-col class="gutter-row" nzSpan="2">
               <div class="inner-box" style="float: right;">
-                <label for="">Phí huỷ vé
-                  <em class="fa fa-asterisk required" style="line-height: revert;"></em>
-                </label>
+                <label for="">Phí huỷ vé</label>
               </div>
             </div>
             <div nz-col class="gutter-row" nzSpan="6">
@@ -543,9 +550,7 @@
             </div>
             <div nz-col class="gutter-row" nzSpan="2">
               <div class="inner-box" style="float: right;">
-                <label for="">Phí đổi vé
-                  <em class="fa fa-asterisk required" style="line-height: revert;"></em>
-                </label>
+                <label for="">Phí đổi vé</label>
               </div>
             </div>
             <div nz-col class="gutter-row" nzSpan="6">
@@ -620,3 +625,59 @@
     </div>
   </nz-modal>
 </form>
+
+
+<!-- Popup cập nhật thông tin số vé cho -->
+<nz-modal [(nzVisible)]="isVisiblePopupUpdateNumberTicket" [nzContent]="contentPopupUpdateNumberTicket" nzWidth="824px"
+  [nzStyle]="{ top: '40px' }" (nzOnCancel)="handleCancelArilineTicketPopup()">
+  <div *nzModalTitle>
+    Cập nhật số vé
+  </div>
+  <ng-template #contentPopupUpdateNumberTicket>
+    <div *ngIf="itemBookingRequest">
+      <div *ngFor="let passenger of itemBookingRequest.passengers;let i = index;">
+        <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
+          <div nz-col class="gutter-row" nzSpan="2">
+            <div class="inner-box">
+              <label for="">Số vé
+                <em class="fa fa-asterisk required" style="line-height: revert;"></em>
+              </label>
+            </div>
+          </div>
+          <div nz-col class="gutter-row" nzSpan="6">
+            <div class="inner-box">
+              <input style="width: 200px; border-radius: 4px; height: 32px; margin-right: 10px;" nzSize="small" nz-input
+                type="text" [(ngModel)]="passenger.ticketNumber" placeholder="Nhập số vé cho chuyến bay">
+            </div>
+          </div>
+          <div nz-col class="gutter-row" nzSpan="4">
+            <div class="inner-box" style="float: right;">
+              <label for="">Khách hàng</label>
+            </div>
+          </div>
+          <div nz-col class="gutter-row" nzSpan="12">
+            <div class="inner-box">
+              Trần Anh Tú
+            </div>
+          </div>
+        </div>
+        <div style="width: 100%; height: 1px; background-color: #f5f5f5; margin: 1.5rem 0rem;"></div>
+      </div>
+    </div>
+  </ng-template>
+  <div *nzModalFooter>
+    <button nz-button nzType="default" (click)="handleCancelArilineTicketPopup()">
+      <div style="display: flex; align-items: center;">
+        <span nz-icon nzType="close"></span>
+        <span style="margin-left: 4px; line-height: normal;">Huỷ</span>
+      </div>
+    </button>
+
+    <button nz-button nzType="primary" (click)="handleSavelArilineTicketPopup()">
+      <div style="display: flex; align-items: center;">
+        <span nz-icon nzType="save"></span>
+        <span style="margin-left: 6px; line-height: normal;">Lưu</span>
+      </div>
+    </button>
+  </div>
+</nz-modal>
