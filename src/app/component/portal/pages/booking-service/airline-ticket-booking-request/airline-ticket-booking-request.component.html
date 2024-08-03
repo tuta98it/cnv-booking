@@ -53,10 +53,16 @@
   <dxi-column caption="STT" [width]="55" dataField="stt" [fixed]="true" [allowFiltering]="false" [allowSorting]="false"
     cssClass="text-center vertical-align-middle"></dxi-column>
 
-  <dxi-column caption="Mã yêu cầu" dataField="bookingCode" cssClass="text-left vertical-align-middle"></dxi-column>
+  <dxi-column caption="Mã yêu cầu" dataField="bookingCode" cssClass="text-left vertical-align-middle" [width]="150" [fixed]="true"></dxi-column>
 
   <dxi-column caption="Mã phê duyệt" dataField="approvalCode" cssClass="vertical-align-middle"
-    [width]="150"></dxi-column>
+    [width]="150" [fixed]="true"></dxi-column>
+
+  <dxi-column caption="Mã đặt chỗ" cssClass="vertical-align-middle" [width]="150"
+    cellTemplate="cellReservationCode" [fixed]="true"></dxi-column>
+  <div *dxTemplate="let item of 'cellReservationCode'">
+    {{item.data.reservationCode}}{{ item.data.returnReservationCode ? ", " + item.data.returnReservationCod : "" }}
+  </div>
 
 
   <dxi-column caption="Trạng thái" [width]="200" dataField="status" cssClass="text-left vertical-align-middle"
@@ -264,7 +270,7 @@
           <div nz-col class="gutter-row" nzSpan="22">
             <div class="inner-box">
               <!-- <input style="border-radius: 4px;" nz-input nzSize="default" formControlName="passengers"> -->
-              <nz-select [nzMaxTagCount]="6" [nzMaxTagPlaceholder]="tagPlaceHolder" nzMode="tags"
+              <nz-select [nzMaxTagCount]="6" [nzMaxTagPlaceholder]="tagPlaceHolder" nzMode="multiple"
                 [nzTokenSeparators]="[',']" nzPlaceHolder="-- Khách hàng --" [nzDropdownRender]="renderTemplate"
                 formControlName="passengers">
                 <nz-option *ngFor="let passenger of listOfOptionPassengers" [nzLabel]="passenger.fullName"
@@ -275,15 +281,20 @@
                 <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }" class="container">
                   <div nz-col class="gutter-row" nzSpan="18">
                     <div class="inner-box">
-                      <input type="text" nz-input #inputElementPassenger />
+                      <input type="text" nz-input #inputElementPassenger
+                        (keyup.enter)="addItemPassenger(inputElementPassenger)" />
                     </div>
                   </div>
                   <div nz-col class="gutter-row" nzSpan="6">
                     <div class="inner-box">
-                      <a class="add-item" (click)="addItemPassenger(inputElementPassenger)">
-                        <span nz-icon nzType="plus"></span>
-                        Thêm mới khách hàng
-                      </a>
+                      <div style="display: flex; align-items: center;">
+                        <a class="add-item" (click)="addItemPassenger(inputElementPassenger)">
+                          <div style=" display: flex; height: 30px; align-items: center;">
+                            <span nz-icon nzType="plus" style="line-height: normal; margin-right: 4px;"></span>
+                            <span>Thêm mới khách hàng</span>
+                          </div>
+                        </a>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -304,7 +315,7 @@
             </div>
             <div nz-col class="gutter-row" nzSpan="14">
               <div class="inner-box">
-                <nz-range-picker [nzShowTime]="true" style="width: 100%;"
+                <nz-range-picker [nzShowTime]="true" nzFormat="dd/MM/yyyy HH:mm" style="width: 100%;"
                   formControlName="flightTimeDeparture"></nz-range-picker>
               </div>
             </div>
@@ -359,8 +370,11 @@
             </div>
             <div nz-col class="gutter-row" nzSpan="6">
               <div class="inner-box">
-                <input style="border-radius: 4px;" nz-input nzSize="default"
-                  formControlName="ticketHoldExpiryDateDeparture">
+                <!-- <input style="border-radius: 4px;" nz-input nzSize="default"
+                  formControlName="ticketHoldExpiryDateDeparture"> -->
+                <nz-date-picker [nzShowTime]="true" formControlName="ticketHoldExpiryDateDeparture" nzSize="default"
+                  style="width: 100%;" nzFormat="dd/MM/yyyy HH:mm" placeholder="Hạn giữ vé" [nzNowText]="'Bây giờ'"
+                  [nzOkText]="'OK'"></nz-date-picker>
               </div>
             </div>
           </div>
@@ -441,7 +455,7 @@
             </div>
             <div nz-col class="gutter-row" nzSpan="14">
               <div class="inner-box">
-                <nz-range-picker [nzShowTime]="true" style="width: 100%;"
+                <nz-range-picker [nzShowTime]="true" nzFormat="dd/MM/yyyy HH:mm" style="width: 100%;"
                   formControlName="flightTimeReturn"></nz-range-picker>
               </div>
             </div>
@@ -496,8 +510,11 @@
             </div>
             <div nz-col class="gutter-row" nzSpan="6">
               <div class="inner-box">
-                <input style="border-radius: 4px;" nz-input nzSize="default"
-                  formControlName="ticketHoldExpiryDateReturn">
+                <!-- <input style="border-radius: 4px;" nz-input nzSize="default"
+                  formControlName="ticketHoldExpiryDateReturn"> -->
+                <nz-date-picker nzShowTime formControlName="ticketHoldExpiryDateReturn" nzSize="default"
+                  style="width: 100%;" nzFormat="dd/MM/yyyy HH:mm" placeholder="Hạn giữ vé" [nzNowText]="'Bây giờ'"
+                  [nzOkText]="'OK'"></nz-date-picker>
               </div>
             </div>
           </div>
@@ -657,7 +674,7 @@
           </div>
           <div nz-col class="gutter-row" nzSpan="12">
             <div class="inner-box">
-              Trần Anh Tú
+              {{passenger.fullName}}
             </div>
           </div>
         </div>
@@ -666,14 +683,14 @@
     </div>
   </ng-template>
   <div *nzModalFooter>
-    <button nz-button nzType="default" (click)="handleCancelArilineTicketPopup()">
+    <button nz-button nzType="default" (click)="handleCancelPopupUpdateNumberTicket()">
       <div style="display: flex; align-items: center;">
         <span nz-icon nzType="close"></span>
         <span style="margin-left: 4px; line-height: normal;">Huỷ</span>
       </div>
     </button>
 
-    <button nz-button nzType="primary" (click)="handleSavelArilineTicketPopup()">
+    <button nz-button nzType="primary" (click)="handleSavelPopupUpdateNumberTicket()">
       <div style="display: flex; align-items: center;">
         <span nz-icon nzType="save"></span>
         <span style="margin-left: 6px; line-height: normal;">Lưu</span>

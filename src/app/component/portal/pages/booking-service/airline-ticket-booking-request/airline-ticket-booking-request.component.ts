@@ -115,7 +115,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
       id: [null],
       typeTicket: new FormControl({ value: TypeAirlineTicket.OneWay, disabled: false }, Validators.required),
       passengers: new FormControl({ value: [], disabled: false }, Validators.required),
-      fileIds: new FormControl({ value: [], disabled: false }, Validators.required),
+      fileIds: new FormControl({ value: [], disabled: false }),
       tripItineraryDeparture: new FormControl({ value: null, disabled: true }),
       flightTimeDeparture: new FormControl({ value: [], disabled: false }, Validators.required),
 
@@ -129,12 +129,12 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
       cancelFeeDeparture: new FormControl({ value: null, disabled: false }),
       changeFeeDeparture: new FormControl({ value: null, disabled: false }),
 
-      airlineCodeReturn: new FormControl({ value: '', disabled: false }, Validators.required),
-      reservationCodeReturn: new FormControl({ value: null, disabled: false }, Validators.required),
-      flightTimeReturn: new FormControl({ value: [], disabled: false }, Validators.required),
-      flightNumberReturn: new FormControl({ value: null, disabled: false }, Validators.required),
-      ticketHoldExpiryDateReturn: new FormControl({ value: null, disabled: false }, Validators.required),
-      ticketPriceReturn: new FormControl({ value: null, disabled: false }, Validators.required),
+      airlineCodeReturn: new FormControl({ value: '', disabled: false }, this.requiredIfRoundTrip.bind(this)),
+      reservationCodeReturn: new FormControl({ value: null, disabled: false }, this.requiredIfRoundTrip.bind(this)),
+      flightTimeReturn: new FormControl({ value: [], disabled: false }, this.requiredIfRoundTrip.bind(this)),
+      flightNumberReturn: new FormControl({ value: null, disabled: false }, this.requiredIfRoundTrip.bind(this)),
+      ticketHoldExpiryDateReturn: new FormControl({ value: null, disabled: false }, this.requiredIfRoundTrip.bind(this)),
+      ticketPriceReturn: new FormControl({ value: null, disabled: false }, this.requiredIfRoundTrip.bind(this)),
       baggageFeeReturn: new FormControl({ value: null, disabled: false }),
       refundFeeReturn: new FormControl({ value: null, disabled: false }),
       cancelFeeReturn: new FormControl({ value: null, disabled: false }),
@@ -176,7 +176,9 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
 
   }
 
-
+  requiredIfRoundTrip(control: FormControl) {
+    return this.itemBookingRequest?.typeTicket == this.TypeAirlineTicketEnum.RoundTrip ? Validators.required(control) : null;
+  }
   getUserInfo() {
     this.userInfor = JSON.parse(localStorage.getItem(Constant.USER_INFO));
   }
@@ -219,8 +221,6 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     this.fileList = this.fileList.concat(file);
     return false;
   };
-
-
 
 
   previewDetailTransactionHistoryTickets(historyTransaction: any) {
@@ -383,7 +383,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   }
 
   formatCurrencyVND(value) {
-    console.log("value formatCurrencyVND", value);
+
 
     if (!value) {
       return '0 đ';
@@ -438,38 +438,13 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
         //Mở popup Cập nhật thông tin vé
         this.isVisibleAirlineTicketInfo = true;
         this.optionAirlineTicketInfo = this.OptionAirlineTicketInfoEnum.Update;
-
-
-
-        // this.generalService.sendEmailToPassengerToConfirmSuccessIssuedTicket(requestBookingId).subscribe(
-        //   {
-        //     next: (res: any) => {
-        //       if (res.isValid) {
-
-        //       } else {
-        //         if (res.errors && res.errors.length > 0) {
-        //           res.errors.forEach((el: any) => {
-        //             this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
-        //           });
-        //         } else {
-        //           this.notificationService.showNotification(Constant.ERROR, 'Đã gửi email Xác nhận xuất vé máy bay đến khách hàng');
-        //         }
-        //       }
-        //     },
-        //     error: (err: any) => {
-        //       this.notificationService.showNotification(Constant.ERROR, 'Thay đổi trạng thái thất bại do lỗi hệ thống');
-        //     },
-        //     complete: () => {
-        //     }
-        //   }
-        // ).add(() => {
-        // });
         break;
       default:
         break;
     }
     status.data.statusOld = newStatus;
   }
+
 
   updateStatusRequestBooking(requestBookingId: number, status: number) {
     return new Promise((resolve, reject) => {
@@ -576,7 +551,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
       this.fileList = fileList;
       setTimeout(() => {
         if (this.fileList.length > 0) {
-          this.fileList[this.fileList.length - 1].uid = file.response.fileId.toString();
+          this.fileList[this.fileList.length - 1].fileId = file.response.fileId.toString();
           this.fileList[this.fileList.length - 1].url = `${this.configService.getConfig().api.baseUrl}/${file.response.path}`;
           // this.fileList[this.fileList.length - 1] = {
           //   uid: file.response.hotelFileId.toString(),
@@ -642,50 +617,48 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   }
 
   handleRemoveFileTicketBookingRequest = async (file: NzUploadFile): Promise<void> => {
-    if (this.optionAirlineTicketInfo == this.OptionAirlineTicketInfoEnum.Update) {
-      const idFile = file.uid;
-      this.generalService.deleteRequestBookingFileByID(idFile).subscribe(
-        {
-          next: (res) => {
-            if (res) {
-              if (res.ret && res.ret.length > 0) {
-                res.ret.forEach((el: any) => {
-                  if (el.code === 0) {
-                    this.msg.success(`Đã xoá file ${file.name}.`);
-                    this.getListData();
-                  } else if (res.code === 404) {
-                    this.msg.error(`Không tìm thấy file ${file.name}.`);
-                  } else {
-                    this.msg.error(`Đã có lỗi xảy ra. Không thể xoá file ${file.name}`);
-                  }
-                });
-              }
-            } else {
-              this.notificationService.showNotification(Constant.ERROR, `Hệ thống gặp lỗi, xoá file ${file.name} thật bại.`);
-            }
-          },
-          error: (error) => {
-            this.notificationService.showNotification(Constant.ERROR, `Hệ thống gặp lỗi, xoá file ${file.name} thật bại.`);
-          },
-          complete: () => {
-          },
 
-        }
-      );
+    if (this.optionAirlineTicketInfo == this.OptionAirlineTicketInfoEnum.Update) {
+      const idFile = file.fileId;
+      if (idFile) {
+        this.generalService.deleteRequestBookingFileByID(idFile).subscribe(
+          {
+            next: (res) => {
+              if (res) {
+                if (res.ret && res.ret.length > 0) {
+                  res.ret.forEach((el: any) => {
+                    if (el.code === 0) {
+                      this.msg.success(`Đã xoá file ${file.name}.`);
+                      this.getListData();
+                    } else if (res.code === 404) {
+                      this.msg.error(`Không tìm thấy file ${file.name}.`);
+                    } else {
+                      this.msg.error(`Đã có lỗi xảy ra. Không thể xoá file ${file.name}`);
+                    }
+                  });
+                }
+              } else {
+                this.notificationService.showNotification(Constant.ERROR, `Hệ thống gặp lỗi, xoá file ${file.name} thật bại.`);
+              }
+            },
+            error: (error) => {
+              this.notificationService.showNotification(Constant.ERROR, `Hệ thống gặp lỗi, xoá file ${file.name} thật bại.`);
+            },
+            complete: () => {
+            },
+
+          }
+        );
+      }
+
     } else {
       this.notificationService.showNotification(Constant.ERROR, `Không thể xoá file khi ở chế độ View Ticket`);
     }
   }
 
   handleSavelArilineTicketPopup() {
-    console.log("handleSavelArilineTicketPopup formValue: ", this.formAirlineTicketPopup.value);
-
     if (this.formAirlineTicketPopup.valid) {
       let formValue = this.formAirlineTicketPopup.value;
-
-
-
-
       let payload = {
         id: this.itemBookingRequest.id,
         // approvalCode: this.itemBookingRequest.approvalCode,
@@ -701,6 +674,8 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
         chd: this.itemBookingRequest.chd,
         inf: this.itemBookingRequest.inf,
         baggage: this.itemBookingRequest.baggage,
+        passengers: formValue.passengers,
+
 
         startTime: formValue.flightTimeDeparture[0],
         endTime: formValue.flightTimeDeparture[1],
@@ -726,12 +701,15 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
         returnTicketHoldExpiryDate: formValue.ticketHoldExpiryDateReturn,
         returnAirlineId: null,
         returnAirlineCode: formValue.airlineCodeReturn,
-        returnReservationCode: formValue.reservationCodeReturn
+        returnReservationCode: formValue.reservationCodeReturn ?? null
 
       }
-      return;
+      // console.log("formValue: ", formValue);
+      // console.log("payload: ", payload);
+
       this.updateRequestBooking(payload).then((r) => {
         // Mở popup cập nhật số vé
+        this.isVisibleAirlineTicketInfo = false;
         this.isVisiblePopupUpdateNumberTicket = true;
       });
 
@@ -750,7 +728,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
           if (res.ret && res.ret[0].code !== 0) {
             this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
           } else {
-            this.notificationService.showNotification(Constant.SUCCESS, Constant.MESSAGE_UPDATE_SUCCESS);
+            this.notificationService.showNotification(Constant.SUCCESS, "Cập nhật vé thành công");
             return resolve(true);
           }
         }, error => {
@@ -785,4 +763,110 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     }
     input.value = '';
   }
+
+  handleCancelPopupUpdateNumberTicket() {
+    this.isVisiblePopupUpdateNumberTicket = false;
+  }
+
+  handleSavelPopupUpdateNumberTicket() {
+    return new Promise((resolve, reject) => {
+      const passengersUpdatePayload = this.itemBookingRequest.passengers;
+      this.generalService.updatePassengersRequestBooking(passengersUpdatePayload).subscribe(
+        {
+          next: (res: any) => {
+            if (res.isValid) {
+              this.notificationService.showNotification(Constant.SUCCESS, `Cập nhật số vé khách hàng thành công!`);
+              this.isVisiblePopupUpdateNumberTicket = false;
+              this.IssuedTicketRequestBookingById(this.itemBookingRequest.id).then((r) => {
+                this.sendEmailToPassengerToConfirmSuccessIssuedTicket(this.itemBookingRequest.id);
+              });
+              resolve(true);
+            } else {
+              if (res.errors && res.errors.length > 0) {
+                res.errors.forEach((el: any) => {
+                  this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+                });
+              } else {
+                this.notificationService.showNotification(Constant.ERROR, 'Cập nhật số vé khách hàng không thành công.');
+              }
+            }
+          },
+          error: (err: any) => {
+            this.notificationService.showNotification(Constant.ERROR, 'Cập nhật số vé khách hàng do lỗi hệ thống');
+          },
+          complete: () => {
+
+          }
+        }
+      ).add(() => {
+      });
+
+    });
+
+  }
+
+  IssuedTicketRequestBookingById(id: number) {
+    return new Promise((resolve, reject) => {
+
+      this.generalService.updateStatusRequestBooking(id, this.BookingRequestStatusEnum.IssuedTicket).subscribe(
+        {
+          next: (res: any) => {
+            if (res.isValid) {
+              this.notificationService.showNotification(Constant.SUCCESS, `Đã xuất vé thành công!`);
+              resolve(true);
+            } else {
+              if (res.errors && res.errors.length > 0) {
+                res.errors.forEach((el: any) => {
+                  this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+                });
+              } else {
+                this.notificationService.showNotification(Constant.ERROR, 'Xuất vé không thành công.');
+              }
+            }
+          },
+          error: (err: any) => {
+            this.notificationService.showNotification(Constant.ERROR, 'Xuất vé thất bại do lỗi hệ thống');
+          },
+          complete: () => {
+          }
+        }
+      ).add(() => {
+      });
+      // if (this.itemBookingRequest.status == this.BookingRequestStatusEnum.ReceivedTicket) {
+
+      // } else if (this.itemBookingRequest.status == this.BookingRequestStatusEnum.IssuedTicket) {
+      //   this.notificationService.showNotification(Constant.SUCCESS, `Vé ${this.itemBookingRequest.bookingCode} đã được xuất.`);
+      // } else {
+      //   this.notificationService.showNotification(Constant.ERROR, 'Không thể xuất vé, vui lòng kiểm tra lại thông tin');
+      // }
+    });
+
+  }
+
+  sendEmailToPassengerToConfirmSuccessIssuedTicket(requestBookingId: number) {
+    this.generalService.sendEmailToPassengerToConfirmSuccessIssuedTicket(requestBookingId).subscribe(
+      {
+        next: (res: any) => {
+          if (res.isValid) {
+            this.notificationService.showNotification(Constant.ERROR, 'Đã gửi email thống báo xuất vé đến khách hàng');
+          } else {
+            if (res.errors && res.errors.length > 0) {
+              res.errors.forEach((el: any) => {
+                this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+              });
+            } else {
+              this.notificationService.showNotification(Constant.ERROR, 'Gửi email thống báo xuất vé đến khách hàng không thành công');
+            }
+          }
+        },
+        error: (err: any) => {
+          this.notificationService.showNotification(Constant.ERROR, 'Gửi email thống báo xuất vé đến khách hàng thất bại do lỗi hệ thống');
+        },
+        complete: () => {
+        }
+      }
+    ).add(() => {
+    });
+  }
+
 }
