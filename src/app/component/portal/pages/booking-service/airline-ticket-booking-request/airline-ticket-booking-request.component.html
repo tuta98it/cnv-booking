@@ -53,13 +53,14 @@
   <dxi-column caption="STT" [width]="55" dataField="stt" [fixed]="true" [allowFiltering]="false" [allowSorting]="false"
     cssClass="text-center vertical-align-middle"></dxi-column>
 
-  <dxi-column caption="Mã yêu cầu" dataField="bookingCode" cssClass="text-left vertical-align-middle" [width]="150" [fixed]="true"></dxi-column>
+  <dxi-column caption="Mã yêu cầu" dataField="bookingCode" cssClass="text-left vertical-align-middle" [width]="150"
+    [fixed]="true"></dxi-column>
 
-  <dxi-column caption="Mã phê duyệt" dataField="approvalCode" cssClass="vertical-align-middle"
-    [width]="150" [fixed]="true"></dxi-column>
+  <dxi-column caption="Mã phê duyệt" dataField="approvalCode" cssClass="vertical-align-middle" [width]="150"
+    [fixed]="true"></dxi-column>
 
-  <dxi-column caption="Mã đặt chỗ" cssClass="vertical-align-middle" [width]="150"
-    cellTemplate="cellReservationCode" [fixed]="true"></dxi-column>
+  <dxi-column caption="Mã đặt chỗ" cssClass="vertical-align-middle" [width]="150" cellTemplate="cellReservationCode"
+    [fixed]="true"></dxi-column>
   <div *dxTemplate="let item of 'cellReservationCode'">
     {{item.data.reservationCode}}{{ item.data.returnReservationCode ? ", " + item.data.returnReservationCod : "" }}
   </div>
@@ -73,8 +74,9 @@
       <nz-option [nzLabel]="'Gửi yêu cầu'" [nzValue]="BookingRequestStatusEnum.SubmitRequest"
         [nzDisabled]="!(status.value == BookingRequestStatusEnum.SubmitRequest)"></nz-option>
 
-      <nz-option [nzLabel]="'Đang giữ vé'" [nzValue]="BookingRequestStatusEnum.ReserveSeat"
-        [nzDisabled]="!(status.value == BookingRequestStatusEnum.SubmitRequest || status.value == BookingRequestStatusEnum.ReserveSeat)">
+      <nz-option [nzLabel]="'Đang giữ vé'" [nzValue]="BookingRequestStatusEnum.ReserveSeat" [nzDisabled]="!(
+          status.value == BookingRequestStatusEnum.SubmitRequest || 
+        status.value == BookingRequestStatusEnum.ReserveSeat)">
       </nz-option>
       <nz-option [nzLabel]="'Đã xác nhận giữ vé'" [nzValue]="BookingRequestStatusEnum.ReceivedTicket"
         [nzDisabled]="!(status.value == BookingRequestStatusEnum.ReceivedTicket)"></nz-option>
@@ -82,11 +84,13 @@
       <nz-option [nzLabel]="'Hết hạn giữ vé'" [nzValue]="BookingRequestStatusEnum.ExpiredTicket "
         [nzDisabled]="!(status.value == BookingRequestStatusEnum.ExpiredTicket)"></nz-option>
 
-      <nz-option [nzLabel]="'Điều chỉnh vé'" [nzValue]="BookingRequestStatusEnum.AdjustTicket"
-        [nzDisabled]="!(status.value == BookingRequestStatusEnum.AdjustTicket || status.value == BookingRequestStatusEnum.ReserveSeat || status.value == BookingRequestStatusEnum.ReceivedTicket)"></nz-option>
+      <nz-option [nzLabel]="'Điều chỉnh vé'" [nzValue]="BookingRequestStatusEnum.AdjustTicket" [nzDisabled]="!(status.value == BookingRequestStatusEnum.AdjustTicket || 
+        status.value == BookingRequestStatusEnum.ReserveSeat || 
+        status.value == BookingRequestStatusEnum.ReceivedTicket)"></nz-option>
 
-      <nz-option [nzLabel]="'Xuất vé'" [nzValue]="BookingRequestStatusEnum.IssuedTicket"
-        [nzDisabled]="!(status.value == BookingRequestStatusEnum.IssuedTicket || status.value == BookingRequestStatusEnum.AdjustTicket || status.value == BookingRequestStatusEnum.ReceivedTicket)"></nz-option>
+      <nz-option [nzLabel]="'Xuất vé'" [nzValue]="BookingRequestStatusEnum.IssuedTicket" [nzDisabled]="!(status.value == BookingRequestStatusEnum.IssuedTicket || 
+        status.value == BookingRequestStatusEnum.AdjustTicket || 
+        status.value == BookingRequestStatusEnum.ReceivedTicket)"></nz-option>
     </nz-select>
     <!-- <container-element [ngSwitch]="status.value">
       <some-element *ngSwitchCase="AirlineTicketBookingRequestStatusEnum.SubmitRequest">
@@ -134,18 +138,28 @@
     cssClass="text-center vertical-align-middle"></dxi-column>
   <div *dxTemplate="let item of 'cellBtnTemplate'" style="display: flex; justify-content: space-evenly;">
 
-    <button title="Xem thông tin đặt vé" nz-button nzSize="small" nzType="default"
-      (click)="showPopupAirlineTicket(item.data, OptionAirlineTicketInfoEnum.View)">
+    <button title="Xem thông tin đặt vé" nz-button nzSize="small" nzType="default">
       <span class="fa fa-eye fa-fw"></span>
     </button>
 
-    <button title="Chỉnh sửa" nz-button nzSize="small" nzType="default"
+    <button *ngIf="
+    (item.data.status == BookingRequestStatusEnum.ReserveSeat) ||
+    (item.data.status == BookingRequestStatusEnum.AdjustTicket) || 
+    (item.data.status == BookingRequestStatusEnum.IssuedTicket)" title="Chỉnh sửa" nz-button nzSize="small" nzType="default" 
       (click)="showPopupAirlineTicket(item.data, OptionAirlineTicketInfoEnum.Update)">
       <span class="fa fa-edit fa-fw"></span>
     </button>
 
-    <button title="Vé máy bay" nz-button nzSize="small" nzType="default">
+    <button *ngIf="
+    (item.data.status == BookingRequestStatusEnum.IssuedTicket)" title="Xem thông tin yêu cầu" nz-button nzSize="small" nzType="default"
+    (click)="showPopupAirlineTicket(item.data, OptionAirlineTicketInfoEnum.View)">
       <span class="fa fa-ticket-alt fa-fw"></span>
+    </button>
+
+    <button *ngIf="
+    (item.data.status == BookingRequestStatusEnum.IssuedTicket)" title="Cập nhật số vé" nz-button nzSize="small" nzType="default"
+    (click)="showPopupUpdateNumberTicket(item.data)">
+      <span class="fa fa-table fa-fw"></span>
     </button>
 
     <button title="Lịch sử" nz-button nzSize="small" nzType="default">

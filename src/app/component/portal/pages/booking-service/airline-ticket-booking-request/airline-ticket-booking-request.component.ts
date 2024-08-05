@@ -96,6 +96,8 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   listOfOptionPassengers = [];
   newStatus: any;
   oldStatus: any;
+  isSendEmailToPassengerToConfirmFlightTicket: boolean;
+  isSendEmailToPassengerToConfirmSuccessIssuedTicket: boolean;
   constructor(
     public translate: TranslateService,
     private notificationService: NotificationService,
@@ -414,10 +416,19 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
       case this.BookingRequestStatusEnum.ExpiredTicket:
 
         break;
+
+      case this.BookingRequestStatusEnum.AdjustTicket:
+        //Mở popup Cập nhật thông tin vé
+        this.isVisibleAirlineTicketInfo = true;
+        this.optionAirlineTicketInfo = this.OptionAirlineTicketInfoEnum.Update;
+        this.isSendEmailToPassengerToConfirmFlightTicket = true;
+        break;
+
       case this.BookingRequestStatusEnum.IssuedTicket:
         //Mở popup Cập nhật thông tin vé
         this.isVisibleAirlineTicketInfo = true;
         this.optionAirlineTicketInfo = this.OptionAirlineTicketInfoEnum.Update;
+        this.isSendEmailToPassengerToConfirmSuccessIssuedTicket = true;
         break;
       default:
         break;
@@ -547,6 +558,12 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
       this.fileList.push(objFile);
     }
     this.uploadUrl = `${this.configService.getConfig().api.baseUrl}/Upload/UploadRequestBookingFile?RequestBookingId=${itemData.id}`;
+  }
+
+  showPopupUpdateNumberTicket(requestBooking: any) {
+    this.isVisiblePopupUpdateNumberTicket = true;
+    this.isSendEmailToPassengerToConfirmFlightTicket = false;
+    this.isSendEmailToPassengerToConfirmSuccessIssuedTicket = false;
   }
 
   handleUploadFileTicketBookingRequest1({ file, fileList }: NzUploadChangeParam): void {
@@ -727,6 +744,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     }
 
   }
+
   updateRequestBooking(payload: any) {
     return new Promise((resolve, reject) => {
       this.generalService.updateRequestBooking(payload).subscribe(
@@ -786,13 +804,17 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
               switch (this.newStatus) {
                 case this.BookingRequestStatusEnum.AdjustTicket:
                   this.AdjuctTicketRequestBookingById(this.itemBookingRequest.id).then((r) => {
-                    this.sendEmailToPassengerToConfirmFlightTicket(this.itemBookingRequest.id);
+                    if (this.isSendEmailToPassengerToConfirmFlightTicket) {
+                      this.sendEmailToPassengerToConfirmFlightTicket(this.itemBookingRequest.id);
+                    }
                   });
                   break;
 
                 case this.BookingRequestStatusEnum.IssuedTicket:
                   this.IssuedTicketRequestBookingById(this.itemBookingRequest.id).then((r) => {
-                    this.sendEmailToPassengerToConfirmSuccessIssuedTicket(this.itemBookingRequest.id);
+                    if (this.isSendEmailToPassengerToConfirmSuccessIssuedTicket) {
+                      this.sendEmailToPassengerToConfirmSuccessIssuedTicket(this.itemBookingRequest.id);
+                    }
                   });
                   break;
 
@@ -860,7 +882,6 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
 
   IssuedTicketRequestBookingById(id: number) {
     return new Promise((resolve, reject) => {
-
       this.generalService.updateStatusRequestBooking(id, this.BookingRequestStatusEnum.IssuedTicket).subscribe(
         {
           next: (res: any) => {
