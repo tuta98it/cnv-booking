@@ -94,6 +94,8 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
 
 
   listOfOptionPassengers = [];
+  newStatus: any;
+  oldStatus: any;
   constructor(
     public translate: TranslateService,
     private notificationService: NotificationService,
@@ -393,38 +395,16 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
 
 
   handleChangeStatusByItem(status: any) {
-    let newStatus = status.value;
-    let oldStatus = status.data.statusOld;
+    this.newStatus = status.value;
+    this.oldStatus = status.data.statusOld;
     let requestBookingId = status.data.id;
-    switch (newStatus) {
+    switch (this.newStatus) {
       case this.BookingRequestStatusEnum.SubmitRequest:
 
         break;
       case this.BookingRequestStatusEnum.ReserveSeat:
         this.updateStatusRequestBooking(requestBookingId, this.BookingRequestStatusEnum.ReserveSeat).then((r) => {
-          this.generalService.sendEmailToPassengerToConfirmFlightTicket(requestBookingId).subscribe(
-            {
-              next: (res: any) => {
-                if (res.isValid) {
-
-                } else {
-                  if (res.errors && res.errors.length > 0) {
-                    res.errors.forEach((el: any) => {
-                      this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
-                    });
-                  } else {
-                    this.notificationService.showNotification(Constant.ERROR, 'Thay đổi trạng thái không thành công');
-                  }
-                }
-              },
-              error: (err: any) => {
-                this.notificationService.showNotification(Constant.ERROR, 'Thay đổi trạng thái thất bại do lỗi hệ thống');
-              },
-              complete: () => {
-              }
-            }
-          ).add(() => {
-          });
+          this.sendEmailToPassengerToConfirmFlightTicket(requestBookingId);
           this.getListData();
         });
         break;
@@ -442,7 +422,33 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
       default:
         break;
     }
-    status.data.statusOld = newStatus;
+    status.data.statusOld = this.newStatus;
+    this.oldStatus = this.newStatus;
+  }
+  sendEmailToPassengerToConfirmFlightTicket(requestBookingId: any) {
+    this.generalService.sendEmailToPassengerToConfirmFlightTicket(requestBookingId).subscribe(
+      {
+        next: (res: any) => {
+          if (res.isValid) {
+
+          } else {
+            if (res.errors && res.errors.length > 0) {
+              res.errors.forEach((el: any) => {
+                this.notificationService.showNotification(Constant.ERROR, 'Đã gửi email thông báo giữ chỗ thời khách hàng');
+              });
+            } else {
+              this.notificationService.showNotification(Constant.ERROR, 'Gửi email thông báo giữ chỗ thời khách hàng không thành công');
+            }
+          }
+        },
+        error: (err: any) => {
+          this.notificationService.showNotification(Constant.ERROR, 'Gửi email thông báo giữ chỗ thời khách hàng thất bại do lỗi hệ thống');
+        },
+        complete: () => {
+        }
+      }
+    ).add(() => {
+    });
   }
 
 
@@ -777,9 +783,23 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
             if (res.isValid) {
               this.notificationService.showNotification(Constant.SUCCESS, `Cập nhật số vé khách hàng thành công!`);
               this.isVisiblePopupUpdateNumberTicket = false;
-              this.IssuedTicketRequestBookingById(this.itemBookingRequest.id).then((r) => {
-                this.sendEmailToPassengerToConfirmSuccessIssuedTicket(this.itemBookingRequest.id);
-              });
+              switch (this.newStatus) {
+                case this.BookingRequestStatusEnum.AdjustTicket:
+                  this.AdjuctTicketRequestBookingById(this.itemBookingRequest.id).then((r) => {
+                    this.sendEmailToPassengerToConfirmFlightTicket(this.itemBookingRequest.id);
+                  });
+                  break;
+
+                case this.BookingRequestStatusEnum.IssuedTicket:
+                  this.IssuedTicketRequestBookingById(this.itemBookingRequest.id).then((r) => {
+                    this.sendEmailToPassengerToConfirmSuccessIssuedTicket(this.itemBookingRequest.id);
+                  });
+                  break;
+
+                default:
+                  break;
+              }
+              this.getListData();
               resolve(true);
             } else {
               if (res.errors && res.errors.length > 0) {
@@ -804,6 +824,39 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     });
 
   }
+
+
+  AdjuctTicketRequestBookingById(id: number) {
+    return new Promise((resolve, reject) => {
+
+      this.generalService.updateStatusRequestBooking(id, this.BookingRequestStatusEnum.AdjustTicket).subscribe(
+        {
+          next: (res: any) => {
+            if (res.isValid) {
+              this.notificationService.showNotification(Constant.SUCCESS, `Điều chỉnh vé thành công!`);
+              resolve(true);
+            } else {
+              if (res.errors && res.errors.length > 0) {
+                res.errors.forEach((el: any) => {
+                  this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+                });
+              } else {
+                this.notificationService.showNotification(Constant.ERROR, 'Điều chỉnh vé không thành công.');
+              }
+            }
+          },
+          error: (err: any) => {
+            this.notificationService.showNotification(Constant.ERROR, 'Điều chỉnh vé thất bại do lỗi hệ thống');
+          },
+          complete: () => {
+          }
+        }
+      ).add(() => {
+      });
+    });
+
+  }
+
 
   IssuedTicketRequestBookingById(id: number) {
     return new Promise((resolve, reject) => {
