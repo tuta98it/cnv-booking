@@ -140,7 +140,7 @@
     cssClass="text-center vertical-align-middle"></dxi-column>
   <div *dxTemplate="let item of 'cellBtnTemplate'" style="display: flex; justify-content: space-evenly;">
 
-    <button title="Xem thông tin đặt vé" nz-button nzSize="small" nzType="default">
+    <button title="Xem thông tin yêu cầu" nz-button nzSize="small" nzType="default">
       <span class="fa fa-eye fa-fw"></span>
     </button>
 
@@ -153,13 +153,13 @@
     </button>
 
     <button *ngIf="
-    (item.data.status == BookingRequestStatusEnum.IssuedTicket)" title="Xem thông tin yêu cầu" nz-button nzSize="small"
+    (item.data.status == BookingRequestStatusEnum.IssuedTicket)" title="Xem thông tin vé đặt" nz-button nzSize="small"
       nzType="default" (click)="showPopupAirlineTicket(item.data, OptionAirlineTicketInfoEnum.View)">
       <span class="fa fa-ticket-alt fa-fw"></span>
     </button>
 
     <button *ngIf="
-    (item.data.status == BookingRequestStatusEnum.IssuedTicket)" title="Cập nhật số vé" nz-button nzSize="small"
+    (item.data.status == BookingRequestStatusEnum.IssuedTicket)" title="Cập nhật thông tin vé đặt" nz-button nzSize="small"
       nzType="default" (click)="showPopupUpdateNumberTicket(item.data)">
       <span class="fa fa-table fa-fw"></span>
     </button>
