@@ -78,8 +78,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   }
   userInfor: any;
   titleFormPartner = '';
-  isVisibleDetailTransactionHistoryTickets: boolean = false;
-  listDetailTicket: any[];
+  // listDetailTicket: any[];
   readonly allowedPageSizes = [10, 20, 50, 100, 200, 'all'];
   displayMode = 'full';
   showPageSizeSelector = true;
@@ -91,6 +90,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   intervalIdUserRegister: NodeJS.Timeout;
 
   isVisiblePopupUpdateNumberTicket: boolean = false;
+  isVisibleRequestBookingHistory: boolean = false;
 
 
   listOfOptionPassengers = [];
@@ -98,6 +98,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   oldStatus: any;
   isSendEmailToPassengerToConfirmFlightTicket: boolean;
   isSendEmailToPassengerToConfirmSuccessIssuedTicket: boolean;
+  listRequestBookingRequests: any;
   constructor(
     public translate: TranslateService,
     private notificationService: NotificationService,
@@ -227,50 +228,48 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   };
 
 
-  previewDetailTransactionHistoryTickets(historyTransaction: any) {
-    this.isVisibleDetailTransactionHistoryTickets = true;
-    this.listDetailTicket = this.getListDetailTicket(historyTransaction);
-    let stt = 0;
-    this.listDetailTicket.forEach(en => {
-      en.gender = en.gender ? 'Nam' : 'Nữ'
-      en.startPoint = this.convertRotueBookingReservations(en.route)[stt].startPoint;
-      en.endPoint = this.convertRotueBookingReservations(en.route)[stt].endPoint;
-      en.fromToPoint = `${en.startPoint} - ${en.endPoint}`
-      en.stt = ++stt;
-    });
+  previewPopupRequestBookingHistory(requestBookingRequests: any) {
+    this.isVisibleRequestBookingHistory = true;
+    this.listRequestBookingRequests = requestBookingRequests;
+    if (this.listRequestBookingRequests) {
+      let stt = 0;
+      this.listRequestBookingRequests.forEach((en: any) => {
+        en.stt = ++stt;
+      });
+    }
   }
 
-  getListDetailTicket(historyTransaction: any) {
-    const bookingFlights = historyTransaction.bookingFlights;
-    const bookingPassengers = historyTransaction.bookingPassengers;
-    const bookingReservations = historyTransaction.bookingReservations;
+  // getListDetailTicket(historyTransaction: any) {
+  //   const bookingFlights = historyTransaction.bookingFlights;
+  //   const bookingPassengers = historyTransaction.bookingPassengers;
+  //   const bookingReservations = historyTransaction.bookingReservations;
 
-    // Create a dictionary to store objects based on bookingId
-    let arraybookingDataMap = [];
+  //   // Create a dictionary to store objects based on bookingId
+  //   let arraybookingDataMap = [];
 
-    // Populate the dictionary with data from bookingFlights
-    bookingFlights.forEach((flight: any) => {
-      let bookingDataMap = {};
-      if (flight) {
-        bookingDataMap = { ...flight };
-      }
-      const bookingId = flight.bookingId;
+  //   // Populate the dictionary with data from bookingFlights
+  //   bookingFlights.forEach((flight: any) => {
+  //     let bookingDataMap = {};
+  //     if (flight) {
+  //       bookingDataMap = { ...flight };
+  //     }
+  //     const bookingId = flight.bookingId;
 
-      const matchingPassenger = bookingPassengers.find((passenger: any) => passenger.bookingId = flight.bookingId);
-      if (matchingPassenger) {
-        bookingDataMap = { ...bookingDataMap, ...matchingPassenger };
-      }
+  //     const matchingPassenger = bookingPassengers.find((passenger: any) => passenger.bookingId = flight.bookingId);
+  //     if (matchingPassenger) {
+  //       bookingDataMap = { ...bookingDataMap, ...matchingPassenger };
+  //     }
 
-      const matchingReservation = bookingReservations.find((reservation: any) => reservation.bookingId === flight.bookingId);
-      if (matchingReservation) {
-        bookingDataMap = { ...bookingDataMap, ...matchingReservation };
-      }
+  //     const matchingReservation = bookingReservations.find((reservation: any) => reservation.bookingId === flight.bookingId);
+  //     if (matchingReservation) {
+  //       bookingDataMap = { ...bookingDataMap, ...matchingReservation };
+  //     }
 
-      arraybookingDataMap.push(bookingDataMap);
-    });
+  //     arraybookingDataMap.push(bookingDataMap);
+  //   });
 
-    return arraybookingDataMap;
-  }
+  //   return arraybookingDataMap;
+  // }
   onOpenPopupTicketDetail(booking: any) {
     booking.isLoadingViewTicket = true;
     this.generalService.getBookingByID(booking.bookingId).subscribe({
@@ -346,8 +345,8 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     }
   }
 
-  handleCancel() {
-    this.isVisibleDetailTransactionHistoryTickets = false;
+  handleCancelPopupRequestBookingHistory() {
+    this.isVisibleRequestBookingHistory = false;
   }
 
 
@@ -386,14 +385,22 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     );
   }
 
-  formatCurrencyVND(value) {
-
-
+  formatCurrencyVND(value: any) {
     if (!value) {
       return '0 đ';
     }
     return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' đ';
   }
+
+  getLabelRequestBookingStatus(value: any) {
+    if (!value) {
+      return '';
+    }
+    var objStatusOption =  AIRLINE_TICKET_BOOKING_REQUEST_STATUS_OPTIONS.find((t: any) => t.value == value)
+    if(!objStatusOption) return "";
+    return objStatusOption.label;
+  }
+
 
 
   handleChangeStatusByItem(status: any) {
@@ -436,6 +443,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     status.data.statusOld = this.newStatus;
     this.oldStatus = this.newStatus;
   }
+
   sendEmailToPassengerToConfirmFlightTicket(requestBookingId: any) {
     this.generalService.sendEmailToPassengerToConfirmFlightTicket(requestBookingId).subscribe(
       {
@@ -461,7 +469,6 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     ).add(() => {
     });
   }
-
 
   updateStatusRequestBooking(requestBookingId: number, status: number) {
     return new Promise((resolve, reject) => {

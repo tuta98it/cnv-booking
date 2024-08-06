@@ -75,8 +75,8 @@
         [nzDisabled]="!(status.value == BookingRequestStatusEnum.SubmitRequest)"></nz-option>
 
       <nz-option [nzLabel]="'Đang giữ vé'" [nzValue]="BookingRequestStatusEnum.ReserveSeat" [nzDisabled]="!(
-          status.value == BookingRequestStatusEnum.SubmitRequest || 
-        status.value == BookingRequestStatusEnum.ReserveSeat)">
+          status.value == BookingRequestStatusEnum.SubmitRequest ||
+          status.value == BookingRequestStatusEnum.ReserveSeat)">
       </nz-option>
       <nz-option [nzLabel]="'Đã xác nhận giữ vé'" [nzValue]="BookingRequestStatusEnum.ReceivedTicket"
         [nzDisabled]="!(status.value == BookingRequestStatusEnum.ReceivedTicket)"></nz-option>
@@ -84,12 +84,14 @@
       <nz-option [nzLabel]="'Hết hạn giữ vé'" [nzValue]="BookingRequestStatusEnum.ExpiredTicket "
         [nzDisabled]="!(status.value == BookingRequestStatusEnum.ExpiredTicket)"></nz-option>
 
-      <nz-option [nzLabel]="'Điều chỉnh vé'" [nzValue]="BookingRequestStatusEnum.AdjustTicket" [nzDisabled]="!(status.value == BookingRequestStatusEnum.AdjustTicket || 
-        status.value == BookingRequestStatusEnum.ReserveSeat || 
+      <nz-option [nzLabel]="'Điều chỉnh vé'" [nzValue]="BookingRequestStatusEnum.AdjustTicket" [nzDisabled]="!(
+        status.value == BookingRequestStatusEnum.AdjustTicket ||
+        status.value == BookingRequestStatusEnum.ReserveSeat ||
         status.value == BookingRequestStatusEnum.ReceivedTicket)"></nz-option>
 
-      <nz-option [nzLabel]="'Xuất vé'" [nzValue]="BookingRequestStatusEnum.IssuedTicket" [nzDisabled]="!(status.value == BookingRequestStatusEnum.IssuedTicket || 
-        status.value == BookingRequestStatusEnum.AdjustTicket || 
+      <nz-option [nzLabel]="'Xuất vé'" [nzValue]="BookingRequestStatusEnum.IssuedTicket" [nzDisabled]="!(
+        status.value == BookingRequestStatusEnum.IssuedTicket ||
+        status.value == BookingRequestStatusEnum.AdjustTicket ||
         status.value == BookingRequestStatusEnum.ReceivedTicket)"></nz-option>
     </nz-select>
     <!-- <container-element [ngSwitch]="status.value">
@@ -144,25 +146,26 @@
 
     <button *ngIf="
     (item.data.status == BookingRequestStatusEnum.ReserveSeat) ||
-    (item.data.status == BookingRequestStatusEnum.AdjustTicket) || 
-    (item.data.status == BookingRequestStatusEnum.IssuedTicket)" title="Chỉnh sửa" nz-button nzSize="small" nzType="default" 
-      (click)="showPopupAirlineTicket(item.data, OptionAirlineTicketInfoEnum.Update)">
+    (item.data.status == BookingRequestStatusEnum.AdjustTicket) ||
+    (item.data.status == BookingRequestStatusEnum.IssuedTicket)" title="Chỉnh sửa" nz-button nzSize="small"
+      nzType="default" (click)="showPopupAirlineTicket(item.data, OptionAirlineTicketInfoEnum.Update)">
       <span class="fa fa-edit fa-fw"></span>
     </button>
 
     <button *ngIf="
-    (item.data.status == BookingRequestStatusEnum.IssuedTicket)" title="Xem thông tin yêu cầu" nz-button nzSize="small" nzType="default"
-    (click)="showPopupAirlineTicket(item.data, OptionAirlineTicketInfoEnum.View)">
+    (item.data.status == BookingRequestStatusEnum.IssuedTicket)" title="Xem thông tin yêu cầu" nz-button nzSize="small"
+      nzType="default" (click)="showPopupAirlineTicket(item.data, OptionAirlineTicketInfoEnum.View)">
       <span class="fa fa-ticket-alt fa-fw"></span>
     </button>
 
     <button *ngIf="
-    (item.data.status == BookingRequestStatusEnum.IssuedTicket)" title="Cập nhật số vé" nz-button nzSize="small" nzType="default"
-    (click)="showPopupUpdateNumberTicket(item.data)">
+    (item.data.status == BookingRequestStatusEnum.IssuedTicket)" title="Cập nhật số vé" nz-button nzSize="small"
+      nzType="default" (click)="showPopupUpdateNumberTicket(item.data)">
       <span class="fa fa-table fa-fw"></span>
     </button>
 
-    <button title="Lịch sử" nz-button nzSize="small" nzType="default">
+    <button title="Lịch sử" nz-button nzSize="small" nzType="default"
+      (click)="previewPopupRequestBookingHistory(item.data.requestBookingHistories)">
       <span class="fa fa-history fa-fw"></span>
     </button>
   </div>
@@ -174,13 +177,13 @@
 </dx-data-grid>
 
 
-<nz-modal [(nzVisible)]="isVisibleDetailTransactionHistoryTickets" nzTitle="Thông tin chi tiết" [nzContent]="content"
-  [nzFooter]="footer" nzWidth="1500px" (nzOnCancel)="handleCancel()">
-  <ng-template #content>
-    <dx-data-grid id="gridContainer" [dataSource]="listDetailTicket" #ListAccount [showColumnLines]="true"
-      [showRowLines]="true" [height]="dxGridHeight" [rowAlternationEnabled]="true" [showBorders]="true"
-      [allowColumnResizing]="true" columnResizingMode="widget" [columnMinWidth]="50" [columnAutoWidth]="true"
-      (onExporting)="onExporting($event)">
+<nz-modal [(nzVisible)]="isVisibleRequestBookingHistory" nzTitle="Lịch sử thay đổi trạng thái đặt vé"
+  [nzContent]="contentRequestBookingHistory" [nzFooter]="footer" nzWidth="1500px" (nzOnCancel)="handleCancelPopupRequestBookingHistory()">
+  <ng-template #contentRequestBookingHistory>
+    <dx-data-grid id="gridRequestBookingHistory" [dataSource]="listRequestBookingRequests" #listRequestBookingRequests
+      [showColumnLines]="true" [showRowLines]="true" [height]="dxGridHeight" [rowAlternationEnabled]="true"
+      [showBorders]="true" [allowColumnResizing]="true" columnResizingMode="widget" [columnMinWidth]="50"
+      [columnAutoWidth]="true" (onExporting)="onExporting($event)">
 
 
       <dxo-load-panel [enabled]="true"></dxo-load-panel>`
@@ -191,46 +194,23 @@
 
       <dxi-column caption="STT" [width]="55" dataField="stt" [fixed]="true" [allowFiltering]="false"
         [allowSorting]="false" cssClass="text-center vertical-align-middle"></dxi-column>
-      <dxi-column caption="Tên" [fixed]="true" [width]="150" dataField="firstName"
-        cssClass="vertical-align-middle"></dxi-column>
-      <dxi-column caption="Họ" [fixed]="true" dataField="lastName" [width]="100"
-        cssClass="vertical-align-middle"></dxi-column>
-      <dxi-column caption="Ngày sinh" dataField="dateOfBirth" [width]="150" dataType="date" format="dd/MM/yy"
-        cssClass="vertical-align-middle"></dxi-column>
-      <dxi-column caption="Giới tính" dataField="gender" cssClass="text-center vertical-align-middle"></dxi-column>
-      <dxi-column caption="Hãng bay" dataField="airlineName" [width]="150"
-        cssClass="vertical-align-middle"></dxi-column>
-      <dxi-column caption="Số hiệu chuyến bay" dataField="flightNumber" [width]="200"
-        cssClass="text-center vertical-align-middle"></dxi-column>
-      <dxi-column caption="Xếp hạng sao" dataField="fareClass" [width]="100"
-        cssClass="text-center vertical-align-middle"></dxi-column>
-      <dxi-column caption="Cân nặng hành lý" dataField="baggageFee" [width]="100"
-        cssClass="vertical-align-middle"></dxi-column>
-      <dxi-column caption="Thời gian cất cánh" dataField="startTime" [width]="200" dataType="date"
-        format="HH:mm dd/MM/yy" cssClass="vertical-align-middle"></dxi-column>
-      <dxi-column caption="Thời gian hạ cánh" dataField="endTime" [width]="200" dataType="date" format="HH:mm dd/MM/yy"
-        cssClass="vertical-align-middle"></dxi-column>
-      <dxi-column caption="Hành trình" dataField="fromToPoint" [width]="150"
-        cssClass="text-center vertical-align-middle"></dxi-column>
-      <dxi-column caption="Giá vé" dataField="price" dataType="number" cssClass="vertical-align-middle"></dxi-column>
-      <dxi-column caption="Giữ vé" cssClass="text-center" dataField="status" [width]="100" [fixed]="true"
-        fixedPosition="right" cellTemplate="cellTicket"></dxi-column>
-      <div *dxTemplate="let item of 'cellTicket'">
-        <div *ngIf="item.data?.status === 'OK'" (click)="onOpenPopupTicketDetail(item.data)">
-          <a nz-button nzType="link" nzBlock>Xem vé <span *ngIf="item.data.isLoadingViewTicket" nz-icon nzType="loading"
-              nzTheme="outline"></span></a>
-        </div>
-        <div *ngIf="item.data?.status === 'FAIL'">
-          Lỗi đặt vé
-        </div>
+      <dxi-column caption="Trạng thái cũ" [fixed]="true" [width]="150" dataField="oldStatus"
+        [format]="getLabelRequestBookingStatus" cssClass="vertical-align-middle"></dxi-column>
+      <dxi-column caption="Trạng thái mới" [fixed]="true" dataField="newStatus" [width]="150"
+        [format]="getLabelRequestBookingStatus" cssClass="vertical-align-middle"></dxi-column>
+      <dxi-column caption="Người thực hiện" cssClass="vertical-align-middle" cellTemplate="cellImplementPerson"></dxi-column>
+      <div *dxTemplate="let implementPerson of 'cellImplementPerson'" style="display: flex;">
+        Id : {{implementPerson.Id}}, Name: {{implementPerson.fullName}}
       </div>
-      <dxo-summary>
-        <dxi-total-item column="contactName" displayFormat="Số bản ghi: {0}" summaryType="count">
+      <dxi-column caption="Thời gian" dataField="implementTime" [width]="150" dataType="date" format="dd/MM/yy HH:mm"
+        cssClass="vertical-align-middle"></dxi-column>
+
+        <dxo-summary>
+        <dxi-total-item column="oldStatus" displayFormat="Số bản ghi: {0}" summaryType="count">
         </dxi-total-item>
       </dxo-summary>
     </dx-data-grid>
   </ng-template>
-
   <ng-template #footer> </ng-template>
 </nz-modal>
 
