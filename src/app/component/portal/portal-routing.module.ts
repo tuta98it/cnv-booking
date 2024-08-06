@@ -73,7 +73,7 @@ const routes: Routes = [
         },
       },
       {
-        path: 'doi-tac',
+        path: 'companies',
         component: PartnerComponent,
         data: {
           pagename: 'Đối tác',

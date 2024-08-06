@@ -89,12 +89,13 @@
 
       <li nz-submenu nzTitle="Quản lý khách hàng" nzIcon="solution">
         <ul>
-          <li nz-menu-item [nzSelected]="url === '/companies'">
-            <i nz-icon nzType="build"></i>
+          <li *ngIf='userInfo.userType == userTypeEnum.SysAdmin' nz-menu-item [nzSelected]="url === '/companies'">
+            <i nz-icon nzType="user-switch"></i>
             <span>
-              <a routerLink="/companies">Danh sách công ty</a>
+              <a routerLink="/companies">Danh sách doanh nghiệp</a>
             </span>
           </li>
+
           <li nz-menu-item [nzSelected]="url === '/user-register'">
             <i nz-icon nzType="usergroup-add"></i>
             <span>
@@ -193,12 +194,7 @@
             </span>
           </li>
 
-          <li *ngIf='userInfo.userType == userTypeEnum.SysAdmin' nz-menu-item [nzSelected]="url === '/doi-tac'">
-            <i nz-icon nzType="user-switch"></i>
-            <span>
-              <a routerLink="/doi-tac">Đối tác lưu trú</a>
-            </span>
-          </li>
+
 
           <li nz-menu-item [nzSelected]="url === '/partner-transport'">
             <i nz-icon nzType="car"></i>

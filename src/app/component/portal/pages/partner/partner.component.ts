@@ -25,6 +25,12 @@ import {
   styleUrls: ['./partner.component.scss']
 })
 export class PartnerComponent extends TableSelectionAbstract implements OnInit, OnDestroy {
+  readonly allowedPageSizes = [10, 20, 50, 100, 200, 'all'];
+  displayMode = 'full';
+  showPageSizeSelector = true;
+  showInfo = true;
+  showNavButtons = true;
+
   @ViewChild("ListAccount") dataGridDetail: DxDataGridComponent;
   valueNumberPhone = '';
   @ViewChild('inputElementNumberPhone', { static: false }) inputElementNumberPhone?: ElementRef;

@@ -1,6 +1,6 @@
 <div class="action-button" style="clear: bottom;overflow: hidden;">
   <div class="form-group" style="float: left">
-    <h1>Danh sách đối tác</h1>
+    <h1>Danh sách doanh nghiệp sử dụng dịch vụ</h1>
   </div>
   <div class="form-group" style="float: right; display: flex; float: right">
 
@@ -26,11 +26,17 @@
   [showRowLines]="true" [height]="dxGridHeight" [rowAlternationEnabled]="true" [showBorders]="true"
   [allowColumnResizing]="true" columnResizingMode="widget" [columnMinWidth]="50" [columnAutoWidth]="true"
   (onExporting)="onExporting($event)">
-  <dxo-scrolling mode="virtual"></dxo-scrolling>
   <dxo-sorting mode="multiple"></dxo-sorting>
-
   <dxo-header-filter [visible]="true"></dxo-header-filter>
   <dxo-filter-row [visible]="true" [applyFilter]="currentFilter"></dxo-filter-row>
+
+  <dxo-paging [pageSize]="10"> </dxo-paging>
+  <dxo-scrolling rowRenderingMode="virtual"> </dxo-scrolling>
+  <dxo-pager [visible]="true" [allowedPageSizes]="allowedPageSizes" [displayMode]="displayMode"
+    [showPageSizeSelector]="showPageSizeSelector" [showInfo]="showInfo"
+    [showNavigationButtons]="showNavButtons"></dxo-pager>
+
+
   <dxi-column cssClass="text-center" caption="Action" [fixed]="true" [width]="170" fixedPosition="right"
     cellTemplate="cellBtnTemplate"></dxi-column>
 
@@ -50,8 +56,6 @@
   <dxi-column caption="Ghi chú" [width]="350" dataField="note"></dxi-column>
   <dxi-column caption="Thời gian đăng ký" dataField="dateCreated" [width]="150" dataType="date" format="dd/MM/yyyy">
   </dxi-column>
-
-
 
   <div *dxTemplate="let partner of 'cellBusinessLicenses'">
     <ng-container *ngIf="partner.data.partnerFile">
