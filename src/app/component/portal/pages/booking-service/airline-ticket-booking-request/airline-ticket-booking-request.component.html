@@ -200,7 +200,7 @@
         [format]="getLabelRequestBookingStatus" cssClass="vertical-align-middle"></dxi-column>
       <dxi-column caption="Người thực hiện" cssClass="vertical-align-middle" cellTemplate="cellImplementPerson"></dxi-column>
       <div *dxTemplate="let implementPerson of 'cellImplementPerson'" style="display: flex;">
-        Id : {{implementPerson.Id}}, Name: {{implementPerson.fullName}}
+        Id : {{implementPerson.value.Id}}, Name: {{implementPerson.value.fullName}}
       </div>
       <dxi-column caption="Thời gian" dataField="implementTime" [width]="150" dataType="date" format="dd/MM/yy HH:mm"
         cssClass="vertical-align-middle"></dxi-column>
