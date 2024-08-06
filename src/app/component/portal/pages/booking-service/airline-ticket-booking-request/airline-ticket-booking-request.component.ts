@@ -501,7 +501,8 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     this.itemBookingRequest = itemData;
     this.isVisibleAirlineTicketInfo = true;
     this.optionAirlineTicketInfo = opPopupAirlineTicket;
-
+    this.isSendEmailToPassengerToConfirmFlightTicket = false;
+    this.isSendEmailToPassengerToConfirmSuccessIssuedTicket = false;
     if (this.optionAirlineTicketInfo == this.OptionAirlineTicketInfoEnum.View) {
       this.formAirlineTicketPopup.disable();
       this.showUploadListOption = { ...this.showUploadListOption, ...{ showPreviewIcon: true, showRemoveIcon: false, showDownloadIcon: true } }
