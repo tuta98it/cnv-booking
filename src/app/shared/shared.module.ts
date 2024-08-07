@@ -42,6 +42,7 @@ import { DxDateBoxModule } from 'devextreme-angular';
 import { PassengerTypesPipe } from './pipe/passenger-type.pipe';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
 import { NzRateModule } from 'ng-zorro-antd/rate';
+import { NzRadioModule } from 'ng-zorro-antd/radio';
 @NgModule({
   imports: [
     CommonModule,
@@ -76,7 +77,8 @@ import { NzRateModule } from 'ng-zorro-antd/rate';
     NzRateModule,
     NzCheckboxModule,
     DxDateBoxModule,
-    AngularEditorModule
+    AngularEditorModule,
+    NzRadioModule
   ],
   exports: [
     DateFormatPipe,
@@ -120,7 +122,8 @@ import { NzRateModule } from 'ng-zorro-antd/rate';
     AngularEditorModule,
     DxDateBoxModule,
     BookingHotelStatusPipe,
-    PassengerTypesPipe
+    PassengerTypesPipe,
+    NzRadioModule
   ],
   declarations: [
     DateFormatPipe,

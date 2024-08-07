@@ -39,7 +39,7 @@ $height-top-header: 50px;
   display: flex;
   width: 100%;
   height: $height-top-header;
-  background: #FAFAFA;
+  background: #F8F9FA;
   align-items: center;
   position: sticky;
   position: -webkit-sticky;
@@ -147,7 +147,7 @@ $height-top-header: 50px;
         display: flex;
         align-items: center;
         height: 32px;
-        background-color: #FAFAFA;
+        background-color: #F8F9FA;
         margin: 16px;
 
         span.icon-vhl {
@@ -166,11 +166,11 @@ $height-top-header: 50px;
       }
 
       &.ant-layout-sider {
-        background: #FAFAFA;
+        background: #F8F9FA;
       }
 
       div.ant-layout-sider-trigger.ng-star-inserted {
-        background: #FAFAFA;
+        background: #F8F9FA;
 
         .anticon.ng-star-inserted {
           color: rgba(0, 0, 0, .85);
@@ -203,7 +203,7 @@ $height-top-header: 50px;
       nz-header {
         display: flex;
         justify-content: flex-end;
-        background: #FAFAFA;
+        background: #F8F9FA;
         font-size: 14px;
       }
 
@@ -219,7 +219,7 @@ $height-top-header: 50px;
       }
 
       nz-footer {
-        background: #FAFAFA;
+        background: #F8F9FA;
 
         div.contact-vhl {
           display: flex;
