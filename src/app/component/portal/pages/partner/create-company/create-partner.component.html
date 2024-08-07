@@ -183,17 +183,12 @@
     <div nz-col class="gutter-row" [nzSpan]="24">
       <div class="inner-box">
         <ul nz-menu nzMode="horizontal">
-          <li nz-menu-item nzSelected>
-            Quản lý hợp đồng
-          </li>
-          <li nz-menu-item>
-            Danh sách nhân viên
-          </li>
-          <li nz-menu-item>
-            Thông tin tài khoản
+          <li nz-menu-item  [nzSelected]="selectedMenu == option.value" *ngFor="let option of MENU_CREATE_PARTNER_OPTION; let i = index ">
+            {{option.label}}
           </li>
         </ul>
       </div>
+
     </div>
   </div>
 </div>
