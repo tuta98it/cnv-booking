@@ -62,7 +62,7 @@ const icons: IconDefinition[] = Object.keys(antDesignIcons).map(key => antDesign
     DataAirlineTicketsComponent,
     UtilitHotelComponent,
     UtilitRoomComponent,
-    DataHotelsComponent
+    DataHotelsComponent,
   ],
   imports: [
     RouterModule.forChild([]),

@@ -8,8 +8,6 @@ import { UserRegisterComponent } from './pages/user-register/user-register.compo
 import { AdminTicketComponent } from './pages/admin-ticket/admin-ticket.component';
 import { AdminVoidTicketComponent } from './pages/admin-void-ticket/admin-void-ticket.component';
 import { AdminHistoryHoldingTicketComponent } from './pages/admin-history-holding-ticket/admin-history-holding-ticket.component';
-import { HotelComponent } from './pages/hotel/hotel.component';
-import { NewsComponent } from './pages/news/news.component';
 
 const routes: Routes = [
   {
@@ -74,11 +72,14 @@ const routes: Routes = [
       },
       {
         path: 'companies',
-        component: PartnerComponent,
+        loadChildren: () =>
+          import('./pages/partner/partner.module').then(
+            (m) => m.PartnerModule
+          ),
         data: {
-          pagename: 'Đối tác',
-          breadcrumb: 'Đối tác'
-        }
+          pagename: 'Quản lý khách hàng',
+          breadcrumb: 'Danh sách doanh nghiệp',
+        },
       },
       {
         path: 'admin-history-holding-ticket',
