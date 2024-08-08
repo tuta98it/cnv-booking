@@ -183,10 +183,23 @@
     <div nz-col class="gutter-row" [nzSpan]="24">
       <div class="inner-box">
         <ul nz-menu nzMode="horizontal">
-          <li nz-menu-item  [nzSelected]="selectedMenu == option.value" *ngFor="let option of MENU_CREATE_PARTNER_OPTION; let i = index ">
+          <li nz-menu-item [nzSelected]="selectedMenu == option.value"
+            *ngFor="let option of MENU_CREATE_PARTNER_OPTION; let i = index" (click)="selectedMenu = option.value">
             {{option.label}}
           </li>
         </ul>
+        <div style="margin: 16px 0;"></div>
+
+        <div *ngIf="selectedMenu == MenuCreatePartner.DebtManagement">
+          DebtManagement
+        </div>
+        <div *ngIf="selectedMenu == MenuCreatePartner.ListEmployees">
+          <h3>Danh sách nhân viên</h3>
+
+        </div>
+        <div *ngIf="selectedMenu == MenuCreatePartner.AccountInfomation">
+          AccountInfomation
+        </div>
       </div>
 
     </div>

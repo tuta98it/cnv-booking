@@ -1,0 +1,6 @@
+::ng-deep dx-data-grid {
+  &#gridContainer {
+    // height: 100%;
+    height: calc(100% - 30px) !important;
+  }
+}
