@@ -3,9 +3,10 @@ import { ActivatedRoute } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzUploadChangeParam } from 'ng-zorro-antd/upload';
 import { MENU_CREATE_PARTNER_OPTION, MenuCreatePartner } from 'src/app/enums/menu-create-partner.enum';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NzTableLayout, NzTablePaginationPosition, NzTablePaginationType, NzTableSize } from 'ng-zorro-antd/table';
 import { NZTableSettingCustoms } from 'src/app/Interfaces/nz-table-seting.interface';
+import { ActionTypePageVHL } from 'src/app/enums/action-type-page-vhl.enum';
 
 
 interface ItemData {
@@ -59,25 +60,42 @@ export class ActionPartnerComponent implements OnInit {
   scrollX: string | null = null;
   scrollY: string | null = null;
   settingTableEmployeesValue: NZTableSettingCustoms;
-  listOfData: readonly ItemData[] = [];
+  listOfEmployees: readonly ItemData[] = [];
   displayData: readonly ItemData[] = [];
+  formActionPartner: FormGroup;
   constructor(
     private msg: NzMessageService,
     private activatedRoute: ActivatedRoute,
     private formBuilder: FormBuilder
   ) {
+    this.formActionPartner = this.formBuilder.group({
+      id: [null],
+      status: [],
+      name: [null, [Validators.required]],
+      companyName: [null, [Validators.required]],
+      taxCode: [null, [Validators.required]],
+      phone: [null],
+      email: [null, [Validators.required]],
+      address: [null, [Validators.required]],
+      debtMax: [null],
+      debtUsed: [null],
+      debtRemain: [null],
+      note: [null],
+    });
+
     this.settingTableListEmployeesForm = this.formBuilder.group({
       bordered: [false],
       loading: [false],
       pagination: [true],
       sizeChanger: [false],
-      title: [true],
+      title: [false],
       header: [true],
-      footer: [true],
+      footer: [false],
       expandable: [true],
       checkbox: [true],
       fixHeader: [false],
       noResult: [false],
+      noResultText: 'Danh sách nhân viên đang trống. Hãy nhấn vào “Thêm mới” để tạo mới các tài khoản nhân viên cho doanh nghiệp',
       ellipsis: [false],
       simple: [false],
       size: 'small' as NzTableSize,
@@ -93,8 +111,9 @@ export class ActionPartnerComponent implements OnInit {
   ngOnInit(): void {
     // Lấy giá trị status từ route data
     this.actionPartnerVHL = this.activatedRoute.snapshot.data['type'];
-    console.log('actionPartnerVHL:', this.actionPartnerVHL); // Để kiểm tra giá trị
-
+    if(this.actionPartnerVHL == ActionTypePageVHL.Create){
+      this.listOfEmployees = [];
+    }
 
     this.settingTableListEmployeesForm.valueChanges.subscribe(value => {
       this.settingTableEmployeesValue = value as NZTableSettingCustoms;
@@ -108,12 +127,12 @@ export class ActionPartnerComponent implements OnInit {
     });
     this.settingTableListEmployeesForm.controls.noResult.valueChanges.subscribe(empty => {
       if (empty) {
-        this.listOfData = [];
+        this.listOfEmployees = [];
       } else {
-        this.listOfData = this.generateData();
+        this.listOfEmployees = this.generateData();
       }
     });
-    this.listOfData = this.generateData();
+
   }
 
 

@@ -12,6 +12,7 @@ export interface NZTableSettingCustoms  {
   checkbox: boolean;
   fixHeader: boolean;
   noResult: boolean;
+  noResultText: string;
   ellipsis: boolean;
   simple: boolean;
   size: NzTableSize;

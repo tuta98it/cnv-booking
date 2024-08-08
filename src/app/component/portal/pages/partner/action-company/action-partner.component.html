@@ -20,284 +20,303 @@
       </div>
     </div>
   </div>
-  <div nz-row [nzGutter]="[16, 24]">
-    <div nz-col class="gutter-row" [nzSpan]="24">
-      <div class="inner-box">
-        <!-- Header Base Information -->
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <span style="font-weight: 500; font-size: 18px;">Thêm tin cơ bản</span>
-          <div>
-            <button nz-button nzType="primary" style="margin-right: 8px;">
-              <div style="display: flex; align-items: center;">
-                <span nz-icon nzType="save"></span>
-                <span style="margin-left: 6px; line-height: normal;">Lưu lại</span>
-              </div>
-            </button>
-            <button nz-button nzType="default">
-              <div style="display: flex; align-items: center;">
-                <span nz-icon nzType="close"></span>
-                <span style="margin-left: 4px; line-height: normal;">Huỷ bỏ</span>
-              </div>
-            </button>
-          </div>
-        </div>
-
-        <!-- Content Base Information -->
-        <div>
-          <div style="height: 1px; margin: 16px 0; background-color: #0000000f;"></div>
-          <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
-            <div nz-col class="gutter-row" [nzSpan]="12">
-              <div>
-                <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
-                  style="display: flex; align-items: center; padding: 8px 0;">
-                  <div nz-col class="gutter-row" [nzSpan]="6">
-                    Trạng thái
-                  </div>
-                  <div nz-col class="gutter-row" [nzSpan]="12">
-                    Đang tạo hồ sơ
-                  </div>
-                </div>
-
-                <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
-                  style="display: flex; align-items: center; padding: 8px 0;">
-                  <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
-                    Mã tạo hồ sơ
-                    <span style="color: tomato; margin-left: 4px;">*</span>
-                  </div>
-                  <div nz-col class="gutter-row" [nzSpan]="12">
-                    <input style="border-radius: 4px;" nzSize="small" nz-input type="text"
-                      placeholder="Nhập mã doanh nghiệp">
-                  </div>
-                </div>
-
-                <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
-                  style="display: flex; align-items: center; padding: 8px 0;">
-                  <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
-                    Tên doanh nghiệp
-                    <span style="color: tomato; margin-left: 4px;">*</span>
-                  </div>
-                  <div nz-col class="gutter-row" [nzSpan]="12">
-                    <input style="border-radius: 4px;" nzSize="small" nz-input type="text"
-                      placeholder="Nhập tên doanh nghiệp">
-                  </div>
-                </div>
-
-                <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
-                  style="display: flex; align-items: center; padding: 8px 0;">
-                  <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
-                    Mã số thuế
-                    <span style="color: tomato; margin-left: 4px;">*</span>
-                  </div>
-                  <div nz-col class="gutter-row" [nzSpan]="12">
-                    <input style="border-radius: 4px;" nzSize="small" nz-input type="text"
-                      placeholder="Nhập mã số thuế">
-                  </div>
-                </div>
-
-                <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
-                  style="display: flex; align-items: center; padding: 8px 0;">
-                  <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
-                    Cho phép công nợ
-                  </div>
-                  <div nz-col class="gutter-row" [nzSpan]="12">
-                    <nz-radio-group>
-                      <label nz-radio nzValue=1>Có</label>
-                      <label nz-radio nzValue=0>Không</label>
-                    </nz-radio-group>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div nz-col class="gutter-row" [nzSpan]="12">
-              <div>
-                <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
-                  style="display: flex; align-items: center; padding: 8px 0;">
-                  <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
-                    Số điện thoại
-                  </div>
-                  <div nz-col class="gutter-row" [nzSpan]="12">
-                    <input style="border-radius: 4px;" nzSize="small" nz-input type="text"
-                      placeholder="Nhập điện thoại doanh nghiệp">
-                  </div>
-                </div>
-
-                <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
-                  style="display: flex; align-items: center; padding: 8px 0;">
-                  <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
-                    Email doanh nghiệp
-                  </div>
-                  <div nz-col class="gutter-row" [nzSpan]="12">
-                    <input style="border-radius: 4px;" nzSize="small" nz-input type="text"
-                      placeholder="Nhập email doanh nghiệp">
-                  </div>
-                </div>
-
-                <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
-                  style="display: flex; align-items: center; padding: 8px 0;">
-                  <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
-                    Địa chỉ doanh nghiệp
-                    <span style="color: tomato; margin-left: 4px;">*</span>
-                  </div>
-                  <div nz-col class="gutter-row" [nzSpan]="12">
-                    <input style="border-radius: 4px;" nzSize="small" nz-input type="text"
-                      placeholder="Nhập địa chỉ doanh nghiệp">
-                  </div>
-                </div>
-
-                <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
-                  style="display: flex; align-items: center; padding: 8px 0;">
-                  <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
-                    Chủ doanh nghiệp
-                  </div>
-                  <div nz-col class="gutter-row" [nzSpan]="12">
-                    <input style="border-radius: 4px;" nzSize="small" nz-input type="text"
-                      placeholder="Nhập chủ doanh nghiệp">
-                  </div>
-                </div>
-
-                <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
-                  style="display: flex; align-items: center; padding: 8px 0;">
-                  <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
-                    File giấy uỷ quyền
-                  </div>
-                  <div nz-col class="gutter-row" [nzSpan]="12">
-                    <nz-upload nzAction="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                      [nzHeaders]="{ authorization: 'authorization-text' }" (nzChange)="handleChange($event)">
-                      <button nz-button nzType="default" [nzSize]="'default'" nzShape="round"><span nz-icon
-                          nzType="upload"></span></button>
-                    </nz-upload>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
 
 
-
-
-    </div>
-  </div>
-  <div nz-row [nzGutter]="[16, 24]">
-    <div nz-col class="gutter-row" [nzSpan]="24">
-      <div class="inner-box">
-        <ul nz-menu nzMode="horizontal">
-          <li nz-menu-item [nzSelected]="selectedMenu == option.value"
-            *ngFor="let option of MENU_CREATE_PARTNER_OPTION; let i = index" (click)="selectedMenu = option.value">
-            {{option.label}}
-          </li>
-        </ul>
-        <div style="margin: 16px 0;"></div>
-
-        <div *ngIf="selectedMenu == MenuCreatePartner.DebtManagement">
-          <span style="font-weight: 500; font-size: 16px;">Quản lý hợp đồng</span>
-
-        </div>
-
-
-        <div *ngIf="selectedMenu == MenuCreatePartner.ListEmployees">
-          <!-- Menu list emloyees -->
+  <form [formGroup]="formActionPartner">
+    <div nz-row [nzGutter]="[16, 24]">
+      <div nz-col class="gutter-row" [nzSpan]="24">
+        <div class="inner-box">
+          <!-- Header Base Information -->
           <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span style="font-weight: 500; font-size: 16px;">Danh sách nhân viên</span>
-            <div style="display: flex; align-items: center;">
-              <input style="width: 200px; border-radius: 4px; height: 32px; margin-right: 4rem;" nzSize="small" nz-input
-                type="text" placeholder="Tìm kiếm nhân viên">
-              <div>
-                <button nz-button nz-dropdown nzType="primary" style="margin-right: 0.5rem;"
-                  [nzDropdownMenu]="menuListEmployeesVHL">
+            <span style="font-weight: 500; font-size: 18px;">Thêm tin cơ bản</span>
+            <div>
+              <button nz-button nzType="primary" style="margin-right: 8px;">
+                <div style="display: flex; align-items: center;">
+                  <span nz-icon nzType="save"></span>
+                  <span style="margin-left: 6px; line-height: normal;">Lưu lại</span>
+                </div>
+              </button>
+              <button nz-button nzType="default">
+                <div style="display: flex; align-items: center;">
+                  <span nz-icon nzType="close"></span>
+                  <span style="margin-left: 4px; line-height: normal;">Huỷ bỏ</span>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Content Base Information -->
+          <div>
+            <div style="height: 1px; margin: 16px 0; background-color: #0000000f;"></div>
+            <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
+              <div nz-col class="gutter-row" [nzSpan]="12">
+                <div>
+                  <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                    style="display: flex; align-items: center; padding: 8px 0;">
+                    <div nz-col class="gutter-row" [nzSpan]="6">
+                      Trạng thái
+                    </div>
+                    <div nz-col class="gutter-row" [nzSpan]="12">
+                      Đang tạo hồ sơ
+                    </div>
+                  </div>
+
+                  <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                    style="display: flex; align-items: center; padding: 8px 0;">
+                    <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
+                      Mã tạo hồ sơ
+                      <span style="color: tomato; margin-left: 4px;">*</span>
+                    </div>
+                    <div nz-col class="gutter-row" [nzSpan]="12">
+                      <input style="border-radius: 4px;" nzSize="small" nz-input type="text"
+                        placeholder="Nhập mã doanh nghiệp">
+                    </div>
+                  </div>
+
+                  <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                    style="display: flex; align-items: center; padding: 8px 0;">
+                    <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
+                      Tên doanh nghiệp
+                      <span style="color: tomato; margin-left: 4px;">*</span>
+                    </div>
+                    <div nz-col class="gutter-row" [nzSpan]="12">
+                      <input style="border-radius: 4px;" nzSize="small" nz-input type="text"
+                        placeholder="Nhập tên doanh nghiệp">
+                    </div>
+                  </div>
+
+                  <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                    style="display: flex; align-items: center; padding: 8px 0;">
+                    <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
+                      Mã số thuế
+                      <span style="color: tomato; margin-left: 4px;">*</span>
+                    </div>
+                    <div nz-col class="gutter-row" [nzSpan]="12">
+                      <input style="border-radius: 4px;" nzSize="small" nz-input type="text"
+                        placeholder="Nhập mã số thuế">
+                    </div>
+                  </div>
+
+                  <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                    style="display: flex; align-items: center; padding: 8px 0;">
+                    <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
+                      Cho phép công nợ
+                    </div>
+                    <div nz-col class="gutter-row" [nzSpan]="12">
+                      <nz-radio-group>
+                        <label nz-radio nzValue=1>Có</label>
+                        <label nz-radio nzValue=0>Không</label>
+                      </nz-radio-group>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div nz-col class="gutter-row" [nzSpan]="12">
+                <div>
+                  <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                    style="display: flex; align-items: center; padding: 8px 0;">
+                    <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
+                      Số điện thoại
+                    </div>
+                    <div nz-col class="gutter-row" [nzSpan]="12">
+                      <input style="border-radius: 4px;" nzSize="small" nz-input type="text"
+                        placeholder="Nhập điện thoại doanh nghiệp">
+                    </div>
+                  </div>
+
+                  <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                    style="display: flex; align-items: center; padding: 8px 0;">
+                    <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
+                      Email doanh nghiệp
+                    </div>
+                    <div nz-col class="gutter-row" [nzSpan]="12">
+                      <input style="border-radius: 4px;" nzSize="small" nz-input type="text"
+                        placeholder="Nhập email doanh nghiệp">
+                    </div>
+                  </div>
+
+                  <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                    style="display: flex; align-items: center; padding: 8px 0;">
+                    <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
+                      Địa chỉ doanh nghiệp
+                      <span style="color: tomato; margin-left: 4px;">*</span>
+                    </div>
+                    <div nz-col class="gutter-row" [nzSpan]="12">
+                      <input style="border-radius: 4px;" nzSize="small" nz-input type="text"
+                        placeholder="Nhập địa chỉ doanh nghiệp">
+                    </div>
+                  </div>
+
+                  <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                    style="display: flex; align-items: center; padding: 8px 0;">
+                    <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
+                      Chủ doanh nghiệp
+                    </div>
+                    <div nz-col class="gutter-row" [nzSpan]="12">
+                      <input style="border-radius: 4px;" nzSize="small" nz-input type="text"
+                        placeholder="Nhập chủ doanh nghiệp">
+                    </div>
+                  </div>
+
+                  <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                    style="display: flex; align-items: center; padding: 8px 0;">
+                    <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
+                      File giấy uỷ quyền
+                    </div>
+                    <div nz-col class="gutter-row" [nzSpan]="12">
+                      <nz-upload nzAction="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                        [nzHeaders]="{ authorization: 'authorization-text' }" (nzChange)="handleChange($event)">
+                        <button nz-button nzType="default" [nzSize]="'default'" nzShape="round"><span nz-icon
+                            nzType="upload"></span></button>
+                      </nz-upload>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+
+      </div>
+    </div>
+    <div nz-row [nzGutter]="[16, 24]">
+      <div nz-col class="gutter-row" [nzSpan]="24">
+        <div class="inner-box">
+          <ul nz-menu nzMode="horizontal">
+            <li nz-menu-item [nzSelected]="selectedMenu == option.value"
+              *ngFor="let option of MENU_CREATE_PARTNER_OPTION; let i = index" (click)="selectedMenu = option.value">
+              {{option.label}}
+            </li>
+          </ul>
+          <div style="margin: 16px 0;"></div>
+
+          <div *ngIf="selectedMenu == MenuCreatePartner.DebtManagement">
+            <span style="font-weight: 500; font-size: 16px;">Quản lý hợp đồng</span>
+
+          </div>
+
+
+          <div *ngIf="selectedMenu == MenuCreatePartner.ListEmployees">
+            <!-- Menu list emloyees -->
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-weight: 500; font-size: 16px;">Danh sách nhân viên</span>
+              <div style="display: flex; align-items: center;">
+                <input style="width: 200px; border-radius: 4px; height: 32px; margin-right: 4rem;" nzSize="small"
+                  nz-input type="text" placeholder="Tìm kiếm nhân viên">
+                <div>
+                  <button nz-button nz-dropdown nzType="primary" style="margin-right: 0.5rem;"
+                    [nzDropdownMenu]="menuListEmployeesVHL">
+                    <div style="display: flex; align-items: center;">
+                      <span nz-icon nzType="plus"></span>
+                      <span style="margin: 0 6px; line-height: normal;">Thêm mới</span>
+                      <span nz-icon nzType="down"></span>
+                    </div>
+                  </button>
+                  <nz-dropdown-menu #menuListEmployeesVHL="nzDropdownMenu">
+                    <ul nz-menu>
+                      <li nz-menu-item style="padding: 0.5rem 0;">
+                        <div style="display: flex; align-items: center;">
+                          <span nz-icon nzType="plus"></span>
+                          <span style="margin-left: 6px; line-height: normal;">Thêm nhân viên</span>
+                        </div>
+                      </li>
+                      <li nz-menu-item style="padding: 0.5rem 0;">
+                        <div style="display: flex; align-items: center;">
+                          <span nz-icon nzType="upload"></span>
+                          <span style="margin-left: 6px; line-height: normal;">Tải lên file excel</span>
+                        </div>
+                      </li>
+                    </ul>
+                  </nz-dropdown-menu>
+                </div>
+                <button nz-button nzType="default" style="margin-right: 0.5rem;">
                   <div style="display: flex; align-items: center;">
-                    <span nz-icon nzType="plus"></span>
-                    <span style="margin: 0 6px; line-height: normal;">Thêm mới</span>
-                    <span nz-icon nzType="down"></span>
+                    <span nz-icon nzType="donwload"></span>
+                    <span style="margin-left: 6px; line-height: normal;">Xuất file excel</span>
                   </div>
                 </button>
-                <nz-dropdown-menu #menuListEmployeesVHL="nzDropdownMenu">
-                  <ul nz-menu>
-                    <li nz-menu-item style="padding: 0.5rem 0;">
-                      <div style="display: flex; align-items: center;">
-                        <span nz-icon nzType="plus"></span>
-                        <span style="margin-left: 6px; line-height: normal;">Thêm nhân viên</span>
-                      </div>
-                    </li>
-                    <li nz-menu-item style="padding: 0.5rem 0;">
-                      <div style="display: flex; align-items: center;">
-                        <span nz-icon nzType="upload"></span>
-                        <span style="margin-left: 6px; line-height: normal;">Tải lên file excel</span>
-                      </div>
-                    </li>
-                  </ul>
-                </nz-dropdown-menu>
+                <button nz-button nzType="default" nzDanger>
+                  <div style="display: flex; align-items: center;">
+                    <span nz-icon nzType="lock"></span>
+                    <span style="margin-left: 4px; line-height: normal;">Khoá tài khoản</span>
+                  </div>
+                </button>
               </div>
-              <button nz-button nzType="default" style="margin-right: 0.5rem;">
-                <div style="display: flex; align-items: center;">
-                  <span nz-icon nzType="donwload"></span>
-                  <span style="margin-left: 6px; line-height: normal;">Xuất file excel</span>
-                </div>
-              </button>
-              <button nz-button nzType="default" nzDanger>
-                <div style="display: flex; align-items: center;">
-                  <span nz-icon nzType="lock"></span>
-                  <span style="margin-left: 4px; line-height: normal;">Khoá tài khoản</span>
-                </div>
-              </button>
+            </div>
+            <div style="margin: 16px 0;"></div>
+            <!-- Content lisst employees -->
+            <div>
+              <nz-table #dynamicTable [nzScroll]="{ x: scrollX, y: scrollY }" [nzData]="listOfEmployees"
+                [nzTableLayout]="settingTableEmployeesValue.tableLayout"
+                [nzBordered]="settingTableEmployeesValue.bordered" [nzSimple]="settingTableEmployeesValue.simple"
+                [nzLoading]="settingTableEmployeesValue.loading"
+                [nzPaginationType]="settingTableEmployeesValue.paginationType"
+                [nzPaginationPosition]="settingTableEmployeesValue.position"
+                [nzShowSizeChanger]="settingTableEmployeesValue.sizeChanger"
+                [nzFrontPagination]="settingTableEmployeesValue.pagination"
+                [nzShowPagination]="settingTableEmployeesValue.pagination"
+                [nzFooter]="settingTableEmployeesValue.footer ? 'Here is Footer' : null"
+                [nzTitle]="settingTableEmployeesValue.title ? 'Here is Title' : null"
+                [nzNoResult]="settingTableEmployeesValue.noResultText ? settingTableEmployeesValue.noResultText : ''"
+                [nzSize]="settingTableEmployeesValue.size" (nzCurrentPageDataChange)="currentPageDataChange($event)">
+                <thead>
+                  <tr *ngIf="settingTableEmployeesValue.header">
+                    <th nzWidth="40px" *ngIf="settingTableEmployeesValue.expandable" [nzLeft]="fixedColumn"></th>
+                    <th *ngIf="settingTableEmployeesValue.checkbox" nzWidth="60px" [(nzChecked)]="allChecked"
+                      [nzLeft]="fixedColumn" [nzIndeterminate]="indeterminate" (nzCheckedChange)="checkAll($event)">
+                    </th>
+                    <th [nzLeft]="fixedColumn">Vai trò</th>
+                    <th [nzLeft]="fixedColumn">Mã người dùng</th>
+                    <th>Tên nhân viên</th>
+                    <th>Trạng thái</th>
+                    <th>Email</th>
+                    <th>Số điện thoại</th>
+                    <th>Giới tính</th>
+                    <th>Quản lý trực tiếp</th>
+                    <th>Mã thẻ thành viên</th>
+                    <th [nzRight]="fixedColumn">Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <ng-container *ngFor="let data of dynamicTable.data">
+                    <tr>
+                      <td [nzLeft]="fixedColumn" *ngIf="settingTableEmployeesValue.expandable"
+                        [(nzExpand)]="data.expand">
+                      </td>
+                      <td [nzLeft]="fixedColumn" *ngIf="settingTableEmployeesValue.checkbox"
+                        [(nzChecked)]="data.checked" (nzCheckedChange)="refreshStatus()"></td>
+                      <td [nzLeft]="fixedColumn">{{ data.name }}</td>
+                      <td>{{ data.age }}</td>
+                      <td [nzEllipsis]="settingTableEmployeesValue.ellipsis">{{ data.address }}</td>
+                      <td [nzRight]="fixedColumn" [nzEllipsis]="settingTableEmployeesValue.ellipsis">
+                        <a href="#">Delete</a>
+                        <nz-divider nzType="vertical"></nz-divider>
+                        <a href="#">More action</a>
+                      </td>
+                    </tr>
+                    <tr *ngIf="settingTableEmployeesValue.expandable" [nzExpand]="data.expand">
+                      <span>{{ data.description }}</span>
+                    </tr>
+                  </ng-container>
+                </tbody>
+              </nz-table>
             </div>
           </div>
 
-          <!-- Content lisst employees -->
-          <div>
-            <nz-table #dynamicTable [nzScroll]="{ x: scrollX, y: scrollY }" [nzData]="listOfData"
-              [nzTableLayout]="settingTableEmployeesValue.tableLayout" [nzBordered]="settingTableEmployeesValue.bordered"
-              [nzSimple]="settingTableEmployeesValue.simple" [nzLoading]="settingTableEmployeesValue.loading"
-              [nzPaginationType]="settingTableEmployeesValue.paginationType" [nzPaginationPosition]="settingTableEmployeesValue.position"
-              [nzShowSizeChanger]="settingTableEmployeesValue.sizeChanger" [nzFrontPagination]="settingTableEmployeesValue.pagination"
-              [nzShowPagination]="settingTableEmployeesValue.pagination" [nzFooter]="settingTableEmployeesValue.footer ? 'Here is Footer' : null"
-              [nzTitle]="settingTableEmployeesValue.title ? 'Here is Title' : null" [nzSize]="settingTableEmployeesValue.size"
-              (nzCurrentPageDataChange)="currentPageDataChange($event)">
-              <thead>
-                <tr *ngIf="settingTableEmployeesValue.header">
-                  <th nzWidth="40px" *ngIf="settingTableEmployeesValue.expandable" [nzLeft]="fixedColumn"></th>
-                  <th *ngIf="settingTableEmployeesValue.checkbox" nzWidth="60px" [(nzChecked)]="allChecked" [nzLeft]="fixedColumn"
-                    [nzIndeterminate]="indeterminate" (nzCheckedChange)="checkAll($event)"></th>
-                  <th [nzLeft]="fixedColumn">Name</th>
-                  <th>Age</th>
-                  <th>Address</th>
-                  <th [nzRight]="fixedColumn">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                <ng-container *ngFor="let data of dynamicTable.data">
-                  <tr>
-                    <td [nzLeft]="fixedColumn" *ngIf="settingTableEmployeesValue.expandable" [(nzExpand)]="data.expand"></td>
-                    <td [nzLeft]="fixedColumn" *ngIf="settingTableEmployeesValue.checkbox" [(nzChecked)]="data.checked"
-                      (nzCheckedChange)="refreshStatus()"></td>
-                    <td [nzLeft]="fixedColumn">{{ data.name }}</td>
-                    <td>{{ data.age }}</td>
-                    <td [nzEllipsis]="settingTableEmployeesValue.ellipsis">{{ data.address }}</td>
-                    <td [nzRight]="fixedColumn" [nzEllipsis]="settingTableEmployeesValue.ellipsis">
-                      <a href="#">Delete</a>
-                      <nz-divider nzType="vertical"></nz-divider>
-                      <a href="#">More action</a>
-                    </td>
-                  </tr>
-                  <tr *ngIf="settingTableEmployeesValue.expandable" [nzExpand]="data.expand">
-                    <span>{{ data.description }}</span>
-                  </tr>
-                </ng-container>
-              </tbody>
-            </nz-table>
+
+
+
+          <div *ngIf="selectedMenu == MenuCreatePartner.AccountInfomation">
+            <span style="font-weight: 500; font-size: 16px;">Thông tin tài khoản</span>
+
           </div>
         </div>
 
-
-
-
-        <div *ngIf="selectedMenu == MenuCreatePartner.AccountInfomation">
-          <span style="font-weight: 500; font-size: 16px;">Thông tin tài khoản</span>
-
-        </div>
       </div>
-
     </div>
-  </div>
+  </form>
+
 </div>
