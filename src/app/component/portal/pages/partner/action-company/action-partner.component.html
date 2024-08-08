@@ -191,14 +191,110 @@
         <div style="margin: 16px 0;"></div>
 
         <div *ngIf="selectedMenu == MenuCreatePartner.DebtManagement">
-          DebtManagement
-        </div>
-        <div *ngIf="selectedMenu == MenuCreatePartner.ListEmployees">
-          <h3>Danh sách nhân viên</h3>
+          <span style="font-weight: 500; font-size: 16px;">Quản lý hợp đồng</span>
 
         </div>
+
+
+        <div *ngIf="selectedMenu == MenuCreatePartner.ListEmployees">
+          <!-- Menu list emloyees -->
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-weight: 500; font-size: 16px;">Danh sách nhân viên</span>
+            <div style="display: flex; align-items: center;">
+              <input style="width: 200px; border-radius: 4px; height: 32px; margin-right: 4rem;" nzSize="small" nz-input
+                type="text" placeholder="Tìm kiếm nhân viên">
+              <div>
+                <button nz-button nz-dropdown nzType="primary" style="margin-right: 0.5rem;"
+                  [nzDropdownMenu]="menuListEmployeesVHL">
+                  <div style="display: flex; align-items: center;">
+                    <span nz-icon nzType="plus"></span>
+                    <span style="margin: 0 6px; line-height: normal;">Thêm mới</span>
+                    <span nz-icon nzType="down"></span>
+                  </div>
+                </button>
+                <nz-dropdown-menu #menuListEmployeesVHL="nzDropdownMenu">
+                  <ul nz-menu>
+                    <li nz-menu-item style="padding: 0.5rem 0;">
+                      <div style="display: flex; align-items: center;">
+                        <span nz-icon nzType="plus"></span>
+                        <span style="margin-left: 6px; line-height: normal;">Thêm nhân viên</span>
+                      </div>
+                    </li>
+                    <li nz-menu-item style="padding: 0.5rem 0;">
+                      <div style="display: flex; align-items: center;">
+                        <span nz-icon nzType="upload"></span>
+                        <span style="margin-left: 6px; line-height: normal;">Tải lên file excel</span>
+                      </div>
+                    </li>
+                  </ul>
+                </nz-dropdown-menu>
+              </div>
+              <button nz-button nzType="default" style="margin-right: 0.5rem;">
+                <div style="display: flex; align-items: center;">
+                  <span nz-icon nzType="donwload"></span>
+                  <span style="margin-left: 6px; line-height: normal;">Xuất file excel</span>
+                </div>
+              </button>
+              <button nz-button nzType="default" nzDanger>
+                <div style="display: flex; align-items: center;">
+                  <span nz-icon nzType="lock"></span>
+                  <span style="margin-left: 4px; line-height: normal;">Khoá tài khoản</span>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Content lisst employees -->
+          <div>
+            <nz-table #dynamicTable [nzScroll]="{ x: scrollX, y: scrollY }" [nzData]="listOfData"
+              [nzTableLayout]="settingTableEmployeesValue.tableLayout" [nzBordered]="settingTableEmployeesValue.bordered"
+              [nzSimple]="settingTableEmployeesValue.simple" [nzLoading]="settingTableEmployeesValue.loading"
+              [nzPaginationType]="settingTableEmployeesValue.paginationType" [nzPaginationPosition]="settingTableEmployeesValue.position"
+              [nzShowSizeChanger]="settingTableEmployeesValue.sizeChanger" [nzFrontPagination]="settingTableEmployeesValue.pagination"
+              [nzShowPagination]="settingTableEmployeesValue.pagination" [nzFooter]="settingTableEmployeesValue.footer ? 'Here is Footer' : null"
+              [nzTitle]="settingTableEmployeesValue.title ? 'Here is Title' : null" [nzSize]="settingTableEmployeesValue.size"
+              (nzCurrentPageDataChange)="currentPageDataChange($event)">
+              <thead>
+                <tr *ngIf="settingTableEmployeesValue.header">
+                  <th nzWidth="40px" *ngIf="settingTableEmployeesValue.expandable" [nzLeft]="fixedColumn"></th>
+                  <th *ngIf="settingTableEmployeesValue.checkbox" nzWidth="60px" [(nzChecked)]="allChecked" [nzLeft]="fixedColumn"
+                    [nzIndeterminate]="indeterminate" (nzCheckedChange)="checkAll($event)"></th>
+                  <th [nzLeft]="fixedColumn">Name</th>
+                  <th>Age</th>
+                  <th>Address</th>
+                  <th [nzRight]="fixedColumn">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngFor="let data of dynamicTable.data">
+                  <tr>
+                    <td [nzLeft]="fixedColumn" *ngIf="settingTableEmployeesValue.expandable" [(nzExpand)]="data.expand"></td>
+                    <td [nzLeft]="fixedColumn" *ngIf="settingTableEmployeesValue.checkbox" [(nzChecked)]="data.checked"
+                      (nzCheckedChange)="refreshStatus()"></td>
+                    <td [nzLeft]="fixedColumn">{{ data.name }}</td>
+                    <td>{{ data.age }}</td>
+                    <td [nzEllipsis]="settingTableEmployeesValue.ellipsis">{{ data.address }}</td>
+                    <td [nzRight]="fixedColumn" [nzEllipsis]="settingTableEmployeesValue.ellipsis">
+                      <a href="#">Delete</a>
+                      <nz-divider nzType="vertical"></nz-divider>
+                      <a href="#">More action</a>
+                    </td>
+                  </tr>
+                  <tr *ngIf="settingTableEmployeesValue.expandable" [nzExpand]="data.expand">
+                    <span>{{ data.description }}</span>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </nz-table>
+          </div>
+        </div>
+
+
+
+
         <div *ngIf="selectedMenu == MenuCreatePartner.AccountInfomation">
-          AccountInfomation
+          <span style="font-weight: 500; font-size: 16px;">Thông tin tài khoản</span>
+
         </div>
       </div>
 
