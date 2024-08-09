@@ -7,6 +7,8 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { NzTableLayout, NzTablePaginationPosition, NzTablePaginationType, NzTableSize } from 'ng-zorro-antd/table';
 import { NZTableSettingCustoms } from 'src/app/Interfaces/nz-table-seting.interface';
 import { ActionTypePageVHL } from 'src/app/enums/action-type-page-vhl.enum';
+import { AllowDebtPartner } from 'src/app/shared/constants/allow-debt-partner.class';
+import { PARTNER_STATUS_OPTIONS, PartnerStatus } from 'src/app/enums/partner-status.enum';
 
 
 interface ItemData {
@@ -51,7 +53,11 @@ export class ActionPartnerComponent implements OnInit {
 
   MenuCreatePartner = MenuCreatePartner;
   MENU_CREATE_PARTNER_OPTION = MENU_CREATE_PARTNER_OPTION;
+  PartnerStatus = PartnerStatus;
+  PARTNER_STATUS_OPTIONS = PARTNER_STATUS_OPTIONS;
+  AllowDebtPartner = AllowDebtPartner;
   selectedMenu = MenuCreatePartner.ListEmployees;
+
   actionPartnerVHL: any;
   settingTableListEmployeesForm: FormGroup;
   allChecked = false;
@@ -68,19 +74,26 @@ export class ActionPartnerComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private formBuilder: FormBuilder
   ) {
+    this.actionPartnerVHL = this.activatedRoute.snapshot.data['type'];
+    if (this.actionPartnerVHL == ActionTypePageVHL.Create) {
+      this.listOfEmployees = [];
+    }
     this.formActionPartner = this.formBuilder.group({
       id: [null],
-      status: [],
-      name: [null, [Validators.required]],
+
+      status: new FormControl({ value: PartnerStatus.CreatingProfile, disabled: this.actionPartnerVHL == ActionTypePageVHL.Create }, Validators.required),
+      code: [null, [Validators.required]],
       companyName: [null, [Validators.required]],
       taxCode: [null, [Validators.required]],
       phone: [null],
-      email: [null, [Validators.required]],
+      email: [null],
       address: [null, [Validators.required]],
-      debtMax: [null],
-      debtUsed: [null],
-      debtRemain: [null],
-      note: [null],
+      name: [null],
+      allowDebt: [AllowDebtPartner.ALLOW, [Validators.required]],
+      patchFile: [[]],
+      // debtMax: [null],
+      // debtUsed: [null],
+      // debtRemain: [null],
     });
 
     this.settingTableListEmployeesForm = this.formBuilder.group({
@@ -110,10 +123,7 @@ export class ActionPartnerComponent implements OnInit {
 
   ngOnInit(): void {
     // Lấy giá trị status từ route data
-    this.actionPartnerVHL = this.activatedRoute.snapshot.data['type'];
-    if(this.actionPartnerVHL == ActionTypePageVHL.Create){
-      this.listOfEmployees = [];
-    }
+
 
     this.settingTableListEmployeesForm.valueChanges.subscribe(value => {
       this.settingTableEmployeesValue = value as NZTableSettingCustoms;

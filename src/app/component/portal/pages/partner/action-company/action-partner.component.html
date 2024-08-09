@@ -57,7 +57,11 @@
                       Trạng thái
                     </div>
                     <div nz-col class="gutter-row" [nzSpan]="12">
-                      Đang tạo hồ sơ
+                      <nz-select nzShowSearch nzMode="default" nzPlaceHolder="Trạng thái hoạt động"
+                        formControlName='status'>
+                        <nz-option *ngFor="let op of PARTNER_STATUS_OPTIONS" nzLabel="{{op.label}}"
+                          [nzValue]="op.value"></nz-option>
+                      </nz-select>
                     </div>
                   </div>
 
@@ -68,7 +72,7 @@
                       <span style="color: tomato; margin-left: 4px;">*</span>
                     </div>
                     <div nz-col class="gutter-row" [nzSpan]="12">
-                      <input style="border-radius: 4px;" nzSize="small" nz-input type="text"
+                      <input style="border-radius: 4px;" nzSize="default" nz-input type="text" formControlName='code'
                         placeholder="Nhập mã doanh nghiệp">
                     </div>
                   </div>
@@ -80,8 +84,8 @@
                       <span style="color: tomato; margin-left: 4px;">*</span>
                     </div>
                     <div nz-col class="gutter-row" [nzSpan]="12">
-                      <input style="border-radius: 4px;" nzSize="small" nz-input type="text"
-                        placeholder="Nhập tên doanh nghiệp">
+                      <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
+                        formControlName='companyName' placeholder="Nhập tên doanh nghiệp">
                     </div>
                   </div>
 
@@ -92,7 +96,7 @@
                       <span style="color: tomato; margin-left: 4px;">*</span>
                     </div>
                     <div nz-col class="gutter-row" [nzSpan]="12">
-                      <input style="border-radius: 4px;" nzSize="small" nz-input type="text"
+                      <input style="border-radius: 4px;" nzSize="default" nz-input type="text" formControlName='taxCode'
                         placeholder="Nhập mã số thuế">
                     </div>
                   </div>
@@ -103,9 +107,9 @@
                       Cho phép công nợ
                     </div>
                     <div nz-col class="gutter-row" [nzSpan]="12">
-                      <nz-radio-group>
-                        <label nz-radio nzValue=1>Có</label>
-                        <label nz-radio nzValue=0>Không</label>
+                      <nz-radio-group formControlName='allowDebt'>
+                        <label nz-radio [nzValue]="AllowDebtPartner.ALLOW">Có</label>
+                        <label nz-radio [nzValue]="AllowDebtPartner.NOTALLOW">Không</label>
                       </nz-radio-group>
                     </div>
                   </div>
@@ -119,8 +123,8 @@
                       Số điện thoại
                     </div>
                     <div nz-col class="gutter-row" [nzSpan]="12">
-                      <input style="border-radius: 4px;" nzSize="small" nz-input type="text"
-                        placeholder="Nhập điện thoại doanh nghiệp">
+                      <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
+                        placeholder="Nhập điện thoại doanh nghiệp" formControlName='phone'>
                     </div>
                   </div>
 
@@ -130,8 +134,8 @@
                       Email doanh nghiệp
                     </div>
                     <div nz-col class="gutter-row" [nzSpan]="12">
-                      <input style="border-radius: 4px;" nzSize="small" nz-input type="text"
-                        placeholder="Nhập email doanh nghiệp">
+                      <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
+                        placeholder="Nhập email doanh nghiệp" formControlName='email'>
                     </div>
                   </div>
 
@@ -142,8 +146,8 @@
                       <span style="color: tomato; margin-left: 4px;">*</span>
                     </div>
                     <div nz-col class="gutter-row" [nzSpan]="12">
-                      <input style="border-radius: 4px;" nzSize="small" nz-input type="text"
-                        placeholder="Nhập địa chỉ doanh nghiệp">
+                      <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
+                        placeholder="Nhập địa chỉ doanh nghiệp" formControlName='address'>
                     </div>
                   </div>
 
@@ -153,8 +157,8 @@
                       Chủ doanh nghiệp
                     </div>
                     <div nz-col class="gutter-row" [nzSpan]="12">
-                      <input style="border-radius: 4px;" nzSize="small" nz-input type="text"
-                        placeholder="Nhập chủ doanh nghiệp">
+                      <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
+                        placeholder="Nhập chủ doanh nghiệp" formControlName='name'>
                     </div>
                   </div>
 
@@ -204,7 +208,7 @@
             <div style="display: flex; justify-content: space-between; align-items: center;">
               <span style="font-weight: 500; font-size: 16px;">Danh sách nhân viên</span>
               <div style="display: flex; align-items: center;">
-                <input style="width: 200px; border-radius: 4px; height: 32px; margin-right: 4rem;" nzSize="small"
+                <input style="width: 200px; border-radius: 4px; height: 32px; margin-right: 4rem;" nzSize="default"
                   nz-input type="text" placeholder="Tìm kiếm nhân viên">
                 <div>
                   <button nz-button nz-dropdown nzType="primary" style="margin-right: 0.5rem;"
@@ -234,7 +238,7 @@
                 </div>
                 <button nz-button nzType="default" style="margin-right: 0.5rem;">
                   <div style="display: flex; align-items: center;">
-                    <span nz-icon nzType="donwload"></span>
+                    <span nz-icon nzType="down"></span>
                     <span style="margin-left: 6px; line-height: normal;">Xuất file excel</span>
                   </div>
                 </button>
@@ -318,5 +322,4 @@
       </div>
     </div>
   </form>
-
 </div>
