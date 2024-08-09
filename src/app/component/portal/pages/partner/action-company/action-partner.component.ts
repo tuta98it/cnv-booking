@@ -13,6 +13,7 @@ import { UploadFileSetting } from 'src/app/Interfaces/upload-file-setting.interf
 import { AppConfigService } from 'src/app-config.service';
 import { TypeOfDocument } from 'src/app/enums/type-of-document.enum';
 import { Constant } from 'src/app/shared/constants/constant.class';
+import { GeneralService } from './../../../../../service/general-service';
 
 
 interface ItemData {
@@ -82,10 +83,12 @@ export class ActionPartnerComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private formBuilder: FormBuilder,
     private configService: AppConfigService,
+    private generalService: GeneralService,
   ) {
     this.actionPartnerVHL = this.activatedRoute.snapshot.data['type'];
     if (this.actionPartnerVHL == ActionTypePageVHL.Create) {
       this.listOfEmployees = [];
+      this.listUploadAuthorizationFile = [];
       this.settingUploadAuthorizationFile = {
         isMultiple: true,
         action: `${this.configService.getConfig().api.baseUrl}/Upload/UploadPartnerFile?partnerId=null&type=${TypeOfDocument.AuthorizationFile}`,
@@ -216,7 +219,7 @@ export class ActionPartnerComponent implements OnInit {
       this.listUploadAuthorizationFile = info.fileList;
       setTimeout(() => {
         if (this.listUploadAuthorizationFile.length > 0) {
-          this.listUploadAuthorizationFile[this.listUploadAuthorizationFile.length - 1].hotelFileId = info.file.response.hotelFileId.toString();
+          this.listUploadAuthorizationFile[this.listUploadAuthorizationFile.length - 1].partnerFileId = info.file.response.partnerFileId.toString();
           this.listUploadAuthorizationFile[this.listUploadAuthorizationFile.length - 1].url = `${this.configService.getConfig().api.baseUrl}/${info.file.response.path}`;
         }
       }, 200);
@@ -227,10 +230,9 @@ export class ActionPartnerComponent implements OnInit {
 
 
   handleRemoveUploadAuthorizationFile(data: any) {
-    // this.generalService.removeFile(data.id).subscribe((res: any) => {
-    //   this.getListData();
-    //   this.curFileResults = this.curFileResults.filter(en => en.id !== data.id);
-    // });
+     this.generalService.removeFile(data.partnerFileId).subscribe((res: any) => {
+       this.listUploadAuthorizationFile = this.listUploadAuthorizationFile.filter(en => en.partnerFileId !== data.partnerFileId);
+     });
   }
 
 }
