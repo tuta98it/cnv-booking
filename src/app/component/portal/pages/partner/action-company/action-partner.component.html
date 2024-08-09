@@ -168,8 +168,14 @@
                       File giấy uỷ quyền
                     </div>
                     <div nz-col class="gutter-row" [nzSpan]="12">
-                      <nz-upload nzAction="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                        [nzHeaders]="{ authorization: 'authorization-text' }" (nzChange)="handleChange($event)">
+                      <nz-upload [nzMultiple]="settingUploadAuthorizationFile.isMultiple"
+                        [nzAction]="settingUploadAuthorizationFile.action"
+                        [nzName]="settingUploadAuthorizationFile.name"
+                        [nzHeaders]="settingUploadAuthorizationFile.header"
+                        [nzRemove]="handleRemoveUploadAuthorizationFile"
+                        [nzShowUploadList]="settingUploadAuthorizationFile.showUploadList"
+                        [nzFileList]="listUploadAuthorizationFile"
+                        (nzChange)="handleChangeUploadAuthorizationFile($event)">
                         <button nz-button nzType="default" [nzSize]="'default'" nzShape="round"><span nz-icon
                             nzType="upload"></span></button>
                       </nz-upload>
@@ -180,9 +186,6 @@
             </div>
           </div>
         </div>
-
-
-
 
       </div>
     </div>
@@ -309,13 +312,8 @@
               </nz-table>
             </div>
           </div>
-
-
-
-
           <div *ngIf="selectedMenu == MenuCreatePartner.AccountInfomation">
             <span style="font-weight: 500; font-size: 16px;">Thông tin tài khoản</span>
-
           </div>
         </div>
 

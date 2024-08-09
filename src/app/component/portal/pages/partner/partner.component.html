@@ -66,12 +66,12 @@
         </div>
       </div>
       <div style="margin-top: 0.5rem; display: flex; justify-content: end;">
-        <button nz-button nzSize="small" nzType="dashed" (click)="openModalUpload(partner.data, 1)"><span nz-icon
+        <button nz-button nzSize="small" nzType="dashed" (click)="openModalUpload(partner.data, TypeOfDocument.BusinessLicenseFile)"><span nz-icon
             nzType="sync" nzTheme="outline"></span>Cập nhật GPKD cho {{partner.data.companyName}}</button>
       </div>
     </ng-container>
   </div>
-  <div *dxTemplate="let partner of 'cellContract'" (click)="openModalUpload(partner.data, 2)">
+  <div *dxTemplate="let partner of 'cellContract'" (click)="openModalUpload(partner.data, TypeOfDocument.ContractFile)">
     <ng-container *ngIf="partner.data.partnerFile">
       <div style="display: flex; flex-direction: column;">
         <div *ngFor="let file of partner.data.partnerFile; let i = index">
@@ -242,7 +242,6 @@
   </nz-modal>
 </form>
 
-
 <!--Thêm tài khoản đối tác con-->
 <nz-modal (nzOnCancel)="handleCancel()" [(nzVisible)]="isVisibleAddAccount" [nzTitle]="titleaccount2"
   [nzContent]="contentaccount2" [nzFooter]="footeraccount2">
@@ -301,7 +300,6 @@
     <button nz-button nzType="primary" (click)="handleOkAddAccount()">{{'save' | translate }}</button>
   </ng-template>
 </nz-modal>
-
 
 <!-- Tải file kết quả -->
 <nz-modal nzTitle='Tải file kết quả' [nzWidth]="700" [(nzVisible)]="visibleUpload" (nzOnCancel)="closeModalUpload()">

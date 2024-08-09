@@ -19,6 +19,7 @@ import {
   DxTooltipComponent,
   DxTooltipModule,
 } from "devextreme-angular";
+import { TypeOfDocument } from 'src/app/enums/type-of-document.enum';
 @Component({
   selector: 'app-partner',
   templateUrl: './partner.component.html',
@@ -30,7 +31,7 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
   showPageSizeSelector = true;
   showInfo = true;
   showNavButtons = true;
-
+  TypeOfDocument = TypeOfDocument;
   @ViewChild("ListAccount") dataGridDetail: DxDataGridComponent;
   valueNumberPhone = '';
   @ViewChild('inputElementNumberPhone', { static: false }) inputElementNumberPhone?: ElementRef;
@@ -558,7 +559,7 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
       });
     }
     const partnerId = data.id;
-    this.uploadUrl = `${this.configService.getConfig().api.baseUrl}/Upload/UploadFile?partnerId=${partnerId}&type=${type}`;
+    this.uploadUrl = `${this.configService.getConfig().api.baseUrl}/Upload/UploadPartnerFile?partnerId=${partnerId}&type=${type}`;
   }
 
   closeModalUpload() {

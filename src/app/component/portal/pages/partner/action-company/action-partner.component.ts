@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { NzUploadChangeParam } from 'ng-zorro-antd/upload';
+import { NzUploadChangeParam, NzUploadFile } from 'ng-zorro-antd/upload';
 import { MENU_CREATE_PARTNER_OPTION, MenuCreatePartner } from 'src/app/enums/menu-create-partner.enum';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NzTableLayout, NzTablePaginationPosition, NzTablePaginationType, NzTableSize } from 'ng-zorro-antd/table';
@@ -9,6 +9,10 @@ import { NZTableSettingCustoms } from 'src/app/Interfaces/nz-table-seting.interf
 import { ActionTypePageVHL } from 'src/app/enums/action-type-page-vhl.enum';
 import { AllowDebtPartner } from 'src/app/shared/constants/allow-debt-partner.class';
 import { PARTNER_STATUS_OPTIONS, PartnerStatus } from 'src/app/enums/partner-status.enum';
+import { UploadFileSetting } from 'src/app/Interfaces/upload-file-setting.interface';
+import { AppConfigService } from 'src/app-config.service';
+import { TypeOfDocument } from 'src/app/enums/type-of-document.enum';
+import { Constant } from 'src/app/shared/constants/constant.class';
 
 
 interface ItemData {
@@ -20,6 +24,8 @@ interface ItemData {
   description: string;
   disabled?: boolean;
 }
+
+
 
 type TableScroll = 'unset' | 'scroll' | 'fixed';
 
@@ -69,14 +75,32 @@ export class ActionPartnerComponent implements OnInit {
   listOfEmployees: readonly ItemData[] = [];
   displayData: readonly ItemData[] = [];
   formActionPartner: FormGroup;
+  settingUploadAuthorizationFile: UploadFileSetting;
+  listUploadAuthorizationFile: NzUploadFile[];
   constructor(
     private msg: NzMessageService,
     private activatedRoute: ActivatedRoute,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private configService: AppConfigService,
   ) {
     this.actionPartnerVHL = this.activatedRoute.snapshot.data['type'];
     if (this.actionPartnerVHL == ActionTypePageVHL.Create) {
       this.listOfEmployees = [];
+      this.settingUploadAuthorizationFile = {
+        isMultiple: true,
+        action: `${this.configService.getConfig().api.baseUrl}/Upload/UploadPartnerFile?partnerId=null&type=${TypeOfDocument.AuthorizationFile}`,
+        header: {
+          Authorization: 'Bearer ' + localStorage.getItem(Constant.TOKEN),
+        },
+        name: `postedFile`,
+        showUploadList: {
+          showPreviewIcon: true,
+          showDownloadIcon: true,
+          showRemoveIcon: true
+        }
+      } as UploadFileSetting;
+    } else if (this.actionPartnerVHL == ActionTypePageVHL.Update) {
+
     }
     this.formActionPartner = this.formBuilder.group({
       id: [null],
@@ -123,8 +147,6 @@ export class ActionPartnerComponent implements OnInit {
 
   ngOnInit(): void {
     // Lấy giá trị status từ route data
-
-
     this.settingTableListEmployeesForm.valueChanges.subscribe(value => {
       this.settingTableEmployeesValue = value as NZTableSettingCustoms;
     });
@@ -185,16 +207,30 @@ export class ActionPartnerComponent implements OnInit {
   }
 
 
-  handleChange(info: NzUploadChangeParam): void {
+  handleChangeUploadAuthorizationFile(info: NzUploadChangeParam): void {
     if (info.file.status !== 'uploading') {
       console.log(info.file, info.fileList);
     }
     if (info.file.status === 'done') {
-      this.msg.success(`${info.file.name} file uploaded successfully`);
+      this.msg.success(`${info.file.name} file tải lên thành công`);
+      this.listUploadAuthorizationFile = info.fileList;
+      setTimeout(() => {
+        if (this.listUploadAuthorizationFile.length > 0) {
+          this.listUploadAuthorizationFile[this.listUploadAuthorizationFile.length - 1].hotelFileId = info.file.response.hotelFileId.toString();
+          this.listUploadAuthorizationFile[this.listUploadAuthorizationFile.length - 1].url = `${this.configService.getConfig().api.baseUrl}/${info.file.response.path}`;
+        }
+      }, 200);
     } else if (info.file.status === 'error') {
-      this.msg.error(`${info.file.name} file upload failed.`);
+      this.msg.error(`${info.file.name} file tải lên thất bại.`);
     }
   }
 
+
+  handleRemoveUploadAuthorizationFile(data: any) {
+    // this.generalService.removeFile(data.id).subscribe((res: any) => {
+    //   this.getListData();
+    //   this.curFileResults = this.curFileResults.filter(en => en.id !== data.id);
+    // });
+  }
 
 }
