@@ -14,6 +14,7 @@ import { AppConfigService } from 'src/app-config.service';
 import { TypeOfDocument } from 'src/app/enums/type-of-document.enum';
 import { Constant } from 'src/app/shared/constants/constant.class';
 import { GeneralService } from './../../../../../service/general-service';
+import { NotificationService } from 'src/app/service/notification.service';
 
 
 interface ItemData {
@@ -26,30 +27,8 @@ interface ItemData {
   disabled?: boolean;
 }
 
-
-
 type TableScroll = 'unset' | 'scroll' | 'fixed';
 
-interface NZTableSetting {
-  bordered: boolean;
-  loading: boolean;
-  pagination: boolean;
-  sizeChanger: boolean;
-  title: boolean;
-  header: boolean;
-  footer: boolean;
-  expandable: boolean;
-  checkbox: boolean;
-  fixHeader: boolean;
-  noResult: boolean;
-  ellipsis: boolean;
-  simple: boolean;
-  size: NzTableSize;
-  tableScroll: TableScroll;
-  tableLayout: NzTableLayout;
-  position: NzTablePaginationPosition;
-  paginationType: NzTablePaginationType;
-}
 @Component({
   selector: 'app-action-partner',
   templateUrl: './action-partner.component.html',
@@ -84,6 +63,7 @@ export class ActionPartnerComponent implements OnInit {
     private formBuilder: FormBuilder,
     private configService: AppConfigService,
     private generalService: GeneralService,
+    private notificationService: NotificationService
   ) {
     this.actionPartnerVHL = this.activatedRoute.snapshot.data['type'];
     if (this.actionPartnerVHL == ActionTypePageVHL.Create) {
@@ -228,11 +208,34 @@ export class ActionPartnerComponent implements OnInit {
     }
   }
 
+  handleRemoveUploadAuthorizationFile(file: NzUploadFile) {
+    if (file?.partnerFileId) {
+      this.generalService.removeFile(file.partnerFileId).subscribe({
+        next: (res: any) => {
+          if (res) {
+            if (res.ret && res.ret.length > 0) {
+              res.ret.forEach((el: any) => {
+                if (el.code === 0) {
+                  this.listUploadAuthorizationFile = this.listUploadAuthorizationFile.filter(en => en.partnerFileId !== file.partnerFileId);
+                  this.msg.success(`Đã xoá file ${file.name}.`);
+                } else if (res.code === 404) {
+                  this.msg.error(`Không tìm thấy file ${file.name}.`);
+                } else {
+                  this.msg.error(`Đã có lỗi xảy ra. Không thể xoá file ${file.name}`);
+                }
+              });
+            }
+          } else {
+            this.msg.error(`Xoá file ${file.name} thất bại.`);
+          }
+        },
+        error: (error: any) => {
+          this.msg.error(Constant.ERROR, `Lỗi hệ thống, Không thể xoá file ${file.name}`);
+        },
+        complete: () => {
 
-  handleRemoveUploadAuthorizationFile(data: any) {
-     this.generalService.removeFile(data.partnerFileId).subscribe((res: any) => {
-       this.listUploadAuthorizationFile = this.listUploadAuthorizationFile.filter(en => en.partnerFileId !== data.partnerFileId);
-     });
+        }
+      });
+    }
   }
-
 }

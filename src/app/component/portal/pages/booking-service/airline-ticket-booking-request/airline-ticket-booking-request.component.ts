@@ -349,9 +349,6 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     this.isVisibleRequestBookingHistory = false;
   }
 
-
-
-
   exportData() {
     this.dataGridDetail.instance.exportToExcel(false);
   }
