@@ -97,7 +97,7 @@ export class ActionPartnerComponent implements OnInit {
       address: [null, [Validators.required]],
       name: [null],
       allowDebt: [AllowDebtPartner.ALLOW, [Validators.required]],
-      patchFile: [[]],
+      filePartnerIDs: [[]]
       // debtMax: [null],
       // debtUsed: [null],
       // debtRemain: [null],
@@ -237,5 +237,39 @@ export class ActionPartnerComponent implements OnInit {
         }
       });
     }
+  }
+
+  saveBaseInfoPartner() {
+    let valueSave = this.formActionPartner.value;
+    let listFilePartnerIds = this.listUploadAuthorizationFile.map((t) => t.filePartnerId);
+    valueSave.filePartnerIDs = listFilePartnerIds;
+    console.log('valueSave: ', valueSave);
+    return;
+    if (this.formActionPartner.valid) {
+      
+      let valueSave = this.formActionPartner.value;
+      let listFilePartnerIds = this.listUploadAuthorizationFile.map((t) => t.filePartnerId);
+      valueSave.filePartnerIDs = listFilePartnerIds;
+      
+      this.generalService.addPartner(valueSave).subscribe((res: any) => {
+        if (res.ret && res.ret[0].code !== 0) {
+          this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
+        } else {
+          this.notificationService.showNotification(Constant.SUCCESS, Constant.MESSAGE_ADD_SUCCESS);
+        }
+      }, error => {
+        this.notificationService.showNotification(Constant.ERROR, 'Tạo mới thông tin đối tác thất bại!');
+      });
+
+
+    } else {
+      // Đánh dấu tất cả các trường là đã được chạm (touched) để hiển thị lỗi
+      this.formActionPartner.markAllAsTouched();
+      // this.notificationService.showNotification(Constant.SUCCESS, "Tồn tại trường thông tin chưa được nhập");
+      this.msg.error(`Tồn tại trường thông tin chưa được nhập`);
+    }
+    console.log("valueSave: ", valueSave);
+    console.log("listFilePartnerIds: ", listFilePartnerIds);
+    // valueSave = [...valueSave, filePartnerIds: listFilePartnerIds];
   }
 }
