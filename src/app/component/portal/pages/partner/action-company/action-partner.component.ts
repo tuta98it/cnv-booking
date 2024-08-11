@@ -230,7 +230,7 @@ export class ActionPartnerComponent implements OnInit {
           }
         },
         error: (error: any) => {
-          this.msg.error(Constant.ERROR, `Lỗi hệ thống, Không thể xoá file ${file.name}`);
+          this.msg.error(`Lỗi hệ thống, Không thể xoá file ${file.name}`);
         },
         complete: () => {
 
