@@ -400,6 +400,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
 
 
   setFormRequestPartnerValue(requestPartnerValue: any) {
+    this.listOfOptionPassengers = requestPartnerValue.passengers;
     this.formAirlineTicketPopup.patchValue({
       typeTicket: requestPartnerValue.typeTicket,
       // passengers: requestPartnerValue.passengers.map(passenger => passenger.fullName),
@@ -435,7 +436,10 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
 
   handleChangeStatusByItem(status: any) {
     this.itemBookingRequest = status.data;
+    console.log('status.data : ', status.data);
+
     this.setFormRequestPartnerValue(this.itemBookingRequest);
+    console.log('this.formAirlineTicketPopup.value ; ', this.formAirlineTicketPopup.value);
     this.newStatus = status.value;
     this.oldStatus = status.data.statusOld;
     let requestBookingId = status.data.id;
