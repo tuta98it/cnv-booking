@@ -399,9 +399,43 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   }
 
 
+  setFormRequestPartnerValue(requestPartnerValue: any) {
+    this.formAirlineTicketPopup.patchValue({
+      typeTicket: requestPartnerValue.typeTicket,
+      // passengers: requestPartnerValue.passengers.map(passenger => passenger.fullName),
+      passengers: requestPartnerValue.passengers,
+
+      tripItineraryDeparture: `${this.flightUtils.toNameAirportByCode(this.airports, requestPartnerValue.startPoint)} - ${this.flightUtils.toNameAirportByCode(this.airports, requestPartnerValue.endPoint)}`,
+      flightTimeDeparture: [requestPartnerValue.startTime, requestPartnerValue.endTime],
+      airlineCodeDeparture: requestPartnerValue.airlineCode,
+      bookingCodeDeparture: requestPartnerValue.bookingCode,
+      flightNumberDeparture: requestPartnerValue.flightNumber,
+      ticketHoldExpiryDateDeparture: requestPartnerValue.ticketHoldExpiryDate,
+      ticketPriceDeparture: requestPartnerValue.ticketPrice,
+      baggageFeeDeparture: requestPartnerValue.baggageFee,
+      refundFeeDeparture: requestPartnerValue.refundFee,
+      cancelFeeDeparture: requestPartnerValue.cancelFee,
+      changeFeeDeparture: requestPartnerValue.changeFee,
+      reservationCodeDeparture: requestPartnerValue.reservationCode,
+
+
+      flightTimeReturn: [requestPartnerValue.returnStartTime, requestPartnerValue.returnEndTime],
+      airlineCodeReturn: requestPartnerValue.returnAirlineCode,
+      bookingCodeReturn: requestPartnerValue.returnBookingCode,
+      flightNumberReturn: requestPartnerValue.returnFlightNumber,
+      ticketHoldExpiryDateReturn: requestPartnerValue.returnTicketHoldExpiryDate,
+      ticketPriceReturn: requestPartnerValue.returnTicketPrice,
+      baggageFeeReturn: requestPartnerValue.returnBaggageFee,
+      refundFeeReturn: requestPartnerValue.returnRefundFee,
+      cancelFeeReturn: requestPartnerValue.returnCancelFee,
+      changeFeeReturn: requestPartnerValue.returnChangeFee,
+      reservationCodeReturn: requestPartnerValue.returnReservationCode
+    });
+  }
 
   handleChangeStatusByItem(status: any) {
     this.itemBookingRequest = status.data;
+    this.setFormRequestPartnerValue(this.itemBookingRequest);
     this.newStatus = status.value;
     this.oldStatus = status.data.statusOld;
     let requestBookingId = status.data.id;
