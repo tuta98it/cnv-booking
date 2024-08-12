@@ -147,7 +147,7 @@
     <button *ngIf="
     (item.data.status == BookingRequestStatusEnum.ReserveSeat) ||
     (item.data.status == BookingRequestStatusEnum.AdjustTicket) ||
-    (item.data.status == BookingRequestStatusEnum.IssuedTicket)" title="Chỉnh sửa" nz-button nzSize="small"
+    (item.data.status == BookingRequestStatusEnum.IssuedTicket)" title="Cập nhật thông tin vé đặt" nz-button nzSize="small"
       nzType="default" (click)="showPopupAirlineTicket(item.data, OptionAirlineTicketInfoEnum.Update)">
       <span class="fa fa-edit fa-fw"></span>
     </button>
@@ -159,7 +159,7 @@
     </button>
 
     <button *ngIf="
-    (item.data.status == BookingRequestStatusEnum.IssuedTicket)" title="Cập nhật thông tin vé đặt" nz-button nzSize="small"
+    (item.data.status == BookingRequestStatusEnum.IssuedTicket)" title="Cập nhật thông tin số vé" nz-button nzSize="small"
       nzType="default" (click)="showPopupUpdateNumberTicket(item.data)">
       <span class="fa fa-table fa-fw"></span>
     </button>
@@ -578,7 +578,7 @@
           <div nz-col class="gutter-row" nzSpan="2">
             <div class="inner-box">
               <label for="">File vé máy bay
-                <em class="fa fa-asterisk required" style="line-height: revert;"></em>
+                <!-- <em class="fa fa-asterisk required" style="line-height: revert;"></em> -->
               </label>
             </div>
           </div>

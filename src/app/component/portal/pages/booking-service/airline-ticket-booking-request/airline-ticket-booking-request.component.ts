@@ -99,6 +99,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   isSendEmailToPassengerToConfirmFlightTicket: boolean;
   isSendEmailToPassengerToConfirmSuccessIssuedTicket: boolean;
   listRequestBookingRequests: any;
+  signalOpenPopupUpdateNumberTicket: boolean = false;
   constructor(
     public translate: TranslateService,
     private notificationService: NotificationService,
@@ -400,6 +401,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
 
 
   handleChangeStatusByItem(status: any) {
+    this.itemBookingRequest = status.data;
     this.newStatus = status.value;
     this.oldStatus = status.data.statusOld;
     let requestBookingId = status.data.id;
@@ -409,7 +411,12 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
         break;
       case this.BookingRequestStatusEnum.ReserveSeat:
         this.updateStatusRequestBooking(requestBookingId, this.BookingRequestStatusEnum.ReserveSeat).then((r) => {
-          this.sendEmailToPassengerToConfirmFlightTicket(requestBookingId);
+          // this.sendEmailToPassengerToConfirmFlightTicket(requestBookingId);
+          this.isVisibleAirlineTicketInfo = true;
+          this.signalOpenPopupUpdateNumberTicket = false;
+          this.isSendEmailToPassengerToConfirmFlightTicket = true;
+          this.isSendEmailToPassengerToConfirmSuccessIssuedTicket = false;
+          this.optionAirlineTicketInfo = OptionAirlineTicketPopup.Update;
           this.getListData();
         });
         break;
@@ -445,11 +452,11 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
       {
         next: (res: any) => {
           if (res.isValid) {
-
+            this.notificationService.showNotification(Constant.SUCCESS, 'Đã gửi email thông báo giữ chỗ thời khách hàng');
           } else {
             if (res.errors && res.errors.length > 0) {
               res.errors.forEach((el: any) => {
-                this.notificationService.showNotification(Constant.ERROR, 'Đã gửi email thông báo giữ chỗ thời khách hàng');
+                this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
               });
             } else {
               this.notificationService.showNotification(Constant.ERROR, 'Gửi email thông báo giữ chỗ thời khách hàng không thành công');
@@ -499,13 +506,18 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   }
 
   showPopupAirlineTicket(itemData: any, opPopupAirlineTicket: OptionAirlineTicketPopup) {
-    // console.log("this.itemData : ", itemData);
+
+
 
     this.itemBookingRequest = itemData;
     this.isVisibleAirlineTicketInfo = true;
     this.optionAirlineTicketInfo = opPopupAirlineTicket;
-    this.isSendEmailToPassengerToConfirmFlightTicket = false;
-    this.isSendEmailToPassengerToConfirmSuccessIssuedTicket = false;
+
+    if(itemData.status == AirlineTicketBookingRequestStatus.ReserveSeat){
+      this.isSendEmailToPassengerToConfirmFlightTicket = true;
+      this.isSendEmailToPassengerToConfirmSuccessIssuedTicket = false;
+    }
+
     if (this.optionAirlineTicketInfo == this.OptionAirlineTicketInfoEnum.View) {
       this.formAirlineTicketPopup.disable();
       this.showUploadListOption = { ...this.showUploadListOption, ...{ showPreviewIcon: true, showRemoveIcon: false, showDownloadIcon: true } }
@@ -737,7 +749,12 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
       this.updateRequestBooking(payload).then((r) => {
         // Mở popup cập nhật số vé
         this.isVisibleAirlineTicketInfo = false;
-        this.isVisiblePopupUpdateNumberTicket = true;
+        this.isVisiblePopupUpdateNumberTicket = this.signalOpenPopupUpdateNumberTicket;
+        console.log("this.isSendEmailToPassengerToConfirmFlightTicket :  ", this.isSendEmailToPassengerToConfirmFlightTicket);
+
+        if (this.isSendEmailToPassengerToConfirmFlightTicket) {
+          this.sendEmailToPassengerToConfirmFlightTicket(this.itemBookingRequest.id);
+        }
       });
 
     } else {
