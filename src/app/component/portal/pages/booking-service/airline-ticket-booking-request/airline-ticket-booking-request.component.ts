@@ -157,18 +157,17 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     this.intervalIdUserRegister = setInterval(() => {
       setTimeout(() => {
         if (this.router.url === '/booking-service/airline-ticket-booking-request') {
-          this.getListData().then((r) => {
-            // cập nhất lại trạng thái quá hạn giữ chỗ
-            this.datas.forEach(requestBooking => {
-              if (requestBooking.status == this.BookingRequestStatusEnum.ReserveSeat) {
-                const ticketHoldExpiryDate = requestBooking.ticketHoldExpiryDate != null ? new Date(requestBooking.ticketHoldExpiryDate) : new Date(0);
-                const now = new Date();
-                if (ticketHoldExpiryDate < now) {
-                  this.updateStatusRequestBooking(requestBooking.id, this.BookingRequestStatusEnum.ExpiredTicket);
-                }
+          // cập nhất lại trạng thái quá hạn giữ chỗ
+          this.datas.forEach(requestBooking => {
+            if (requestBooking.status == this.BookingRequestStatusEnum.ReserveSeat) {
+              const ticketHoldExpiryDate = requestBooking.ticketHoldExpiryDate != null ? new Date(requestBooking.ticketHoldExpiryDate) : new Date(0);
+              const now = new Date();
+              if (ticketHoldExpiryDate < now) {
+                this.updateStatusRequestBooking(requestBooking.id, this.BookingRequestStatusEnum.ExpiredTicket).then((r) => {
+                  this.getListData();
+                });
               }
-            });
-            this.getListData();
+            }
           });
         } else {
           clearInterval(this.intervalIdUserRegister);
@@ -393,8 +392,8 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     if (!value) {
       return '';
     }
-    var objStatusOption =  AIRLINE_TICKET_BOOKING_REQUEST_STATUS_OPTIONS.find((t: any) => t.value == value)
-    if(!objStatusOption) return "";
+    var objStatusOption = AIRLINE_TICKET_BOOKING_REQUEST_STATUS_OPTIONS.find((t: any) => t.value == value)
+    if (!objStatusOption) return "";
     return objStatusOption.label;
   }
 
