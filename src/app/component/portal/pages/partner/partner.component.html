@@ -9,7 +9,7 @@
     <input style="width: 200px; border-radius: 4px; height: 32px;" class="mgr10" nzSize="small" nz-input type="text"
       [(ngModel)]="searchText" (keyup)="onSearch()" placeholder="Tìm kiếm theo tên, username, ...">
 
-    <button nz-button nzType="primary" class="btn-add-asset" type="button" (click)="showModalAdd()" *ngIf="checkAdd">
+    <button nz-button nzType="primary" class="btn-add-asset" type="button" (click)="navigativePageCreatePartner()" *ngIf="checkAdd">
       <em class="fas fa-plus fa-fw"></em> Thêm mới
     </button>
 

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzUploadChangeParam, NzUploadFile } from 'ng-zorro-antd/upload';
 import { MENU_CREATE_PARTNER_OPTION, MenuCreatePartner } from 'src/app/enums/menu-create-partner.enum';
@@ -15,7 +15,6 @@ import { TypeOfDocument } from 'src/app/enums/type-of-document.enum';
 import { Constant } from 'src/app/shared/constants/constant.class';
 import { GeneralService } from './../../../../../service/general-service';
 import { NotificationService } from 'src/app/service/notification.service';
-
 
 interface ItemData {
   name: string;
@@ -63,7 +62,8 @@ export class ActionPartnerComponent implements OnInit {
     private formBuilder: FormBuilder,
     private configService: AppConfigService,
     private generalService: GeneralService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private router: Router,
   ) {
     this.actionPartnerVHL = this.activatedRoute.snapshot.data['type'];
     if (this.actionPartnerVHL == ActionTypePageVHL.Create) {
@@ -244,18 +244,18 @@ export class ActionPartnerComponent implements OnInit {
     let listFilePartnerIds = this.listUploadAuthorizationFile.map((t) => t.filePartnerId);
     valueSave.filePartnerIDs = listFilePartnerIds;
     console.log('valueSave: ', valueSave);
-    return;
     if (this.formActionPartner.valid) {
-      
+
       let valueSave = this.formActionPartner.value;
       let listFilePartnerIds = this.listUploadAuthorizationFile.map((t) => t.filePartnerId);
       valueSave.filePartnerIDs = listFilePartnerIds;
-      
+
       this.generalService.addPartner(valueSave).subscribe((res: any) => {
         if (res.ret && res.ret[0].code !== 0) {
           this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
         } else {
           this.notificationService.showNotification(Constant.SUCCESS, Constant.MESSAGE_ADD_SUCCESS);
+          this.router.navigate(['/companies']);
         }
       }, error => {
         this.notificationService.showNotification(Constant.ERROR, 'Tạo mới thông tin đối tác thất bại!');

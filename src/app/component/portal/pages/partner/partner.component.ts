@@ -20,6 +20,7 @@ import {
   DxTooltipModule,
 } from "devextreme-angular";
 import { TypeOfDocument } from 'src/app/enums/type-of-document.enum';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-partner',
   templateUrl: './partner.component.html',
@@ -82,6 +83,7 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
     private configService: AppConfigService,
     private fb: FormBuilder,
     private dateFormatPipe: DateFormatPipe,
+    private router: Router,
   ) {
     super('id');
     this.formAdd = this.fb.group({
@@ -264,6 +266,9 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
     }
   }
 
+  navigativePageCreatePartner() {
+    this.router.navigate(['/companies/create']);
+  }
   showModalAdd() {
     this.isVisibleAdd = true;
     this.submitted = false;
