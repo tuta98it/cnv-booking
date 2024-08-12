@@ -53,7 +53,7 @@ export class ActionPartnerComponent implements OnInit {
   settingTableEmployeesValue: NZTableSettingCustoms;
   listOfEmployees: readonly ItemData[] = [];
   displayData: readonly ItemData[] = [];
-  formActionPartner: FormGroup;
+  formBaseInfoCreatePartner: FormGroup;
   settingUploadAuthorizationFile: UploadFileSetting;
   listUploadAuthorizationFile: NzUploadFile[];
   constructor(
@@ -85,9 +85,8 @@ export class ActionPartnerComponent implements OnInit {
     } else if (this.actionPartnerVHL == ActionTypePageVHL.Update) {
 
     }
-    this.formActionPartner = this.formBuilder.group({
+    this.formBaseInfoCreatePartner = this.formBuilder.group({
       id: [null],
-
       status: new FormControl({ value: PartnerStatus.CreatingProfile, disabled: this.actionPartnerVHL == ActionTypePageVHL.Create }, Validators.required),
       code: [null, [Validators.required]],
       companyName: [null, [Validators.required]],
@@ -240,13 +239,13 @@ export class ActionPartnerComponent implements OnInit {
   }
 
   saveBaseInfoPartner() {
-    let valueSave = this.formActionPartner.value;
+    let valueSave = this.formBaseInfoCreatePartner.value;
     let listFilePartnerIds = this.listUploadAuthorizationFile.map((t) => t.filePartnerId);
     valueSave.filePartnerIDs = listFilePartnerIds;
     console.log('valueSave: ', valueSave);
-    if (this.formActionPartner.valid) {
+    if (this.formBaseInfoCreatePartner.valid) {
 
-      let valueSave = this.formActionPartner.value;
+      let valueSave = this.formBaseInfoCreatePartner.value;
       let listFilePartnerIds = this.listUploadAuthorizationFile.map((t) => t.filePartnerId);
       valueSave.filePartnerIDs = listFilePartnerIds;
 
@@ -264,7 +263,7 @@ export class ActionPartnerComponent implements OnInit {
 
     } else {
       // Đánh dấu tất cả các trường là đã được chạm (touched) để hiển thị lỗi
-      this.formActionPartner.markAllAsTouched();
+      this.formBaseInfoCreatePartner.markAllAsTouched();
       // this.notificationService.showNotification(Constant.SUCCESS, "Tồn tại trường thông tin chưa được nhập");
       this.msg.error(`Tồn tại trường thông tin chưa được nhập`);
     }
