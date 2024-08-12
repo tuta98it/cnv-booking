@@ -41,7 +41,7 @@ export class ActionPartnerComponent implements OnInit {
   PartnerStatus = PartnerStatus;
   PARTNER_STATUS_OPTIONS = PARTNER_STATUS_OPTIONS;
   AllowDebtPartner = AllowDebtPartner;
-  selectedMenu = MenuCreatePartner.ListEmployees;
+  selectedMenu = MenuCreatePartner.DebtManagement;
 
   actionPartnerVHL: any;
   settingTableListEmployeesForm: FormGroup;
@@ -56,6 +56,7 @@ export class ActionPartnerComponent implements OnInit {
   formBaseInfoCreatePartner: FormGroup;
   settingUploadAuthorizationFile: UploadFileSetting;
   listUploadAuthorizationFile: NzUploadFile[];
+  partnerIdInfoBaseReturn?: number;
   constructor(
     private msg: NzMessageService,
     private activatedRoute: ActivatedRoute,
@@ -253,6 +254,7 @@ export class ActionPartnerComponent implements OnInit {
         if (res.ret && res.ret[0].code !== 0) {
           this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
         } else {
+          this.partnerIdInfoBaseReturn = res?.id;
           this.notificationService.showNotification(Constant.SUCCESS, Constant.MESSAGE_ADD_SUCCESS);
           this.router.navigate(['/companies']);
         }
