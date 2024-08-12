@@ -72,24 +72,24 @@
     <nz-select nzShowSearch nzMode="default" nzPlaceHolder="Trạng thái" style="width: 200px; margin-left: 0.5rem;"
       [(ngModel)]="status.value" (ngModelChange)="handleChangeStatusByItem(status)">
       <nz-option [nzLabel]="'Gửi yêu cầu'" [nzValue]="BookingRequestStatusEnum.SubmitRequest"
-        [nzDisabled]="!(status.value == BookingRequestStatusEnum.SubmitRequest)"></nz-option>
+        *ngIf="(status.value == BookingRequestStatusEnum.SubmitRequest)"></nz-option>
 
-      <nz-option [nzLabel]="'Đang giữ vé'" [nzValue]="BookingRequestStatusEnum.ReserveSeat" [nzDisabled]="!(
+      <nz-option [nzLabel]="'Đang giữ vé'" [nzValue]="BookingRequestStatusEnum.ReserveSeat" *ngIf="(
           status.value == BookingRequestStatusEnum.SubmitRequest ||
           status.value == BookingRequestStatusEnum.ReserveSeat)">
       </nz-option>
       <nz-option [nzLabel]="'Đã xác nhận giữ vé'" [nzValue]="BookingRequestStatusEnum.ReceivedTicket"
-        [nzDisabled]="!(status.value == BookingRequestStatusEnum.ReceivedTicket)"></nz-option>
+        *ngIf="(status.value == BookingRequestStatusEnum.ReceivedTicket)"></nz-option>
 
       <nz-option [nzLabel]="'Hết hạn giữ vé'" [nzValue]="BookingRequestStatusEnum.ExpiredTicket "
-        [nzDisabled]="!(status.value == BookingRequestStatusEnum.ExpiredTicket)"></nz-option>
+        *ngIf="(status.value == BookingRequestStatusEnum.ExpiredTicket)"></nz-option>
 
-      <nz-option [nzLabel]="'Điều chỉnh vé'" [nzValue]="BookingRequestStatusEnum.AdjustTicket" [nzDisabled]="!(
+      <nz-option [nzLabel]="'Điều chỉnh vé'" [nzValue]="BookingRequestStatusEnum.AdjustTicket" *ngIf="(
         status.value == BookingRequestStatusEnum.AdjustTicket ||
         status.value == BookingRequestStatusEnum.ReserveSeat ||
         status.value == BookingRequestStatusEnum.ReceivedTicket)"></nz-option>
 
-      <nz-option [nzLabel]="'Xuất vé'" [nzValue]="BookingRequestStatusEnum.IssuedTicket" [nzDisabled]="!(
+      <nz-option [nzLabel]="'Xuất vé'" [nzValue]="BookingRequestStatusEnum.IssuedTicket" *ngIf="(
         status.value == BookingRequestStatusEnum.IssuedTicket ||
         status.value == BookingRequestStatusEnum.AdjustTicket ||
         status.value == BookingRequestStatusEnum.ReceivedTicket)"></nz-option>
