@@ -87,7 +87,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   isVisibleAirlineTicketInfo: boolean = false;
   itemTicketHistoryTicket: any;
   airports: any[] = [];
-  intervalIdUserRegister: NodeJS.Timeout;
+  intervalRequestBookingUpdateStatus: NodeJS.Timeout;
 
   isVisiblePopupUpdateNumberTicket: boolean = false;
   isVisibleRequestBookingHistory: boolean = false;
@@ -100,6 +100,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   isSendEmailToPassengerToConfirmSuccessIssuedTicket: boolean;
   listRequestBookingRequests: any;
   signalOpenPopupUpdateNumberTicket: boolean = false;
+  isSetSinalUpdateStatusRequestBooking: boolean = true;
   constructor(
     public translate: TranslateService,
     private notificationService: NotificationService,
@@ -155,23 +156,26 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     this.getAirport();
 
 
-    this.intervalIdUserRegister = setInterval(() => {
+    this.intervalRequestBookingUpdateStatus = setInterval(() => {
       setTimeout(() => {
         if (this.router.url === '/booking-service/airline-ticket-booking-request') {
           // cập nhất lại trạng thái quá hạn giữ chỗ
           this.datas.forEach(requestBooking => {
-            if (requestBooking.status == this.BookingRequestStatusEnum.ReserveSeat) {
-              const ticketHoldExpiryDate = requestBooking.ticketHoldExpiryDate != null ? new Date(requestBooking.ticketHoldExpiryDate) : new Date(0);
-              const now = new Date();
-              if (ticketHoldExpiryDate < now) {
-                this.updateStatusRequestBooking(requestBooking.id, this.BookingRequestStatusEnum.ExpiredTicket).then((r) => {
-                  this.getListData();
-                });
+            if (this.isSetSinalUpdateStatusRequestBooking) {
+              if (requestBooking.status == this.BookingRequestStatusEnum.ReserveSeat) {
+                const ticketHoldExpiryDate = requestBooking.ticketHoldExpiryDate != null ? new Date(requestBooking.ticketHoldExpiryDate) : new Date(0);
+                const now = new Date();
+                if (ticketHoldExpiryDate < now) {
+                  this.updateStatusRequestBooking(requestBooking.id, this.BookingRequestStatusEnum.ExpiredTicket).then((r) => {
+                    this.getListData();
+                  });
+                }
               }
             }
+
           });
         } else {
-          clearInterval(this.intervalIdUserRegister);
+          clearInterval(this.intervalRequestBookingUpdateStatus);
         }
       }, 200);
     }, RequestBookingConfig.TIME_UPDATE_DATAS);
@@ -436,10 +440,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
 
   handleChangeStatusByItem(status: any) {
     this.itemBookingRequest = status.data;
-    console.log('status.data : ', status.data);
-
     this.setFormRequestPartnerValue(this.itemBookingRequest);
-    console.log('this.formAirlineTicketPopup.value ; ', this.formAirlineTicketPopup.value);
     this.newStatus = status.value;
     this.oldStatus = status.data.statusOld;
     let requestBookingId = status.data.id;
@@ -451,6 +452,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
         this.updateStatusRequestBooking(requestBookingId, this.BookingRequestStatusEnum.ReserveSeat).then((r) => {
           // this.sendEmailToPassengerToConfirmFlightTicket(requestBookingId);
           this.isVisibleAirlineTicketInfo = true;
+          this.isSetSinalUpdateStatusRequestBooking = false;
           this.signalOpenPopupUpdateNumberTicket = false;
           this.isSendEmailToPassengerToConfirmFlightTicket = true;
           this.isSendEmailToPassengerToConfirmSuccessIssuedTicket = false;
@@ -468,6 +470,9 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
       case this.BookingRequestStatusEnum.AdjustTicket:
         //Mở popup Cập nhật thông tin vé
         this.isVisibleAirlineTicketInfo = true;
+        this.signalOpenPopupUpdateNumberTicket = true;
+        this.isSendEmailToPassengerToConfirmFlightTicket = true;
+        this.isSendEmailToPassengerToConfirmSuccessIssuedTicket = false;
         this.optionAirlineTicketInfo = this.OptionAirlineTicketInfoEnum.Update;
         this.isSendEmailToPassengerToConfirmFlightTicket = true;
         break;
@@ -475,6 +480,9 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
       case this.BookingRequestStatusEnum.IssuedTicket:
         //Mở popup Cập nhật thông tin vé
         this.isVisibleAirlineTicketInfo = true;
+        this.signalOpenPopupUpdateNumberTicket = true;
+        this.isSendEmailToPassengerToConfirmFlightTicket = false;
+        this.isSendEmailToPassengerToConfirmSuccessIssuedTicket = true;
         this.optionAirlineTicketInfo = this.OptionAirlineTicketInfoEnum.Update;
         this.isSendEmailToPassengerToConfirmSuccessIssuedTicket = true;
         break;
@@ -551,7 +559,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     this.isVisibleAirlineTicketInfo = true;
     this.optionAirlineTicketInfo = opPopupAirlineTicket;
 
-    if(itemData.status == AirlineTicketBookingRequestStatus.ReserveSeat){
+    if (itemData.status == AirlineTicketBookingRequestStatus.ReserveSeat) {
       this.isSendEmailToPassengerToConfirmFlightTicket = true;
       this.isSendEmailToPassengerToConfirmSuccessIssuedTicket = false;
     }
@@ -788,8 +796,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
         // Mở popup cập nhật số vé
         this.isVisibleAirlineTicketInfo = false;
         this.isVisiblePopupUpdateNumberTicket = this.signalOpenPopupUpdateNumberTicket;
-        console.log("this.isSendEmailToPassengerToConfirmFlightTicket :  ", this.isSendEmailToPassengerToConfirmFlightTicket);
-
+        this.isSetSinalUpdateStatusRequestBooking = true;
         if (this.isSendEmailToPassengerToConfirmFlightTicket) {
           this.sendEmailToPassengerToConfirmFlightTicket(this.itemBookingRequest.id);
         }
