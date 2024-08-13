@@ -29,10 +29,10 @@
 
 
     <!-- Nút xuất Excel -->
-    <button nz-button nzType="primary" class="btn-green mgr10" (click)="exportData()">
+    <!-- <button nz-button nzType="primary" class="btn-green mgr10" (click)="exportData()">
       <span class="fa fa-fw fa-file-excel" style="margin-right: 4px;"></span>
       Xuất Excel
-    </button>
+    </button> -->
   </div>
 </div>
 
@@ -66,7 +66,7 @@
   </div>
 
 
-  <dxi-column caption="Trạng thái" [width]="200" dataField="status" cssClass="text-left vertical-align-middle"
+  <dxi-column caption="Trạng thái" dataField="status" cssClass="text-left vertical-align-middle"
     cellTemplate="cellStatus"></dxi-column>
   <div *dxTemplate="let status of 'cellStatus'" style="display: flex;">
     <nz-select nzShowSearch nzMode="default" nzPlaceHolder="Trạng thái" style="width: 200px; margin-left: 0.5rem;"
@@ -165,7 +165,7 @@
     </button>
 
     <button title="Lịch sử" nz-button nzSize="small" nzType="default"
-      (click)="previewPopupRequestBookingHistory(item.data.requestBookingHistories)">
+      (click)="previewPopupRequestBookingHistory(item.data)" [nzLoading]="item.data.isLoadingRequestBookingHistory">
       <span class="fa fa-history fa-fw"></span>
     </button>
   </div>
@@ -178,9 +178,10 @@
 
 
 <nz-modal [(nzVisible)]="isVisibleRequestBookingHistory" nzTitle="Lịch sử thay đổi trạng thái đặt vé"
-  [nzContent]="contentRequestBookingHistory" [nzFooter]="footer" nzWidth="1500px" (nzOnCancel)="handleCancelPopupRequestBookingHistory()">
+  [nzContent]="contentRequestBookingHistory" [nzFooter]="footer" nzWidth="750px"
+  [nzStyle]="{ top: '20px' }" (nzOnCancel)="handleCancelPopupRequestBookingHistory()">
   <ng-template #contentRequestBookingHistory>
-    <dx-data-grid id="gridRequestBookingHistory" [dataSource]="listRequestBookingRequests" #listRequestBookingRequests
+    <dx-data-grid id="gridRequestBookingHistory" [dataSource]="listRequestBookingHistories" #TagGridRequestBookingHistory
       [showColumnLines]="true" [showRowLines]="true" [height]="dxGridHeight" [rowAlternationEnabled]="true"
       [showBorders]="true" [allowColumnResizing]="true" columnResizingMode="widget" [columnMinWidth]="50"
       [columnAutoWidth]="true" (onExporting)="onExporting($event)">
@@ -194,13 +195,13 @@
 
       <dxi-column caption="STT" [width]="55" dataField="stt" [fixed]="true" [allowFiltering]="false"
         [allowSorting]="false" cssClass="text-center vertical-align-middle"></dxi-column>
-      <dxi-column caption="Trạng thái cũ" [fixed]="true" [width]="150" dataField="oldStatus"
-        [format]="getLabelRequestBookingStatus" cssClass="vertical-align-middle"></dxi-column>
-      <dxi-column caption="Trạng thái mới" [fixed]="true" dataField="newStatus" [width]="150"
-        [format]="getLabelRequestBookingStatus" cssClass="vertical-align-middle"></dxi-column>
-      <dxi-column caption="Người thực hiện" cssClass="vertical-align-middle" cellTemplate="cellImplementPerson"></dxi-column>
+      <!-- <dxi-column caption="Trạng thái cũ" [fixed]="true" [width]="150" dataField="oldStatus"
+        [format]="getLabelRequestBookingStatus" cssClass="vertical-align-middle"></dxi-column> -->
+      <dxi-column caption="Trạng thái" [fixed]="true" dataField="newStatus" cssClass="vertical-align-middle" [width]="150"
+        [format]="getLabelRequestBookingStatus"></dxi-column>
+      <dxi-column caption="Người thực hiện" cssClass="vertical-align-middle" dataField="implementPerson" cellTemplate="cellImplementPerson"></dxi-column>
       <div *dxTemplate="let implementPerson of 'cellImplementPerson'" style="display: flex;">
-        Id : {{implementPerson.value.Id}}, Name: {{implementPerson.value.fullName}}
+        Id : {{implementPerson.value.id}}, Name: {{implementPerson.value.fullname}}
       </div>
       <dxi-column caption="Thời gian" dataField="implementTime" [width]="150" dataType="date" format="dd/MM/yy HH:mm"
         cssClass="vertical-align-middle"></dxi-column>

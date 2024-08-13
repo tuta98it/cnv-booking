@@ -98,9 +98,10 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   oldStatus: any;
   isSendEmailToPassengerToConfirmFlightTicket: boolean;
   isSendEmailToPassengerToConfirmSuccessIssuedTicket: boolean;
-  listRequestBookingRequests: any;
+  listRequestBookingHistories: any;
   signalOpenPopupUpdateNumberTicket: boolean = false;
   isSetSinalUpdateStatusRequestBooking: boolean = true;
+
   constructor(
     public translate: TranslateService,
     private notificationService: NotificationService,
@@ -212,7 +213,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
           this.datas.forEach(en => {
             en.stt = ++stt;
             en.statusOld = en.status;
-            en.isLoadingViewTicket = false;
+            en.isLoadingRequestBookingHistory = false;
           });
           this.filteredDatas = this.datas;
           super.setListOfAllData(this.datas);
@@ -232,17 +233,48 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   };
 
 
-  previewPopupRequestBookingHistory(requestBookingRequests: any) {
-    this.isVisibleRequestBookingHistory = true;
-    this.listRequestBookingRequests = requestBookingRequests;
-    if (this.listRequestBookingRequests) {
-      let stt = 0;
-      this.listRequestBookingRequests.forEach((en: any) => {
-        en.stt = ++stt;
-      });
-    }
+  previewPopupRequestBookingHistory(requestBookingItem: any) {
+    this.itemBookingRequest = requestBookingItem;
+    let requestBookingID = requestBookingItem.id;
+    this.getHistoriesByRequestBookingID(requestBookingID).then((r) => {
+      this.isVisibleRequestBookingHistory = true;
+    });
   }
 
+  getHistoriesByRequestBookingID(requestBookingID: number) {
+    this.itemBookingRequest.isLoadingRequestBookingHistory = true;
+    return new Promise((resolve, reject) => {
+      this.generalService.getHistoriesByRequestBookingId(requestBookingID).subscribe({
+        next: (res: any) => {
+          if (res.isValid) {
+            this.listRequestBookingHistories = res.data;
+            let stt = 0;
+            this.listRequestBookingHistories.forEach((en: any) => {
+              en.stt = ++stt;
+            });
+            resolve(true);
+          } else {
+            if (res.errors && res.errors.length > 0) {
+              res.errors.forEach((el: any) => {
+                this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+              });
+            } else {
+              this.notificationService.showNotification(Constant.ERROR, 'Lỗi khi lấy dữ liệu lịch sử book vé');
+            }
+          }
+        },
+
+        error: (error) => {
+          this.notificationService.showNotification(Constant.ERROR, 'Lỗi hệ thống');
+        },
+
+        complete: () => {
+          this.itemBookingRequest.isLoadingRequestBookingHistory = false;
+        }
+      });
+
+    });
+  }
   // getListDetailTicket(historyTransaction: any) {
   //   const bookingFlights = historyTransaction.bookingFlights;
   //   const bookingPassengers = historyTransaction.bookingPassengers;

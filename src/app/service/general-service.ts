@@ -579,6 +579,9 @@ export class GeneralService extends BaseService {
     return this.get(`/api${UrlConstant.REQUEST_BOOKING}/GetRequestBookingByID/${id}`);
   }
 
+  getHistoriesByRequestBookingId(id: number): Observable<any> {
+    return this.get(`/api${UrlConstant.REQUEST_BOOKING}/GetHistoriesByRequestBookingId/${id}`);
+  }
 
   getBookingByID(idBooking: any): Observable<any> {
     return this.get(`/api${UrlConstant.BOOKING}/getbookingbyid/${idBooking}`);
