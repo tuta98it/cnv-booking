@@ -85,6 +85,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   showInfo = true;
   showNavButtons = true;
   isVisibleAirlineTicketInfo: boolean = false;
+  isVisiblePopupViewRequestBookingTicket: boolean = false;
   itemTicketHistoryTicket: any;
   airports: any[] = [];
   intervalRequestBookingUpdateStatus: NodeJS.Timeout;
@@ -584,9 +585,6 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   }
 
   showPopupAirlineTicket(itemData: any, opPopupAirlineTicket: OptionAirlineTicketPopup) {
-
-
-
     this.itemBookingRequest = itemData;
     this.isVisibleAirlineTicketInfo = true;
     this.optionAirlineTicketInfo = opPopupAirlineTicket;
@@ -655,6 +653,8 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   }
 
   showPopupUpdateNumberTicket(requestBooking: any) {
+    this.itemBookingRequest = requestBooking;
+
     this.isVisiblePopupUpdateNumberTicket = true;
     this.isSendEmailToPassengerToConfirmFlightTicket = false;
     this.isSendEmailToPassengerToConfirmSuccessIssuedTicket = false;
@@ -1041,4 +1041,13 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     });
   }
 
+
+  handleCancelRequestBookingTicketPopup() {
+    this.isVisiblePopupViewRequestBookingTicket = false;
+  }
+
+  showPopupViewRequestBookingTicket(requestBooking: any) {
+    this.itemBookingRequest = requestBooking;
+    this.isVisiblePopupViewRequestBookingTicket = true;
+  }
 }
