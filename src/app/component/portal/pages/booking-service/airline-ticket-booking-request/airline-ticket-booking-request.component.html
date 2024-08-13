@@ -140,8 +140,9 @@
     cssClass="text-center vertical-align-middle"></dxi-column>
   <div *dxTemplate="let item of 'cellBtnTemplate'" style="display: flex; justify-content: space-evenly;">
 
-    <button title="Xem thông tin yêu cầu" nz-button nzSize="small" nzType="default">
-      <span class="fa fa-eye fa-fw" (click)="showPopupViewRequestBookingTicket(item.data)"></span>
+    <button title="Xem thông tin yêu cầu" nz-button nzSize="small" nzType="default"
+      (click)="showPopupViewRequestBookingTicket(item.data)">
+      <span class="fa fa-eye fa-fw"></span>
     </button>
 
     <button *ngIf="
