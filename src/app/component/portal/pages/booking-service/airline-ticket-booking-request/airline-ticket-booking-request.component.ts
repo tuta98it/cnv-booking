@@ -28,6 +28,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { HttpClient, HttpHeaders, HttpRequest, HttpResponse } from '@angular/common/http';
 import { filter } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { resolve } from 'path';
 @Component({
   selector: 'airline-ticket-booking-request',
   templateUrl: './airline-ticket-booking-request.component.html',
@@ -527,29 +528,33 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   }
 
   sendEmailToPassengerToConfirmFlightTicket(requestBookingId: any) {
-    this.generalService.sendEmailToPassengerToConfirmFlightTicket(requestBookingId).subscribe(
-      {
-        next: (res: any) => {
-          if (res.isValid) {
-            this.notificationService.showNotification(Constant.SUCCESS, 'Đã gửi email thông báo giữ chỗ thời khách hàng');
-          } else {
-            if (res.errors && res.errors.length > 0) {
-              res.errors.forEach((el: any) => {
-                this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
-              });
+    return new Promise((resolve, reject) => {
+      this.generalService.sendEmailToPassengerToConfirmFlightTicket(requestBookingId).subscribe(
+        {
+          next: (res: any) => {
+            if (res.isValid) {
+              resolve(true);
+              this.notificationService.showNotification(Constant.SUCCESS, 'Đã gửi email thông báo giữ chỗ thời khách hàng');
             } else {
-              this.notificationService.showNotification(Constant.ERROR, 'Gửi email thông báo giữ chỗ thời khách hàng không thành công');
+              if (res.errors && res.errors.length > 0) {
+                res.errors.forEach((el: any) => {
+                  this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+                });
+              } else {
+                this.notificationService.showNotification(Constant.ERROR, 'Gửi email thông báo giữ chỗ thời khách hàng không thành công');
+              }
             }
+          },
+          error: (err: any) => {
+            this.notificationService.showNotification(Constant.ERROR, 'Gửi email thông báo giữ chỗ thời khách hàng thất bại do lỗi hệ thống');
+          },
+          complete: () => {
           }
-        },
-        error: (err: any) => {
-          this.notificationService.showNotification(Constant.ERROR, 'Gửi email thông báo giữ chỗ thời khách hàng thất bại do lỗi hệ thống');
-        },
-        complete: () => {
         }
-      }
-    ).add(() => {
-    });
+      ).add(() => {
+      });
+    })
+
   }
 
   updateStatusRequestBooking(requestBookingId: number, status: number) {
@@ -903,7 +908,9 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
                 case this.BookingRequestStatusEnum.AdjustTicket:
                   this.AdjuctTicketRequestBookingById(this.itemBookingRequest.id).then((r) => {
                     if (this.isSendEmailToPassengerToConfirmFlightTicket) {
-                      this.sendEmailToPassengerToConfirmFlightTicket(this.itemBookingRequest.id);
+                      this.sendEmailToPassengerToConfirmFlightTicket(this.itemBookingRequest.id).then(() => {
+                        this.isSendEmailToPassengerToConfirmFlightTicket = false;
+                      });
                     }
                   });
                   break;
@@ -911,7 +918,9 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
                 case this.BookingRequestStatusEnum.IssuedTicket:
                   this.IssuedTicketRequestBookingById(this.itemBookingRequest.id).then((r) => {
                     if (this.isSendEmailToPassengerToConfirmSuccessIssuedTicket) {
-                      this.sendEmailToPassengerToConfirmSuccessIssuedTicket(this.itemBookingRequest.id);
+                      this.sendEmailToPassengerToConfirmSuccessIssuedTicket(this.itemBookingRequest.id).then((r) => {
+                        this.isSendEmailToPassengerToConfirmSuccessIssuedTicket = false;
+                      });
                     }
                   });
                   break;
@@ -1014,29 +1023,33 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   }
 
   sendEmailToPassengerToConfirmSuccessIssuedTicket(requestBookingId: number) {
-    this.generalService.sendEmailToPassengerToConfirmSuccessIssuedTicket(requestBookingId).subscribe(
-      {
-        next: (res: any) => {
-          if (res.isValid) {
-            this.notificationService.showNotification(Constant.ERROR, 'Đã gửi email thống báo xuất vé đến khách hàng');
-          } else {
-            if (res.errors && res.errors.length > 0) {
-              res.errors.forEach((el: any) => {
-                this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
-              });
+    return new Promise((resolve, reject) => {
+      this.generalService.sendEmailToPassengerToConfirmSuccessIssuedTicket(requestBookingId).subscribe(
+        {
+          next: (res: any) => {
+            if (res.isValid) {
+              resolve(true);
+              this.notificationService.showNotification(Constant.ERROR, 'Đã gửi email thống báo xuất vé đến khách hàng');
             } else {
-              this.notificationService.showNotification(Constant.ERROR, 'Gửi email thống báo xuất vé đến khách hàng không thành công');
+              if (res.errors && res.errors.length > 0) {
+                res.errors.forEach((el: any) => {
+                  this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+                });
+              } else {
+                this.notificationService.showNotification(Constant.ERROR, 'Gửi email thống báo xuất vé đến khách hàng không thành công');
+              }
             }
+          },
+          error: (err: any) => {
+            this.notificationService.showNotification(Constant.ERROR, 'Gửi email thống báo xuất vé đến khách hàng thất bại do lỗi hệ thống');
+          },
+          complete: () => {
           }
-        },
-        error: (err: any) => {
-          this.notificationService.showNotification(Constant.ERROR, 'Gửi email thống báo xuất vé đến khách hàng thất bại do lỗi hệ thống');
-        },
-        complete: () => {
         }
-      }
-    ).add(() => {
+      ).add(() => {
+      });
     });
+
   }
 
 
