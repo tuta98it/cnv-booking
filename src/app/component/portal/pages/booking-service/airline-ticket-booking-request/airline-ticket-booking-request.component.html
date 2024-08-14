@@ -784,7 +784,7 @@
                 </div>
               </div>
             </div>
-            <div nz-col class="gutter-row" nzSpan="5">
+            <div nz-col class="gutter-row" nzSpan="5" *ngIf="itemBookingRequest.typeTicket == TypeAirlineTicketEnum.RoundTrip">
               <div class="inner-box">
                 <label for="" style="font-weight: 600;">Ngày về
                   <span style="color: tomato; margin-left: 4px;">(*)</span>
