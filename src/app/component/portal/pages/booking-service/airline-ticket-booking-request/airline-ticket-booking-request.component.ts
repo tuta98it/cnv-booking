@@ -893,6 +893,8 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
 
   handleCancelPopupUpdateNumberTicket() {
     this.isVisiblePopupUpdateNumberTicket = false;
+    this.signalOpenPopupUpdateNumberTicket = false;
+
   }
 
   handleSavelPopupUpdateNumberTicket() {
