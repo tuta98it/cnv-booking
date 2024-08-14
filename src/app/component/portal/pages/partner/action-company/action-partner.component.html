@@ -186,7 +186,6 @@
             </div>
           </div>
         </div>
-
       </div>
     </div>
     <div nz-row [nzGutter]="[16, 24]">
@@ -201,9 +200,191 @@
           <div style="margin: 16px 0;"></div>
 
           <div *ngIf="selectedMenu == MenuCreatePartner.DebtManagement">
-            <span style="font-weight: 500; font-size: 16px;">Quản lý hợp đồng</span>
-          </div>
+            <span style="font-weight: 500; font-size: 16px;">Quản lý thông tin hợp đồng</span>
+            <div>
+              <div style="height: 1px; margin: 16px 0; background-color: #0000000f;"></div>
+              <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
+                <div nz-col class="gutter-row" [nzSpan]="12">
+                  <div>
+                    <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                      style="display: flex; align-items: center; padding: 8px 0;">
+                      <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
+                        File giấy phép KD
+                      </div>
+                      <div nz-col class="gutter-row" [nzSpan]="12">
+                        <nz-upload [nzMultiple]="settingUploadAuthorizationFile.isMultiple"
+                          [nzAction]="settingUploadAuthorizationFile.action"
+                          [nzName]="settingUploadAuthorizationFile.name"
+                          [nzHeaders]="settingUploadAuthorizationFile.header"
+                          [nzRemove]="handleRemoveUploadAuthorizationFile"
+                          [nzShowUploadList]="settingUploadAuthorizationFile.showUploadList"
+                          [nzFileList]="listUploadAuthorizationFile"
+                          (nzChange)="handleChangeUploadAuthorizationFile($event)">
+                          <button nz-button nzType="default" [nzSize]="'default'" nzShape="round"><span nz-icon
+                              nzType="upload"></span></button>
+                        </nz-upload>
+                      </div>
+                    </div>
 
+                    <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                      style="display: flex; align-items: center; padding: 8px 0;">
+                      <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
+                        File hợp đồng <span style="color: tomato; margin-left: 4px;">*</span>
+                      </div>
+                      <div nz-col class="gutter-row" [nzSpan]="12">
+                        <nz-upload [nzMultiple]="settingUploadAuthorizationFile.isMultiple"
+                          [nzAction]="settingUploadAuthorizationFile.action"
+                          [nzName]="settingUploadAuthorizationFile.name"
+                          [nzHeaders]="settingUploadAuthorizationFile.header"
+                          [nzRemove]="handleRemoveUploadAuthorizationFile"
+                          [nzShowUploadList]="settingUploadAuthorizationFile.showUploadList"
+                          [nzFileList]="listUploadAuthorizationFile"
+                          (nzChange)="handleChangeUploadAuthorizationFile($event)">
+                          <button nz-button nzType="default" [nzSize]="'default'" nzShape="round"><span nz-icon
+                              nzType="upload"></span></button>
+                        </nz-upload>
+                      </div>
+                    </div>
+
+                    <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                      style="display: flex; align-items: center; padding: 8px 0;">
+                      <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
+                        Người phụ trách
+                        <span style="color: tomato; margin-left: 4px;">*</span>
+                      </div>
+                      <div nz-col class="gutter-row" [nzSpan]="12">
+                        <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
+                          placeholder="Nhập  người phụ trách">
+                      </div>
+                    </div>
+
+                    <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                      style="display: flex; align-items: center; padding: 8px 0;">
+                      <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
+                        Chức vụ
+                        <span style="color: tomato; margin-left: 4px;">*</span>
+                      </div>
+                      <div nz-col class="gutter-row" [nzSpan]="12">
+                        <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
+                          placeholder="Nhập chức vụ">
+                      </div>
+                    </div>
+
+                    <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                      style="display: flex; align-items: center; padding: 8px 0;">
+                      <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
+                        Số điện thoại
+                        <span style="color: tomato; margin-left: 4px;">*</span>
+                      </div>
+                      <div nz-col class="gutter-row" [nzSpan]="12">
+                        <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
+                          placeholder="Nhập số điện thoại">
+                      </div>
+                    </div>
+
+                    <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                      style="display: flex; align-items: center; padding: 8px 0;">
+                      <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
+                        Email cá nhân
+                        <span style="color: tomato; margin-left: 4px;">*</span>
+                      </div>
+                      <div nz-col class="gutter-row" [nzSpan]="12">
+                        <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
+                          placeholder="Nhập email cá nhân">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div nz-col class="gutter-row" [nzSpan]="12">
+                  <div>
+                    <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                      style="display: flex; align-items: center; padding: 8px 0;">
+                      <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
+                        Thời gian bẳt đầu HĐ
+                        <span style="color: tomato; margin-left: 4px;">*</span>
+                      </div>
+                      <div nz-col class="gutter-row" [nzSpan]="12">
+                        <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
+                          placeholder="Chọn thời gian bắt đầu">
+                      </div>
+                    </div>
+
+                    <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                      style="display: flex; align-items: center; padding: 8px 0;">
+                      <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
+                        Thời gian kết thúc HĐ
+                        <span style="color: tomato; margin-left: 4px;">*</span>
+                      </div>
+                      <div nz-col class="gutter-row" [nzSpan]="12">
+                        <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
+                          placeholder="Chọn thời gian kết thúc">
+                      </div>
+                    </div>
+
+                    <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                      style="display: flex; align-items: center; padding: 8px 0;">
+                      <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
+                        Email nhận hoá đơn
+                        <span style="color: tomato; margin-left: 4px;">*</span>
+                      </div>
+                      <div nz-col class="gutter-row" [nzSpan]="12">
+                        <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
+                          placeholder="Nhập email nhận hoá đơn">
+                      </div>
+                    </div>
+
+                    <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                      style="display: flex; align-items: center; padding: 8px 0;">
+                      <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
+                        Thời gian thanh toán
+                        <span style="color: tomato; margin-left: 4px;">*</span>
+                      </div>
+                      <div nz-col class="gutter-row" [nzSpan]="12">
+                        <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
+                          placeholder="Nhập Thời gian thanh toán">
+                      </div>
+                    </div>
+
+                    <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                      style="display: flex; align-items: center; padding: 8px 0;">
+                      <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
+                        Hạn mức tối đa
+                        <span style="color: tomato; margin-left: 4px;">*</span>
+                      </div>
+                      <div nz-col class="gutter-row" [nzSpan]="12">
+                        <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
+                          placeholder="Nhập hạn mức tối đa">
+                      </div>
+                    </div>
+
+                    <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                      style="display: flex; align-items: center; padding: 8px 0;">
+                      <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
+                        Hạn mức cảnh báo
+                        <span style="color: tomato; margin-left: 4px;">*</span>
+                      </div>
+                      <div nz-col class="gutter-row" [nzSpan]="12">
+                        <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
+                          placeholder="Nhập hạn mức cảnh báo">
+                      </div>
+                    </div>
+
+                    <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                      style="display: flex; align-items: center; padding: 8px 0;">
+                      <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
+                        Dịch vụ đăng kí
+                        <span style="color: tomato; margin-left: 4px;">*</span>
+                      </div>
+                      <div nz-col class="gutter-row" [nzSpan]="12">
+                        <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
+                          placeholder="Nhập dịch vụ đăng kí">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
 
           <div *ngIf="selectedMenu == MenuCreatePartner.ListEmployees">
             <!-- Menu list emloyees -->
