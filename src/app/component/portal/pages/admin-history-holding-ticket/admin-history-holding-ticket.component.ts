@@ -194,7 +194,7 @@ export class AdminHistoryHoldingTicketComponent extends TableSelectionAbstract i
     });
     return result;
   }
-  toNameAirportByCode(code: String) {
+  toAirportNameByCode(code: String) {
     let mameAirport = '';
     if (code) {
       let airport = this.airports.find((objAirports: any) => objAirports.code === code);

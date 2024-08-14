@@ -942,7 +942,6 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
       });
 
     });
-
   }
 
 
@@ -974,7 +973,6 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
       ).add(() => {
       });
     });
-
   }
 
 
@@ -1048,6 +1046,8 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
 
   showPopupViewRequestBookingTicket(requestBooking: any) {
     this.itemBookingRequest = requestBooking;
+    console.log("this.itemBookingRequest : ", this.itemBookingRequest);
+
     this.isVisiblePopupViewRequestBookingTicket = true;
   }
 }

@@ -220,8 +220,8 @@
                   *ngFor="let bookingFlight of itemTicketHistoryTicket.bookingFlights; let i = index;">
                   <div class="flight-schedule-title">
                     <label>
-                      Hành trình : <strong>{{toNameAirportByCode(bookingFlight.startPoint)}} -
-                        {{toNameAirportByCode(bookingFlight.endPoint)}}</strong>
+                      Hành trình : <strong>{{toAirportNameByCode(bookingFlight.startPoint)}} -
+                        {{toAirportNameByCode(bookingFlight.endPoint)}}</strong>
                     </label>
                   </div>
                   <div>

@@ -718,7 +718,7 @@
               <div class="inner-box">
                 <label for="" style="font-weight: 600;">Mã người dùng</label>
                 <div>
-                  <span>VTH000001</span>
+                  <span>{{ itemBookingRequest.userBooking.userCode }}</span>
                 </div>
               </div>
             </div>
@@ -726,7 +726,7 @@
               <div class="inner-box">
                 <label for="" style="font-weight: 600;">Tên người dùng</label>
                 <div>
-                  <span>Nguyên Võ Hoàng Anh</span>
+                  <span>{{ itemBookingRequest.userBooking.fullname }}</span>
                 </div>
               </div>
             </div>
@@ -734,7 +734,7 @@
               <div class="inner-box">
                 <label for="" style="font-weight: 600;">Công ty</label>
                 <div>
-                  <span>VTH - Công ty TNHH Y tế Việt Tiến</span>
+                  <span>{{ itemBookingRequest.userBooking.companyName }}</span>
                 </div>
               </div>
             </div>
@@ -760,7 +760,7 @@
                   <span style="color: tomato; margin-left: 4px;">(*)</span>
                 </label>
                 <div>
-                  <span>ABCDEF</span>
+                  <span>{{ itemBookingRequest.approvalCode }}</span>
                 </div>
               </div>
             </div>
@@ -770,7 +770,7 @@
                   <span style="color: tomato; margin-left: 4px;">(*)</span>
                 </label>
                 <div>
-                  <span>Khứ hồi</span>
+                  <span>{{ itemBookingRequest.typeTicket | typeTicketPipe}} </span>
                 </div>
               </div>
             </div>
@@ -780,7 +780,7 @@
                   <span style="color: tomato; margin-left: 4px;">(*)</span>
                 </label>
                 <div>
-                  <span>29/05/2024</span>
+                  <span>{{ itemBookingRequest.departureDay | dateFormat}}</span>
                 </div>
               </div>
             </div>
@@ -790,7 +790,7 @@
                   <span style="color: tomato; margin-left: 4px;">(*)</span>
                 </label>
                 <div>
-                  <span>29/06/2024</span>
+                  <span>{{ itemBookingRequest.returnDay | dateFormat}}</span>
                 </div>
               </div>
             </div>
@@ -803,7 +803,7 @@
                   <span style="color: tomato; margin-left: 4px;">(*)</span>
                 </label>
                 <div>
-                  <span>TP. Hồ Chí Minh (SGN)</span>
+                  <span>{{ itemBookingRequest.startPoint | airlinePipe : airports}}</span>
                 </div>
               </div>
             </div>
@@ -813,7 +813,7 @@
                   <span style="color: tomato; margin-left: 4px;">(*)</span>
                 </label>
                 <div>
-                  <span>Buôn Ma Thuột (BMV)</span>
+                  <span>{{ itemBookingRequest.endPoint | airlinePipe : airports }}</span>
                 </div>
               </div>
             </div>
@@ -823,7 +823,7 @@
                   <span style="color: tomato; margin-left: 4px;">(*)</span>
                 </label>
                 <div>
-                  <span>Vietnam Airline</span>
+                  <span>{{ itemBookingRequest.airlineCode | airportPipe }}</span>
                 </div>
               </div>
             </div>
@@ -833,7 +833,7 @@
                   <span style="color: tomato; margin-left: 4px;">(*)</span>
                 </label>
                 <div>
-                  <span>Hạng phổ thông đặc biệt</span>
+                  <span>{{ itemBookingRequest.fareClass }}</span>
                 </div>
               </div>
             </div>
@@ -846,15 +846,16 @@
                   <span style="color: tomato; margin-left: 4px;">(*)</span>
                 </label>
                 <div>
-                  <span>2</span>
+                  <span>{{ itemBookingRequest.adt }}</span>
                 </div>
               </div>
             </div>
             <div nz-col class="gutter-row" nzSpan="6">
               <div class="inner-box">
-                <label for="" style="font-weight: 600;">Số lượng trẻ em 2 - 11 tuổi</label>
+                <label for="" style="font-weight: 600;">Số lượng trẻ em {{ itemBookingRequest.fareClass }} - 11
+                  tuổi</label>
                 <div>
-                  <span>2</span>
+                  <span>{{ itemBookingRequest.chd }}</span>
                 </div>
               </div>
             </div>
@@ -862,7 +863,7 @@
               <div class="inner-box">
                 <label for="" style="font-weight: 600;">Số lượng em bé < 24 tháng </label>
                     <div>
-                      <span>2</span>
+                      <span>{{ itemBookingRequest.inf }}</span>
                     </div>
               </div>
             </div>
@@ -872,7 +873,7 @@
                   <span style="color: tomato; margin-left: 4px;">(*)</span>
                 </label>
                 <div>
-                  <span>Không mua thêm hành lý</span>
+                  <span>{{ itemBookingRequest.baggage }}</span>
                 </div>
               </div>
             </div>
@@ -890,14 +891,15 @@
               </div>
             </div>
           </div>
-          <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
+          <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+            *ngFor="let passenger of itemBookingRequest.passengers;let i = index;">
             <div nz-col class="gutter-row" nzSpan="5">
               <div class="inner-box">
                 <label for="" style="font-weight: 600;">1. Họ và tên
                   <span style="color: tomato; margin-left: 4px;">(*)</span>
                 </label>
                 <div>
-                  <span>Vũ Hữu Xung</span>
+                  <span>{{ passenger.fullName }}</span>
                 </div>
               </div>
             </div>
@@ -907,7 +909,7 @@
                   <span style="color: tomato; margin-left: 4px;">(*)</span>
                 </label>
                 <div>
-                  <span>Nam</span>
+                  <span>{{ passenger.gender | genderPipe}}</span>
                 </div>
               </div>
             </div>
@@ -918,7 +920,7 @@
                   <span style="color: tomato; margin-left: 4px;">(*)</span>
                 </label>
                 <div>
-                  <span>xung.vu@gmail.com</span>
+                  <span>{{ passenger.email }}</span>
                 </div>
               </div>
             </div>
@@ -928,7 +930,7 @@
                   <span style="color: tomato; margin-left: 4px;">(*)</span>
                 </label>
                 <div>
-                  <span>0348380947</span>
+                  <span>{{ passenger.phone }}</span>
                 </div>
               </div>
             </div>
@@ -936,58 +938,7 @@
               <div class="inner-box">
                 <label for="" style="font-weight: 600;">Mã thẻ thành viên</label>
                 <div>
-                  <span>xxxxxxxxx</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
-            <div nz-col class="gutter-row" nzSpan="5">
-              <div class="inner-box">
-                <label for="" style="font-weight: 600;">2. Họ và tên
-                  <span style="color: tomato; margin-left: 4px;">(*)</span>
-                </label>
-                <div>
-                  <span>Vũ Hữu Xung</span>
-                </div>
-              </div>
-            </div>
-            <div nz-col class="gutter-row" nzSpan="4">
-              <div class="inner-box">
-                <label for="" style="font-weight: 600;">Giới tính
-                  <span style="color: tomato; margin-left: 4px;">(*)</span>
-                </label>
-                <div>
-                  <span>Nam</span>
-                </div>
-              </div>
-            </div>
-            <div nz-col class="gutter-row" nzSpan="5">
-              <div class="inner-box">
-                <label for="" style="font-weight: 600;">
-                  Email
-                  <span style="color: tomato; margin-left: 4px;">(*)</span>
-                </label>
-                <div>
-                  <span>xung.vu@gmail.com</span>
-                </div>
-              </div>
-            </div>
-            <div nz-col class="gutter-row" nzSpan="5">
-              <div class="inner-box">
-                <label for="" style="font-weight: 600;">Số điện thoại
-                  <span style="color: tomato; margin-left: 4px;">(*)</span>
-                </label>
-                <div>
-                  <span>0348380947</span>
-                </div>
-              </div>
-            </div>
-            <div nz-col class="gutter-row" nzSpan="5">
-              <div class="inner-box">
-                <label for="" style="font-weight: 600;">Mã thẻ thành viên</label>
-                <div>
-                  <span>xxxxxxxxx</span>
+                  <span>{{ passenger.membership }}</span>
                 </div>
               </div>
             </div>

@@ -1,37 +1,37 @@
-import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
-import {DateFormatPipe} from './pipe/format-date.pipe';
-import {CommonModule, CurrencyPipe} from '@angular/common';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {HttpClientModule} from '@angular/common/http';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
+import { DateFormatPipe } from './pipe/format-date.pipe';
+import { CommonModule, CurrencyPipe } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 
 import { NzNotificationModule } from 'ng-zorro-antd/notification';
-import {NotificationService} from '../service/notification.service';
-import {I18nModule} from '../i18n/i18n.module';
+import { NotificationService } from '../service/notification.service';
+import { I18nModule } from '../i18n/i18n.module';
 import { SelectLanguageComponent } from './component/select-language/select-language.component';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzResultModule } from 'ng-zorro-antd/result';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
-import {CurrencyFormatPipe} from './pipe/currency-format.pipe';
-import {ImageFormatPipe} from './pipe/image-format.pipe';
-import {QRCodeModule} from 'angularx-qrcode';
-import {OrderStatusFormatPipe} from './pipe/order-status-format.pipe';
-import {FullNameFormatPipe} from './pipe/fullname-format.pipe';
-import {NzTableModule} from 'ng-zorro-antd/table';
-import {NzPaginationModule} from 'ng-zorro-antd/pagination';
-import {NzInputModule} from 'ng-zorro-antd/input';
-import {NzButtonModule} from 'ng-zorro-antd/button';
-import {NzSelectModule} from 'ng-zorro-antd/select';
-import {NzModalModule, NzModalService} from 'ng-zorro-antd/modal';
-import {NzIconModule} from 'ng-zorro-antd/icon';
-import {NzLayoutModule} from 'ng-zorro-antd/layout';
-import {NzCollapseModule} from 'ng-zorro-antd/collapse';
-import {NzInputNumberModule} from 'ng-zorro-antd/input-number';
-import {NzTagModule} from 'ng-zorro-antd/tag';
-import {NzUploadModule} from 'ng-zorro-antd/upload';
-import {NzCheckboxModule} from 'ng-zorro-antd/checkbox';
-import {NzAlertModule} from 'ng-zorro-antd/alert';
+import { CurrencyFormatPipe } from './pipe/currency-format.pipe';
+import { ImageFormatPipe } from './pipe/image-format.pipe';
+import { QRCodeModule } from 'angularx-qrcode';
+import { OrderStatusFormatPipe } from './pipe/order-status-format.pipe';
+import { FullNameFormatPipe } from './pipe/fullname-format.pipe';
+import { NzTableModule } from 'ng-zorro-antd/table';
+import { NzPaginationModule } from 'ng-zorro-antd/pagination';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzLayoutModule } from 'ng-zorro-antd/layout';
+import { NzCollapseModule } from 'ng-zorro-antd/collapse';
+import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
+import { NzTagModule } from 'ng-zorro-antd/tag';
+import { NzUploadModule } from 'ng-zorro-antd/upload';
+import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
+import { NzAlertModule } from 'ng-zorro-antd/alert';
 import { IsEmptyPipe } from './pipe/is-empty.pipe';
 import { MViewPdfComponent } from './component/m-view-pdf/m-view-pdf.component';
 import { NzImageModule } from 'ng-zorro-antd/image';
@@ -43,6 +43,10 @@ import { PassengerTypesPipe } from './pipe/passenger-type.pipe';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
 import { NzRateModule } from 'ng-zorro-antd/rate';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
+import { TypeTicketPipe } from './pipe/type-ticket.pipe';
+import { AirlinePipe } from './pipe/airline.pipe';
+import { AirportPipe } from './pipe/airport.pipe';
+import { GenderPipe } from './pipe/gender.pipe';
 @NgModule({
   imports: [
     CommonModule,
@@ -123,6 +127,10 @@ import { NzRadioModule } from 'ng-zorro-antd/radio';
     DxDateBoxModule,
     BookingHotelStatusPipe,
     PassengerTypesPipe,
+    TypeTicketPipe,
+    AirlinePipe,
+    AirportPipe,
+    GenderPipe,
     NzRadioModule
   ],
   declarations: [
@@ -135,10 +143,14 @@ import { NzRadioModule } from 'ng-zorro-antd/radio';
     IsEmptyPipe,
     BookingHotelStatusPipe,
     PassengerTypesPipe,
+    TypeTicketPipe,
+    AirlinePipe,
+    AirportPipe,
+    GenderPipe,
     MViewPdfComponent
   ],
   providers: [NotificationService],
-  schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SharedModule {
 }
