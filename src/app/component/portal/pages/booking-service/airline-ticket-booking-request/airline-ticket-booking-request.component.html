@@ -62,7 +62,7 @@
   <dxi-column caption="Mã đặt chỗ" cssClass="vertical-align-middle" [width]="150" cellTemplate="cellReservationCode"
     [fixed]="true"></dxi-column>
   <div *dxTemplate="let item of 'cellReservationCode'">
-    {{item.data.reservationCode}}{{ item.data.returnReservationCode ? ", " + item.data.returnReservationCod : "" }}
+    {{item.data.reservationCode}}{{ item.data.returnReservationCode ? ", " + item.data.returnReservationCode : "" }}
   </div>
 
 
