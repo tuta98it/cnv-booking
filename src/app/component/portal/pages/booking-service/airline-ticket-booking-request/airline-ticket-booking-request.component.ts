@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { GeneralService } from 'src/app/service/general-service';
 import { TableSelectionAbstract } from 'src/app/shared/component/table/table-selection.abstract';
@@ -104,6 +104,12 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   signalOpenPopupUpdateNumberTicket: boolean = false;
   isSetSinalUpdateStatusRequestBooking: boolean = true;
 
+
+  valueInputNumberAmount = '';
+  tooltipTitleAmount = 'Nhập số tiền';
+
+  @ViewChild('inputElementAmount', { static: false }) inputElementAmount?: ElementRef
+  formControlNameCurrent: string;
   constructor(
     public translate: TranslateService,
     private notificationService: NotificationService,
@@ -151,6 +157,64 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
       changeFeeReturn: new FormControl({ value: null, disabled: false }),
     });
 
+  }
+
+
+  onChangeInputAmount(value: string, controlName?: string): void {
+    this.updateValueInputAmount(value);
+    this.formControlNameCurrent = controlName;
+  }
+
+
+  onClickInputAmount(event: any, controlName?: string): void {
+    const inputElement = event.target as HTMLInputElement;
+    this.valueInputNumberAmount = inputElement.value;
+    this.formControlNameCurrent = controlName;
+    this.updateValueInputAmount(this.valueInputNumberAmount);
+  }
+
+  // '.' at the end or only '-' in the input box.
+  onBlurInputAmount(): void {
+    if (this.valueInputNumberAmount.charAt(this.valueInputNumberAmount.length - 1) === '.' || this.valueInputNumberAmount === '-') {
+      this.updateValueInputAmount(this.valueInputNumberAmount.slice(0, -1));
+      this.tooltipTitleAmount = "0 đ"
+    }
+  }
+
+
+  updateValueInputAmount(value: string): void {
+    const reg = /^-?(0|[1-9][0-9]*)(\.[0-9]*)?$/;
+    if ((!isNaN(+value) && reg.test(value)) || value === '' || value === '-') {
+      this.valueInputNumberAmount = value;
+    }
+    // Chỉ cập nhật nếu giá trị khác
+    if (this.formControlNameCurrent) {
+      const control = this.formAirlineTicketPopup.get(this.formControlNameCurrent);
+      if (control && control.value !== this.valueInputNumberAmount) {
+        control.setValue(this.valueInputNumberAmount, { emitEvent: false });
+      }
+    }
+    this.updateTooltipTitleAmount();
+  }
+
+  updateTooltipTitleAmount(): void {
+    this.tooltipTitleAmount = ((this.valueInputNumberAmount !== '-' ? this.formatNumber(this.valueInputNumberAmount) : '-') || '0') + " đ";
+  }
+
+  formatNumber(value: string): string {
+    const stringValue = `${value}`;
+    const list = stringValue.split('.');
+    const prefix = list[0].charAt(0) === '-' ? '-' : '';
+    let num = prefix ? list[0].slice(1) : list[0];
+    let result = '';
+    while (num.length > 3) {
+      result = `,${num.slice(-3)}${result}`;
+      num = num.slice(0, num.length - 3);
+    }
+    if (num) {
+      result = num + result;
+    }
+    return `${prefix}${result}${list[1] ? `.${list[1]}` : ''}`;
   }
 
   ngOnInit(): void {
@@ -483,6 +547,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
 
         break;
       case this.BookingRequestStatusEnum.ReserveSeat:
+        this.isSetSinalUpdateStatusRequestBooking = false;
         this.updateStatusRequestBooking(requestBookingId, this.BookingRequestStatusEnum.ReserveSeat).then((r) => {
           // this.sendEmailToPassengerToConfirmFlightTicket(requestBookingId);
           this.isVisibleAirlineTicketInfo = true;
@@ -1062,5 +1127,10 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   showPopupViewRequestBookingTicket(requestBooking: any) {
     this.itemBookingRequest = requestBooking;
     this.isVisiblePopupViewRequestBookingTicket = true;
+  }
+
+  handleChangeTypeTicket(event: any) {
+    let status = event;
+    this.ticketRoundTrip = status;
   }
 }

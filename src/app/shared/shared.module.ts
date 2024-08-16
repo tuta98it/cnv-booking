@@ -47,6 +47,7 @@ import { TypeTicketPipe } from './pipe/type-ticket.pipe';
 import { AirlinePipe } from './pipe/airline.pipe';
 import { AirportPipe } from './pipe/airport.pipe';
 import { GenderPipe } from './pipe/gender.pipe';
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 @NgModule({
   imports: [
     CommonModule,
@@ -80,6 +81,7 @@ import { GenderPipe } from './pipe/gender.pipe';
     NzSwitchModule,
     NzRateModule,
     NzCheckboxModule,
+    NzToolTipModule,
     DxDateBoxModule,
     AngularEditorModule,
     NzRadioModule
@@ -117,6 +119,7 @@ import { GenderPipe } from './pipe/gender.pipe';
     QRCodeModule,
     NzUploadModule,
     NzCheckboxModule,
+    NzToolTipModule,
     NzAlertModule,
     MViewPdfComponent,
     NzImageModule,
