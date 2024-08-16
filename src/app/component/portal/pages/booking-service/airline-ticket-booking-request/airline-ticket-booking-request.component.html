@@ -74,7 +74,7 @@
       <nz-option [nzLabel]="'Gửi yêu cầu'" [nzValue]="BookingRequestStatusEnum.SubmitRequest"
         *ngIf="(status.value == BookingRequestStatusEnum.SubmitRequest)"></nz-option>
 
-      <nz-option [nzLabel]="'Đang giữ vé'" [nzValue]="BookingRequestStatusEnum.ReserveSeat" *ngIf="(
+      <nz-option [nzLabel]="'Giữ chỗ'" [nzValue]="BookingRequestStatusEnum.ReserveSeat" *ngIf="(
           status.value == BookingRequestStatusEnum.SubmitRequest ||
           status.value == BookingRequestStatusEnum.ReserveSeat)">
       </nz-option>
@@ -91,7 +91,6 @@
 
       <nz-option [nzLabel]="'Xuất vé'" [nzValue]="BookingRequestStatusEnum.IssuedTicket" *ngIf="(
         status.value == BookingRequestStatusEnum.IssuedTicket ||
-        status.value == BookingRequestStatusEnum.AdjustTicket ||
         status.value == BookingRequestStatusEnum.ReceivedTicket)"></nz-option>
     </nz-select>
     <!-- <container-element [ngSwitch]="status.value">
@@ -696,7 +695,7 @@
       </button>
 
       <button *ngIf="optionAirlineTicketInfo == OptionAirlineTicketInfoEnum.Update" nz-button nzType="primary"
-        [nzLoading]="isLoadingButtonSavaeAirlineTicketInfo" (click)="handleSavelArilineTicketPopup()">
+        [nzLoading]="isLoadingButtonSaveAirlineTicketInfo" (click)="handleSavelArilineTicketPopup()">
         <div style="display: flex; align-items: center;">
           <span nz-icon nzType="save"></span>
           <span style="margin-left: 6px; line-height: normal;">Lưu</span>

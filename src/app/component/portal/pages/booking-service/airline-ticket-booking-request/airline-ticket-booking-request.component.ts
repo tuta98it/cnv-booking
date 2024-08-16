@@ -110,7 +110,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
 
   @ViewChild('inputElementAmount', { static: false }) inputElementAmount?: ElementRef
   formControlNameCurrent: string;
-  isLoadingButtonSavaeAirlineTicketInfo: boolean = false;
+  isLoadingButtonSaveAirlineTicketInfo: boolean = false;
   constructor(
     public translate: TranslateService,
     private notificationService: NotificationService,
@@ -342,37 +342,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
 
     });
   }
-  // getListDetailTicket(historyTransaction: any) {
-  //   const bookingFlights = historyTransaction.bookingFlights;
-  //   const bookingPassengers = historyTransaction.bookingPassengers;
-  //   const bookingReservations = historyTransaction.bookingReservations;
 
-  //   // Create a dictionary to store objects based on bookingId
-  //   let arraybookingDataMap = [];
-
-  //   // Populate the dictionary with data from bookingFlights
-  //   bookingFlights.forEach((flight: any) => {
-  //     let bookingDataMap = {};
-  //     if (flight) {
-  //       bookingDataMap = { ...flight };
-  //     }
-  //     const bookingId = flight.bookingId;
-
-  //     const matchingPassenger = bookingPassengers.find((passenger: any) => passenger.bookingId = flight.bookingId);
-  //     if (matchingPassenger) {
-  //       bookingDataMap = { ...bookingDataMap, ...matchingPassenger };
-  //     }
-
-  //     const matchingReservation = bookingReservations.find((reservation: any) => reservation.bookingId === flight.bookingId);
-  //     if (matchingReservation) {
-  //       bookingDataMap = { ...bookingDataMap, ...matchingReservation };
-  //     }
-
-  //     arraybookingDataMap.push(bookingDataMap);
-  //   });
-
-  //   return arraybookingDataMap;
-  // }
   onOpenPopupTicketDetail(booking: any) {
     booking.isLoadingViewTicket = true;
     this.generalService.getBookingByID(booking.bookingId).subscribe({
@@ -539,6 +509,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
 
   handleChangeStatusByItem(status: any) {
     this.itemBookingRequest = status.data;
+    this.ticketRoundTrip = this.itemBookingRequest.typeTicket == this.TypeAirlineTicketEnum.RoundTrip
     this.setFormRequestPartnerValue(this.itemBookingRequest);
     this.newStatus = status.value;
     this.oldStatus = status.data.statusOld;
@@ -570,11 +541,10 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
       case this.BookingRequestStatusEnum.AdjustTicket:
         //Mở popup Cập nhật thông tin vé
         this.isVisibleAirlineTicketInfo = true;
-        this.signalOpenPopupUpdateNumberTicket = true;
+        this.signalOpenPopupUpdateNumberTicket = false;
         this.isSendEmailToPassengerToConfirmFlightTicket = true;
         this.isSendEmailToPassengerToConfirmSuccessIssuedTicket = false;
         this.optionAirlineTicketInfo = this.OptionAirlineTicketInfoEnum.Update;
-        this.isSendEmailToPassengerToConfirmFlightTicket = true;
         break;
 
       case this.BookingRequestStatusEnum.IssuedTicket:
@@ -895,10 +865,10 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
       // console.log("formValue: ", formValue);
       // console.log("payload: ", payload);
 
-      this.isLoadingButtonSavaeAirlineTicketInfo = true;
+      this.isLoadingButtonSaveAirlineTicketInfo = true;
       this.updateRequestBooking(payload).then((r) => {
         // Mở popup cập nhật số vé
-        this.isLoadingButtonSavaeAirlineTicketInfo = false;
+        this.isLoadingButtonSaveAirlineTicketInfo = false;
 
         this.isVisibleAirlineTicketInfo = false;
         this.getListData();
@@ -1028,7 +998,6 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
 
   AdjuctTicketRequestBookingById(id: number) {
     return new Promise((resolve, reject) => {
-
       this.generalService.updateStatusRequestBooking(id, this.BookingRequestStatusEnum.AdjustTicket).subscribe(
         {
           next: (res: any) => {
