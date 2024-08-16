@@ -876,8 +876,8 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
         ticketHoldExpiryDate: formValue.ticketHoldExpiryDateDeparture,
         reservationCode: formValue.reservationCodeDeparture,
 
-        returnStartTime: formValue.flightTimeReturn[0],
-        returnEndTime: formValue.flightTimeReturn[1],
+        returnStartTime: formValue.flightTimeReturn[0] ?? new Date(),
+        returnEndTime: formValue.flightTimeReturn[1] ?? new Date(),
         returnBookingCode: formValue.bookingCodeReturn,
         returnFlightNumber: formValue.flightNumberReturn,
         returnTicketPrice: formValue.ticketPriceReturn,
@@ -897,6 +897,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
       this.updateRequestBooking(payload).then((r) => {
         // Mở popup cập nhật số vé
         this.isVisibleAirlineTicketInfo = false;
+        this.getListData();
         this.isVisiblePopupUpdateNumberTicket = this.signalOpenPopupUpdateNumberTicket;
         this.isSetSinalUpdateStatusRequestBooking = true;
         if (this.isSendEmailToPassengerToConfirmFlightTicket) {
