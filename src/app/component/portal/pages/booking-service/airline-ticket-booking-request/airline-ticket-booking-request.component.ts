@@ -895,10 +895,10 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
       // console.log("formValue: ", formValue);
       // console.log("payload: ", payload);
 
-      this.isLoadingButtonSavaeAirlineTicketInfo = false;
+      this.isLoadingButtonSavaeAirlineTicketInfo = true;
       this.updateRequestBooking(payload).then((r) => {
         // Mở popup cập nhật số vé
-        this.isLoadingButtonSavaeAirlineTicketInfo = true;
+        this.isLoadingButtonSavaeAirlineTicketInfo = false;
 
         this.isVisibleAirlineTicketInfo = false;
         this.getListData();
