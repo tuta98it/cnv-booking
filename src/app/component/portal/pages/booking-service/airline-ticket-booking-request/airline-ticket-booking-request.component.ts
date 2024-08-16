@@ -110,6 +110,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
 
   @ViewChild('inputElementAmount', { static: false }) inputElementAmount?: ElementRef
   formControlNameCurrent: string;
+  isLoadingButtonSavaeAirlineTicketInfo: boolean = false;
   constructor(
     public translate: TranslateService,
     private notificationService: NotificationService,
@@ -894,8 +895,11 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
       // console.log("formValue: ", formValue);
       // console.log("payload: ", payload);
 
+      this.isLoadingButtonSavaeAirlineTicketInfo = false;
       this.updateRequestBooking(payload).then((r) => {
         // Mở popup cập nhật số vé
+        this.isLoadingButtonSavaeAirlineTicketInfo = true;
+
         this.isVisibleAirlineTicketInfo = false;
         this.getListData();
         this.isVisiblePopupUpdateNumberTicket = this.signalOpenPopupUpdateNumberTicket;
@@ -1009,7 +1013,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
             }
           },
           error: (err: any) => {
-            this.notificationService.showNotification(Constant.ERROR, 'Cập nhật số vé khách hàng do lỗi hệ thống');
+            this.notificationService.showNotification(Constant.ERROR, 'Cập nhật số vé khách hàng thật bại do lỗi hệ thống');
           },
           complete: () => {
 

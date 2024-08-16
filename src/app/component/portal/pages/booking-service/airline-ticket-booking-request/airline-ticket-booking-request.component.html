@@ -696,7 +696,7 @@
       </button>
 
       <button *ngIf="optionAirlineTicketInfo == OptionAirlineTicketInfoEnum.Update" nz-button nzType="primary"
-        (click)="handleSavelArilineTicketPopup()">
+        [nzLoading]="isLoadingButtonSavaeAirlineTicketInfo" (click)="handleSavelArilineTicketPopup()">
         <div style="display: flex; align-items: center;">
           <span nz-icon nzType="save"></span>
           <span style="margin-left: 6px; line-height: normal;">Lưu</span>
