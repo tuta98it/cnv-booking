@@ -146,8 +146,7 @@
 
     <button *ngIf="
     (item.data.status == BookingRequestStatusEnum.ReserveSeat) ||
-    (item.data.status == BookingRequestStatusEnum.AdjustTicket) ||
-    (item.data.status == BookingRequestStatusEnum.IssuedTicket)" title="Cập nhật thông tin vé đặt" nz-button
+    (item.data.status == BookingRequestStatusEnum.AdjustTicket)" title="Cập nhật thông tin vé đặt" nz-button
       nzSize="small" nzType="default" (click)="showPopupAirlineTicket(item.data, OptionAirlineTicketInfoEnum.Update)">
       <span class="fa fa-edit fa-fw"></span>
     </button>

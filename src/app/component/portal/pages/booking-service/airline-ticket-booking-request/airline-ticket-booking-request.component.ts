@@ -99,7 +99,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   newStatus: any;
   oldStatus: any;
   // isSendEmailToPassengerToConfirmFlightTicket: boolean;
-  // isSendEmailToPassengerToConfirmSuccessIssuedTicket: boolean;
+  isSendEmailToPassengerToConfirmSuccessIssuedTicket: boolean;
   listRequestBookingHistories: any;
   // signalOpenPopupUpdateNumberTicket: boolean = false;
   isSetSinalUpdateStatusRequestBooking: boolean = true;
@@ -551,7 +551,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
         this.optionAirlineTicketInfo = this.OptionAirlineTicketInfoEnum.Update;
         // this.signalOpenPopupUpdateNumberTicket = true;
         // this.isSendEmailToPassengerToConfirmFlightTicket = false;
-        // this.isSendEmailToPassengerToConfirmSuccessIssuedTicket = true;
+        this.isSendEmailToPassengerToConfirmSuccessIssuedTicket = true;
         break;
       default:
         break;
@@ -698,7 +698,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     this.newStatus = this.itemBookingRequest.status;
     this.isVisiblePopupUpdateNumberTicket = true;
     // this.isSendEmailToPassengerToConfirmFlightTicket = false;
-    // this.isSendEmailToPassengerToConfirmSuccessIssuedTicket = false;
+    this.isSendEmailToPassengerToConfirmSuccessIssuedTicket = false;
   }
 
   handleUploadFileTicketBookingRequest1({ file, fileList }: NzUploadChangeParam): void {
@@ -986,13 +986,13 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
                 case this.BookingRequestStatusEnum.IssuedTicket:
                   this.IssuedTicketRequestBookingById(this.itemBookingRequest.id).then((r) => {
                     this.getListData();
-                    this.sendEmailToPassengerToConfirmSuccessIssuedTicket(this.itemBookingRequest.id).then((r) => {
-                    });
-                    // if (this.isSendEmailToPassengerToConfirmSuccessIssuedTicket) {
-                    //   this.sendEmailToPassengerToConfirmSuccessIssuedTicket(this.itemBookingRequest.id).then((r) => {
-                    //     this.isSendEmailToPassengerToConfirmSuccessIssuedTicket = false;
-                    //   });
-                    // }
+                    if (this.isSendEmailToPassengerToConfirmSuccessIssuedTicket) {
+                      this.sendEmailToPassengerToConfirmSuccessIssuedTicket(this.itemBookingRequest.id).then((result) => {
+                        if (result) {
+                          this.isSendEmailToPassengerToConfirmSuccessIssuedTicket = false;
+                        }
+                      });
+                    }
                   }).catch((err) => {
                     this.getListData();
                   });
