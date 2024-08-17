@@ -567,19 +567,19 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
           next: (res: any) => {
             if (res.isValid) {
               resolve(true);
-              this.notificationService.showNotification(Constant.SUCCESS, 'Đã gửi email thông báo giữ chỗ thời khách hàng');
+              this.notificationService.showNotification(Constant.SUCCESS, 'Đã gửi email thông báo giữ chỗ tới khách hàng');
             } else {
               if (res.errors && res.errors.length > 0) {
                 res.errors.forEach((el: any) => {
                   this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
                 });
               } else {
-                this.notificationService.showNotification(Constant.ERROR, 'Gửi email thông báo giữ chỗ thời khách hàng không thành công');
+                this.notificationService.showNotification(Constant.ERROR, 'Gửi email thông báo giữ chỗ tới khách hàng không thành công');
               }
             }
           },
           error: (err: any) => {
-            this.notificationService.showNotification(Constant.ERROR, 'Gửi email thông báo giữ chỗ thời khách hàng thất bại do lỗi hệ thống');
+            this.notificationService.showNotification(Constant.ERROR, 'Gửi email thông báo giữ chỗ tới khách hàng thất bại do lỗi hệ thống');
           },
           complete: () => {
           }
@@ -627,6 +627,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     this.itemBookingRequest = itemData;
     this.newStatus = this.itemBookingRequest.status;
     this.isVisibleAirlineTicketInfo = true;
+    this.ticketRoundTrip = this.itemBookingRequest.typeTicket == this.TypeAirlineTicketEnum.RoundTrip;
     this.optionAirlineTicketInfo = opPopupAirlineTicket;
 
     if (itemData.status == AirlineTicketBookingRequestStatus.ReserveSeat) {
@@ -1165,7 +1166,8 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   }
 
   handleChangeTypeTicket(event: any) {
-    let status = event;
-    this.ticketRoundTrip = status;
+    let typeTicket = event;
+    this.itemBookingRequest.typeTicket = typeTicket;
+    this.ticketRoundTrip = typeTicket == this.TypeAirlineTicketEnum.RoundTrip
   }
 }
