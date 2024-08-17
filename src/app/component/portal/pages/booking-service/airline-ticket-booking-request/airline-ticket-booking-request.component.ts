@@ -98,10 +98,10 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   listOfOptionPassengers = [];
   newStatus: any;
   oldStatus: any;
-  isSendEmailToPassengerToConfirmFlightTicket: boolean;
-  isSendEmailToPassengerToConfirmSuccessIssuedTicket: boolean;
+  // isSendEmailToPassengerToConfirmFlightTicket: boolean;
+  // isSendEmailToPassengerToConfirmSuccessIssuedTicket: boolean;
   listRequestBookingHistories: any;
-  signalOpenPopupUpdateNumberTicket: boolean = false;
+  // signalOpenPopupUpdateNumberTicket: boolean = false;
   isSetSinalUpdateStatusRequestBooking: boolean = true;
 
 
@@ -520,16 +520,14 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
         break;
       case this.BookingRequestStatusEnum.ReserveSeat:
         this.isSetSinalUpdateStatusRequestBooking = false;
-        this.updateStatusRequestBooking(requestBookingId, this.BookingRequestStatusEnum.ReserveSeat).then((r) => {
-          // this.sendEmailToPassengerToConfirmFlightTicket(requestBookingId);
-          this.isVisibleAirlineTicketInfo = true;
-          this.isSetSinalUpdateStatusRequestBooking = false;
-          this.signalOpenPopupUpdateNumberTicket = false;
-          this.isSendEmailToPassengerToConfirmFlightTicket = true;
-          this.isSendEmailToPassengerToConfirmSuccessIssuedTicket = false;
-          this.optionAirlineTicketInfo = OptionAirlineTicketPopup.Update;
-          this.getListData();
-        });
+
+        // this.sendEmailToPassengerToConfirmFlightTicket(requestBookingId);
+        this.isVisibleAirlineTicketInfo = true;
+        // this.signalOpenPopupUpdateNumberTicket = false;
+        // this.isSendEmailToPassengerToConfirmFlightTicket = true;
+        // this.isSendEmailToPassengerToConfirmSuccessIssuedTicket = false;
+        this.optionAirlineTicketInfo = OptionAirlineTicketPopup.Update;
+        this.getListData();
         break;
       case this.BookingRequestStatusEnum.ReceivedTicket:
 
@@ -541,20 +539,19 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
       case this.BookingRequestStatusEnum.AdjustTicket:
         //Mở popup Cập nhật thông tin vé
         this.isVisibleAirlineTicketInfo = true;
-        this.signalOpenPopupUpdateNumberTicket = false;
-        this.isSendEmailToPassengerToConfirmFlightTicket = true;
-        this.isSendEmailToPassengerToConfirmSuccessIssuedTicket = false;
         this.optionAirlineTicketInfo = this.OptionAirlineTicketInfoEnum.Update;
+        // this.signalOpenPopupUpdateNumberTicket = false;
+        // this.isSendEmailToPassengerToConfirmFlightTicket = true;
+        // this.isSendEmailToPassengerToConfirmSuccessIssuedTicket = false;
         break;
 
       case this.BookingRequestStatusEnum.IssuedTicket:
         //Mở popup Cập nhật thông tin vé
         this.isVisibleAirlineTicketInfo = true;
-        this.signalOpenPopupUpdateNumberTicket = true;
-        this.isSendEmailToPassengerToConfirmFlightTicket = false;
-        this.isSendEmailToPassengerToConfirmSuccessIssuedTicket = true;
         this.optionAirlineTicketInfo = this.OptionAirlineTicketInfoEnum.Update;
-        this.isSendEmailToPassengerToConfirmSuccessIssuedTicket = true;
+        // this.signalOpenPopupUpdateNumberTicket = true;
+        // this.isSendEmailToPassengerToConfirmFlightTicket = false;
+        // this.isSendEmailToPassengerToConfirmSuccessIssuedTicket = true;
         break;
       default:
         break;
@@ -626,13 +623,14 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   }
 
   showPopupAirlineTicket(itemData: any, opPopupAirlineTicket: OptionAirlineTicketPopup) {
+    this.isSetSinalUpdateStatusRequestBooking = false;
     this.itemBookingRequest = itemData;
     this.isVisibleAirlineTicketInfo = true;
     this.optionAirlineTicketInfo = opPopupAirlineTicket;
 
     if (itemData.status == AirlineTicketBookingRequestStatus.ReserveSeat) {
-      this.isSendEmailToPassengerToConfirmFlightTicket = true;
-      this.isSendEmailToPassengerToConfirmSuccessIssuedTicket = false;
+      // this.isSendEmailToPassengerToConfirmFlightTicket = true;
+      // this.isSendEmailToPassengerToConfirmSuccessIssuedTicket = false;
     }
 
     if (this.optionAirlineTicketInfo == this.OptionAirlineTicketInfoEnum.View) {
@@ -695,17 +693,15 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
 
   showPopupUpdateNumberTicket(requestBooking: any) {
     this.itemBookingRequest = requestBooking;
-
     this.isVisiblePopupUpdateNumberTicket = true;
-    this.isSendEmailToPassengerToConfirmFlightTicket = false;
-    this.isSendEmailToPassengerToConfirmSuccessIssuedTicket = false;
+    // this.isSendEmailToPassengerToConfirmFlightTicket = false;
+    // this.isSendEmailToPassengerToConfirmSuccessIssuedTicket = false;
   }
 
   handleUploadFileTicketBookingRequest1({ file, fileList }: NzUploadChangeParam): void {
     const status = file.status;
     if (status === 'done') {
       this.msg.success(`file ${file.name} tải lên thành công.`);
-      this.getListData();
       this.fileList = fileList;
       setTimeout(() => {
         if (this.fileList.length > 0) {
@@ -726,6 +722,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     } else if (status === 'error') {
       this.msg.error(`File ${file.name} tải lên không thành công.`);
     }
+    this.getListData();
   }
 
 
@@ -775,7 +772,6 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   }
 
   handleRemoveFileTicketBookingRequest = async (file: NzUploadFile): Promise<void> => {
-
     if (this.optionAirlineTicketInfo == this.OptionAirlineTicketInfoEnum.Update) {
       const idFile = file.fileId;
       if (idFile) {
@@ -803,6 +799,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
               this.notificationService.showNotification(Constant.ERROR, `Hệ thống gặp lỗi, xoá file ${file.name} thật bại.`);
             },
             complete: () => {
+              this.getListData();
             },
 
           }
@@ -814,7 +811,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     }
   }
 
-  handleSavelArilineTicketPopup() {
+  handleSaveArilineTicketPopup() {
     if (this.formAirlineTicketPopup.valid) {
       let formValue = this.formAirlineTicketPopup.value;
       let payload = {
@@ -862,22 +859,56 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
         returnReservationCode: formValue.reservationCodeReturn ?? null
 
       }
-      // console.log("formValue: ", formValue);
-      // console.log("payload: ", payload);
 
       this.isLoadingButtonSaveAirlineTicketInfo = true;
-      this.updateRequestBooking(payload).then((r) => {
-        // Mở popup cập nhật số vé
+      this.updateRequestBooking(payload).then((result) => {
         this.isLoadingButtonSaveAirlineTicketInfo = false;
-
         this.isVisibleAirlineTicketInfo = false;
-        this.getListData();
-        this.isVisiblePopupUpdateNumberTicket = this.signalOpenPopupUpdateNumberTicket;
         this.isSetSinalUpdateStatusRequestBooking = true;
-        if (this.isSendEmailToPassengerToConfirmFlightTicket) {
-          this.sendEmailToPassengerToConfirmFlightTicket(this.itemBookingRequest.id);
+        // Mở popup cập nhật số vé
+        switch (this.newStatus) {
+          case this.BookingRequestStatusEnum.ReserveSeat:
+            this.ReserveSeatRequestBookingById(this.itemBookingRequest.id).then((result) => {
+              this.getListData();
+              if (result) {
+                // this.isVisiblePopupUpdateNumberTicket = this.signalOpenPopupUpdateNumberTicket;
+                // this.isVisiblePopupUpdateNumberTicket = false;
+                this.sendEmailToPassengerToConfirmFlightTicket(this.itemBookingRequest.id);
+                // if (this.isSendEmailToPassengerToConfirmFlightTicket) {
+                //   this.sendEmailToPassengerToConfirmFlightTicket(this.itemBookingRequest.id);
+                // }
+              } else {
+              }
+            }).catch((error) => {
+              this.getListData();
+            });
+            break;
+
+          case this.BookingRequestStatusEnum.AdjustTicket:
+            this.AdjuctTicketRequestBookingById(this.itemBookingRequest.id).then((r) => {
+              this.getListData();
+              this.sendEmailToPassengerToConfirmFlightTicket(this.itemBookingRequest.id).then(() => {
+                // this.isSendEmailToPassengerToConfirmFlightTicket = false;
+              });
+              // if (this.isSendEmailToPassengerToConfirmFlightTicket) {
+              //   this.sendEmailToPassengerToConfirmFlightTicket(this.itemBookingRequest.id).then(() => {
+              //     // this.isSendEmailToPassengerToConfirmFlightTicket = false;
+              //   });
+              // }
+            }).catch((error) => {
+              this.getListData();
+            });;
+            break;
+
+          case this.BookingRequestStatusEnum.IssuedTicket:
+            this.isVisiblePopupUpdateNumberTicket = true;
+            break;
+          default:
+            this.getListData();
         }
-      });
+      }).catch((error) => {
+        this.getListData();
+      });;
 
     } else {
       // Đánh dấu tất cả các trường là đã được chạm (touched) để hiển thị lỗi
@@ -896,10 +927,10 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
             this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
           } else {
             this.notificationService.showNotification(Constant.SUCCESS, "Cập nhật vé thành công");
-            return resolve(true);
+            resolve(true);
           }
         }, error => {
-
+          reject(error);
         });
     });
 
@@ -907,6 +938,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
 
   handleCancelArilineTicketPopup() {
     this.isVisibleAirlineTicketInfo = false;
+    this.getListData();
   }
 
   addItemPassenger(input: HTMLInputElement): void {
@@ -933,44 +965,40 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
 
   handleCancelPopupUpdateNumberTicket() {
     this.isVisiblePopupUpdateNumberTicket = false;
-    this.signalOpenPopupUpdateNumberTicket = false;
-
+    // this.signalOpenPopupUpdateNumberTicket = false;
+    this.getListData();
   }
 
   handleSavelPopupUpdateNumberTicket() {
     return new Promise((resolve, reject) => {
       const passengersUpdatePayload = this.itemBookingRequest.passengers;
-      this.generalService.updatePassengersRequestBooking(passengersUpdatePayload).subscribe(
+      this.generalService.updatePassengerRequestBookings({ passengers: passengersUpdatePayload }).subscribe(
         {
           next: (res: any) => {
             if (res.isValid) {
               this.notificationService.showNotification(Constant.SUCCESS, `Cập nhật số vé khách hàng thành công!`);
               this.isVisiblePopupUpdateNumberTicket = false;
               switch (this.newStatus) {
-                case this.BookingRequestStatusEnum.AdjustTicket:
-                  this.AdjuctTicketRequestBookingById(this.itemBookingRequest.id).then((r) => {
-                    if (this.isSendEmailToPassengerToConfirmFlightTicket) {
-                      this.sendEmailToPassengerToConfirmFlightTicket(this.itemBookingRequest.id).then(() => {
-                        this.isSendEmailToPassengerToConfirmFlightTicket = false;
-                      });
-                    }
-                  });
-                  break;
-
                 case this.BookingRequestStatusEnum.IssuedTicket:
                   this.IssuedTicketRequestBookingById(this.itemBookingRequest.id).then((r) => {
-                    if (this.isSendEmailToPassengerToConfirmSuccessIssuedTicket) {
-                      this.sendEmailToPassengerToConfirmSuccessIssuedTicket(this.itemBookingRequest.id).then((r) => {
-                        this.isSendEmailToPassengerToConfirmSuccessIssuedTicket = false;
-                      });
-                    }
+                    this.getListData();
+                    this.sendEmailToPassengerToConfirmSuccessIssuedTicket(this.itemBookingRequest.id).then((r) => {
+                    });
+                    // if (this.isSendEmailToPassengerToConfirmSuccessIssuedTicket) {
+                    //   this.sendEmailToPassengerToConfirmSuccessIssuedTicket(this.itemBookingRequest.id).then((r) => {
+                    //     this.isSendEmailToPassengerToConfirmSuccessIssuedTicket = false;
+                    //   });
+                    // }
+                  }).catch((err) => {
+                    this.getListData();
                   });
+
                   break;
 
                 default:
+                  this.getListData();
                   break;
               }
-              this.getListData();
               resolve(true);
             } else {
               if (res.errors && res.errors.length > 0) {
@@ -978,12 +1006,13 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
                   this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
                 });
               } else {
-                this.notificationService.showNotification(Constant.ERROR, 'Cập nhật số vé khách hàng không thành công.');
+                this.notificationService.showNotification(Constant.ERROR, 'Cập nhật số vé khách hàng không thành công');
               }
             }
           },
           error: (err: any) => {
             this.notificationService.showNotification(Constant.ERROR, 'Cập nhật số vé khách hàng thật bại do lỗi hệ thống');
+            reject(err);
           },
           complete: () => {
 
@@ -995,7 +1024,36 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     });
   }
 
-
+  ReserveSeatRequestBookingById(id: number) {
+    return new Promise((resolve, reject) => {
+      this.generalService.updateStatusRequestBooking(id, this.BookingRequestStatusEnum.ReserveSeat).subscribe(
+        {
+          next: (res: any) => {
+            if (res.isValid) {
+              this.notificationService.showNotification(Constant.SUCCESS, `Giữ chỗ thành công!`);
+              resolve(true);
+            } else {
+              if (res.errors && res.errors.length > 0) {
+                res.errors.forEach((el: any) => {
+                  this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+                });
+              } else {
+                this.notificationService.showNotification(Constant.ERROR, 'Giữ chỗ không thành công.');
+              }
+              resolve(false);
+            }
+          },
+          error: (err: any) => {
+            this.notificationService.showNotification(Constant.ERROR, 'Giữ chỗ thất bại do lỗi hệ thống');
+            reject(err);
+          },
+          complete: () => {
+          }
+        }
+      ).add(() => {
+      });
+    });
+  }
   AdjuctTicketRequestBookingById(id: number) {
     return new Promise((resolve, reject) => {
       this.generalService.updateStatusRequestBooking(id, this.BookingRequestStatusEnum.AdjustTicket).subscribe(
@@ -1012,10 +1070,12 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
               } else {
                 this.notificationService.showNotification(Constant.ERROR, 'Điều chỉnh vé không thành công.');
               }
+              resolve(false);
             }
           },
           error: (err: any) => {
             this.notificationService.showNotification(Constant.ERROR, 'Điều chỉnh vé thất bại do lỗi hệ thống');
+            reject(err);
           },
           complete: () => {
           }
@@ -1042,23 +1102,18 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
               } else {
                 this.notificationService.showNotification(Constant.ERROR, 'Xuất vé không thành công.');
               }
+              resolve(false);
             }
           },
           error: (err: any) => {
             this.notificationService.showNotification(Constant.ERROR, 'Xuất vé thất bại do lỗi hệ thống');
+            reject(err);
           },
           complete: () => {
           }
         }
       ).add(() => {
       });
-      // if (this.itemBookingRequest.status == this.BookingRequestStatusEnum.ReceivedTicket) {
-
-      // } else if (this.itemBookingRequest.status == this.BookingRequestStatusEnum.IssuedTicket) {
-      //   this.notificationService.showNotification(Constant.SUCCESS, `Vé ${this.itemBookingRequest.bookingCode} đã được xuất.`);
-      // } else {
-      //   this.notificationService.showNotification(Constant.ERROR, 'Không thể xuất vé, vui lòng kiểm tra lại thông tin');
-      // }
     });
 
   }
@@ -1069,8 +1124,8 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
         {
           next: (res: any) => {
             if (res.isValid) {
-              resolve(true);
               this.notificationService.showNotification(Constant.ERROR, 'Đã gửi email thống báo xuất vé đến khách hàng');
+              resolve(true);
             } else {
               if (res.errors && res.errors.length > 0) {
                 res.errors.forEach((el: any) => {
@@ -1079,10 +1134,12 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
               } else {
                 this.notificationService.showNotification(Constant.ERROR, 'Gửi email thống báo xuất vé đến khách hàng không thành công');
               }
+              resolve(false);
             }
           },
           error: (err: any) => {
             this.notificationService.showNotification(Constant.ERROR, 'Gửi email thống báo xuất vé đến khách hàng thất bại do lỗi hệ thống');
+            reject(err);
           },
           complete: () => {
           }
@@ -1096,6 +1153,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
 
   handleCancelRequestBookingTicketPopup() {
     this.isVisiblePopupViewRequestBookingTicket = false;
+    this.getListData();
   }
 
   showPopupViewRequestBookingTicket(requestBooking: any) {
