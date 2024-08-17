@@ -976,55 +976,59 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   handleSavelPopupUpdateNumberTicket() {
     return new Promise((resolve, reject) => {
       const passengersUpdatePayload = this.itemBookingRequest.passengers;
-      this.generalService.updatePassengerRequestBookings({ passengers: passengersUpdatePayload }).subscribe(
-        {
-          next: (res: any) => {
-            if (res.isValid) {
-              this.notificationService.showNotification(Constant.SUCCESS, `Cập nhật số vé khách hàng thành công!`);
-              this.isVisiblePopupUpdateNumberTicket = false;
-              switch (this.newStatus) {
-                case this.BookingRequestStatusEnum.IssuedTicket:
-                  this.IssuedTicketRequestBookingById(this.itemBookingRequest.id).then((r) => {
-                    this.getListData();
-                    if (this.isSendEmailToPassengerToConfirmSuccessIssuedTicket) {
-                      this.sendEmailToPassengerToConfirmSuccessIssuedTicket(this.itemBookingRequest.id).then((result) => {
-                        if (result) {
-                          this.isSendEmailToPassengerToConfirmSuccessIssuedTicket = false;
-                        }
-                      });
-                    }
-                  }).catch((err) => {
-                    this.getListData();
-                  });
+      let findPassengerError = passengersUpdatePayload.find(passenger => !passenger.ticketNumber);
+      if (findPassengerError) {
+        this.notificationService.showNotification(Constant.ERROR, "Tồn tại trường số vé chưa nhập");
+      } else {
+        this.generalService.updatePassengerRequestBookings({ passengers: passengersUpdatePayload }).subscribe(
+          {
+            next: (res: any) => {
+              if (res.isValid) {
+                this.notificationService.showNotification(Constant.SUCCESS, `Cập nhật số vé khách hàng thành công!`);
+                this.isVisiblePopupUpdateNumberTicket = false;
+                switch (this.newStatus) {
+                  case this.BookingRequestStatusEnum.IssuedTicket:
+                    this.IssuedTicketRequestBookingById(this.itemBookingRequest.id).then((r) => {
+                      this.getListData();
+                      if (this.isSendEmailToPassengerToConfirmSuccessIssuedTicket) {
+                        this.sendEmailToPassengerToConfirmSuccessIssuedTicket(this.itemBookingRequest.id).then((result) => {
+                          if (result) {
+                            this.isSendEmailToPassengerToConfirmSuccessIssuedTicket = false;
+                          }
+                        });
+                      }
+                    }).catch((err) => {
+                      this.getListData();
+                    });
 
-                  break;
+                    break;
 
-                default:
-                  this.getListData();
-                  break;
-              }
-              resolve(true);
-            } else {
-              if (res.errors && res.errors.length > 0) {
-                res.errors.forEach((el: any) => {
-                  this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
-                });
+                  default:
+                    this.getListData();
+                    break;
+                }
+                resolve(true);
               } else {
-                this.notificationService.showNotification(Constant.ERROR, 'Cập nhật số vé khách hàng không thành công');
+                if (res.errors && res.errors.length > 0) {
+                  res.errors.forEach((el: any) => {
+                    this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+                  });
+                } else {
+                  this.notificationService.showNotification(Constant.ERROR, 'Cập nhật số vé khách hàng không thành công');
+                }
               }
+            },
+            error: (err: any) => {
+              this.notificationService.showNotification(Constant.ERROR, 'Cập nhật số vé khách hàng thật bại do lỗi hệ thống');
+              reject(err);
+            },
+            complete: () => {
+
             }
-          },
-          error: (err: any) => {
-            this.notificationService.showNotification(Constant.ERROR, 'Cập nhật số vé khách hàng thật bại do lỗi hệ thống');
-            reject(err);
-          },
-          complete: () => {
-
           }
-        }
-      ).add(() => {
-      });
-
+        ).add(() => {
+        });
+      }
     });
   }
 
