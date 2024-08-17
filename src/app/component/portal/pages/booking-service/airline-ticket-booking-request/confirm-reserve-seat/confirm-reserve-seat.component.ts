@@ -19,6 +19,7 @@ export class ConfirmReserveSeatComponent implements OnInit {
   isReservedSuccess: boolean = false;
   BookingRequestStatusEnum = AirlineTicketBookingRequestStatus
   errorMessenger: any;
+  successMessenger: any;
   constructor(private router: Router,
     private generalService: GeneralService,
     private notificationService: NotificationService,
@@ -26,6 +27,7 @@ export class ConfirmReserveSeatComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.successMessenger = `Mã đặt vé : ${this.requestBookingCurrent.bookingCode} đã được lưu lại trên hệ thống!`;
     const currentUrl = window.location.href;
     // Tạo một đối tượng URL từ URL hiện tại
     const url = new URL(currentUrl);
@@ -101,6 +103,7 @@ export class ConfirmReserveSeatComponent implements OnInit {
               if (res.isValid) {
                 this.notificationService.showNotification(Constant.SUCCESS, `Đã giữ vé thành công!`);
                 this.isReservedSuccess = true;
+                this.successMessenger = `Mã đặt vé : ${this.requestBookingCurrent.bookingCode} đã được lưu lại trên hệ thống!`;
                 resolve(true);
               } else {
                 if (res.errors && res.errors.length > 0) {
@@ -128,6 +131,7 @@ export class ConfirmReserveSeatComponent implements OnInit {
         });
       } else if (this.requestBookingCurrent.status == this.BookingRequestStatusEnum.ReceivedTicket) {
         this.notificationService.showNotification(Constant.SUCCESS, `Vé ${this.requestBookingCurrent.bookingCode} đã được xác nhận trước đó.`);
+        this.successMessenger = `Vé ${this.requestBookingCurrent.bookingCode} đã được xác nhận trước đó!`;
         this.isReservedSuccess = true;
       } else {
         this.notificationService.showNotification(Constant.ERROR, 'Không thể xác nhận giữ vé');
