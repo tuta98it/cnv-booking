@@ -625,6 +625,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   showPopupAirlineTicket(itemData: any, opPopupAirlineTicket: OptionAirlineTicketPopup) {
     this.isSetSinalUpdateStatusRequestBooking = false;
     this.itemBookingRequest = itemData;
+    this.newStatus = this.itemBookingRequest.status;
     this.isVisibleAirlineTicketInfo = true;
     this.optionAirlineTicketInfo = opPopupAirlineTicket;
 
@@ -693,6 +694,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
 
   showPopupUpdateNumberTicket(requestBooking: any) {
     this.itemBookingRequest = requestBooking;
+    this.newStatus = this.itemBookingRequest.status;
     this.isVisiblePopupUpdateNumberTicket = true;
     // this.isSendEmailToPassengerToConfirmFlightTicket = false;
     // this.isSendEmailToPassengerToConfirmSuccessIssuedTicket = false;
@@ -908,6 +910,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
         }
       }).catch((error) => {
         this.getListData();
+        this.isSetSinalUpdateStatusRequestBooking = true;
       });;
 
     } else {
@@ -1124,7 +1127,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
         {
           next: (res: any) => {
             if (res.isValid) {
-              this.notificationService.showNotification(Constant.ERROR, 'Đã gửi email thống báo xuất vé đến khách hàng');
+              this.notificationService.showNotification(Constant.SUCCESS, 'Đã gửi email thống báo xuất vé đến khách hàng');
               resolve(true);
             } else {
               if (res.errors && res.errors.length > 0) {

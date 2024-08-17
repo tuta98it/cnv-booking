@@ -78,7 +78,7 @@
           status.value == BookingRequestStatusEnum.SubmitRequest ||
           status.value == BookingRequestStatusEnum.ReserveSeat)">
       </nz-option>
-      <nz-option [nzLabel]="'Đã xác nhận giữ vé'" [nzValue]="BookingRequestStatusEnum.ReceivedTicket"
+      <nz-option [nzLabel]="'Đã xác nhận vé'" [nzValue]="BookingRequestStatusEnum.ReceivedTicket"
         *ngIf="(status.value == BookingRequestStatusEnum.ReceivedTicket)"></nz-option>
 
       <nz-option [nzLabel]="'Hết hạn giữ vé'" [nzValue]="BookingRequestStatusEnum.ExpiredTicket "
