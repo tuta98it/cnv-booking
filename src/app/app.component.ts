@@ -19,10 +19,5 @@ export class AppComponent implements OnInit, AfterViewChecked {
     this.cdRef.detectChanges();
   }
   ngOnInit(): void {
-    if (this.router.url === '/booking-service/airline-ticket-booking-request/confirm-reserve-seat') {
-      this.menuStateService.dispatch(false);
-    } else {
-      this.menuStateService.dispatch(true);
-    }
   }
 }

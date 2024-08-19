@@ -1,21 +1,21 @@
-import {Component, isDevMode, OnDestroy, OnInit} from '@angular/core';
-import {Title} from '@angular/platform-browser';
-import {FormBuilder, FormGroup} from '@angular/forms';
-import {GeneralService} from '../../../service/general-service';
-import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
-import {Constant} from '../../../shared/constants/constant.class';
-import {NotificationService} from '../../../service/notification.service';
-import {DatePipe} from '@angular/common';
-import {filter, map} from 'rxjs/operators';
-import {Subscription} from 'rxjs';
-import {Menu} from '../../../model/menu.class';
-import {ActionsSubject, Store} from '@ngrx/store';
+import { Component, isDevMode, OnDestroy, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { GeneralService } from '../../../service/general-service';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { Constant } from '../../../shared/constants/constant.class';
+import { NotificationService } from '../../../service/notification.service';
+import { DatePipe } from '@angular/common';
+import { filter, map } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
+import { Menu } from '../../../model/menu.class';
+import { ActionsSubject, Store } from '@ngrx/store';
 import * as fromAuth from '../../auth/redux/auth.reducer';
-import {MenuService} from '../../../service/menu.service';
-import {AuthService} from '../../../service/auth.service';
-import {TranslateService} from '@ngx-translate/core';
-import {AdminLayoutComponent} from '../../admin-layout/admin-layout.component';
-import {FileManagerService} from '../../../service/file-manager.service';
+import { MenuService } from '../../../service/menu.service';
+import { AuthService } from '../../../service/auth.service';
+import { TranslateService } from '@ngx-translate/core';
+import { AdminLayoutComponent } from '../../admin-layout/admin-layout.component';
+import { FileManagerService } from '../../../service/file-manager.service';
 import { UserType } from 'src/app/enums/user-type.enum';
 import { MenuStateService } from 'src/app/shared/app-state/menu-state.service';
 
@@ -26,7 +26,7 @@ import { MenuStateService } from 'src/app/shared/app-state/menu-state.service';
 })
 export class MasterPageComponent implements OnInit, OnDestroy {
   protected _menuSubscription: Subscription;
-  isShowMenu : boolean = true;
+  isShowMenu: boolean = true;
   userTypeEnum = UserType;
   static readonly ROUTE_DATA_PAGENAME = 'pagename';
   formSearch: FormGroup;
@@ -63,7 +63,7 @@ export class MasterPageComponent implements OnInit, OnDestroy {
   loading: boolean;
   datas: any[];
   size = 'small';
-  userInfo : any;
+  userInfo: any;
   selectionData: any;
   selectionPassword: any;
   isVisible = false;
@@ -120,7 +120,7 @@ export class MasterPageComponent implements OnInit, OnDestroy {
   ) {
     this._menuSubscription = this.menuState.subscribe((m: boolean) => {
       this.isShowMenu = m;
-  });
+    });
     this.formSearch = this.fb.group({
       text_search: [null]
     });
@@ -133,10 +133,10 @@ export class MasterPageComponent implements OnInit, OnDestroy {
     this.isVisiblePopupPhong = false;
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)).subscribe(event => {
-      // @ts-ignore
-      this.url = event.url;
-      // alert(this.url);
-    });
+        // @ts-ignore
+        this.url = event.url;
+        // alert(this.url);
+      });
     // this.getTinhThanh();
   }
 
@@ -146,6 +146,12 @@ export class MasterPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    if (this.router.url.includes('/booking-service/airline-ticket-booking-request/confirm-reserve-seat')) {
+      this.menuState.dispatch(false);
+    } else {
+      this.menuState.dispatch(true);
+    }
+
     this.selectionPassword = {};
     this.userInfo = JSON.parse(localStorage.getItem(Constant.USER_INFO));
     if (!this.userInfo) {
@@ -159,8 +165,8 @@ export class MasterPageComponent implements OnInit, OnDestroy {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd),
       map(() => this.getPageInfo())).subscribe((pageName: string) => {
-      this.pageName = this.translate.instant(pageName);
-    });
+        this.pageName = this.translate.instant(pageName);
+      });
     this.pageName = this.translate.instant(this.getPageInfo());
     this.authService.checkToken().subscribe(res => {
       if (res.ret && res.ret[0].code === 401) {
