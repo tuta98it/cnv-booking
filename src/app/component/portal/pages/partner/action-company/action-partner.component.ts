@@ -57,6 +57,9 @@ export class ActionPartnerComponent implements OnInit {
   settingUploadAuthorizationFile: UploadFileSetting;
   listUploadAuthorizationFile: NzUploadFile[];
   partnerIdInfoBaseReturn?: number;
+
+  listOfOption: string[] = ['a10', 'c12', 'c13'];
+  listOfSelectedValue = ['a10', 'c12'];
   constructor(
     private msg: NzMessageService,
     private activatedRoute: ActivatedRoute,

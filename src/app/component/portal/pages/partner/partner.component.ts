@@ -75,6 +75,10 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
   previewFileResult = false;
   curFileResults = [];
   newFileResults = [];
+
+  listOfOption: string[] = ['a10', 'c12', 'c13'];
+  listOfSelectedValue = ['a10', 'c12'];
+
   constructor(
     public translate: TranslateService,
     private modalService: NzModalService,
@@ -269,6 +273,7 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
   navigativePageCreatePartner() {
     this.router.navigate(['/companies/create']);
   }
+
   showModalAdd() {
     this.isVisibleAdd = true;
     this.submitted = false;

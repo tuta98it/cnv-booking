@@ -321,8 +321,8 @@
   </nz-sider>
   <nz-layout class="container-vhl">
     <nz-header *ngIf="isShowMenu">
-      <div class="col-md-2 text-right" >
-        <div class="dropdown-toggle header-icon" nz-dropdown [nzDropdownMenu]="menu"
+      <!-- <div class="col-md-2 text-right" >
+        <div class="dropdown-toggle header-icon" nz-dropdown [nzDropdownMenu]="menu" nzPlacement="bottomRight"
           style="margin-top: 8px;color: #333">
           <nz-avatar nzIcon="user" nzSize="small"></nz-avatar>
           <span class="d-none d-sm-inline-block" style="width: 5px;"></span>
@@ -330,6 +330,22 @@
         </div>
         <nz-dropdown-menu  #menu="nzDropdownMenu" style="width: 120px;margin-right: 10px">
           <ul nz-menu>
+            <li nz-menu-item (click)="logout()"><span class="fa fa-sign-out"></span>&nbsp;Đăng xuất</li>
+            <li nz-menu-item (click)="showModalUser()">Tài khoản</li>
+          </ul>
+        </nz-dropdown-menu>
+      </div> -->
+
+      <div>
+        <a nz-dropdown [nzDropdownMenu]="menu" style="color: black;">
+          <nz-avatar nzIcon="user" nzSize="small"></nz-avatar>
+          <span style="margin-left: 4px;">
+            {{username}}
+          </span>
+          <span nz-icon nzType="down"></span>
+        </a>
+        <nz-dropdown-menu #menu="nzDropdownMenu">
+          <ul nz-menu nzSelectable>
             <li nz-menu-item (click)="logout()"><span class="fa fa-sign-out"></span>&nbsp;Đăng xuất</li>
             <li nz-menu-item (click)="showModalUser()">Tài khoản</li>
           </ul>
