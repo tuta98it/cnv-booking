@@ -27,7 +27,7 @@ export class ConfirmReserveSeatComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.successMessenger = `Mã đặt vé : ${this.requestBookingCurrent.bookingCode} đã được lưu lại trên hệ thống!`;
+    this.successMessenger = ``;
     const currentUrl = window.location.href;
     // Tạo một đối tượng URL từ URL hiện tại
     const url = new URL(currentUrl);

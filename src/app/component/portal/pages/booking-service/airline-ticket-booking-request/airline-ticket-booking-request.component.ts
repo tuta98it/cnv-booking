@@ -127,7 +127,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     this.uploadHeader = {
       Authorization: 'Bearer ' + localStorage.getItem(Constant.TOKEN),
     };
-    this.uploadUrl = `${this.configService.getConfig().api.baseUrl}/Upload`;
+    this.uploadUrl = `${this.configService.getConfig().api.baseUrl}/Upload/UploadRequestBookingFile?RequestBookingId=null`;
     this.formAirlineTicketPopup = this.formBuilder.group({
       id: [null],
       typeTicket: new FormControl({ value: TypeAirlineTicket.OneWay, disabled: false }, Validators.required),
@@ -254,7 +254,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   }
 
   requiredIfRoundTrip(control: FormControl) {
-    return this.itemBookingRequest?.typeTicket == this.TypeAirlineTicketEnum.RoundTrip ? Validators.required(control) : null;
+    return this.itemBookingRequest?.typeTicket == TypeAirlineTicket.RoundTrip ? Validators.required(control) : null;
   }
   getUserInfo() {
     this.userInfor = JSON.parse(localStorage.getItem(Constant.USER_INFO));
@@ -509,8 +509,8 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
 
   handleChangeStatusByItem(status: any) {
     this.itemBookingRequest = status.data;
-    this.ticketRoundTrip = this.itemBookingRequest.typeTicket == this.TypeAirlineTicketEnum.RoundTrip
-    this.setFormRequestPartnerValue(this.itemBookingRequest);
+    this.ticketRoundTrip = this.itemBookingRequest.typeTicket == TypeAirlineTicket.RoundTrip
+    this.itemBookingRequest.status = status.value;
     this.newStatus = status.value;
     this.oldStatus = status.data.statusOld;
     let requestBookingId = status.data.id;
@@ -522,11 +522,13 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
         this.isSetSinalUpdateStatusRequestBooking = false;
 
         // this.sendEmailToPassengerToConfirmFlightTicket(requestBookingId);
-        this.isVisibleAirlineTicketInfo = true;
+        this.showPopupAirlineTicket(this.itemBookingRequest, this.OptionAirlineTicketInfoEnum.Update)
+
+
         // this.signalOpenPopupUpdateNumberTicket = false;
         // this.isSendEmailToPassengerToConfirmFlightTicket = true;
         // this.isSendEmailToPassengerToConfirmSuccessIssuedTicket = false;
-        this.optionAirlineTicketInfo = OptionAirlineTicketPopup.Update;
+
         this.getListData();
         break;
       case this.BookingRequestStatusEnum.ReceivedTicket:
@@ -538,8 +540,8 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
 
       case this.BookingRequestStatusEnum.AdjustTicket:
         //Mở popup Cập nhật thông tin vé
-        this.isVisibleAirlineTicketInfo = true;
-        this.optionAirlineTicketInfo = this.OptionAirlineTicketInfoEnum.Update;
+        this.showPopupAirlineTicket(this.itemBookingRequest, this.OptionAirlineTicketInfoEnum.Update)
+
         // this.signalOpenPopupUpdateNumberTicket = false;
         // this.isSendEmailToPassengerToConfirmFlightTicket = true;
         // this.isSendEmailToPassengerToConfirmSuccessIssuedTicket = false;
@@ -547,8 +549,8 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
 
       case this.BookingRequestStatusEnum.IssuedTicket:
         //Mở popup Cập nhật thông tin vé
-        this.isVisibleAirlineTicketInfo = true;
-        this.optionAirlineTicketInfo = this.OptionAirlineTicketInfoEnum.Update;
+        this.showPopupAirlineTicket(this.itemBookingRequest, this.OptionAirlineTicketInfoEnum.Update)
+
         // this.signalOpenPopupUpdateNumberTicket = true;
         // this.isSendEmailToPassengerToConfirmFlightTicket = false;
         this.isSendEmailToPassengerToConfirmSuccessIssuedTicket = true;
@@ -625,9 +627,8 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   showPopupAirlineTicket(itemData: any, opPopupAirlineTicket: OptionAirlineTicketPopup) {
     this.isSetSinalUpdateStatusRequestBooking = false;
     this.itemBookingRequest = itemData;
-    this.newStatus = this.itemBookingRequest.status;
     this.isVisibleAirlineTicketInfo = true;
-    this.ticketRoundTrip = this.itemBookingRequest.typeTicket == this.TypeAirlineTicketEnum.RoundTrip;
+    this.ticketRoundTrip = this.itemBookingRequest.typeTicket == TypeAirlineTicket.RoundTrip;
     this.optionAirlineTicketInfo = opPopupAirlineTicket;
 
     if (itemData.status == AirlineTicketBookingRequestStatus.ReserveSeat) {
@@ -678,7 +679,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
 
     });
 
-    this.ticketRoundTrip = itemData.typeTicket == this.TypeAirlineTicketEnum.RoundTrip
+    this.ticketRoundTrip = itemData.typeTicket == TypeAirlineTicket.RoundTrip
     // console.log("this.formAirlineTicketPopup : ", this.formAirlineTicketPopup.value);
     this.listFileIds = [];
     this.fileList = [];
@@ -730,6 +731,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
 
 
   handleUploadFileTicketBookingRequest2BeforSelect({ file, fileList }: NzUploadChangeParam): void {
+
     this.uploading = true;
     this.fileList.forEach((file: any) => {
       const formData = new FormData();
@@ -776,7 +778,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
 
   handleRemoveFileTicketBookingRequest = async (file: NzUploadFile): Promise<void> => {
     if (this.optionAirlineTicketInfo == this.OptionAirlineTicketInfoEnum.Update) {
-      const idFile = file.fileId;
+      const idFile = file.uid;
       if (idFile) {
         this.generalService.deleteRequestBookingFileByID(idFile).subscribe(
           {
@@ -1172,6 +1174,6 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   handleChangeTypeTicket(event: any) {
     let typeTicket = event;
     this.itemBookingRequest.typeTicket = typeTicket;
-    this.ticketRoundTrip = typeTicket == this.TypeAirlineTicketEnum.RoundTrip
+    this.ticketRoundTrip = typeTicket == TypeAirlineTicket.RoundTrip
   }
 }
