@@ -29,7 +29,7 @@ export class ConfirmReserveSeatComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.menuStateService.dispatch(false);
+    //this.menuStateService.dispatch(false);
     this.successMessenger = ``;
     const currentUrl = window.location.href;
     // Tạo một đối tượng URL từ URL hiện tại

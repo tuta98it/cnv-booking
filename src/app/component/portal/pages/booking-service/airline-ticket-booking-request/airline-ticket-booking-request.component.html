@@ -71,8 +71,10 @@
   <div *dxTemplate="let status of 'cellStatus'" style="display: flex;">
     <nz-select nzShowSearch nzMode="default" nzPlaceHolder="Trạng thái" style="width: 200px; margin-left: 0.5rem;"
       [(ngModel)]="status.value" (ngModelChange)="handleChangeStatusByItem(status)">
-      <nz-option [nzLabel]="'Gửi yêu cầu'" [nzValue]="BookingRequestStatusEnum.SubmitRequest"
-        *ngIf="(status.value == BookingRequestStatusEnum.SubmitRequest)"></nz-option>
+      <nz-option [nzLabel]="'Gửi yêu cầu'" [nzValue]="BookingRequestStatusEnum.SubmitRequest" *ngIf="(
+        status.value == BookingRequestStatusEnum.SubmitRequest ||
+        status.value == BookingRequestStatusEnum.ReserveSeat
+        )"></nz-option>
 
       <nz-option [nzLabel]="'Giữ chỗ'" [nzValue]="BookingRequestStatusEnum.ReserveSeat" *ngIf="(
           status.value == BookingRequestStatusEnum.SubmitRequest ||
@@ -917,7 +919,7 @@
             </div>
             <div nz-col class="gutter-row" nzSpan="6">
               <div class="inner-box">
-                <label for="" style="font-weight: 600;">Số lượng trẻ em  2 - 11
+                <label for="" style="font-weight: 600;">Số lượng trẻ em 2 - 11
                   tuổi</label>
                 <div>
                   <span>{{ itemBookingRequest.chd }}</span>

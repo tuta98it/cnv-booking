@@ -516,7 +516,9 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     let requestBookingId = status.data.id;
     switch (this.newStatus) {
       case this.BookingRequestStatusEnum.SubmitRequest:
-
+        this.updateStatusRequestBooking(this.itemBookingRequest.id, this.BookingRequestStatusEnum.SubmitRequest).then((r) => {
+          this.getListData();
+        });
         break;
       case this.BookingRequestStatusEnum.ReserveSeat:
         this.isSetSinalUpdateStatusRequestBooking = false;
