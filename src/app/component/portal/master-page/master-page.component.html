@@ -29,7 +29,7 @@
 <!-- class="container" class="header_menu"  -->
 
 <nz-layout class="layout-vhl">
-  <nz-sider class="menu-vhl" nzCollapsible nzWidth="300px">
+  <nz-sider *ngIf="isShowMenu" class="menu-vhl" nzCollapsible nzWidth="300px">
     <div class="logo">
       <img class="logo-image-vhl" src="/assets/image/logo-vhl-green.svg" style="width: auto; height: 40px;">
       <!-- <span nz-icon nzType="setting" class="icon-vhl" nzTheme="outline" [nzSpin]="false"></span> -->

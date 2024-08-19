@@ -17,6 +17,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {AdminLayoutComponent} from '../../admin-layout/admin-layout.component';
 import {FileManagerService} from '../../../service/file-manager.service';
 import { UserType } from 'src/app/enums/user-type.enum';
+import { MenuStateService } from 'src/app/shared/app-state/menu-state.service';
 
 @Component({
   selector: 'app-master-page',
@@ -24,6 +25,8 @@ import { UserType } from 'src/app/enums/user-type.enum';
   styleUrls: ['./master-page.component.scss']
 })
 export class MasterPageComponent implements OnInit, OnDestroy {
+  protected _menuSubscription: Subscription;
+  isShowMenu : boolean = true;
   userTypeEnum = UserType;
   static readonly ROUTE_DATA_PAGENAME = 'pagename';
   formSearch: FormGroup;
@@ -112,8 +115,12 @@ export class MasterPageComponent implements OnInit, OnDestroy {
     private actionsSubject$: ActionsSubject,
     private menuService: MenuService,
     private authService: AuthService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private menuState: MenuStateService,
   ) {
+    this._menuSubscription = this.menuState.subscribe((m: boolean) => {
+      this.isShowMenu = m;
+  });
     this.formSearch = this.fb.group({
       text_search: [null]
     });

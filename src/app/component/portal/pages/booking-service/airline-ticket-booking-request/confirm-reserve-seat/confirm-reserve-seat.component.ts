@@ -5,6 +5,7 @@ import { GeneralService } from 'src/app/service/general-service';
 import { NotificationService } from 'src/app/service/notification.service';
 import { Constant } from 'src/app/shared/constants/constant.class';
 import { FlightUtils } from 'src/app/shared/utils/flight-utils.class';
+import { MenuStateService } from 'src/app/shared/app-state/menu-state.service';
 
 @Component({
   selector: 'confirm-reserve-seat',
@@ -24,9 +25,11 @@ export class ConfirmReserveSeatComponent implements OnInit {
     private generalService: GeneralService,
     private notificationService: NotificationService,
     public flightUtils: FlightUtils,
+    private menuStateService: MenuStateService
   ) { }
 
   ngOnInit(): void {
+    this.menuStateService.dispatch(false);
     this.successMessenger = ``;
     const currentUrl = window.location.href;
     // Tạo một đối tượng URL từ URL hiện tại
