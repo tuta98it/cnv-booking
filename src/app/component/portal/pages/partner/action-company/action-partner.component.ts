@@ -41,7 +41,7 @@ export class ActionPartnerComponent implements OnInit {
   PartnerStatus = PartnerStatus;
   PARTNER_STATUS_OPTIONS = PARTNER_STATUS_OPTIONS;
   AllowDebtPartner = AllowDebtPartner;
-  selectedMenu = MenuCreatePartner.DebtManagement;
+  selectedMenu = MenuCreatePartner.ContractManagement;
 
   actionPartnerVHL: any;
   settingTableListEmployeesForm: FormGroup;

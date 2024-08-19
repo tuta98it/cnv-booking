@@ -157,8 +157,13 @@
                       Chủ doanh nghiệp
                     </div>
                     <div nz-col class="gutter-row" [nzSpan]="12">
-                      <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
-                        placeholder="Nhập chủ doanh nghiệp" formControlName='name'>
+                      <!-- <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
+                        placeholder="Nhập chủ doanh nghiệp" formControlName='name'> -->
+
+                      <nz-select style="border-radius: 4px;" nzSize="default" nzMode="default"
+                        nzPlaceHolder="Nhập chủ doanh nghiệp" nzAllowClear nzShowSearch>
+                        <nz-option *ngFor="let item of listOfOption" [nzLabel]="item" [nzValue]="item"></nz-option>
+                      </nz-select>
                     </div>
                   </div>
 
@@ -253,14 +258,11 @@
                         <span style="color: tomato; margin-left: 4px;">*</span>
                       </div>
                       <div nz-col class="gutter-row" [nzSpan]="12">
-                        <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
-                          placeholder="Tìm người phụ trách">
-
-                        <nz-select [nzMaxTagCount]="3" [nzMaxTagPlaceholder]="tagPlaceHolder" nzMode="multiple"
-                          nzPlaceHolder="Please select" [(ngModel)]="listOfSelectedValue">
+                        <nz-select style="border-radius: 4px;" nzSize="default" nzMode="default"
+                          nzPlaceHolder="Nhập người phụ trách" nzAllowClear nzShowSearch
+                          [(ngModel)]="listOfSelectedValue">
                           <nz-option *ngFor="let item of listOfOption" [nzLabel]="item" [nzValue]="item"></nz-option>
                         </nz-select>
-                        <ng-template #tagPlaceHolder let-selectedList>và {{ selectedList.length }} người nữa ...</ng-template>
                       </div>
                     </div>
 
@@ -310,8 +312,8 @@
                         <span style="color: tomato; margin-left: 4px;">*</span>
                       </div>
                       <div nz-col class="gutter-row" [nzSpan]="12">
-                        <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
-                          placeholder="Chọn thời gian bắt đầu">
+                        <nz-date-picker [nzMode]="'date'" nzSize="default" style="border-radius: 4px; width: 100%;" nzFormat="dd/MM/yyyy"
+                          nzPlaceHolder="Chọn thời gian bắt đầu"></nz-date-picker>
                       </div>
                     </div>
 
@@ -322,8 +324,8 @@
                         <span style="color: tomato; margin-left: 4px;">*</span>
                       </div>
                       <div nz-col class="gutter-row" [nzSpan]="12">
-                        <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
-                          placeholder="Chọn thời gian kết thúc">
+                        <nz-date-picker [nzMode]="'date'" nzSize="default" style="border-radius: 4px; width: 100%;" nzFormat="dd/MM/yyyy"
+                          nzPlaceHolder="Chọn thời gian kết thúc"></nz-date-picker>
                       </div>
                     </div>
 
