@@ -1,14 +1,14 @@
 <!-- nzSubTitle="Khách hàng : {{requestBookingCurrent.userIdCreatedNavigation.fullname}}, số hiệu chuyến bay : {{requestBookingCurrent?.flightNumber ? requestBookingCurrent?.flightNumber : 'chưa xác định'}}, hành trình đi: {{requestBookingCurrent.tripItineraryDeparture}}, hãng hàng không : {{requestBookingCurrent.airlineName}}" -->
+
 <nz-result *ngIf="isReservedSuccess" nzStatus="success" nzTitle="Giữ vé thành công!"
-nzSubTitle="{{ successMessenger }}">
+  nzSubTitle="{{ successMessenger }}">
   <!-- <div nz-result-extra>
     <button nz-button nzType="primary">Go Console</button>
     <button nz-button>Buy Again</button>
   </div> -->
 </nz-result>
 
-<nz-result *ngIf="!isReservedSuccess" nzTitle="Giữ vé thất bại!" nzStatus="error"
-  nzSubTitle="{{errorMessenger}}">
+<nz-result *ngIf="!isReservedSuccess" nzTitle="Giữ vé thất bại!" nzStatus="error" nzSubTitle="{{errorMessenger}}">
   <!-- <div nz-result-content>
     <div class="desc">
       <h4 nz-title>The content you submitted has the following error:</h4>
