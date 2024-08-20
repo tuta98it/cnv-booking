@@ -254,6 +254,8 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   }
 
   requiredIfRoundTrip(control: FormControl) {
+    console.log("this.itemBookingRequest?.typeTicket : ", this.itemBookingRequest?.typeTicket);
+
     return this.itemBookingRequest?.typeTicket == TypeAirlineTicket.RoundTrip ? Validators.required(control) : null;
   }
   getUserInfo() {
@@ -1176,6 +1178,16 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   handleChangeTypeTicket(event: any) {
     let typeTicket = event;
     this.itemBookingRequest.typeTicket = typeTicket;
+
+    // Nếu cần kiểm tra lại tính hợp lệ của form sau khi thay đổi loại vé
+    this.formAirlineTicketPopup.updateValueAndValidity();
+    // Hoặc cập nhật lại giá trị và tính hợp lệ của từng control cụ thể
+    this.formAirlineTicketPopup.get('airlineCodeReturn')?.updateValueAndValidity();
+    this.formAirlineTicketPopup.get('reservationCodeReturn')?.updateValueAndValidity();
+    this.formAirlineTicketPopup.get('flightTimeReturn')?.updateValueAndValidity();
+    this.formAirlineTicketPopup.get('flightNumberReturn')?.updateValueAndValidity();
+    this.formAirlineTicketPopup.get('ticketHoldExpiryDateReturn')?.updateValueAndValidity();
+    this.formAirlineTicketPopup.get('ticketPriceReturn')?.updateValueAndValidity();
     this.ticketRoundTrip = typeTicket == TypeAirlineTicket.RoundTrip
   }
 }

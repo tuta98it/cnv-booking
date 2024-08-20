@@ -138,7 +138,7 @@
     cssClass="text-center vertical-align-middle"></dxi-column>
 
   <dxi-column caption="Thao tác" [width]="200" cellTemplate="cellBtnTemplate"
-    cssClass="text-center vertical-align-middle"></dxi-column>
+    cssClass="text-center vertical-align-middle" [fixed]="true" fixedPosition="right"></dxi-column>
   <div *dxTemplate="let item of 'cellBtnTemplate'" style="display: flex; justify-content: space-evenly;">
 
     <button title="Xem thông tin yêu cầu" nz-button nzSize="small" nzType="default"
