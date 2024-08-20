@@ -154,8 +154,10 @@
     </button>
 
     <button *ngIf="
-    (item.data.status == BookingRequestStatusEnum.IssuedTicket)" title="Xem thông tin vé đặt" nz-button nzSize="small"
-      nzType="default" (click)="showPopupAirlineTicket(item.data, OptionAirlineTicketInfoEnum.View)">
+    (item.data.status == BookingRequestStatusEnum.IssuedTicket ||
+      item.data.status == BookingRequestStatusEnum.ExpiredTicket
+    )" title="Xem thông tin vé đặt" nz-button nzSize="small" nzType="default"
+      (click)="showPopupAirlineTicket(item.data, OptionAirlineTicketInfoEnum.View)">
       <span class="fa fa-ticket-alt fa-fw"></span>
     </button>
 
