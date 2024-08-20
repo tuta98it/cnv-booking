@@ -254,8 +254,6 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   }
 
   requiredIfRoundTrip(control: FormControl) {
-    console.log("this.itemBookingRequest?.typeTicket : ", this.itemBookingRequest?.typeTicket);
-
     return this.itemBookingRequest?.typeTicket == TypeAirlineTicket.RoundTrip ? Validators.required(control) : null;
   }
   getUserInfo() {
