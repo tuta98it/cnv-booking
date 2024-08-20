@@ -80,10 +80,11 @@
           status.value == BookingRequestStatusEnum.SubmitRequest ||
           status.value == BookingRequestStatusEnum.ReserveSeat)">
       </nz-option>
+
       <nz-option [nzLabel]="'Đã xác nhận vé'" [nzValue]="BookingRequestStatusEnum.ReceivedTicket"
         *ngIf="(status.value == BookingRequestStatusEnum.ReceivedTicket)"></nz-option>
 
-      <nz-option [nzLabel]="'Hết hạn giữ vé'" [nzValue]="BookingRequestStatusEnum.ExpiredTicket "
+      <nz-option [nzLabel]="'Hết hạn giữ vé'" [nzValue]="BookingRequestStatusEnum.ExpiredTicket"
         *ngIf="(status.value == BookingRequestStatusEnum.ExpiredTicket)"></nz-option>
 
       <nz-option [nzLabel]="'Điều chỉnh vé'" [nzValue]="BookingRequestStatusEnum.AdjustTicket" *ngIf="(
@@ -163,11 +164,11 @@
       <span class="fa fa-ticket-alt fa-fw"></span>
     </button>
 
-    <button *ngIf="
+    <!-- <button *ngIf="
     (item.data.status == BookingRequestStatusEnum.IssuedTicket)" title="Cập nhật thông tin số vé" nz-button
       nzSize="small" nzType="default" (click)="showPopupUpdateNumberTicket(item.data)">
       <span class="fa fa-table fa-fw"></span>
-    </button>
+    </button> -->
 
     <button title="Lịch sử" nz-button nzSize="small" nzType="default"
       (click)="previewPopupRequestBookingHistory(item.data)" [nzLoading]="item.data.isLoadingRequestBookingHistory">

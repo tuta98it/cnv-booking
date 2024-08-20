@@ -162,7 +162,7 @@
 
                       <nz-select style="border-radius: 4px;" nzSize="default" nzMode="default"
                         nzPlaceHolder="Nhập chủ doanh nghiệp" nzAllowClear nzShowSearch>
-                        <nz-option *ngFor="let item of listOfOption" [nzLabel]="item" [nzValue]="item"></nz-option>
+                        <nz-option *ngFor="let item of []" [nzLabel]="item" [nzValue]="item"></nz-option>
                       </nz-select>
                     </div>
                   </div>
@@ -259,8 +259,7 @@
                       </div>
                       <div nz-col class="gutter-row" [nzSpan]="12">
                         <nz-select style="border-radius: 4px;" nzSize="default" nzMode="default"
-                          nzPlaceHolder="Nhập người phụ trách" nzAllowClear nzShowSearch
-                          [(ngModel)]="listOfSelectedValue">
+                          nzPlaceHolder="Nhập người phụ trách" nzAllowClear nzShowSearch>
                           <nz-option *ngFor="let item of listOfOption" [nzLabel]="item" [nzValue]="item"></nz-option>
                         </nz-select>
                       </div>
@@ -312,8 +311,8 @@
                         <span style="color: tomato; margin-left: 4px;">*</span>
                       </div>
                       <div nz-col class="gutter-row" [nzSpan]="12">
-                        <nz-date-picker [nzMode]="'date'" nzSize="default" style="border-radius: 4px; width: 100%;" nzFormat="dd/MM/yyyy"
-                          nzPlaceHolder="Chọn thời gian bắt đầu"></nz-date-picker>
+                        <nz-date-picker [nzMode]="'date'" nzSize="default" style="border-radius: 4px; width: 100%;"
+                          nzFormat="dd/MM/yyyy" nzPlaceHolder="Chọn thời gian bắt đầu"></nz-date-picker>
                       </div>
                     </div>
 
@@ -324,8 +323,8 @@
                         <span style="color: tomato; margin-left: 4px;">*</span>
                       </div>
                       <div nz-col class="gutter-row" [nzSpan]="12">
-                        <nz-date-picker [nzMode]="'date'" nzSize="default" style="border-radius: 4px; width: 100%;" nzFormat="dd/MM/yyyy"
-                          nzPlaceHolder="Chọn thời gian kết thúc"></nz-date-picker>
+                        <nz-date-picker [nzMode]="'date'" nzSize="default" style="border-radius: 4px; width: 100%;"
+                          nzFormat="dd/MM/yyyy" nzPlaceHolder="Chọn thời gian kết thúc"></nz-date-picker>
                       </div>
                     </div>
 
@@ -347,9 +346,18 @@
                         Thời gian thanh toán
                         <span style="color: tomato; margin-left: 4px;">*</span>
                       </div>
-                      <div nz-col class="gutter-row" [nzSpan]="12">
-                        <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
-                          placeholder="Nhập Thời gian thanh toán">
+                      <div nz-col class="gutter-row" [nzSpan]="6">
+                        <nz-select [ngModel]="temp" (ngModelChange)="changeValuePaymentPeriod($event)" nzAllowClear nzPlaceHolder="Chọn kỳ thanh toán">
+                          <nz-option *ngFor="let op of PAYMENT_PERIOD_VHL_OPTIONS" nzLabel="{{op.label}}"
+                          [nzValue]="op.value" ></nz-option>
+                        </nz-select>
+                      </div>
+
+                      <div nz-col class="gutter-row" [nzSpan]="6">
+                        <nz-select nzPlaceHolder="Chọn ngày trong kỳ" nzAllowClear nzShowSearch>
+                          <nz-option *ngFor="let op of PAYMENT_PERIOD_DAYS_OPTIONS" nzLabel="{{op.label}}"
+                          [nzValue]="op.value"></nz-option>
+                        </nz-select>
                       </div>
                     </div>
 
@@ -384,8 +392,9 @@
                         <span style="color: tomato; margin-left: 4px;">*</span>
                       </div>
                       <div nz-col class="gutter-row" [nzSpan]="12">
-                        <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
-                          placeholder="Nhập dịch vụ đăng kí">
+                        <nz-checkbox-group [(ngModel)]="checkOptionsBusinessServiceVHL"
+                          (ngModelChange)="log(checkOptionsBusinessServiceVHL)" [ngModelOptions]="
+              {standalone: true}"></nz-checkbox-group>
                       </div>
                     </div>
                   </div>

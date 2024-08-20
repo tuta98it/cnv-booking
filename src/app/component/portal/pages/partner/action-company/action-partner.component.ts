@@ -15,6 +15,9 @@ import { TypeOfDocument } from 'src/app/enums/type-of-document.enum';
 import { Constant } from 'src/app/shared/constants/constant.class';
 import { GeneralService } from './../../../../../service/general-service';
 import { NotificationService } from 'src/app/service/notification.service';
+import { BusinessServiceType } from 'src/app/enums/Business-service-type';
+import { PaymentPeriod, PAYMENT_PERIOD_VHL_OPTIONS, PAYMENT_PERIOD_FULL_OPTIONS } from 'src/app/enums/payment-period.enum';
+import { Weekdays, WEEKDAYS_OPTIONS } from 'src/app/enums/weekdays.enum';
 
 interface ItemData {
   name: string;
@@ -34,15 +37,18 @@ type TableScroll = 'unset' | 'scroll' | 'fixed';
   styleUrls: ['./action-partner.component.scss']
 })
 export class ActionPartnerComponent implements OnInit {
-
-
   MenuCreatePartner = MenuCreatePartner;
   MENU_CREATE_PARTNER_OPTION = MENU_CREATE_PARTNER_OPTION;
   PartnerStatus = PartnerStatus;
   PARTNER_STATUS_OPTIONS = PARTNER_STATUS_OPTIONS;
   AllowDebtPartner = AllowDebtPartner;
   selectedMenu = MenuCreatePartner.ContractManagement;
-
+  PaymentPeriod = PaymentPeriod;
+  PAYMENT_PERIOD_VHL_OPTIONS = PAYMENT_PERIOD_VHL_OPTIONS;
+  PAYMENT_PERIOD_FULL_OPTIONS = PAYMENT_PERIOD_FULL_OPTIONS;
+  Weekdays = Weekdays;
+  WEEKDAYS_OPTIONS = WEEKDAYS_OPTIONS;
+  PAYMENT_PERIOD_DAYS_OPTIONS = [];
   actionPartnerVHL: any;
   settingTableListEmployeesForm: FormGroup;
   allChecked = false;
@@ -60,6 +66,12 @@ export class ActionPartnerComponent implements OnInit {
 
   listOfOption: string[] = ['a10', 'c12', 'c13'];
   listOfSelectedValue = ['a10', 'c12'];
+
+  checkOptionsBusinessServiceVHL = [
+    { label: 'Dịch vụ vé máy bay', value: BusinessServiceType.AirlineTicketBookingService, disabled: false, checked: true },
+    { label: 'Dich vụ đặt khách sạn', value: BusinessServiceType.HotelBookingService, disabled: false, checked: false },
+  ];
+temp: any;
   constructor(
     private msg: NzMessageService,
     private activatedRoute: ActivatedRoute,
@@ -275,5 +287,26 @@ export class ActionPartnerComponent implements OnInit {
     console.log("valueSave: ", valueSave);
     console.log("listFilePartnerIds: ", listFilePartnerIds);
     // valueSave = [...valueSave, filePartnerIds: listFilePartnerIds];
+  }
+
+  log(value: object[]): void {
+    console.log(value);
+  }
+
+  changeValuePaymentPeriod(value: any) {
+    console.log("value:", value);
+
+    switch (value) {
+      case PaymentPeriod.WEEK:
+        this.PAYMENT_PERIOD_DAYS_OPTIONS = WEEKDAYS_OPTIONS;
+        break;
+
+      case PaymentPeriod.MONTH:
+        this.PARTNER_STATUS_OPTIONS = [];
+        break;
+
+      default:
+        break;
+    }
   }
 }
