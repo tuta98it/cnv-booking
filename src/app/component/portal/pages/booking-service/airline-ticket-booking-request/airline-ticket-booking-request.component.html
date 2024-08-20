@@ -122,19 +122,19 @@
     </container-element> -->
   </div>
 
-  <dxi-column caption="Chi phí vé" [width]="150" dataField="ticketPrice" [format]="formatCurrencyVND"
+  <dxi-column caption="Chi phí vé" [width]="150" dataField="ticketPriceTotal" [format]="formatCurrencyVND"
     cssClass="text-center  vertical-align-middle"></dxi-column>
 
-  <dxi-column caption="Chi phí hoàn vé" [width]="150" dataField="refundFee" [format]="formatCurrencyVND"
+  <dxi-column caption="Chi phí hoàn vé" [width]="150" dataField="refundFeeTotal" [format]="formatCurrencyVND"
     cssClass="text-center vertical-align-middle"></dxi-column>
 
-  <dxi-column caption="Chi phí huỷ vé" [width]="150" dataField="cancelFee" [format]="formatCurrencyVND"
+  <dxi-column caption="Chi phí huỷ vé" [width]="150" dataField="cancelFeeTotal" [format]="formatCurrencyVND"
     cssClass="text-center vertical-align-middle"></dxi-column>
 
-  <dxi-column caption="Chi phí đổi vé" [width]="150" dataField="changeFee" [format]="formatCurrencyVND"
+  <dxi-column caption="Chi phí đổi vé" [width]="150" dataField="changeFeeTotal" [format]="formatCurrencyVND"
     cssClass="text-center vertical-align-middle"></dxi-column>
 
-  <dxi-column caption="Chi phí thêm hành lý" [width]="200" dataField="baggageFee" [format]="formatCurrencyVND"
+  <dxi-column caption="Chi phí thêm hành lý" [width]="200" dataField="baggageFeeTotal" [format]="formatCurrencyVND"
     cssClass="text-center vertical-align-middle"></dxi-column>
 
   <dxi-column caption="Thao tác" [width]="200" cellTemplate="cellBtnTemplate"
@@ -154,8 +154,10 @@
     </button>
 
     <button *ngIf="
-    (item.data.status == BookingRequestStatusEnum.IssuedTicket ||
-      item.data.status == BookingRequestStatusEnum.ExpiredTicket
+    (item.data.status == BookingRequestStatusEnum.ReserveSeat ||
+    item.data.status == BookingRequestStatusEnum.ReceivedTicket ||
+    item.data.status == BookingRequestStatusEnum.ExpiredTicket ||
+      item.data.status == BookingRequestStatusEnum.IssuedTicket
     )" title="Xem thông tin vé đặt" nz-button nzSize="small" nzType="default"
       (click)="showPopupAirlineTicket(item.data, OptionAirlineTicketInfoEnum.View)">
       <span class="fa fa-ticket-alt fa-fw"></span>

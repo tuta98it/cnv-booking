@@ -281,6 +281,11 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
             en.stt = ++stt;
             en.statusOld = en.status;
             en.isLoadingRequestBookingHistory = false;
+            en.ticketPriceTotal = en.ticketPrice + (en.typeTicket == TypeAirlineTicket.RoundTrip ? (en.returnTicketPrice ?? 0) : 0);
+            en.refundFeeTotal = en.refundFee + (en.typeTicket == TypeAirlineTicket.RoundTrip ? (en.returnRefundFee ?? 0) : 0);
+            en.cancelFeeTotal = en.cancelFee + (en.typeTicket == TypeAirlineTicket.RoundTrip ? (en.returnCancelFee ?? 0) : 0);
+            en.changeFeeTotal = en.changeFee + (en.typeTicket == TypeAirlineTicket.RoundTrip ? (en.returnChangeFee ?? 0) : 0);
+            en.baggageFeeTotal = en.baggageFee + (en.typeTicket == TypeAirlineTicket.RoundTrip ? (en.returnBaggageFee ?? 0) : 0);
           });
           this.filteredDatas = this.datas;
           super.setListOfAllData(this.datas);
@@ -632,7 +637,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     this.isVisibleAirlineTicketInfo = true;
     this.ticketRoundTrip = this.itemBookingRequest.typeTicket == TypeAirlineTicket.RoundTrip;
     this.optionAirlineTicketInfo = opPopupAirlineTicket;
-    this.newStatus =  this.itemBookingRequest.status;
+    this.newStatus = this.itemBookingRequest.status;
     if (itemData.status == AirlineTicketBookingRequestStatus.ReserveSeat) {
       // this.isSendEmailToPassengerToConfirmFlightTicket = true;
       // this.isSendEmailToPassengerToConfirmSuccessIssuedTicket = false;
