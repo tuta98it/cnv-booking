@@ -632,7 +632,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     this.isVisibleAirlineTicketInfo = true;
     this.ticketRoundTrip = this.itemBookingRequest.typeTicket == TypeAirlineTicket.RoundTrip;
     this.optionAirlineTicketInfo = opPopupAirlineTicket;
-
+    this.newStatus =  this.itemBookingRequest.status;
     if (itemData.status == AirlineTicketBookingRequestStatus.ReserveSeat) {
       // this.isSendEmailToPassengerToConfirmFlightTicket = true;
       // this.isSendEmailToPassengerToConfirmSuccessIssuedTicket = false;
@@ -839,8 +839,8 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
         passengers: formValue.passengers,
 
 
-        startTime: formValue.flightTimeDeparture[0],
-        endTime: formValue.flightTimeDeparture[1],
+        startTime: formValue.flightTimeDeparture[0] ?? new Date(),
+        endTime: formValue.flightTimeDeparture[1] ?? new Date(),
         bookingCode: formValue.bookingCodeDeparture,
         flightNumber: formValue.flightNumberDeparture,
         ticketPrice: formValue.ticketPriceDeparture,
