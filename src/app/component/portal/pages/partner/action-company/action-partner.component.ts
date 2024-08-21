@@ -71,7 +71,6 @@ export class ActionPartnerComponent implements OnInit {
     { label: 'Dịch vụ vé máy bay', value: BusinessServiceType.AirlineTicketBookingService, disabled: false, checked: true },
     { label: 'Dich vụ đặt khách sạn', value: BusinessServiceType.HotelBookingService, disabled: false, checked: false },
   ];
-temp: any;
   constructor(
     private msg: NzMessageService,
     private activatedRoute: ActivatedRoute,

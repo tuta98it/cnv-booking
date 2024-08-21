@@ -347,7 +347,7 @@
                         <span style="color: tomato; margin-left: 4px;">*</span>
                       </div>
                       <div nz-col class="gutter-row" [nzSpan]="6">
-                        <nz-select [ngModel]="temp" (ngModelChange)="changeValuePaymentPeriod($event)" nzAllowClear nzPlaceHolder="Chọn kỳ thanh toán">
+                        <nz-select (ngModelChange)="changeValuePaymentPeriod($event)" nzAllowClear nzPlaceHolder="Chọn kỳ thanh toán">
                           <nz-option *ngFor="let op of PAYMENT_PERIOD_VHL_OPTIONS" nzLabel="{{op.label}}"
                           [nzValue]="op.value" ></nz-option>
                         </nz-select>
