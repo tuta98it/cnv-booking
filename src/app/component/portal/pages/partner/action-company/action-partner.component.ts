@@ -15,9 +15,11 @@ import { TypeOfDocument } from 'src/app/enums/type-of-document.enum';
 import { Constant } from 'src/app/shared/constants/constant.class';
 import { GeneralService } from './../../../../../service/general-service';
 import { NotificationService } from 'src/app/service/notification.service';
-import { BusinessServiceType } from 'src/app/enums/Business-service-type';
+import { BusinessServiceType } from 'src/app/enums/business-service-type';
 import { PaymentPeriod, PAYMENT_PERIOD_VHL_OPTIONS, PAYMENT_PERIOD_FULL_OPTIONS } from 'src/app/enums/payment-period.enum';
 import { Weekdays, WEEKDAYS_OPTIONS } from 'src/app/enums/weekdays.enum';
+import { DAYS_OF_MONTH_OPTIONS, DaysOfMonth } from 'src/app/enums/days-of-month.enum';
+import { MONTHS_OPTIONS, MonthsOfTheYear } from 'src/app/enums/months-of-the-year.enum';
 
 interface ItemData {
   name: string;
@@ -48,6 +50,10 @@ export class ActionPartnerComponent implements OnInit {
   PAYMENT_PERIOD_FULL_OPTIONS = PAYMENT_PERIOD_FULL_OPTIONS;
   Weekdays = Weekdays;
   WEEKDAYS_OPTIONS = WEEKDAYS_OPTIONS;
+  DaysOfMonth = DaysOfMonth;
+  DAYS_OF_MONTH_OPTIONS = DAYS_OF_MONTH_OPTIONS;
+  MonthsOfTheYear = MonthsOfTheYear;
+  MONTHS_OPTIONS = MONTHS_OPTIONS;
   PAYMENT_PERIOD_DAYS_OPTIONS = [];
   actionPartnerVHL: any;
   settingTableListEmployeesForm: FormGroup;
@@ -301,10 +307,18 @@ export class ActionPartnerComponent implements OnInit {
         break;
 
       case PaymentPeriod.MONTH:
-        this.PARTNER_STATUS_OPTIONS = [];
+        const currentYear = new Date().getFullYear();
+        const daysInMonth = new Date(currentYear, PaymentPeriod.MONTH, 0).getDate();
+
+        if (value = MonthsOfTheYear.FEB) {
+          this.PAYMENT_PERIOD_DAYS_OPTIONS = DAYS_OF_MONTH_OPTIONS.filter((day: any) => day.value >= DaysOfMonth.ONE && day.value <= DaysOfMonth.TWENTY_EIGHT);
+        } else {
+          this.PAYMENT_PERIOD_DAYS_OPTIONS = DAYS_OF_MONTH_OPTIONS.filter((day: any) => day.value >= DaysOfMonth.ONE && day.value <= daysInMonth);
+        }
         break;
 
       default:
+        this.PAYMENT_PERIOD_DAYS_OPTIONS = [];
         break;
     }
   }
