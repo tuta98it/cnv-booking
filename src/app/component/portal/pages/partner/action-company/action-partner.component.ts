@@ -77,6 +77,7 @@ export class ActionPartnerComponent implements OnInit {
     { label: 'Dịch vụ vé máy bay', value: BusinessServiceType.AirlineTicketBookingService, disabled: false, checked: true },
     { label: 'Dich vụ đặt khách sạn', value: BusinessServiceType.HotelBookingService, disabled: false, checked: false },
   ];
+  itemPartner: any = null;
   constructor(
     private msg: NzMessageService,
     private activatedRoute: ActivatedRoute,
@@ -269,6 +270,7 @@ export class ActionPartnerComponent implements OnInit {
       this.generalService.addPartner(valueSave).subscribe((res: any) => {
         if (res.isValid) {
           this.notificationService.showNotification(Constant.SUCCESS, `Tạo mới thông tin doanh nghiệp thành công`);
+          this.itemPartner = res.data;
         } else {
           if (res.errors && res.errors.length > 0) {
             res.errors.forEach((el: any) => {
@@ -306,6 +308,39 @@ export class ActionPartnerComponent implements OnInit {
       default:
         this.PAYMENT_PERIOD_DAYS_OPTIONS = [];
         break;
+    }
+  }
+
+  saveUpdateContractInfoForPartner() {
+    if (this.formBaseInfoCreatePartner.valid) {
+      let valueSave = this.formBaseInfoCreatePartner.value;
+      let listPartnerAuthorizationFileIDs = this.listUploadAuthorizationFile.map((t) => t.partnerFileId);
+      valueSave.partnerAuthorizationFileIDs = listPartnerAuthorizationFileIDs;
+      if (this.itemPartner?.id) {
+        this.generalService.updateContractInfoForPartner(this.itemPartner?.id, valueSave).subscribe((res: any) => {
+          if (res.isValid) {
+            this.notificationService.showNotification(Constant.SUCCESS, `Tạo mới thông tin doanh nghiệp thành công`);
+          } else {
+            if (res.errors && res.errors.length > 0) {
+              res.errors.forEach((el: any) => {
+                this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+              });
+            } else {
+              this.notificationService.showNotification(Constant.ERROR, 'Tạo mới thông tin doanh nghiệp không thành công');
+            }
+          }
+        }, error => {
+          this.notificationService.showNotification(Constant.ERROR, 'Tạo mới thông tin đối tác thất bại do lỗi hệ thống');
+        });
+      } else {
+        this.msg.error(`Doanh nghiệp không tồn tại`);
+      }
+
+    } else {
+      // Đánh dấu tất cả các trường là đã được chạm (touched) để hiển thị lỗi
+      this.formBaseInfoCreatePartner.markAllAsTouched();
+      // this.notificationService.showNotification(Constant.SUCCESS, "Tồn tại trường thông tin chưa được nhập");
+      this.msg.error(`Tồn tại trường thông tin chưa được nhập`);
     }
   }
 }
