@@ -509,7 +509,7 @@ export class GeneralService extends BaseService {
 
 
   addPartner(newData: any): Observable<any> {
-    return this.post(UrlConstant.LIST_PARTNERS, newData);
+    return this.post(`${UrlConstant.LIST_PARTNERS}/CreateBaseInfo`, newData);
   }
 
   updatePartner(newData: any): Observable<any> {

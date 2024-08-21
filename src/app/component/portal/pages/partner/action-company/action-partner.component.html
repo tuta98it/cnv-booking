@@ -205,7 +205,24 @@
           <div style="margin: 16px 0;"></div>
 
           <div *ngIf="selectedMenu == MenuCreatePartner.ContractManagement">
-            <span style="font-weight: 500; font-size: 16px;">Quản lý thông tin hợp đồng</span>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-weight: 500; font-size: 16px;">Quản lý thông tin hợp đồng</span>
+              <div>
+                <button nz-button nzType="primary" style="margin-right: 8px;" (click)="saveBaseInfoPartner()">
+                  <div style="display: flex; align-items: center;">
+                    <span nz-icon nzType="save"></span>
+                    <span style="margin-left: 6px; line-height: normal;">Lưu lại</span>
+                  </div>
+                </button>
+                <button nz-button nzType="default">
+                  <div style="display: flex; align-items: center;">
+                    <span nz-icon nzType="close"></span>
+                    <span style="margin-left: 4px; line-height: normal;">Huỷ bỏ</span>
+                  </div>
+                </button>
+              </div>
+            </div>
+
             <div>
               <div style="height: 1px; margin: 16px 0; background-color: #0000000f;"></div>
               <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
@@ -347,16 +364,17 @@
                         <span style="color: tomato; margin-left: 4px;">*</span>
                       </div>
                       <div nz-col class="gutter-row" [nzSpan]="6">
-                        <nz-select (ngModelChange)="changeValuePaymentPeriod($event)" nzAllowClear nzPlaceHolder="Chọn kỳ thanh toán">
+                        <nz-select (ngModelChange)="changeValuePaymentPeriod($event)" nzAllowClear
+                          nzPlaceHolder="Chọn kỳ thanh toán">
                           <nz-option *ngFor="let op of PAYMENT_PERIOD_VHL_OPTIONS" nzLabel="{{op.label}}"
-                          [nzValue]="op.value" ></nz-option>
+                            [nzValue]="op.value"></nz-option>
                         </nz-select>
                       </div>
 
                       <div nz-col class="gutter-row" [nzSpan]="6">
                         <nz-select nzPlaceHolder="Chọn ngày trong kỳ" nzAllowClear nzShowSearch>
                           <nz-option *ngFor="let op of PAYMENT_PERIOD_DAYS_OPTIONS" nzLabel="{{op.label}}"
-                          [nzValue]="op.value"></nz-option>
+                            [nzValue]="op.value"></nz-option>
                         </nz-select>
                       </div>
                     </div>

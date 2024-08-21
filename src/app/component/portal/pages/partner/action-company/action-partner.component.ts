@@ -115,9 +115,9 @@ export class ActionPartnerComponent implements OnInit {
       phone: [null],
       email: [null],
       address: [null, [Validators.required]],
-      name: [null],
+      businessOwnerId: [null],
       allowDebt: [AllowDebtPartner.ALLOW, [Validators.required]],
-      filePartnerIDs: [[]]
+      partnerAuthorizationFileIDs: [[]]
       // debtMax: [null],
       // debtUsed: [null],
       // debtRemain: [null],
@@ -260,38 +260,33 @@ export class ActionPartnerComponent implements OnInit {
   }
 
   saveBaseInfoPartner() {
-    let valueSave = this.formBaseInfoCreatePartner.value;
-    let listFilePartnerIds = this.listUploadAuthorizationFile.map((t) => t.filePartnerId);
-    valueSave.filePartnerIDs = listFilePartnerIds;
-    console.log('valueSave: ', valueSave);
     if (this.formBaseInfoCreatePartner.valid) {
 
       let valueSave = this.formBaseInfoCreatePartner.value;
-      let listFilePartnerIds = this.listUploadAuthorizationFile.map((t) => t.filePartnerId);
-      valueSave.filePartnerIDs = listFilePartnerIds;
+      let listPartnerAuthorizationFileIDs = this.listUploadAuthorizationFile.map((t) => t.partnerFileId);
+      valueSave.partnerAuthorizationFileIDs = listPartnerAuthorizationFileIDs;
 
       this.generalService.addPartner(valueSave).subscribe((res: any) => {
-        if (res.ret && res.ret[0].code !== 0) {
-          this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
+        if (res.isValid) {
+          this.notificationService.showNotification(Constant.SUCCESS, `Tạo mới thông tin doanh nghiệp thành công`);
         } else {
-          this.partnerIdInfoBaseReturn = res?.id;
-          this.notificationService.showNotification(Constant.SUCCESS, Constant.MESSAGE_ADD_SUCCESS);
-          this.router.navigate(['/companies']);
+          if (res.errors && res.errors.length > 0) {
+            res.errors.forEach((el: any) => {
+              this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+            });
+          } else {
+            this.notificationService.showNotification(Constant.ERROR, 'Tạo mới thông tin doanh nghiệp không thành công');
+          }
         }
       }, error => {
-        this.notificationService.showNotification(Constant.ERROR, 'Tạo mới thông tin đối tác thất bại!');
+        this.notificationService.showNotification(Constant.ERROR, 'Tạo mới thông tin đối tác thất bại do lỗi hệ thống');
       });
-
-
     } else {
       // Đánh dấu tất cả các trường là đã được chạm (touched) để hiển thị lỗi
       this.formBaseInfoCreatePartner.markAllAsTouched();
       // this.notificationService.showNotification(Constant.SUCCESS, "Tồn tại trường thông tin chưa được nhập");
       this.msg.error(`Tồn tại trường thông tin chưa được nhập`);
     }
-    console.log("valueSave: ", valueSave);
-    console.log("listFilePartnerIds: ", listFilePartnerIds);
-    // valueSave = [...valueSave, filePartnerIds: listFilePartnerIds];
   }
 
   log(value: object[]): void {
