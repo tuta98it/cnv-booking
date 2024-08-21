@@ -299,22 +299,13 @@ export class ActionPartnerComponent implements OnInit {
   }
 
   changeValuePaymentPeriod(value: any) {
-    console.log("value:", value);
-
     switch (value) {
       case PaymentPeriod.WEEK:
         this.PAYMENT_PERIOD_DAYS_OPTIONS = WEEKDAYS_OPTIONS;
         break;
 
       case PaymentPeriod.MONTH:
-        const currentYear = new Date().getFullYear();
-        const daysInMonth = new Date(currentYear, PaymentPeriod.MONTH, 0).getDate();
-
-        if (value = MonthsOfTheYear.FEB) {
-          this.PAYMENT_PERIOD_DAYS_OPTIONS = DAYS_OF_MONTH_OPTIONS.filter((day: any) => day.value >= DaysOfMonth.ONE && day.value <= DaysOfMonth.TWENTY_EIGHT);
-        } else {
-          this.PAYMENT_PERIOD_DAYS_OPTIONS = DAYS_OF_MONTH_OPTIONS.filter((day: any) => day.value >= DaysOfMonth.ONE && day.value <= daysInMonth);
-        }
+        this.PAYMENT_PERIOD_DAYS_OPTIONS = DAYS_OF_MONTH_OPTIONS.filter((day: any) => day.value >= DaysOfMonth.ONE && day.value <= DaysOfMonth.TWENTY_EIGHT);
         break;
 
       default:
