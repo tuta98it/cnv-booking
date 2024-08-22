@@ -20,6 +20,7 @@ import { PaymentPeriod, PAYMENT_PERIOD_VHL_OPTIONS, PAYMENT_PERIOD_FULL_OPTIONS 
 import { Weekdays, WEEKDAYS_OPTIONS } from 'src/app/enums/weekdays.enum';
 import { DAYS_OF_MONTH_OPTIONS, DaysOfMonth } from 'src/app/enums/days-of-month.enum';
 import { MONTHS_OPTIONS, MonthsOfTheYear } from 'src/app/enums/months-of-the-year.enum';
+import { UserType } from 'src/app/enums/user-type.enum';
 
 interface ItemData {
   name: string;
@@ -78,6 +79,7 @@ export class ActionPartnerComponent implements OnInit {
     { label: 'Dich vụ đặt khách sạn', value: BusinessServiceType.HotelBookingService, disabled: false, checked: false },
   ];
   itemPartner: any = null;
+  employees: any;
   constructor(
     private msg: NzMessageService,
     private activatedRoute: ActivatedRoute,
@@ -169,8 +171,23 @@ export class ActionPartnerComponent implements OnInit {
       }
     });
 
+    this.getEmployees();
   }
 
+
+  getEmployees() {
+    this.generalService.queryByUserType({ userType: UserType.All }).subscribe((res: any) => {
+      if (res !== null) {
+        let stt = 0;
+        this.employees = res;
+        this.employees.forEach(en => {
+          stt++;
+          en.stt = stt;
+        });
+      }
+    }, error => {
+    });
+  }
 
   generateData(): readonly ItemData[] {
     const data = [];

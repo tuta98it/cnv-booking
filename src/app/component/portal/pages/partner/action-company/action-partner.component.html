@@ -160,9 +160,9 @@
                       <!-- <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
                         placeholder="Nhập chủ doanh nghiệp" formControlName='name'> -->
 
-                      <nz-select style="border-radius: 4px;" nzSize="default" nzMode="default"
+                      <nz-select style="border-radius: 4px;" nzSize="default" nzMode="default" formControlName='businessOwnerId'
                         nzPlaceHolder="Nhập chủ doanh nghiệp" nzAllowClear nzShowSearch>
-                        <nz-option *ngFor="let item of []" [nzLabel]="item" [nzValue]="item"></nz-option>
+                        <nz-option *ngFor="let employee of employees" nzLabel="{{employee.fullname}} - {{employee.username}}" [nzValue]="employee.id"></nz-option>
                       </nz-select>
                     </div>
                   </div>
