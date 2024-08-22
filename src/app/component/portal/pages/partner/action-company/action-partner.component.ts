@@ -67,8 +67,13 @@ export class ActionPartnerComponent implements OnInit {
   listOfEmployees: readonly ItemData[] = [];
   displayData: readonly ItemData[] = [];
   formBaseInfoCreatePartner: FormGroup;
+  formBaseBusinessContractUpdate: FormGroup;
   settingUploadAuthorizationFile: UploadFileSetting;
+  settingUploadBusinessLicenseFile: UploadFileSetting;
+  settingUploadContractFile: UploadFileSetting;
   listUploadAuthorizationFile: NzUploadFile[];
+  listUploadBusinessLicenseFile: NzUploadFile[];
+  listUploadContractFile: NzUploadFile[];
   partnerIdInfoBaseReturn?: number;
 
   listOfOption: string[] = ['a10', 'c12', 'c13'];
@@ -106,6 +111,34 @@ export class ActionPartnerComponent implements OnInit {
           showRemoveIcon: true
         }
       } as UploadFileSetting;
+
+      this.settingUploadBusinessLicenseFile = {
+        isMultiple: true,
+        action: `${this.configService.getConfig().api.baseUrl}/Upload/UploadPartnerFile?partnerId=null&type=${TypeOfDocument.BusinessLicenseFile}`,
+        header: {
+          Authorization: 'Bearer ' + localStorage.getItem(Constant.TOKEN),
+        },
+        name: `postedFile`,
+        showUploadList: {
+          showPreviewIcon: true,
+          showDownloadIcon: true,
+          showRemoveIcon: true
+        }
+      } as UploadFileSetting;
+
+      this.settingUploadContractFile = {
+        isMultiple: true,
+        action: `${this.configService.getConfig().api.baseUrl}/Upload/UploadPartnerFile?partnerId=null&type=${TypeOfDocument.ContractFile}`,
+        header: {
+          Authorization: 'Bearer ' + localStorage.getItem(Constant.TOKEN),
+        },
+        name: `postedFile`,
+        showUploadList: {
+          showPreviewIcon: true,
+          showDownloadIcon: true,
+          showRemoveIcon: true
+        }
+      } as UploadFileSetting;
     } else if (this.actionPartnerVHL == ActionTypePageVHL.Update) {
 
     }
@@ -125,6 +158,21 @@ export class ActionPartnerComponent implements OnInit {
       // debtUsed: [null],
       // debtRemain: [null],
     });
+
+    this.formBaseBusinessContractUpdate = this.formBuilder.group({
+      partnerBusinessLicenseFileIDs: [null],
+      partnerContractFileIDs: [null, [Validators.required]],
+      personInChargeId: [null, [Validators.required]],
+      startTimeContractDate: [null, [Validators.required]],
+      endTimeContractDate: [null, [Validators.required]],
+      emailToReceiveInvoice: [null, [Validators.required]],
+      paymentPeriodType: [null, [Validators.required]],
+      dayOfPeriodType: [null, [Validators.required]],
+      debtMax: [null, [Validators.required]],
+      warningLimitPrice: [null, [Validators.required]],
+      typeOfServices: [null, [Validators.required]],
+    });
+
 
     this.settingTableListEmployeesForm = this.formBuilder.group({
       bordered: [false],
@@ -246,6 +294,44 @@ export class ActionPartnerComponent implements OnInit {
     }
   }
 
+  handleChangeUploadContractFile(info: NzUploadChangeParam): void {
+    if (info.file.status !== 'uploading') {
+      console.log(info.file, info.fileList);
+    }
+    if (info.file.status === 'done') {
+      this.msg.success(`${info.file.name} file tải lên thành công`);
+      this.listUploadContractFile = info.fileList;
+      setTimeout(() => {
+        if (this.listUploadContractFile.length > 0) {
+          this.listUploadContractFile[this.listUploadContractFile.length - 1].partnerFileId = info.file.response.partnerFileId.toString();
+          this.listUploadContractFile[this.listUploadContractFile.length - 1].url = `${this.configService.getConfig().api.baseUrl}/${info.file.response.path}`;
+        }
+      }, 200);
+    } else if (info.file.status === 'error') {
+      this.msg.error(`${info.file.name} file tải lên thất bại.`);
+    }
+  }
+
+
+  handleChangeUploadBusinessLicenseFile(info: NzUploadChangeParam): void {
+    if (info.file.status !== 'uploading') {
+      console.log(info.file, info.fileList);
+    }
+    if (info.file.status === 'done') {
+      this.msg.success(`${info.file.name} file tải lên thành công`);
+      this.listUploadBusinessLicenseFile = info.fileList;
+      setTimeout(() => {
+        if (this.listUploadBusinessLicenseFile.length > 0) {
+          this.listUploadBusinessLicenseFile[this.listUploadBusinessLicenseFile.length - 1].partnerFileId = info.file.response.partnerFileId.toString();
+          this.listUploadBusinessLicenseFile[this.listUploadBusinessLicenseFile.length - 1].url = `${this.configService.getConfig().api.baseUrl}/${info.file.response.path}`;
+        }
+      }, 200);
+    } else if (info.file.status === 'error') {
+      this.msg.error(`${info.file.name} file tải lên thất bại.`);
+    }
+  }
+
+
   handleRemoveUploadAuthorizationFile(file: NzUploadFile) {
     if (file?.partnerFileId) {
       this.generalService.removeFile(file.partnerFileId).subscribe({
@@ -276,6 +362,70 @@ export class ActionPartnerComponent implements OnInit {
       });
     }
   }
+
+  handleRemoveUploadContractFile(file: NzUploadFile) {
+    if (file?.partnerFileId) {
+      this.generalService.removeFile(file.partnerFileId).subscribe({
+        next: (res: any) => {
+          if (res) {
+            if (res.ret && res.ret.length > 0) {
+              res.ret.forEach((el: any) => {
+                if (el.code === 0) {
+                  this.listUploadContractFile = this.listUploadContractFile.filter(en => en.partnerFileId !== file.partnerFileId);
+                  this.msg.success(`Đã xoá file ${file.name}.`);
+                } else if (res.code === 404) {
+                  this.msg.error(`Không tìm thấy file ${file.name}.`);
+                } else {
+                  this.msg.error(`Đã có lỗi xảy ra. Không thể xoá file ${file.name}`);
+                }
+              });
+            }
+          } else {
+            this.msg.error(`Xoá file ${file.name} thất bại.`);
+          }
+        },
+        error: (error: any) => {
+          this.msg.error(`Lỗi hệ thống, Không thể xoá file ${file.name}`);
+        },
+        complete: () => {
+
+        }
+      });
+    }
+  }
+
+
+  handleRemoveUploadBusinessLicenseFile(file: NzUploadFile) {
+    if (file?.partnerFileId) {
+      this.generalService.removeFile(file.partnerFileId).subscribe({
+        next: (res: any) => {
+          if (res) {
+            if (res.ret && res.ret.length > 0) {
+              res.ret.forEach((el: any) => {
+                if (el.code === 0) {
+                  this.listUploadBusinessLicenseFile = this.listUploadBusinessLicenseFile.filter(en => en.partnerFileId !== file.partnerFileId);
+                  this.msg.success(`Đã xoá file ${file.name}.`);
+                } else if (res.code === 404) {
+                  this.msg.error(`Không tìm thấy file ${file.name}.`);
+                } else {
+                  this.msg.error(`Đã có lỗi xảy ra. Không thể xoá file ${file.name}`);
+                }
+              });
+            }
+          } else {
+            this.msg.error(`Xoá file ${file.name} thất bại.`);
+          }
+        },
+        error: (error: any) => {
+          this.msg.error(`Lỗi hệ thống, Không thể xoá file ${file.name}`);
+        },
+        complete: () => {
+
+        }
+      });
+    }
+  }
+
 
   saveBaseInfoPartner() {
     if (this.formBaseInfoCreatePartner.valid) {

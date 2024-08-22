@@ -160,9 +160,11 @@
                       <!-- <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
                         placeholder="Nhập chủ doanh nghiệp" formControlName='name'> -->
 
-                      <nz-select style="border-radius: 4px;" nzSize="default" nzMode="default" formControlName='businessOwnerId'
-                        nzPlaceHolder="Nhập chủ doanh nghiệp" nzAllowClear nzShowSearch>
-                        <nz-option *ngFor="let employee of employees" nzLabel="{{employee.fullname}} - {{employee.username}}" [nzValue]="employee.id"></nz-option>
+                      <nz-select style="border-radius: 4px;" nzSize="default" nzMode="default"
+                        formControlName='businessOwnerId' nzPlaceHolder="Nhập chủ doanh nghiệp" nzAllowClear
+                        nzShowSearch>
+                        <nz-option *ngFor="let employee of employees"
+                          nzLabel="{{employee.fullname}} - {{employee.username}}" [nzValue]="employee.id"></nz-option>
                       </nz-select>
                     </div>
                   </div>
@@ -193,6 +195,8 @@
         </div>
       </div>
     </div>
+  </form>
+  <form [formGroup]="formBaseBusinessContractUpdate">
     <div nz-row [nzGutter]="[16, 24]">
       <div nz-col class="gutter-row" [nzSpan]="24">
         <div class="inner-box">
@@ -208,7 +212,8 @@
             <div style="display: flex; justify-content: space-between; align-items: center;">
               <span style="font-weight: 500; font-size: 16px;">Quản lý thông tin hợp đồng</span>
               <div>
-                <button nz-button nzType="primary" style="margin-right: 8px;" (click)="saveUpdateContractInfoForPartner()">
+                <button nz-button nzType="primary" style="margin-right: 8px;"
+                  (click)="saveUpdateContractInfoForPartner()">
                   <div style="display: flex; align-items: center;">
                     <span nz-icon nzType="save"></span>
                     <span style="margin-left: 6px; line-height: normal;">Lưu lại</span>
@@ -234,14 +239,14 @@
                         File giấy phép KD
                       </div>
                       <div nz-col class="gutter-row" [nzSpan]="12">
-                        <nz-upload [nzMultiple]="settingUploadAuthorizationFile.isMultiple"
-                          [nzAction]="settingUploadAuthorizationFile.action"
-                          [nzName]="settingUploadAuthorizationFile.name"
-                          [nzHeaders]="settingUploadAuthorizationFile.header"
-                          [nzRemove]="handleRemoveUploadAuthorizationFile"
-                          [nzShowUploadList]="settingUploadAuthorizationFile.showUploadList"
+                        <nz-upload [nzMultiple]="settingUploadBusinessLicenseFile.isMultiple"
+                          [nzAction]="settingUploadBusinessLicenseFile.action"
+                          [nzName]="settingUploadBusinessLicenseFile.name"
+                          [nzHeaders]="settingUploadBusinessLicenseFile.header"
+                          [nzRemove]="handleRemoveUploadBusinessLicenseFile"
+                          [nzShowUploadList]="settingUploadBusinessLicenseFile.showUploadList"
                           [nzFileList]="listUploadAuthorizationFile"
-                          (nzChange)="handleChangeUploadAuthorizationFile($event)">
+                          (nzChange)="handleChangeUploadBusinessLicenseFile($event)">
                           <button nz-button nzType="default" [nzSize]="'default'" nzShape="round"><span nz-icon
                               nzType="upload"></span></button>
                         </nz-upload>
@@ -254,14 +259,14 @@
                         File hợp đồng <span style="color: tomato; margin-left: 4px;">*</span>
                       </div>
                       <div nz-col class="gutter-row" [nzSpan]="12">
-                        <nz-upload [nzMultiple]="settingUploadAuthorizationFile.isMultiple"
-                          [nzAction]="settingUploadAuthorizationFile.action"
-                          [nzName]="settingUploadAuthorizationFile.name"
-                          [nzHeaders]="settingUploadAuthorizationFile.header"
-                          [nzRemove]="handleRemoveUploadAuthorizationFile"
-                          [nzShowUploadList]="settingUploadAuthorizationFile.showUploadList"
+                        <nz-upload [nzMultiple]="settingUploadContractFile.isMultiple"
+                          [nzAction]="settingUploadContractFile.action"
+                          [nzName]="settingUploadContractFile.name"
+                          [nzHeaders]="settingUploadContractFile.header"
+                          [nzRemove]="handleRemoveUploadContractFile"
+                          [nzShowUploadList]="settingUploadContractFile.showUploadList"
                           [nzFileList]="listUploadAuthorizationFile"
-                          (nzChange)="handleChangeUploadAuthorizationFile($event)">
+                          (nzChange)="handleChangeUploadContractFile($event)">
                           <button nz-button nzType="default" [nzSize]="'default'" nzShape="round"><span nz-icon
                               nzType="upload"></span></button>
                         </nz-upload>
@@ -276,8 +281,8 @@
                       </div>
                       <div nz-col class="gutter-row" [nzSpan]="12">
                         <nz-select style="border-radius: 4px;" nzSize="default" nzMode="default"
-                          nzPlaceHolder="Nhập người phụ trách" nzAllowClear nzShowSearch>
-                          <nz-option *ngFor="let item of listOfOption" [nzLabel]="item" [nzValue]="item"></nz-option>
+                          nzPlaceHolder="Nhập người phụ trách"  formControlName='personInChargeId' nzAllowClear nzShowSearch>
+                          <nz-option *ngFor="let employee of employees" nzLabel="{{employee.fullname}} - {{employees.username}}" [nzValue]="employees.id"></nz-option>
                         </nz-select>
                       </div>
                     </div>
@@ -329,7 +334,7 @@
                       </div>
                       <div nz-col class="gutter-row" [nzSpan]="12">
                         <nz-date-picker [nzMode]="'date'" nzSize="default" style="border-radius: 4px; width: 100%;"
-                          nzFormat="dd/MM/yyyy" nzPlaceHolder="Chọn thời gian bắt đầu"></nz-date-picker>
+                          nzFormat="dd/MM/yyyy" nzPlaceHolder="Chọn thời gian bắt đầu" formControlName='startTimeContractDate'></nz-date-picker>
                       </div>
                     </div>
 
@@ -341,7 +346,7 @@
                       </div>
                       <div nz-col class="gutter-row" [nzSpan]="12">
                         <nz-date-picker [nzMode]="'date'" nzSize="default" style="border-radius: 4px; width: 100%;"
-                          nzFormat="dd/MM/yyyy" nzPlaceHolder="Chọn thời gian kết thúc"></nz-date-picker>
+                          nzFormat="dd/MM/yyyy" nzPlaceHolder="Chọn thời gian kết thúc" formControlName='endTimeContractDate'></nz-date-picker>
                       </div>
                     </div>
 
@@ -353,7 +358,7 @@
                       </div>
                       <div nz-col class="gutter-row" [nzSpan]="12">
                         <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
-                          placeholder="Nhập email nhận hoá đơn">
+                          placeholder="Nhập email nhận hoá đơn" formControlName='emailToReceiveInvoice'>
                       </div>
                     </div>
 
@@ -365,14 +370,14 @@
                       </div>
                       <div nz-col class="gutter-row" [nzSpan]="6">
                         <nz-select (ngModelChange)="changeValuePaymentPeriod($event)" nzAllowClear
-                          nzPlaceHolder="Chọn kỳ thanh toán">
+                          nzPlaceHolder="Chọn kỳ thanh toán" formControlName='paymentPeriodType'>
                           <nz-option *ngFor="let op of PAYMENT_PERIOD_VHL_OPTIONS" nzLabel="{{op.label}}"
                             [nzValue]="op.value"></nz-option>
                         </nz-select>
                       </div>
 
                       <div nz-col class="gutter-row" [nzSpan]="6">
-                        <nz-select nzPlaceHolder="Chọn ngày trong kỳ" nzAllowClear nzShowSearch>
+                        <nz-select nzPlaceHolder="Chọn ngày trong kỳ" formControlName='dayOfPeriodType' nzAllowClear nzShowSearch>
                           <nz-option *ngFor="let op of PAYMENT_PERIOD_DAYS_OPTIONS" nzLabel="{{op.label}}"
                             [nzValue]="op.value"></nz-option>
                         </nz-select>
@@ -386,7 +391,7 @@
                         <span style="color: tomato; margin-left: 4px;">*</span>
                       </div>
                       <div nz-col class="gutter-row" [nzSpan]="12">
-                        <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
+                        <input style="border-radius: 4px;" nzSize="default" formControlName='debtMax' nz-input type="text"
                           placeholder="Nhập hạn mức tối đa">
                       </div>
                     </div>
@@ -398,7 +403,7 @@
                         <span style="color: tomato; margin-left: 4px;">*</span>
                       </div>
                       <div nz-col class="gutter-row" [nzSpan]="12">
-                        <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
+                        <input style="border-radius: 4px;" nzSize="default" formControlName='warningLimitPrice' nz-input type="text"
                           placeholder="Nhập hạn mức cảnh báo">
                       </div>
                     </div>
@@ -534,4 +539,6 @@
       </div>
     </div>
   </form>
+
+
 </div>
