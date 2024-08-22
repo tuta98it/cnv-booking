@@ -463,8 +463,14 @@ export class ActionPartnerComponent implements OnInit {
     }
   }
 
-  log(value: object[]): void {
-    console.log(value);
+  cancelBaseInfoPartner(){
+    this.formBaseInfoCreatePartner.reset();
+  }
+
+  cancelPageActionPartner(){
+    this.cancelBaseInfoPartner();
+    this.cancelUpdateContractInfoForPartner();
+    this.router.navigate(['/companies'])
   }
 
   changeValuePaymentPeriod(value: any) {
@@ -549,5 +555,9 @@ export class ActionPartnerComponent implements OnInit {
       // this.notificationService.showNotification(Constant.SUCCESS, "Tồn tại trường thông tin chưa được nhập");
       this.msg.error(`Tồn tại trường thông tin chưa được nhập`);
     }
+  }
+
+  cancelUpdateContractInfoForPartner(){
+    this.formBaseBusinessContractUpdate.reset();
   }
 }
