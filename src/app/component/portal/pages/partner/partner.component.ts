@@ -21,6 +21,7 @@ import {
 } from "devextreme-angular";
 import { TypeOfDocument } from 'src/app/enums/type-of-document.enum';
 import { Router } from '@angular/router';
+import { PARTNER_STATUS_OPTIONS } from 'src/app/enums/partner-status.enum';
 @Component({
   selector: 'app-partner',
   templateUrl: './partner.component.html',
@@ -655,5 +656,23 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
       return '0 đ';
     }
     return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' đ';
+  }
+
+  formatAllowDebt(value: any) {
+    if (value) {
+      return "Có"
+    }
+    return "Không";
+  }
+
+  formatSatusPartner(value: any) {
+    let textSatus = ''
+    if (value != null && value != undefined) {
+      let opStatusPartner = PARTNER_STATUS_OPTIONS.find(p => p.value == value);
+      if (opStatusPartner) {
+        textSatus = opStatusPartner.label;
+      }
+    }
+    return textSatus;
   }
 }

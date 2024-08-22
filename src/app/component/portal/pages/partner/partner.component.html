@@ -9,15 +9,16 @@
     <input style="width: 200px; border-radius: 4px; height: 32px;" class="mgr10" nzSize="small" nz-input type="text"
       [(ngModel)]="searchText" (keyup)="onSearch()" placeholder="Tìm kiếm theo tên, username, ...">
 
-    <button nz-button nzType="primary" class="btn-add-asset" type="button" (click)="navigativePageCreatePartner()" *ngIf="checkAdd">
+    <button nz-button nzType="primary" class="btn-add-asset" type="button" (click)="navigativePageCreatePartner()"
+      *ngIf="checkAdd">
       <em class="fas fa-plus fa-fw"></em> Thêm mới
     </button>
 
     <!-- Nút xuất Excel -->
-    <button nz-button nzType="primary" class="btn-green mgr10" (click)="exportData()">
+    <!-- <button nz-button nzType="primary" class="btn-green mgr10" (click)="exportData()">
       <span class="fa fa-fw fa-file-excel" style="margin-right: 4px;"></span>
       Xuất Excel
-    </button>
+    </button> -->
   </div>
 </div>
 
@@ -37,13 +38,20 @@
     [showNavigationButtons]="showNavButtons"></dxo-pager>
 
 
-  <dxi-column cssClass="text-center" caption="Action" [fixed]="true" [width]="170" fixedPosition="right"
-    cellTemplate="cellBtnTemplate"></dxi-column>
-
   <dxi-column cssClass="text-center" caption="STT" [width]="55" dataField="stt" [fixed]="true" [allowFiltering]="false"
     [allowSorting]="false"></dxi-column>
-  <dxi-column caption="Tên doanh nghiệp" [width]="200" dataField="companyName"></dxi-column>
-  <dxi-column caption="Tên chủ doanh nghiệp" [fixed]="true" dataField="name" [width]="200"></dxi-column>
+  <dxi-column caption="Mã doanh nghiệp" dataField="code" [fixed]="true" fixedPosition="left"></dxi-column>
+  <dxi-column caption="Tên doanh nghiệp" dataField="companyName" [fixed]="true"
+    fixedPosition="left"></dxi-column>
+  <dxi-column caption="Cho phép công nợ" dataField="allowDebt" [format]="formatAllowDebt" cellTemplate="cellAllowDebt"></dxi-column>
+  <div *dxTemplate="let allowDebt of 'cellAllowDebt'">
+    <ng-container>
+      {{allowDebt.value ? "Có" : "Không"}}
+    </ng-container>
+  </div>
+  <dxi-column caption="Trạng thái" dataField="status" [format]="formatSatusPartner"></dxi-column>
+
+  <!-- <dxi-column caption="Tên chủ doanh nghiệp" [fixed]="true" dataField="name" [width]="200"></dxi-column>
   <dxi-column caption="Mã số thuế" [width]="120" dataField="taxCode"></dxi-column>
   <dxi-column caption="Số điện thoại" [width]="150" dataField="phone"></dxi-column>
   <dxi-column caption="Email" dataField="email" [width]="200"></dxi-column>
@@ -55,9 +63,9 @@
   <dxi-column caption="Hợp đồng" [width]="450" cellTemplate="cellContract"></dxi-column>
   <dxi-column caption="Ghi chú" [width]="350" dataField="note"></dxi-column>
   <dxi-column caption="Thời gian đăng ký" dataField="dateCreated" [width]="150" dataType="date" format="dd/MM/yyyy">
-  </dxi-column>
+  </dxi-column> -->
 
-  <div *dxTemplate="let partner of 'cellBusinessLicenses'">
+  <!-- <div *dxTemplate="let partner of 'cellBusinessLicenses'">
     <ng-container *ngIf="partner.data.partnerFile">
       <div style="display: flex; flex-direction: column;">
         <div *ngFor="let file of partner.data.partnerFile; let i = index">
@@ -66,8 +74,9 @@
         </div>
       </div>
       <div style="margin-top: 0.5rem; display: flex; justify-content: end;">
-        <button nz-button nzSize="small" nzType="dashed" (click)="openModalUpload(partner.data, TypeOfDocument.BusinessLicenseFile)"><span nz-icon
-            nzType="sync" nzTheme="outline"></span>Cập nhật GPKD cho {{partner.data.companyName}}</button>
+        <button nz-button nzSize="small" nzType="dashed"
+          (click)="openModalUpload(partner.data, TypeOfDocument.BusinessLicenseFile)"><span nz-icon nzType="sync"
+            nzTheme="outline"></span>Cập nhật GPKD cho {{partner.data.companyName}}</button>
       </div>
     </ng-container>
   </div>
@@ -84,7 +93,10 @@
             nzType="sync" nzTheme="outline"></span>Cập nhật HĐ cho {{partner.data.companyName}}</button>
       </div>
     </ng-container>
-  </div>
+  </div> -->
+
+  <dxi-column cssClass="text-center" caption="Thao tác" [fixed]="true" [width]="170" fixedPosition="right"
+    cellTemplate="cellBtnTemplate"></dxi-column>
   <div *dxTemplate="let item of 'cellBtnTemplate'">
     <button title="Xóa tài khoản" nz-button nzSize="small" nzType="default" class="btn-right button-update ant-btn-red"
       (click)="showDeleteConfirm(item.data)" *ngIf="checkUpdate">
