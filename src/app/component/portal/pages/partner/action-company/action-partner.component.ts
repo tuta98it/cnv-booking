@@ -171,6 +171,11 @@ export class ActionPartnerComponent implements OnInit {
       debtMax: [null, [Validators.required]],
       warningLimitPrice: [null, [Validators.required]],
       typeOfServices: [null, [Validators.required]],
+
+      positionPersonInCharge: new FormControl({ value: null, disabled: true }),
+      phoneNumberPersonInCharge: new FormControl({ value: null, disabled: true }),
+      emailPersonInCharge: new FormControl({ value: null, disabled: true }),
+
     });
 
 
@@ -278,7 +283,7 @@ export class ActionPartnerComponent implements OnInit {
 
   handleChangeUploadAuthorizationFile(info: NzUploadChangeParam): void {
     if (info.file.status !== 'uploading') {
-      console.log(info.file, info.fileList);
+
     }
     if (info.file.status === 'done') {
       this.msg.success(`${info.file.name} file tải lên thành công`);
@@ -296,7 +301,7 @@ export class ActionPartnerComponent implements OnInit {
 
   handleChangeUploadContractFile(info: NzUploadChangeParam): void {
     if (info.file.status !== 'uploading') {
-      console.log(info.file, info.fileList);
+
     }
     if (info.file.status === 'done') {
       this.msg.success(`${info.file.name} file tải lên thành công`);
@@ -315,7 +320,7 @@ export class ActionPartnerComponent implements OnInit {
 
   handleChangeUploadBusinessLicenseFile(info: NzUploadChangeParam): void {
     if (info.file.status !== 'uploading') {
-      console.log(info.file, info.fileList);
+
     }
     if (info.file.status === 'done') {
       this.msg.success(`${info.file.name} file tải lên thành công`);
@@ -478,11 +483,46 @@ export class ActionPartnerComponent implements OnInit {
     }
   }
 
+
+  async onSelectPersonInCharge(employeeId: any) {
+    try {
+
+      const itemEmployee = await this.getEmployeeById(employeeId);
+      this.formBaseBusinessContractUpdate.controls['positionPersonInCharge'].setValue(itemEmployee?.position ?? "");
+      this.formBaseBusinessContractUpdate.controls['phoneNumberPersonInCharge'].setValue(itemEmployee?.phoneNo ?? "");
+      this.formBaseBusinessContractUpdate.controls['emailPersonInCharge'].setValue(itemEmployee?.email ?? "");
+    } catch (error) {
+      this.msg.error("Error fetching employee data: ", error);
+    }
+
+
+  }
+  private getEmployeeById(employeeId: number): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.generalService.getUserById(employeeId).subscribe((res: any) => {
+        if (res) {
+          resolve(res);
+        } else {
+          reject("No employee found");
+        }
+      }, error => {
+        reject(error)
+      });
+    });
+
+  }
   saveUpdateContractInfoForPartner() {
-    if (this.formBaseInfoCreatePartner.valid) {
-      let valueSave = this.formBaseInfoCreatePartner.value;
-      let listPartnerAuthorizationFileIDs = this.listUploadAuthorizationFile.map((t) => t.partnerFileId);
-      valueSave.partnerAuthorizationFileIDs = listPartnerAuthorizationFileIDs;
+    let partnerBusinessLicenseFileIds = this.listUploadBusinessLicenseFile?.map((bl: any) => bl.partnerFileId) ?? null;
+    this.formBaseBusinessContractUpdate.controls['partnerBusinessLicenseFileIDs'].setValue(partnerBusinessLicenseFileIds);
+
+    let partnerContractFileIds = this.listUploadContractFile?.map((bl: any) => bl.partnerFileId) ?? null;
+    this.formBaseBusinessContractUpdate.controls['partnerContractFileIDs'].setValue(partnerContractFileIds);
+
+    let partnerTypeOfServices = this.checkOptionsBusinessServiceVHL?.filter(option => option.checked).map(option => option.value) ?? null;
+    this.formBaseBusinessContractUpdate.controls['typeOfServices'].setValue(JSON.stringify(partnerTypeOfServices));
+
+    if (this.formBaseBusinessContractUpdate.valid) {
+      let valueSave = this.formBaseBusinessContractUpdate.value;
       if (this.itemPartner?.id) {
         this.generalService.updateContractInfoForPartner(this.itemPartner?.id, valueSave).subscribe((res: any) => {
           if (res.isValid) {

@@ -20,8 +20,6 @@
       </div>
     </div>
   </div>
-
-
   <form [formGroup]="formBaseInfoCreatePartner">
     <div nz-row [nzGutter]="[16, 24]">
       <div nz-col class="gutter-row" [nzSpan]="24">
@@ -281,8 +279,8 @@
                       </div>
                       <div nz-col class="gutter-row" [nzSpan]="12">
                         <nz-select style="border-radius: 4px;" nzSize="default" nzMode="default"
-                          nzPlaceHolder="Nhập người phụ trách"  formControlName='personInChargeId' nzAllowClear nzShowSearch>
-                          <nz-option *ngFor="let employee of employees" nzLabel="{{employee.fullname}} - {{employees.username}}" [nzValue]="employees.id"></nz-option>
+                          nzPlaceHolder="Nhập người phụ trách"  formControlName='personInChargeId' (ngModelChange)="onSelectPersonInCharge($event)" nzAllowClear nzShowSearch>
+                          <nz-option *ngFor="let employee of employees" nzLabel="{{employee.fullname}} - {{employee.username}}" [nzValue]="employee.id"></nz-option>
                         </nz-select>
                       </div>
                     </div>
@@ -294,7 +292,7 @@
                         <span style="color: tomato; margin-left: 4px;">*</span>
                       </div>
                       <div nz-col class="gutter-row" [nzSpan]="12">
-                        <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
+                        <input style="border-radius: 4px;" nzSize="default" nz-input type="text" formControlName='positionPersonInCharge'
                           placeholder="Nhập chức vụ">
                       </div>
                     </div>
@@ -306,7 +304,7 @@
                         <span style="color: tomato; margin-left: 4px;">*</span>
                       </div>
                       <div nz-col class="gutter-row" [nzSpan]="12">
-                        <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
+                        <input style="border-radius: 4px;" nzSize="default" nz-input type="text" formControlName='phoneNumberPersonInCharge'
                           placeholder="Nhập số điện thoại">
                       </div>
                     </div>
@@ -318,7 +316,7 @@
                         <span style="color: tomato; margin-left: 4px;">*</span>
                       </div>
                       <div nz-col class="gutter-row" [nzSpan]="12">
-                        <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
+                        <input style="border-radius: 4px;" nzSize="default" nz-input type="text" formControlName='emailPersonInCharge'
                           placeholder="Nhập email cá nhân">
                       </div>
                     </div>
@@ -539,6 +537,4 @@
       </div>
     </div>
   </form>
-
-
 </div>

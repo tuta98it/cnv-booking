@@ -443,6 +443,9 @@ export class GeneralService extends BaseService {
     return this.get(UrlConstant.LIST_USER + '/GetUserForSysAdmin/');
   }
 
+  getUserById(userId: number): Observable<any> {
+    return this.get(`${UrlConstant.LIST_USER}/${userId}`);
+  }
 
   getByPartnerId(partnerId: any): Observable<any> {
     return this.get(UrlConstant.LIST_USER + `/GetByPartnerId/${partnerId}`);
