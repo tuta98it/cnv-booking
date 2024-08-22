@@ -40,6 +40,7 @@ type TableScroll = 'unset' | 'scroll' | 'fixed';
   styleUrls: ['./action-partner.component.scss']
 })
 export class ActionPartnerComponent implements OnInit {
+  ActionTypePageVHL = ActionTypePageVHL;
   MenuCreatePartner = MenuCreatePartner;
   MENU_CREATE_PARTNER_OPTION = MENU_CREATE_PARTNER_OPTION;
   PartnerStatus = PartnerStatus;
@@ -85,6 +86,8 @@ export class ActionPartnerComponent implements OnInit {
   ];
   itemPartner: any = null;
   employees: any;
+  isActiveEditBaseInfo: boolean = false;
+
   constructor(
     private msg: NzMessageService,
     private activatedRoute: ActivatedRoute,
@@ -94,66 +97,19 @@ export class ActionPartnerComponent implements OnInit {
     private notificationService: NotificationService,
     private router: Router,
   ) {
-    this.actionPartnerVHL = this.activatedRoute.snapshot.data['type'];
-    if (this.actionPartnerVHL == ActionTypePageVHL.Create) {
-      this.listOfEmployees = [];
-      this.listUploadAuthorizationFile = [];
-      this.settingUploadAuthorizationFile = {
-        isMultiple: true,
-        action: `${this.configService.getConfig().api.baseUrl}/Upload/UploadPartnerFile?partnerId=null&type=${TypeOfDocument.AuthorizationFile}`,
-        header: {
-          Authorization: 'Bearer ' + localStorage.getItem(Constant.TOKEN),
-        },
-        name: `postedFile`,
-        showUploadList: {
-          showPreviewIcon: true,
-          showDownloadIcon: true,
-          showRemoveIcon: true
-        }
-      } as UploadFileSetting;
 
-      this.settingUploadBusinessLicenseFile = {
-        isMultiple: true,
-        action: `${this.configService.getConfig().api.baseUrl}/Upload/UploadPartnerFile?partnerId=null&type=${TypeOfDocument.BusinessLicenseFile}`,
-        header: {
-          Authorization: 'Bearer ' + localStorage.getItem(Constant.TOKEN),
-        },
-        name: `postedFile`,
-        showUploadList: {
-          showPreviewIcon: true,
-          showDownloadIcon: true,
-          showRemoveIcon: true
-        }
-      } as UploadFileSetting;
-
-      this.settingUploadContractFile = {
-        isMultiple: true,
-        action: `${this.configService.getConfig().api.baseUrl}/Upload/UploadPartnerFile?partnerId=null&type=${TypeOfDocument.ContractFile}`,
-        header: {
-          Authorization: 'Bearer ' + localStorage.getItem(Constant.TOKEN),
-        },
-        name: `postedFile`,
-        showUploadList: {
-          showPreviewIcon: true,
-          showDownloadIcon: true,
-          showRemoveIcon: true
-        }
-      } as UploadFileSetting;
-    } else if (this.actionPartnerVHL == ActionTypePageVHL.Update) {
-
-    }
     this.formBaseInfoCreatePartner = this.formBuilder.group({
       id: [null],
       status: new FormControl({ value: PartnerStatus.CreatingProfile, disabled: this.actionPartnerVHL == ActionTypePageVHL.Create }, Validators.required),
-      code: [null, [Validators.required]],
-      companyName: [null, [Validators.required]],
-      taxCode: [null, [Validators.required]],
-      phone: [null],
-      email: [null],
-      address: [null, [Validators.required]],
-      businessOwnerId: [null],
-      allowDebt: [AllowDebtPartner.ALLOW, [Validators.required]],
-      partnerAuthorizationFileIDs: [[]]
+      code: new FormControl({ value: null, disabled: false }, Validators.required),
+      companyName: new FormControl({ value: null, disabled: false }, Validators.required),
+      taxCode: new FormControl({ value: null, disabled: false }, Validators.required),
+      phone: new FormControl({ value: null, disabled: false }),
+      email: new FormControl({ value: null, disabled: false }),
+      address: new FormControl({ value: null, disabled: false }, Validators.required),
+      businessOwnerId: new FormControl({ value: null, disabled: false }),
+      allowDebt: new FormControl({ value: AllowDebtPartner.ALLOW, disabled: false }, Validators.required),
+      // partnerAuthorizationFileIDs: [[]]
       // debtMax: [null],
       // debtUsed: [null],
       // debtRemain: [null],
@@ -202,6 +158,103 @@ export class ActionPartnerComponent implements OnInit {
     });
 
     this.settingTableEmployeesValue = this.settingTableListEmployeesForm.value as NZTableSettingCustoms;
+
+    this.actionPartnerVHL = this.activatedRoute.snapshot.data['type'];
+    this.setIsActiveEditBaseInfo(true);
+    this.listOfEmployees = [];
+    this.listUploadAuthorizationFile = [];
+    this.listUploadBusinessLicenseFile = [];
+    this.listUploadContractFile = [];
+    if (this.actionPartnerVHL == ActionTypePageVHL.Create) {
+      this.settingUploadAuthorizationFile = {
+        isMultiple: true,
+        action: `${this.configService.getConfig().api.baseUrl}/Upload/UploadPartnerFile?partnerId=null&type=${TypeOfDocument.AuthorizationFile}`,
+        header: {
+          Authorization: 'Bearer ' + localStorage.getItem(Constant.TOKEN),
+        },
+        name: `postedFile`,
+        showUploadList: {
+          showPreviewIcon: true,
+          showDownloadIcon: true,
+          showRemoveIcon: true
+        }
+      } as UploadFileSetting;
+
+      this.settingUploadBusinessLicenseFile = {
+        isMultiple: true,
+        action: `${this.configService.getConfig().api.baseUrl}/Upload/UploadPartnerFile?partnerId=null&type=${TypeOfDocument.BusinessLicenseFile}`,
+        header: {
+          Authorization: 'Bearer ' + localStorage.getItem(Constant.TOKEN),
+        },
+        name: `postedFile`,
+        showUploadList: {
+          showPreviewIcon: true,
+          showDownloadIcon: true,
+          showRemoveIcon: true
+        }
+      } as UploadFileSetting;
+
+      this.settingUploadContractFile = {
+        isMultiple: true,
+        action: `${this.configService.getConfig().api.baseUrl}/Upload/UploadPartnerFile?partnerId=null&type=${TypeOfDocument.ContractFile}`,
+        header: {
+          Authorization: 'Bearer ' + localStorage.getItem(Constant.TOKEN),
+        },
+        name: `postedFile`,
+        showUploadList: {
+          showPreviewIcon: true,
+          showDownloadIcon: true,
+          showRemoveIcon: true
+        }
+      } as UploadFileSetting;
+    } else if (this.actionPartnerVHL == ActionTypePageVHL.Update) {
+      this.setIsActiveEditBaseInfo(true);
+      this.activatedRoute.queryParams.subscribe(params => {
+        let idPartner = +params['id']; // Lấy id từ query parameter
+        console.log('idPartner:', idPartner);
+        this.settingUploadAuthorizationFile = {
+          isMultiple: true,
+          action: `${this.configService.getConfig().api.baseUrl}/Upload/UploadPartnerFile?partnerId=${idPartner}&type=${TypeOfDocument.AuthorizationFile}`,
+          header: {
+            Authorization: 'Bearer ' + localStorage.getItem(Constant.TOKEN),
+          },
+          name: `postedFile`,
+          showUploadList: {
+            showPreviewIcon: true,
+            showDownloadIcon: true,
+            showRemoveIcon: true
+          }
+        } as UploadFileSetting;
+
+        this.settingUploadBusinessLicenseFile = {
+          isMultiple: true,
+          action: `${this.configService.getConfig().api.baseUrl}/Upload/UploadPartnerFile?partnerId=${idPartner}&type=${TypeOfDocument.BusinessLicenseFile}`,
+          header: {
+            Authorization: 'Bearer ' + localStorage.getItem(Constant.TOKEN),
+          },
+          name: `postedFile`,
+          showUploadList: {
+            showPreviewIcon: true,
+            showDownloadIcon: true,
+            showRemoveIcon: true
+          }
+        } as UploadFileSetting;
+
+        this.settingUploadContractFile = {
+          isMultiple: true,
+          action: `${this.configService.getConfig().api.baseUrl}/Upload/UploadPartnerFile?partnerId=${idPartner}&type=${TypeOfDocument.ContractFile}`,
+          header: {
+            Authorization: 'Bearer ' + localStorage.getItem(Constant.TOKEN),
+          },
+          name: `postedFile`,
+          showUploadList: {
+            showPreviewIcon: true,
+            showDownloadIcon: true,
+            showRemoveIcon: true
+          }
+        } as UploadFileSetting;
+      });
+    }
   }
 
   ngOnInit(): void {
@@ -443,6 +496,8 @@ export class ActionPartnerComponent implements OnInit {
         if (res.isValid) {
           this.notificationService.showNotification(Constant.SUCCESS, `Tạo mới thông tin doanh nghiệp thành công`);
           this.itemPartner = res.data;
+          this.setIsActiveEditBaseInfo(this.itemPartner?.id != null);
+
         } else {
           if (res.errors && res.errors.length > 0) {
             res.errors.forEach((el: any) => {
@@ -463,11 +518,39 @@ export class ActionPartnerComponent implements OnInit {
     }
   }
 
-  cancelBaseInfoPartner(){
-    this.formBaseInfoCreatePartner.reset();
+  editBaseInfoPartner() {
+    this.setIsActiveEditBaseInfo(true);
   }
 
-  cancelPageActionPartner(){
+  private setIsActiveEditBaseInfo(value: boolean) {
+    this.isActiveEditBaseInfo = value;
+    if (this.isActiveEditBaseInfo) {
+      this.formBaseInfoCreatePartner.enable();
+      if (this.actionPartnerVHL == ActionTypePageVHL.Create) {
+        this.formBaseInfoCreatePartner.controls['status'].disable();
+      }
+    } else {
+      this.formBaseInfoCreatePartner.disable();
+    }
+  }
+
+  cancelBaseInfoPartner() {
+    this.setIsActiveEditBaseInfo(true);
+    this.formBaseInfoCreatePartner.reset({
+      status: { value: this.itemPartner?.status || PartnerStatus.CreatingProfile, disabled: this.actionPartnerVHL == ActionTypePageVHL.Create },
+      code: this.itemPartner?.code || null,
+      companyName: this.itemPartner?.companyName || null,
+      taxCode: this.itemPartner?.taxCode || null,
+      phone: this.itemPartner?.phone || null,
+      email: this.itemPartner?.email || null,
+      address: this.itemPartner?.address || null,
+      businessOwnerId: this.itemPartner?.businessOwnerId || null,
+      allowDebt: this.itemPartner?.allowDebt || AllowDebtPartner.ALLOW
+    });
+
+  }
+
+  cancelPageActionPartner() {
     this.cancelBaseInfoPartner();
     this.cancelUpdateContractInfoForPartner();
     this.router.navigate(['/companies'])
@@ -557,7 +640,7 @@ export class ActionPartnerComponent implements OnInit {
     }
   }
 
-  cancelUpdateContractInfoForPartner(){
+  cancelUpdateContractInfoForPartner() {
     this.formBaseBusinessContractUpdate.reset();
   }
 }

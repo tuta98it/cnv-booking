@@ -14,6 +14,13 @@ const routes: Routes = [
       type: ActionTypePageVHL.Create
     }
   },
+  {
+    path: 'update', component: ActionPartnerComponent, canActivate: [AuthGuard], data: {
+      pagename: 'Danh sách doanh nghiệp',
+      breadcrumb: 'Cập nhật',
+      type: ActionTypePageVHL.Update
+    }
+  },
 ]
 
 @NgModule({
