@@ -320,6 +320,7 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
 
   navigatePageUpdatePartner(idPartner: number) {
     this.router.navigate([`/companies/update`], { queryParams : {id : idPartner}});
+    
   }
 
   showModalPassword(data) {
@@ -360,7 +361,7 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
         delete formValue.repeatPassword;
         delete formValue.userId;
         // formValue.status = 1;
-        this.generalService.addPartner(formValue).subscribe((res: any) => {
+        this.generalService.addBaseInfoPartner(formValue).subscribe((res: any) => {
           if (res.ret && res.ret[0].code !== 0) {
             this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
             formValue.id = 0;

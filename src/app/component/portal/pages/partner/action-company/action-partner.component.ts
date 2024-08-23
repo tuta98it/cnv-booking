@@ -209,9 +209,10 @@ export class ActionPartnerComponent implements OnInit {
       } as UploadFileSetting;
     } else if (this.actionPartnerVHL == ActionTypePageVHL.Update) {
       this.setIsActiveEditBaseInfo(true);
-      this.activatedRoute.queryParams.subscribe(params => {
+      this.activatedRoute.queryParams.subscribe(async params => {
         let idPartner = +params['id']; // Lấy id từ query parameter
-        console.log('idPartner:', idPartner);
+        this.itemPartner = await this.getPartnerById(idPartner);
+
         this.settingUploadAuthorizationFile = {
           isMultiple: true,
           action: `${this.configService.getConfig().api.baseUrl}/Upload/UploadPartnerFile?partnerId=${idPartner}&type=${TypeOfDocument.AuthorizationFile}`,
@@ -253,8 +254,37 @@ export class ActionPartnerComponent implements OnInit {
             showRemoveIcon: true
           }
         } as UploadFileSetting;
+
+        this.resetFormBaseInfoCreatePartner(this.itemPartner);
       });
     }
+  }
+  private resetFormBaseInfoCreatePartner(itemPartner: any) {
+    this.formBaseInfoCreatePartner.reset({
+      status: { value: this.itemPartner?.status || PartnerStatus.CreatingProfile, disabled: this.actionPartnerVHL == ActionTypePageVHL.Create },
+      code: this.itemPartner?.code || null,
+      companyName: this.itemPartner?.companyName || null,
+      taxCode: this.itemPartner?.taxCode || null,
+      phone: this.itemPartner?.phone || null,
+      email: this.itemPartner?.email || null,
+      address: this.itemPartner?.address || null,
+      businessOwnerId: this.itemPartner?.businessOwnerId || null,
+      allowDebt: this.itemPartner?.allowDebt || AllowDebtPartner.ALLOW
+    });
+  }
+  private getPartnerById(partnerId: number): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.generalService.getPartnerById(partnerId).subscribe((res: any) => {
+        if (res) {
+          resolve(res);
+        } else {
+          reject("Không tìm thấy doanh nghiệp này");
+        }
+      }, error => {
+        reject(error)
+      });
+    });
+
   }
 
   ngOnInit(): void {
@@ -273,7 +303,7 @@ export class ActionPartnerComponent implements OnInit {
       if (empty) {
         this.listOfEmployees = [];
       } else {
-        this.listOfEmployees = this.generateData();
+        this.listOfEmployees = this.employees;
       }
     });
 
@@ -492,24 +522,28 @@ export class ActionPartnerComponent implements OnInit {
       let listPartnerAuthorizationFileIDs = this.listUploadAuthorizationFile.map((t) => t.partnerFileId);
       valueSave.partnerAuthorizationFileIDs = listPartnerAuthorizationFileIDs;
 
-      this.generalService.addPartner(valueSave).subscribe((res: any) => {
-        if (res.isValid) {
-          this.notificationService.showNotification(Constant.SUCCESS, `Tạo mới thông tin doanh nghiệp thành công`);
-          this.itemPartner = res.data;
-          this.setIsActiveEditBaseInfo(this.itemPartner?.id != null);
+      if (this.itemPartner?.id) {
 
-        } else {
-          if (res.errors && res.errors.length > 0) {
-            res.errors.forEach((el: any) => {
-              this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
-            });
+      } else {
+        this.generalService.addBaseInfoPartner(valueSave).subscribe((res: any) => {
+          if (res.isValid) {
+            this.notificationService.showNotification(Constant.SUCCESS, `Tạo mới thông tin doanh nghiệp thành công`);
+            this.itemPartner = res.data;
+            this.setIsActiveEditBaseInfo(this.itemPartner?.id != null);
           } else {
-            this.notificationService.showNotification(Constant.ERROR, 'Tạo mới thông tin doanh nghiệp không thành công');
+            if (res.errors && res.errors.length > 0) {
+              res.errors.forEach((el: any) => {
+                this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+              });
+            } else {
+              this.notificationService.showNotification(Constant.ERROR, 'Tạo mới thông tin doanh nghiệp không thành công');
+            }
           }
-        }
-      }, error => {
-        this.notificationService.showNotification(Constant.ERROR, 'Tạo mới thông tin đối tác thất bại do lỗi hệ thống');
-      });
+        }, error => {
+          this.notificationService.showNotification(Constant.ERROR, 'Tạo mới thông tin đối tác thất bại do lỗi hệ thống');
+        });
+      }
+
     } else {
       // Đánh dấu tất cả các trường là đã được chạm (touched) để hiển thị lỗi
       this.formBaseInfoCreatePartner.markAllAsTouched();
@@ -536,18 +570,7 @@ export class ActionPartnerComponent implements OnInit {
 
   cancelBaseInfoPartner() {
     this.setIsActiveEditBaseInfo(true);
-    this.formBaseInfoCreatePartner.reset({
-      status: { value: this.itemPartner?.status || PartnerStatus.CreatingProfile, disabled: this.actionPartnerVHL == ActionTypePageVHL.Create },
-      code: this.itemPartner?.code || null,
-      companyName: this.itemPartner?.companyName || null,
-      taxCode: this.itemPartner?.taxCode || null,
-      phone: this.itemPartner?.phone || null,
-      email: this.itemPartner?.email || null,
-      address: this.itemPartner?.address || null,
-      businessOwnerId: this.itemPartner?.businessOwnerId || null,
-      allowDebt: this.itemPartner?.allowDebt || AllowDebtPartner.ALLOW
-    });
-
+    this.resetFormBaseInfoCreatePartner(this.itemPartner);
   }
 
   cancelPageActionPartner() {
@@ -575,7 +598,6 @@ export class ActionPartnerComponent implements OnInit {
 
   async onSelectPersonInCharge(employeeId: any) {
     try {
-
       const itemEmployee = await this.getEmployeeById(employeeId);
       this.formBaseBusinessContractUpdate.controls['positionPersonInCharge'].setValue(itemEmployee?.position ?? "");
       this.formBaseBusinessContractUpdate.controls['phoneNumberPersonInCharge'].setValue(itemEmployee?.phoneNo ?? "");
@@ -583,9 +605,8 @@ export class ActionPartnerComponent implements OnInit {
     } catch (error) {
       this.msg.error("Error fetching employee data: ", error);
     }
-
-
   }
+
   private getEmployeeById(employeeId: number): Promise<any> {
     return new Promise((resolve, reject) => {
       this.generalService.getUserById(employeeId).subscribe((res: any) => {
@@ -600,6 +621,7 @@ export class ActionPartnerComponent implements OnInit {
     });
 
   }
+
   saveUpdateContractInfoForPartner() {
     let partnerBusinessLicenseFileIds = this.listUploadBusinessLicenseFile?.map((bl: any) => bl.partnerFileId) ?? null;
     this.formBaseBusinessContractUpdate.controls['partnerBusinessLicenseFileIDs'].setValue(partnerBusinessLicenseFileIds);

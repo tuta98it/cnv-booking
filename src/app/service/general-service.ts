@@ -467,6 +467,9 @@ export class GeneralService extends BaseService {
     return this.get(UrlConstant.LIST_PARTNERS);
   }
 
+  getPartnerById(partnerId : number): Observable<any[]> {
+    return this.get(`${UrlConstant.LIST_PARTNERS}/${partnerId}`);
+  }
   // getListPartner(): Observable<any[]> {
   //   return this.get(UrlConstant.LIST_PARTNERS + "/GetPartnerForAcc");
   // }
@@ -511,10 +514,13 @@ export class GeneralService extends BaseService {
   }
 
 
-  addPartner(newData: any): Observable<any> {
+  addBaseInfoPartner(newData: any): Observable<any> {
     return this.post(`${UrlConstant.LIST_PARTNERS}/CreateBaseInfo`, newData);
   }
 
+  updateBaseInfoPartner(upData: any): Observable<any> {
+    return this.put(`${UrlConstant.LIST_PARTNERS}/UpdateBaseInfo`, upData);
+  }
   updateContractInfoForPartner(idPartner: number, updateData: any): Observable<any> {
     return this.put(`${UrlConstant.LIST_PARTNERS}/UpdateContractInfo/${idPartner}`, updateData);
   }
