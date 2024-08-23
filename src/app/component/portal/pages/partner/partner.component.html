@@ -107,7 +107,7 @@
       <span class='fas fa-undo'></span>
     </button>
     <button title="Sửa thông tin tài khoản" nz-button nzSize="small" nzType="default" class="btn-right button-update"
-      (click)="showModalUpdate(item.data)" *ngIf="checkUpdate">
+      (click)="navigatePageUpdatePartner(item.data.id)" *ngIf="checkUpdate">
       <span class="fa fa-edit fa-fw"></span>
     </button>
     <button *ngIf="!item.data.userId" title="Tạo tài khoản" nz-button nzSize="small" nzType="default"
