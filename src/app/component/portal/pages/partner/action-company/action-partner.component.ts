@@ -109,7 +109,7 @@ export class ActionPartnerComponent implements OnInit {
       address: new FormControl({ value: null, disabled: false }, Validators.required),
       businessOwnerId: new FormControl({ value: null, disabled: false }),
       allowDebt: new FormControl({ value: AllowDebtPartner.ALLOW, disabled: false }, Validators.required),
-      // partnerAuthorizationFileIDs: [[]]
+      partnerAuthorizationFileIDs: [{ value: [], disabled: false }, Validators.required]
       // debtMax: [null],
       // debtUsed: [null],
       // debtRemain: [null],
@@ -211,8 +211,6 @@ export class ActionPartnerComponent implements OnInit {
       this.setIsActiveEditBaseInfo(true);
       this.activatedRoute.queryParams.subscribe(async params => {
         let idPartner = +params['id']; // Lấy id từ query parameter
-        this.itemPartner = await this.getPartnerById(idPartner);
-
         this.settingUploadAuthorizationFile = {
           isMultiple: true,
           action: `${this.configService.getConfig().api.baseUrl}/Upload/UploadPartnerFile?partnerId=${idPartner}&type=${TypeOfDocument.AuthorizationFile}`,
@@ -254,11 +252,14 @@ export class ActionPartnerComponent implements OnInit {
             showRemoveIcon: true
           }
         } as UploadFileSetting;
-
+        this.itemPartner = await this.getPartnerById(idPartner);
         this.resetFormBaseInfoCreatePartner(this.itemPartner);
+        this.resetFormContractUpdatePartner(this.itemPartner);
       });
     }
   }
+
+
   private resetFormBaseInfoCreatePartner(itemPartner: any) {
     this.formBaseInfoCreatePartner.reset({
       status: { value: this.itemPartner?.status || PartnerStatus.CreatingProfile, disabled: this.actionPartnerVHL == ActionTypePageVHL.Create },
@@ -271,7 +272,57 @@ export class ActionPartnerComponent implements OnInit {
       businessOwnerId: this.itemPartner?.businessOwnerId || null,
       allowDebt: this.itemPartner?.allowDebt || AllowDebtPartner.ALLOW
     });
+
+    this.listUploadAuthorizationFile = [];
+    for (const partnerFile of itemPartner.partnerFiles.filter((f : any) => f.type = TypeOfDocument.AuthorizationFile)) {
+      const objPartner = {
+        uid: partnerFile.id.toString(),
+        name: partnerFile.fileName,
+        url: `${this.configService.getConfig().api.baseUrl}/${partnerFile.filePath}`,
+      }
+      this.listUploadAuthorizationFile.push(objPartner)
+    }
   }
+
+  private resetFormContractUpdatePartner(itemPartner: any) {
+    this.formBaseBusinessContractUpdate.reset({
+      // partnerBusinessLicenseFileIDs: this.itemPartner?.partnerBusinessLicenseFileIDs,
+      // partnerContractFileIDs: this.itemPartner?.partnerContractFileIDs,
+      personInChargeId: itemPartner?.personInChargeId,
+      startTimeContractDate: itemPartner?.startTimeContractDate,
+      endTimeContractDate: itemPartner?.endTimeContractDate,
+      emailToReceiveInvoice: itemPartner?.emailToReceiveInvoice,
+      paymentPeriodType: itemPartner?.paymentPeriodType,
+      dayOfPeriodType: itemPartner?.dayOfPeriodType,
+      debtMax: itemPartner?.debtMax,
+      warningLimitPrice: itemPartner?.warningLimitPrice,
+      typeOfServices: itemPartner?.typeOfServices,
+      positionPersonInCharge: { value: itemPartner?.positionPersonInCharge, disabled: true },
+      phoneNumberPersonInCharge: { value: itemPartner?.phoneNumberPersonInCharge, disabled: true },
+      emailPersonInCharge: { value: itemPartner?.emailPersonInCharge, disabled: true }
+    });
+
+    this.listUploadBusinessLicenseFile = [];
+    for (const partnerFile of itemPartner.partnerFiles.filter((f : any) => f.type = TypeOfDocument.BusinessLicenseFile)) {
+      const objPartner = {
+        uid: partnerFile.id.toString(),
+        name: partnerFile.fileName,
+        url: `${this.configService.getConfig().api.baseUrl}/${partnerFile.filePath}`,
+      }
+      this.listUploadBusinessLicenseFile.push(objPartner)
+    }
+
+    this.listUploadContractFile = [];
+    for (const partnerFile of itemPartner.partnerFiles.filter((f : any) => f.type = TypeOfDocument.ContractFile)) {
+      const objPartner = {
+        uid: partnerFile.id.toString(),
+        name: partnerFile.fileName,
+        url: `${this.configService.getConfig().api.baseUrl}/${partnerFile.filePath}`,
+      }
+      this.listUploadContractFile.push(objPartner)
+    }
+  }
+
   private getPartnerById(partnerId: number): Promise<any> {
     return new Promise((resolve, reject) => {
       this.generalService.getPartnerById(partnerId).subscribe((res: any) => {
@@ -523,13 +574,29 @@ export class ActionPartnerComponent implements OnInit {
       valueSave.partnerAuthorizationFileIDs = listPartnerAuthorizationFileIDs;
 
       if (this.itemPartner?.id) {
-
+        this.generalService.updateBaseInfoById(valueSave, this.itemPartner?.id).subscribe((res: any) => {
+          if (res.isValid) {
+            this.notificationService.showNotification(Constant.SUCCESS, `Cập nhật thông tin doanh nghiệp thành công`);
+            this.itemPartner = res.data;
+            this.setIsActiveEditBaseInfo(this.itemPartner?.id == null);
+          } else {
+            if (res.errors && res.errors.length > 0) {
+              res.errors.forEach((el: any) => {
+                this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+              });
+            } else {
+              this.notificationService.showNotification(Constant.ERROR, 'Cập nhật thông tin doanh nghiệp không thành công');
+            }
+          }
+        }, error => {
+          this.notificationService.showNotification(Constant.ERROR, 'Cập nhật thông tin đối tác thất bại do lỗi hệ thống');
+        });
       } else {
         this.generalService.addBaseInfoPartner(valueSave).subscribe((res: any) => {
           if (res.isValid) {
             this.notificationService.showNotification(Constant.SUCCESS, `Tạo mới thông tin doanh nghiệp thành công`);
             this.itemPartner = res.data;
-            this.setIsActiveEditBaseInfo(this.itemPartner?.id != null);
+            this.setIsActiveEditBaseInfo(this.itemPartner?.id == null);
           } else {
             if (res.errors && res.errors.length > 0) {
               res.errors.forEach((el: any) => {

@@ -518,6 +518,11 @@ export class GeneralService extends BaseService {
     return this.post(`${UrlConstant.LIST_PARTNERS}/CreateBaseInfo`, newData);
   }
 
+  updateBaseInfoById(updateData: any, idPartner: number): Observable<any> {
+    return this.put(`${UrlConstant.LIST_PARTNERS}/UpdateBaseInfoById/${idPartner}`, updateData);
+  }
+
+  
   updateBaseInfoPartner(upData: any): Observable<any> {
     return this.put(`${UrlConstant.LIST_PARTNERS}/UpdateBaseInfo`, upData);
   }
