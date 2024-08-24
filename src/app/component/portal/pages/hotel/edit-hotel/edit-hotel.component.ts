@@ -326,7 +326,7 @@ export class EditHotelComponent implements OnInit {
       if (form === 'hotel') {
         setTimeout(() => {
           if (this.fileList.length > 0) {
-            this.fileList[this.fileList.length - 1].hotelFileId = file.response.hotelFileId.toString();
+            this.fileList[this.fileList.length - 1].uid = file.response.hotelFileId.toString();
             this.fileList[this.fileList.length - 1].url = `${this.configService.getConfig().api.baseUrl}/${file.response.path}`;
             // this.fileList[this.fileList.length - 1] = {
             //   uid: file.response.hotelFileId.toString(),
@@ -357,7 +357,7 @@ export class EditHotelComponent implements OnInit {
 
 
   handleRemoveImageHotel = async (file: NzUploadFile): Promise<void> => {
-    const idHotelImage = file.hotelFileId;
+    const idHotelImage = file.uid;
     if (idHotelImage) {
       this.generalService.deleteHotelImageByID(idHotelImage).subscribe(
         {
