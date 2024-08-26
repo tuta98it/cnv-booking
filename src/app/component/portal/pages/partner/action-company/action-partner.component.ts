@@ -155,15 +155,10 @@ export class ActionPartnerComponent implements OnInit {
       tableLayout: 'auto' as NzTableLayout,
       position: 'bottom' as NzTablePaginationPosition
     });
-
-
-
   }
 
   ngAfterViewInit() {
-
     this.settingTableEmployeesValue = this.settingTableListEmployeesForm.value as NZTableSettingCustoms;
-
     this.actionPartnerVHL = this.activatedRoute.snapshot.data['type'];
     this.setIsActiveEditBaseInfo(true);
     this.listOfEmployees = [];
@@ -257,12 +252,16 @@ export class ActionPartnerComponent implements OnInit {
             showRemoveIcon: true
           }
         } as UploadFileSetting;
-        this.itemPartner = await this.getPartnerById(idPartner);
+        this.itemPartner = await this.getPartnerById(idPartner).catch((reject) => {
+          this.notificationService.showNotification(Constant.ERROR, `Lỗi truy vận dữ liệu doanh nghiệp`);
+          this.router.navigate([['/companies']]);
+        });
         this.resetFormBaseInfoCreatePartner(this.itemPartner);
         this.resetFormContractUpdatePartner(this.itemPartner);
       });
     }
   }
+
   private async resetFormBaseInfoCreatePartner(itemPartner: any) {
     this.formBaseInfoCreatePartner.reset({
       status: { value: this.itemPartner?.status || PartnerStatus.CreatingProfile, disabled: this.actionPartnerVHL == ActionTypePageVHL.Create },
@@ -318,11 +317,8 @@ export class ActionPartnerComponent implements OnInit {
       }
       this.listUploadBusinessLicenseFile.push(objPartner)
     }
-
     this.listUploadContractFile = [];
     const partnerContractFileFiles = await itemPartner.partnerFiles.filter((f: { type: TypeOfDocument }) => f.type == TypeOfDocument.ContractFile);
-    //console.log("itemPartner.partnerFiles: ", itemPartner.partnerFiles);
-
     for (const partnerFile of partnerContractFileFiles) {
       const objPartner = {
         uid: partnerFile.id.toString(),
@@ -331,10 +327,7 @@ export class ActionPartnerComponent implements OnInit {
       }
       this.listUploadContractFile.push(objPartner);
     }
-    //console.log("listUploadContractFile: ", this.listUploadContractFile);
-    //console.log("partnerContractFileFiles: ", partnerContractFileFiles);
   }
-
 
   private getPartnerById(partnerId: number): Promise<any> {
     return new Promise((resolve, reject) => {
@@ -348,7 +341,6 @@ export class ActionPartnerComponent implements OnInit {
         reject(error)
       });
     });
-
   }
 
   ngOnInit(): void {
@@ -373,7 +365,6 @@ export class ActionPartnerComponent implements OnInit {
 
     this.getEmployees();
   }
-
 
   getEmployees() {
     this.generalService.queryByUserType({ userType: UserType.All }).subscribe((res: any) => {
@@ -581,7 +572,6 @@ export class ActionPartnerComponent implements OnInit {
 
   saveBaseInfoPartner() {
     if (this.formBaseInfoCreatePartner.valid) {
-
       let valueSave = this.formBaseInfoCreatePartner.value;
       let listPartnerAuthorizationFileIDs = this.listUploadAuthorizationFile.map((t) => t.uid);
       valueSave.partnerAuthorizationFileIDs = listPartnerAuthorizationFileIDs;
