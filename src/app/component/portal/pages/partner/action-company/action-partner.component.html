@@ -247,14 +247,14 @@
                         File giấy phép KD
                       </div>
                       <div nz-col class="gutter-row" [nzSpan]="12">
-                        <nz-upload *ngIf="settingUploadBusinessLicenseFile && settingUploadBusinessLicenseFile?.action" 
+                        <nz-upload *ngIf="settingUploadBusinessLicenseFile && settingUploadBusinessLicenseFile?.action"
                         [nzMultiple]="settingUploadBusinessLicenseFile?.isMultiple"
                           [nzAction]="settingUploadBusinessLicenseFile?.action"
                           [nzName]="settingUploadBusinessLicenseFile?.name"
                           [nzHeaders]="settingUploadBusinessLicenseFile?.header"
                           [nzRemove]="handleRemoveUploadBusinessLicenseFile"
                           [nzShowUploadList]="settingUploadBusinessLicenseFile?.showUploadList"
-                          [nzFileList]="listUploadAuthorizationFile"
+                          [nzFileList]="listUploadBusinessLicenseFile"
                           (nzChange)="handleChangeUploadBusinessLicenseFile($event)">
                           <button nz-button nzType="default" [nzSize]="'default'" nzShape="round"><span nz-icon
                               nzType="upload"></span></button>
@@ -268,12 +268,12 @@
                         File hợp đồng <span style="color: tomato; margin-left: 4px;">*</span>
                       </div>
                       <div nz-col class="gutter-row" [nzSpan]="12">
-                        <nz-upload *ngIf="settingUploadContractFile && settingUploadContractFile.action" 
+                        <nz-upload *ngIf="settingUploadContractFile && settingUploadContractFile.action"
                         [nzMultiple]="settingUploadContractFile?.isMultiple"
                           [nzAction]="settingUploadContractFile?.action" [nzName]="settingUploadContractFile?.name"
                           [nzHeaders]="settingUploadContractFile?.header" [nzRemove]="handleRemoveUploadContractFile"
                           [nzShowUploadList]="settingUploadContractFile?.showUploadList"
-                          [nzFileList]="listUploadAuthorizationFile"
+                          [nzFileList]="listUploadContractFile"
                           (nzChange)="handleChangeUploadContractFile($event)">
                           <button nz-button nzType="default" [nzSize]="'default'" nzShape="round"><span nz-icon
                               nzType="upload"></span></button>
