@@ -258,8 +258,36 @@ export class ActionPartnerComponent implements OnInit {
         });
         this.resetFormBaseInfoCreatePartner(this.itemPartner);
         this.resetFormContractUpdatePartner(this.itemPartner);
+
+        this.getUsersByPartnerId(this.itemPartner?.id).then((result: any) => {
+          this.listOfEmployees = result;
+        });
       });
     }
+  }
+
+  ngOnInit(): void {
+    // Lấy giá trị status từ route data
+    this.settingTableListEmployeesForm.valueChanges.subscribe(value => {
+      this.settingTableEmployeesValue = value as NZTableSettingCustoms;
+    });
+    this.settingTableListEmployeesForm.controls.tableScroll.valueChanges.subscribe(scroll => {
+      this.fixedColumn = scroll === 'fixed';
+      this.scrollX = scroll === 'scroll' || scroll === 'fixed' ? '100vw' : null;
+    });
+    this.settingTableListEmployeesForm.controls.fixHeader.valueChanges.subscribe(fixed => {
+      this.scrollY = fixed ? '240px' : null;
+    });
+    this.settingTableListEmployeesForm.controls.noResult.valueChanges.subscribe(async empty => {
+      if (empty) {
+        this.listOfEmployees = [];
+      } else {
+        this.getUsersByPartnerId(this.itemPartner?.id).then((result: any) => {
+          this.listOfEmployees = result;
+        });
+      }
+    });
+    this.getEmployees();
   }
 
   private async resetFormBaseInfoCreatePartner(itemPartner: any) {
@@ -343,30 +371,7 @@ export class ActionPartnerComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    // Lấy giá trị status từ route data
-    this.settingTableListEmployeesForm.valueChanges.subscribe(value => {
-      this.settingTableEmployeesValue = value as NZTableSettingCustoms;
-    });
-    this.settingTableListEmployeesForm.controls.tableScroll.valueChanges.subscribe(scroll => {
-      this.fixedColumn = scroll === 'fixed';
-      this.scrollX = scroll === 'scroll' || scroll === 'fixed' ? '100vw' : null;
-    });
-    this.settingTableListEmployeesForm.controls.fixHeader.valueChanges.subscribe(fixed => {
-      this.scrollY = fixed ? '240px' : null;
-    });
-    this.settingTableListEmployeesForm.controls.noResult.valueChanges.subscribe(empty => {
-      if (empty) {
-        this.listOfEmployees = [];
-      } else {
-        this.listOfEmployees = this.employees;
-      }
-    });
-
-    this.getEmployees();
-  }
-
-  getEmployees() {
+  private getEmployees() {
     this.generalService.queryByUserType({ userType: UserType.All }).subscribe((res: any) => {
       if (res !== null) {
         let stt = 0;
@@ -379,6 +384,31 @@ export class ActionPartnerComponent implements OnInit {
     }, error => {
     });
   }
+
+
+  private getUsersByPartnerId(idPartner: number): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.generalService.getUsersByPartnerId(idPartner).subscribe((res: any) => {
+        if (res.isValid) {
+          resolve(res.data);
+        } else {
+          if (res.errors && res.errors.length > 0) {
+            res.errors.forEach((el: any) => {
+              this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+            });
+          } else {
+            this.notificationService.showNotification(Constant.ERROR, 'Lấy ra danh sách nhân viên doanh nghiệp không thành công');
+          }
+          reject(res.errors);
+        }
+      }, error => {
+        this.notificationService.showNotification(Constant.ERROR, 'TLấy ra danh sách nhân viên doanh nghiệp thất bại do lỗi hệ thống');
+        reject(error);
+      });
+    });
+
+  }
+
 
   generateData(): readonly ItemData[] {
     const data = [];

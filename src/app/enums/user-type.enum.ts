@@ -7,3 +7,8 @@ export enum UserType {
   NormalAccount = 5,
   All = 999,
 }
+
+export const TEXT_USER_TYPE = {
+  [UserType.MasterAccount]: "Master Account",
+  [UserType.NormalAccount] : "Normal Account",
+}

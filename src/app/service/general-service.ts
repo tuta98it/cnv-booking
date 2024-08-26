@@ -447,7 +447,7 @@ export class GeneralService extends BaseService {
     return this.get(`${UrlConstant.LIST_USER}/${userId}`);
   }
 
-  getByPartnerId(partnerId: any): Observable<any> {
+  getUsersByPartnerId(partnerId: number): Observable<any> {
     return this.get(UrlConstant.LIST_USER + `/GetByPartnerId/${partnerId}`);
   }
 
@@ -522,7 +522,7 @@ export class GeneralService extends BaseService {
     return this.put(`${UrlConstant.LIST_PARTNERS}/UpdateBaseInfoById/${idPartner}`, updateData);
   }
 
-  
+
   updateBaseInfoPartner(upData: any): Observable<any> {
     return this.put(`${UrlConstant.LIST_PARTNERS}/UpdateBaseInfo`, upData);
   }

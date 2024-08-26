@@ -172,9 +172,9 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
         }, error => {
         });
       } else if (this.userInfor.userType === 1) {
-        this.generalService.getByPartnerId(this.userInfor.partnerId).subscribe((res: any) => {
+        this.generalService.getUsersByPartnerId(this.userInfor.partnerId).subscribe((res: any) => {
           if (res !== null) {
-            this.datas = res;
+            this.datas = res.data;
             let stt = 0;
             this.datas.forEach(en => {
               stt++;
