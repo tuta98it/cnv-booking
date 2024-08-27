@@ -59,14 +59,14 @@ export class ActionPartnerComponent implements OnInit {
   PAYMENT_PERIOD_DAYS_OPTIONS = [];
   actionPartnerVHL: any;
   settingTableListEmployeesForm: FormGroup;
-  allChecked = false;
-  indeterminate = false;
+  allCheckedEmployee = false;
+  indeterminateEmployee = false;
   fixedColumn = false;
   scrollX: string | null = null;
   scrollY: string | null = null;
   settingTableEmployeesValue: NZTableSettingCustoms;
   listOfEmployees: readonly ItemData[] = [];
-  displayData: readonly ItemData[] = [];
+  displayDataEmployee: readonly ItemData[] = [];
   formBaseInfoCreatePartner: FormGroup;
   formBaseBusinessContractUpdate: FormGroup;
   settingUploadAuthorizationFile: UploadFileSetting;
@@ -437,20 +437,20 @@ export class ActionPartnerComponent implements OnInit {
 
 
   currentPageDataChangeEmployee($event: readonly ItemData[]): void {
-    this.displayData = $event;
+    this.displayDataEmployee = $event;
     this.refreshStatusEmployee();
   }
 
   refreshStatusEmployee(): void {
-    const validData = this.displayData.filter(value => !value.disabled);
-    const allChecked = validData.length > 0 && validData.every(value => value.checked === true);
-    const allUnChecked = validData.every(value => !value.checked);
-    this.allChecked = allChecked;
-    this.indeterminate = !allChecked && !allUnChecked;
+    const validDataEmployee = this.displayDataEmployee.filter(value => !value.disabled);
+    const allCheckedEmployee = validDataEmployee.length > 0 && validDataEmployee.every(value => value.checked === true);
+    const allUnCheckedEmployee = validDataEmployee.every(value => !value.checked);
+    this.allCheckedEmployee = allCheckedEmployee;
+    this.indeterminateEmployee = !allCheckedEmployee && !allUnCheckedEmployee;
   }
 
   checkAllEmployees(value: boolean): void {
-    this.displayData.forEach(data => {
+    this.displayDataEmployee.forEach(data => {
       if (!data.disabled) {
         data.checked = value;
       }

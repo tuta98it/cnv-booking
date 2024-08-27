@@ -503,8 +503,8 @@
                 <thead>
                   <tr *ngIf="settingTableEmployeesValue.header">
                     <th nzWidth="40px" *ngIf="settingTableEmployeesValue.expandable" [nzLeft]="fixedColumn"></th>
-                    <th *ngIf="settingTableEmployeesValue.checkbox" nzWidth="60px" [(nzChecked)]="allChecked"
-                      [nzLeft]="fixedColumn" [nzIndeterminate]="indeterminate" (nzCheckedChange)="checkAllEmployees($event)">
+                    <th *ngIf="settingTableEmployeesValue.checkbox" nzWidth="60px" [(nzChecked)]="allCheckedEmployee"
+                      [nzLeft]="fixedColumn" [nzIndeterminate]="indeterminateEmployee" (nzCheckedChange)="checkAllEmployees($event)">
                     </th>
                     <th [nzLeft]="fixedColumn">Vai trò</th>
                     <th [nzLeft]="fixedColumn">Mã người dùng</th>
