@@ -6,7 +6,9 @@ import { ActionPartnerComponent as ActionPartnerComponent } from './action-compa
 import { ActionTypePageVHL } from 'src/app/enums/action-type-page-vhl.enum';
 
 const routes: Routes = [
-  { path: '', component: PartnerComponent, canActivate: [AuthGuard] },
+  {
+    path: '', component: PartnerComponent, canActivate: [AuthGuard]
+  },
   {
     path: 'create', component: ActionPartnerComponent, canActivate: [AuthGuard], data: {
       pagename: 'Danh sách doanh nghiệp',
@@ -20,11 +22,19 @@ const routes: Routes = [
       breadcrumb: 'Cập nhật',
       type: ActionTypePageVHL.Update
     }
+
+  },
+  {
+    path: 'employee-action',
+    loadChildren: () =>
+      import('../upgraed-employee/upgrade-employee.module').then(
+        (m) => m.UpgradeEmployeeModule
+      ),
   },
 ]
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+exports: [RouterModule]
 })
 export class PartnerRoutingModule { }

@@ -13,7 +13,6 @@ import { UploadFileSetting } from 'src/app/Interfaces/upload-file-setting.interf
 import { AppConfigService } from 'src/app-config.service';
 import { TypeOfDocument } from 'src/app/enums/type-of-document.enum';
 import { Constant } from 'src/app/shared/constants/constant.class';
-import { GeneralService } from './../../../../../service/general-service';
 import { NotificationService } from 'src/app/service/notification.service';
 import { BusinessServiceType } from 'src/app/enums/business-service-type';
 import { PaymentPeriod, PAYMENT_PERIOD_VHL_OPTIONS, PAYMENT_PERIOD_FULL_OPTIONS } from 'src/app/enums/payment-period.enum';
@@ -22,25 +21,16 @@ import { DAYS_OF_MONTH_OPTIONS, DaysOfMonth } from 'src/app/enums/days-of-month.
 import { MONTHS_OPTIONS, MonthsOfTheYear } from 'src/app/enums/months-of-the-year.enum';
 import { UserType } from 'src/app/enums/user-type.enum';
 import { removeAccents } from 'src/app/shared/utils/filters/remove-accents';
-
-// interface ItemData {
-//   name: string;
-//   age: number | string;
-//   address: string;
-//   checked: boolean;
-//   expand: boolean;
-//   description: string;
-//   disabled?: boolean;
-// }
+import { GeneralService } from 'src/app/service/general-service';
 
 type TableScroll = 'unset' | 'scroll' | 'fixed';
 
 @Component({
-  selector: 'app-action-partner',
-  templateUrl: './action-partner.component.html',
-  styleUrls: ['./action-partner.component.scss']
+  selector: 'app-upgrade-employee',
+  templateUrl: './upgrade-employee.component.html',
+  styleUrls: ['./upgrade-employee.component.scss']
 })
-export class ActionPartnerComponent implements OnInit {
+export class UpgradeEmployeeComponent implements OnInit {
 
   ActionTypePageVHL = ActionTypePageVHL;
   MenuCreatePartner = MenuCreatePartner;
@@ -781,6 +771,4 @@ export class ActionPartnerComponent implements OnInit {
   cancelUpdateContractInfoForPartner() {
     this.formBaseBusinessContractUpdate.reset();
   }
-
-
 }
