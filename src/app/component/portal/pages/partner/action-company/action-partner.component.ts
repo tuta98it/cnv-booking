@@ -211,6 +211,7 @@ export class ActionPartnerComponent implements OnInit {
       this.setIsActiveEditBaseInfo(true);
       this.activatedRoute.queryParams.subscribe(async params => {
         let idPartner = +params['id']; // Lấy id từ query parameter
+
         this.settingUploadAuthorizationFile = {
           isMultiple: true,
           action: `${this.configService.getConfig().api.baseUrl}/Upload/UploadPartnerFile?partnerId=${idPartner}&type=${TypeOfDocument.AuthorizationFile}`,
@@ -252,6 +253,7 @@ export class ActionPartnerComponent implements OnInit {
             showRemoveIcon: true
           }
         } as UploadFileSetting;
+
         this.itemPartner = await this.getPartnerById(idPartner).catch((reject) => {
           this.notificationService.showNotification(Constant.ERROR, `Lỗi truy vận dữ liệu doanh nghiệp`);
           this.router.navigate([['/companies']]);
@@ -361,6 +363,7 @@ export class ActionPartnerComponent implements OnInit {
     return new Promise((resolve, reject) => {
       this.generalService.getPartnerById(partnerId).subscribe((res: any) => {
         if (res) {
+
           resolve(res);
         } else {
           reject("Không tìm thấy doanh nghiệp này");
@@ -379,6 +382,7 @@ export class ActionPartnerComponent implements OnInit {
         this.employees.forEach(en => {
           stt++;
           en.stt = stt;
+          en.checked = true;
         });
       }
     }, error => {
@@ -390,6 +394,12 @@ export class ActionPartnerComponent implements OnInit {
     return new Promise((resolve, reject) => {
       this.generalService.getUsersByPartnerId(idPartner).subscribe((res: any) => {
         if (res.isValid) {
+          let stt = 0;
+          res.data.forEach(en => {
+            stt++;
+            en.stt = stt;
+            en.checked = true;
+          });
           resolve(res.data);
         } else {
           if (res.errors && res.errors.length > 0) {
