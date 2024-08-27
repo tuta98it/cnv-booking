@@ -8,7 +8,6 @@
         [(ngModel)]="payloadAdminrequestbooking.status" (ngModelChange)="getListData()">
         <nz-option *ngFor="let option of AIRLINE_TICKET_BOOKING_REQUEST_STATUS_OPTIONS" [nzLabel]="option.label"
           [nzValue]="option.value"></nz-option>
-
       </nz-select>
     </div>
   </div>
@@ -22,9 +21,9 @@
   </nz-select> -->
   <div class="form-group" style="float: right; display: flex; float: right">
     <!-- Tìm kiếm -->
-    <input style="width: 200px; border-radius: 4px; height: 32px; margin-right: 10px;" nzSize="small" nz-input
+    <!-- <input style="width: 200px; border-radius: 4px; height: 32px; margin-right: 10px;" nzSize="small" nz-input
       type="text" [(ngModel)]="searchText" (keyup)="onSearch()"
-      placeholder="Tìm kiếm theo Tên người đặt vé, SĐT, Email ...">
+      placeholder="Tìm kiếm theo Tên người đặt vé, SĐT, Email ..."> -->
 
 
 

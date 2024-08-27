@@ -204,38 +204,38 @@
       </div>
     </div>
   </form>
-  <form [formGroup]="formBaseBusinessContractUpdate">
-    <div nz-row [nzGutter]="[16, 24]">
-      <div nz-col class="gutter-row" [nzSpan]="24">
-        <div class="inner-box">
-          <ul nz-menu nzMode="horizontal">
-            <li nz-menu-item [nzSelected]="selectedMenu == option.value"
-              *ngFor="let option of MENU_CREATE_PARTNER_OPTION; let i = index" (click)="selectedMenu = option.value">
-              {{option.label}}
-            </li>
-          </ul>
-          <div style="margin: 16px 0;"></div>
+  <div nz-row [nzGutter]="[16, 24]">
+    <div nz-col class="gutter-row" [nzSpan]="24">
+      <div class="inner-box">
+        <ul nz-menu nzMode="horizontal">
+          <li nz-menu-item [nzSelected]="selectedMenu == option.value"
+            *ngFor="let option of MENU_CREATE_PARTNER_OPTION; let i = index" (click)="selectedMenu = option.value">
+            {{option.label}}
+          </li>
+        </ul>
+        <div style="margin: 16px 0;"></div>
 
-          <div *ngIf="selectedMenu == MenuCreatePartner.ContractManagement">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-              <span style="font-weight: 500; font-size: 16px;">Quản lý thông tin hợp đồng</span>
-              <div>
-                <button nz-button nzType="primary" style="margin-right: 8px;" [disabled]="!itemPartner?.id"
-                  (click)="saveUpdateContractInfoForPartner()">
-                  <div style="display: flex; align-items: center;">
-                    <span nz-icon nzType="save"></span>
-                    <span style="margin-left: 6px; line-height: normal;">Lưu lại</span>
-                  </div>
-                </button>
-                <button nz-button nzType="default" (click)="cancelUpdateContractInfoForPartner()">
-                  <div style="display: flex; align-items: center;">
-                    <span nz-icon nzType="close"></span>
-                    <span style="margin-left: 4px; line-height: normal;">Huỷ bỏ</span>
-                  </div>
-                </button>
-              </div>
+
+        <div *ngIf="selectedMenu == MenuCreatePartner.ContractManagement">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-weight: 500; font-size: 16px;">Quản lý thông tin hợp đồng</span>
+            <div>
+              <button nz-button nzType="primary" style="margin-right: 8px;" [disabled]="!itemPartner?.id"
+                (click)="saveUpdateContractInfoForPartner()">
+                <div style="display: flex; align-items: center;">
+                  <span nz-icon nzType="save"></span>
+                  <span style="margin-left: 6px; line-height: normal;">Lưu lại</span>
+                </div>
+              </button>
+              <button nz-button nzType="default" (click)="cancelUpdateContractInfoForPartner()">
+                <div style="display: flex; align-items: center;">
+                  <span nz-icon nzType="close"></span>
+                  <span style="margin-left: 4px; line-height: normal;">Huỷ bỏ</span>
+                </div>
+              </button>
             </div>
-
+          </div>
+          <form [formGroup]="formBaseBusinessContractUpdate">
             <div>
               <div style="height: 1px; margin: 16px 0; background-color: #0000000f;"></div>
               <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
@@ -435,147 +435,150 @@
                 </div>
               </div>
             </div>
-          </div>
+          </form>
+        </div>
 
-          <div *ngIf="selectedMenu == MenuCreatePartner.ListEmployees">
-            <!-- Menu list emloyees -->
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-              <span style="font-weight: 500; font-size: 16px;">Danh sách nhân viên</span>
-              <div style="display: flex; align-items: center;">
-                <input style="width: 200px; border-radius: 4px; height: 32px; margin-right: 4rem;" nzSize="default"
-                  nz-input type="text" placeholder="Tìm kiếm nhân viên">
-                <div>
-                  <button [disabled]="!itemPartner?.id" nz-button nz-dropdown nzType="primary"
-                    style="margin-right: 0.5rem;" [nzDropdownMenu]="menuListEmployeesVHL">
-                    <div style="display: flex; align-items: center;">
-                      <span nz-icon nzType="plus"></span>
-                      <span style="margin: 0 6px; line-height: normal;">Thêm mới</span>
-                      <span nz-icon nzType="down"></span>
-                    </div>
-                  </button>
-                  <nz-dropdown-menu [disabled]="!itemPartner?.id" #menuListEmployeesVHL="nzDropdownMenu">
-                    <ul nz-menu>
-                      <li nz-menu-item style="padding: 0.5rem 0;">
-                        <div style="display: flex; align-items: center;">
-                          <span nz-icon nzType="plus"></span>
-                          <span style="margin-left: 6px; line-height: normal;">Thêm nhân viên</span>
-                        </div>
-                      </li>
-                      <li nz-menu-item style="padding: 0.5rem 0;">
-                        <div style="display: flex; align-items: center;">
-                          <span nz-icon nzType="upload"></span>
-                          <span style="margin-left: 6px; line-height: normal;">Tải lên file excel</span>
-                        </div>
-                      </li>
-                    </ul>
-                  </nz-dropdown-menu>
-                </div>
-                <button [disabled]="!itemPartner?.id" nz-button nzType="default" style="margin-right: 0.5rem;">
+        <div *ngIf="selectedMenu == MenuCreatePartner.ListEmployees">
+          <!-- Menu list emloyees -->
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-weight: 500; font-size: 16px;">Danh sách nhân viên</span>
+            <div style="display: flex; align-items: center;">
+              <input style="width: 200px; border-radius: 4px; height: 32px; margin-right: 4rem;" nzSize="default"
+                nz-input type="text" placeholder="Tìm kiếm nhân viên" [(ngModel)]="searchEmployee"
+                (keyup)="onSearchEmployee()">
+              <div>
+                <button [disabled]="!itemPartner?.id" nz-button nz-dropdown nzType="primary"
+                  style="margin-right: 0.5rem;" [nzDropdownMenu]="menuListEmployeesVHL">
                   <div style="display: flex; align-items: center;">
+                    <span nz-icon nzType="plus"></span>
+                    <span style="margin: 0 6px; line-height: normal;">Thêm mới</span>
                     <span nz-icon nzType="down"></span>
-                    <span style="margin-left: 6px; line-height: normal;">Xuất file excel</span>
                   </div>
                 </button>
-                <button [disabled]="!itemPartner?.id" nz-button nzType="default" nzDanger>
-                  <div style="display: flex; align-items: center;">
-                    <span nz-icon nzType="lock"></span>
-                    <span style="margin-left: 4px; line-height: normal;">Khoá tài khoản</span>
-                  </div>
-                </button>
+                <nz-dropdown-menu [disabled]="!itemPartner?.id" #menuListEmployeesVHL="nzDropdownMenu">
+                  <ul nz-menu>
+                    <li nz-menu-item style="padding: 0.5rem 0;">
+                      <div style="display: flex; align-items: center;">
+                        <span nz-icon nzType="plus"></span>
+                        <span style="margin-left: 6px; line-height: normal;">Thêm nhân viên</span>
+                      </div>
+                    </li>
+                    <li nz-menu-item style="padding: 0.5rem 0;">
+                      <div style="display: flex; align-items: center;">
+                        <span nz-icon nzType="upload"></span>
+                        <span style="margin-left: 6px; line-height: normal;">Tải lên file excel</span>
+                      </div>
+                    </li>
+                  </ul>
+                </nz-dropdown-menu>
               </div>
+              <button [disabled]="!itemPartner?.id" nz-button nzType="default" style="margin-right: 0.5rem;">
+                <div style="display: flex; align-items: center;">
+                  <span nz-icon nzType="download"></span>
+                  <span style="margin-left: 6px; line-height: normal;">Xuất file excel</span>
+                </div>
+              </button>
+              <button [disabled]="!itemPartner?.id" nz-button nzType="default" nzDanger>
+                <div style="display: flex; align-items: center;">
+                  <span nz-icon nzType="lock"></span>
+                  <span style="margin-left: 4px; line-height: normal;">Khoá tài khoản</span>
+                </div>
+              </button>
             </div>
-            <div style="margin: 16px 0;"></div>
-            <!-- Content lisst employees -->
-            <div>
-              <nz-table #tagEmployeeTable [nzScroll]="{ x: scrollX, y: scrollY }" [nzData]="listOfEmployees"
-                [nzTableLayout]="settingTableEmployeesValue.tableLayout"
-                [nzBordered]="settingTableEmployeesValue.bordered" [nzSimple]="settingTableEmployeesValue.simple"
-                [nzLoading]="settingTableEmployeesValue.loading"
-                [nzPaginationType]="settingTableEmployeesValue.paginationType"
-                [nzPaginationPosition]="settingTableEmployeesValue.position"
-                [nzShowSizeChanger]="settingTableEmployeesValue.sizeChanger"
-                [nzFrontPagination]="settingTableEmployeesValue.pagination"
-                [nzShowPagination]="settingTableEmployeesValue.pagination"
-                [nzFooter]="settingTableEmployeesValue.footer ? 'Here is Footer' : null"
-                [nzTitle]="settingTableEmployeesValue.title ? 'Here is Title' : null"
-                [nzNoResult]="settingTableEmployeesValue.noResultText ? settingTableEmployeesValue.noResultText : ''"
-                [nzSize]="settingTableEmployeesValue.size" (nzCurrentPageDataChange)="currentPageDataChangeEmployee($event)">
-                <thead>
-                  <tr *ngIf="settingTableEmployeesValue.header">
-                    <th nzWidth="40px" *ngIf="settingTableEmployeesValue.expandable" [nzLeft]="fixedColumn"></th>
-                    <th *ngIf="settingTableEmployeesValue.checkbox" nzWidth="60px" [(nzChecked)]="allCheckedEmployee"
-                      [nzLeft]="fixedColumn" [nzIndeterminate]="indeterminateEmployee" (nzCheckedChange)="checkAllEmployees($event)">
-                    </th>
-                    <th [nzLeft]="fixedColumn">Vai trò</th>
-                    <th [nzLeft]="fixedColumn">Mã người dùng</th>
-                    <th>Tên nhân viên</th>
-                    <th>Trạng thái</th>
-                    <th>Email</th>
-                    <th>Số điện thoại</th>
-                    <th>Giới tính</th>
-                    <th>Quản lý trực tiếp</th>
-                    <th>Mã thẻ thành viên</th>
-                    <th [nzRight]="fixedColumn" class="text-aligin-center">Thao tác</th>
+          </div>
+          <div style="margin: 16px 0;"></div>
+          <!-- Content lisst employees -->
+          <div>
+            <nz-table #tagEmployeeTable [nzScroll]="{ x: scrollX, y: scrollY }" [nzData]="listOfEmployees"
+              [nzTableLayout]="settingTableEmployeesValue.tableLayout"
+              [nzBordered]="settingTableEmployeesValue.bordered" [nzSimple]="settingTableEmployeesValue.simple"
+              [nzLoading]="settingTableEmployeesValue.loading"
+              [nzPaginationType]="settingTableEmployeesValue.paginationType"
+              [nzPaginationPosition]="settingTableEmployeesValue.position"
+              [nzShowSizeChanger]="settingTableEmployeesValue.sizeChanger"
+              [nzFrontPagination]="settingTableEmployeesValue.pagination"
+              [nzShowPagination]="settingTableEmployeesValue.pagination"
+              [nzFooter]="settingTableEmployeesValue.footer ? 'Here is Footer' : null"
+              [nzTitle]="settingTableEmployeesValue.title ? 'Here is Title' : null"
+              [nzNoResult]="settingTableEmployeesValue.noResultText ? settingTableEmployeesValue.noResultText : ''"
+              [nzSize]="settingTableEmployeesValue.size"
+              (nzCurrentPageDataChange)="currentPageDataChangeEmployee($event)">
+              <thead>
+                <tr *ngIf="settingTableEmployeesValue.header">
+                  <th nzWidth="40px" *ngIf="settingTableEmployeesValue.expandable" [nzLeft]="fixedColumn"></th>
+                  <th *ngIf="settingTableEmployeesValue.checkbox" nzWidth="60px" [(nzChecked)]="allCheckedEmployee"
+                    [nzLeft]="fixedColumn" [nzIndeterminate]="indeterminateEmployee"
+                    (nzCheckedChange)="checkAllEmployees($event)">
+                  </th>
+                  <th [nzLeft]="fixedColumn">Vai trò</th>
+                  <th [nzLeft]="fixedColumn">Mã người dùng</th>
+                  <th>Tên nhân viên</th>
+                  <th>Trạng thái</th>
+                  <th>Email</th>
+                  <th>Số điện thoại</th>
+                  <th>Giới tính</th>
+                  <th>Quản lý trực tiếp</th>
+                  <th>Mã thẻ thành viên</th>
+                  <th [nzRight]="fixedColumn" class="text-aligin-center">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngFor="let data of tagEmployeeTable.data">
+                  <tr>
+                    <td [nzLeft]="fixedColumn" *ngIf="settingTableEmployeesValue.expandable" [(nzExpand)]="data.expand">
+                    </td>
+                    <td [nzLeft]="fixedColumn" *ngIf="settingTableEmployeesValue.checkbox" [(nzChecked)]="data.checked"
+                      (nzCheckedChange)="refreshStatusEmployee()"></td>
+                    <td [nzLeft]="fixedColumn">{{ data.userType | userTypePipe }}</td>
+                    <td>{{ data.userCode }}</td>
+                    <td>{{ data.fullname }}</td>
+                    <td>{{ data.status | partnerStatusPipe}}</td>
+                    <td [nzEllipsis]="settingTableEmployeesValue.ellipsis">{{ data.email }}</td>
+                    <td>{{ data.phoneNo }}</td>
+                    <td>{{ data.gender | genderPipe }}</td>
+                    <td>{{ data.directManagementUserId | employeePipe : employees }}</td>
+                    <td>{{ data.membershipCode }}</td>
+                    <td [nzRight]="fixedColumn" [nzEllipsis]="settingTableEmployeesValue.ellipsis"
+                      class="text-aligin-center">
+                      <button title="Sửa thông tin tài khoản" nz-button nzSize="small" nzType="default"
+                        class="button-update">
+                        <span class="fa fa-edit fa-fw"></span>
+                      </button>
+
+
+                      <button title="Thiết lập lại mật khẩu" nz-button nzSize="small" nzType="default"
+                        class="button-update">
+                        <span class="fa fa-key fa-fw"></span>
+                      </button>
+
+
+
+                      <button title="Khóa quyền truy cập trang Customer Portal" nz-button nzSize="small"
+                        nzType="default" class="button-update ant-btn-red">
+                        <span class="fa fa-lock fa-fw"></span>
+                      </button>
+
+                      <button title="Mở khóa quyền truy cập trang Customer Portal" nz-button nzSize="small"
+                        nzType="default" class="button-update">
+                        <span class='fa fa-unlock fa-fw '></span>
+                      </button>
+
+
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  <ng-container *ngFor="let data of tagEmployeeTable.data">
-                    <tr>
-                      <td [nzLeft]="fixedColumn" *ngIf="settingTableEmployeesValue.expandable"
-                        [(nzExpand)]="data.expand">
-                      </td>
-                      <td [nzLeft]="fixedColumn" *ngIf="settingTableEmployeesValue.checkbox"
-                        [(nzChecked)]="data.checked" (nzCheckedChange)="refreshStatusEmployee()"></td>
-                      <td [nzLeft]="fixedColumn">{{ data.userType | userTypePipe }}</td>
-                      <td>{{ data.userCode }}</td>
-                      <td>{{ data.fullname }}</td>
-                      <td>{{ data.status | partnerStatusPipe}}</td>
-                      <td [nzEllipsis]="settingTableEmployeesValue.ellipsis">{{ data.email }}</td>
-                      <td>{{ data.phoneNo }}</td>
-                      <td>{{ data.gender | genderPipe }}</td>
-                      <td>{{ data.directManagementUserId | employeePipe : employees }}</td>
-                      <td>{{ data.membershipCode }}</td>
-                      <td [nzRight]="fixedColumn" [nzEllipsis]="settingTableEmployeesValue.ellipsis"
-                        class="text-aligin-center">
-                        <button title="Sửa thông tin tài khoản" nz-button nzSize="small" nzType="default"
-                          class="button-update">
-                          <span class="fa fa-edit fa-fw"></span>
-                        </button>
-
-
-                        <button title="Thiết lập lại mật khẩu" nz-button nzSize="small" nzType="default"
-                          class="button-update">
-                          <span class="fa fa-key fa-fw"></span>
-                        </button>
-
-
-
-                        <button title="Khóa quyền truy cập trang Customer Portal" nz-button nzSize="small"
-                          nzType="default" class="button-update ant-btn-red">
-                          <span class="fa fa-lock fa-fw"></span>
-                        </button>
-
-                        <button title="Mở khóa quyền truy cập trang Customer Portal" nz-button nzSize="small"
-                          nzType="default" class="button-update">
-                          <span class='fa fa-unlock fa-fw '></span>
-                        </button>
-
-
-                      </td>
-                    </tr>
-                    <tr *ngIf="settingTableEmployeesValue.expandable" [nzExpand]="data.expand">
-                      <span>{{ data.description }}</span>
-                    </tr>
-                  </ng-container>
-                </tbody>
-              </nz-table>
-            </div>
+                  <tr *ngIf="settingTableEmployeesValue.expandable" [nzExpand]="data.expand">
+                    <span>{{ data.description }}</span>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </nz-table>
           </div>
-          <div *ngIf="selectedMenu == MenuCreatePartner.AccountInfomation">
-            <span style="font-weight: 500; font-size: 16px;">Thông tin tài khoản</span>
-          </div>
+        </div>
+
+        <div *ngIf="selectedMenu == MenuCreatePartner.AccountInfomation">
+          <span style="font-weight: 500; font-size: 16px;">Thông tin tài khoản</span>
         </div>
       </div>
     </div>
-  </form>
+  </div>
 </div>

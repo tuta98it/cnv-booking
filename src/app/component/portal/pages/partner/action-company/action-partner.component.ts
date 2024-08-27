@@ -21,16 +21,17 @@ import { Weekdays, WEEKDAYS_OPTIONS } from 'src/app/enums/weekdays.enum';
 import { DAYS_OF_MONTH_OPTIONS, DaysOfMonth } from 'src/app/enums/days-of-month.enum';
 import { MONTHS_OPTIONS, MonthsOfTheYear } from 'src/app/enums/months-of-the-year.enum';
 import { UserType } from 'src/app/enums/user-type.enum';
+import { removeAccents } from 'src/app/shared/utils/filters/remove-accents';
 
-interface ItemData {
-  name: string;
-  age: number | string;
-  address: string;
-  checked: boolean;
-  expand: boolean;
-  description: string;
-  disabled?: boolean;
-}
+// interface ItemData {
+//   name: string;
+//   age: number | string;
+//   address: string;
+//   checked: boolean;
+//   expand: boolean;
+//   description: string;
+//   disabled?: boolean;
+// }
 
 type TableScroll = 'unset' | 'scroll' | 'fixed';
 
@@ -40,6 +41,7 @@ type TableScroll = 'unset' | 'scroll' | 'fixed';
   styleUrls: ['./action-partner.component.scss']
 })
 export class ActionPartnerComponent implements OnInit {
+
   ActionTypePageVHL = ActionTypePageVHL;
   MenuCreatePartner = MenuCreatePartner;
   MENU_CREATE_PARTNER_OPTION = MENU_CREATE_PARTNER_OPTION;
@@ -65,8 +67,8 @@ export class ActionPartnerComponent implements OnInit {
   scrollX: string | null = null;
   scrollY: string | null = null;
   settingTableEmployeesValue: NZTableSettingCustoms;
-  listOfEmployees: readonly ItemData[] = [];
-  displayDataEmployee: readonly ItemData[] = [];
+  listOfEmployees: readonly any[] = [];
+  displayDataEmployee: readonly any[] = [];
   formBaseInfoCreatePartner: FormGroup;
   formBaseBusinessContractUpdate: FormGroup;
   settingUploadAuthorizationFile: UploadFileSetting;
@@ -87,6 +89,7 @@ export class ActionPartnerComponent implements OnInit {
   itemPartner: any = null;
   employees: any;
   isActiveEditBaseInfo: boolean = false;
+  searchEmployee: string = '';
 
   constructor(
     private msg: NzMessageService,
@@ -420,23 +423,8 @@ export class ActionPartnerComponent implements OnInit {
   }
 
 
-  generateData(): readonly ItemData[] {
-    const data = [];
-    for (let i = 1; i <= 100; i++) {
-      data.push({
-        name: 'John Brown',
-        age: `${i}2`,
-        address: `New York No. ${i} Lake Park`,
-        description: `My name is John Brown, I am ${i}2 years old, living in New York No. ${i} Lake Park.`,
-        checked: false,
-        expand: false
-      });
-    }
-    return data;
-  }
 
-
-  currentPageDataChangeEmployee($event: readonly ItemData[]): void {
+  currentPageDataChangeEmployee($event: readonly any[]): void {
     this.displayDataEmployee = $event;
     this.refreshStatusEmployee();
   }
@@ -458,6 +446,21 @@ export class ActionPartnerComponent implements OnInit {
     this.refreshStatusEmployee();
   }
 
+  onSearchEmployee() {
+    const keyword = removeAccents(this.searchEmployee.trim().toLowerCase());
+    if (keyword) {
+      this.listOfEmployees = this.listOfEmployees.filter((en) =>
+        removeAccents(en.fullname?.trim()).toLowerCase().includes(keyword) ||
+        removeAccents(en.username?.trim()).toLowerCase().includes(keyword) ||
+        removeAccents(en.phoneNo?.trim()).toLowerCase().includes(keyword) ||
+        removeAccents(en.email?.trim()).toLowerCase().includes(keyword)
+      );
+    } else {
+      this.getUsersByPartnerId(this.itemPartner?.id).then((result: any) => {
+        this.listOfEmployees = result;
+      });
+    }
+  }
 
   handleChangeUploadAuthorizationFile(info: NzUploadChangeParam): void {
     if (info.file.status !== 'uploading') {
@@ -776,4 +779,6 @@ export class ActionPartnerComponent implements OnInit {
   cancelUpdateContractInfoForPartner() {
     this.formBaseBusinessContractUpdate.reset();
   }
+
+
 }
