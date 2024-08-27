@@ -499,12 +499,12 @@
                 [nzFooter]="settingTableEmployeesValue.footer ? 'Here is Footer' : null"
                 [nzTitle]="settingTableEmployeesValue.title ? 'Here is Title' : null"
                 [nzNoResult]="settingTableEmployeesValue.noResultText ? settingTableEmployeesValue.noResultText : ''"
-                [nzSize]="settingTableEmployeesValue.size" (nzCurrentPageDataChange)="currentPageDataChange($event)">
+                [nzSize]="settingTableEmployeesValue.size" (nzCurrentPageDataChange)="currentPageDataChangeEmployee($event)">
                 <thead>
                   <tr *ngIf="settingTableEmployeesValue.header">
                     <th nzWidth="40px" *ngIf="settingTableEmployeesValue.expandable" [nzLeft]="fixedColumn"></th>
                     <th *ngIf="settingTableEmployeesValue.checkbox" nzWidth="60px" [(nzChecked)]="allChecked"
-                      [nzLeft]="fixedColumn" [nzIndeterminate]="indeterminate" (nzCheckedChange)="checkAll($event)">
+                      [nzLeft]="fixedColumn" [nzIndeterminate]="indeterminate" (nzCheckedChange)="checkAllEmployees($event)">
                     </th>
                     <th [nzLeft]="fixedColumn">Vai trò</th>
                     <th [nzLeft]="fixedColumn">Mã người dùng</th>
@@ -525,7 +525,7 @@
                         [(nzExpand)]="data.expand">
                       </td>
                       <td [nzLeft]="fixedColumn" *ngIf="settingTableEmployeesValue.checkbox"
-                        [(nzChecked)]="data.checked" (nzCheckedChange)="refreshStatus()"></td>
+                        [(nzChecked)]="data.checked" (nzCheckedChange)="refreshStatusEmployee()"></td>
                       <td [nzLeft]="fixedColumn">{{ data.userType | userTypePipe }}</td>
                       <td>{{ data.userCode }}</td>
                       <td>{{ data.fullname }}</td>

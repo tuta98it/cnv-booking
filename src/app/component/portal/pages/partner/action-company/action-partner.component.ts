@@ -436,12 +436,12 @@ export class ActionPartnerComponent implements OnInit {
   }
 
 
-  currentPageDataChange($event: readonly ItemData[]): void {
+  currentPageDataChangeEmployee($event: readonly ItemData[]): void {
     this.displayData = $event;
-    this.refreshStatus();
+    this.refreshStatusEmployee();
   }
 
-  refreshStatus(): void {
+  refreshStatusEmployee(): void {
     const validData = this.displayData.filter(value => !value.disabled);
     const allChecked = validData.length > 0 && validData.every(value => value.checked === true);
     const allUnChecked = validData.every(value => !value.checked);
@@ -449,13 +449,13 @@ export class ActionPartnerComponent implements OnInit {
     this.indeterminate = !allChecked && !allUnChecked;
   }
 
-  checkAll(value: boolean): void {
+  checkAllEmployees(value: boolean): void {
     this.displayData.forEach(data => {
       if (!data.disabled) {
         data.checked = value;
       }
     });
-    this.refreshStatus();
+    this.refreshStatusEmployee();
   }
 
 
