@@ -11,3 +11,10 @@ export const PARTNER_STATUS_OPTIONS = [
   { label: 'Đang hoạt động', value: PartnerStatus.Active },
   { label: 'Khoá', value: PartnerStatus.Locked },
 ]
+
+export const TEXT_PARTNER_STATUS = {
+  [PartnerStatus.Locked]: 'Khoá',
+  [PartnerStatus.CreatingProfile]: 'Đang tạo hồ sơ',
+  [PartnerStatus.PendingApproval]: 'Chờ phê duyệt',
+  [PartnerStatus.Active]: 'Đang hoạt động',
+};

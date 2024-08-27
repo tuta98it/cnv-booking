@@ -49,6 +49,8 @@ import { AirportPipe } from './pipe/airport.pipe';
 import { GenderPipe } from './pipe/gender.pipe';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { UserTypePipe } from './pipe/user-type.pipe';
+import { PartnerStatusPipe } from './pipe/partner-status.pipe';
+import { EmployeePipePipe } from './pipe/employeePipe.pipe';
 @NgModule({
   imports: [
     CommonModule,
@@ -136,6 +138,8 @@ import { UserTypePipe } from './pipe/user-type.pipe';
     AirportPipe,
     GenderPipe,
     UserTypePipe,
+    PartnerStatusPipe,
+    EmployeePipePipe,
     NzRadioModule
   ],
   declarations: [
@@ -153,6 +157,8 @@ import { UserTypePipe } from './pipe/user-type.pipe';
     AirportPipe,
     GenderPipe,
     UserTypePipe,
+    PartnerStatusPipe,
+    EmployeePipePipe,
     MViewPdfComponent
   ],
   providers: [NotificationService],
