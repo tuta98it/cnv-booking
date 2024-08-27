@@ -2,9 +2,9 @@
   <div nz-row [nzGutter]="[16, 24]">
     <div nz-col class="gutter-row" [nzSpan]="24">
       <div class="inner-box" style="display: flex; justify-content: space-between; align-items: center;">
-        <span style="font-weight: 500; font-size: 18px;">{{ actionPartnerVHL == ActionTypePageVHL.Create ? 'Thêm mới' :
-          'Cập nhật'}} doanh nghiệp</span>
-        <div>
+        <span style="font-weight: 500; font-size: 18px;">{{ actionEmployeeVHL == ActionTypePageVHL.Create ? 'Thêm mới' :
+          'Cập nhật'}} nhân viên</span>
+        <!-- <div>
           <button nz-button nzType="default" style="margin-right: 8px;">
             <div style="display: flex; align-items: center;">
               <span nz-icon nzType="send"></span>
@@ -17,20 +17,42 @@
               <span style="margin-left: 4px; line-height: normal;">Huỷ bỏ</span>
             </div>
           </button>
+        </div> -->
+        <div>
+          <button [disabled]="!isActiveEditBaseInfo" nz-button nzType="primary" style="margin-right: 8px;"
+            (click)="saveBaseInfoEmployee()">
+            <div style="display: flex; align-items: center;">
+              <span nz-icon nzType="save"></span>
+              <span style="margin-left: 6px; line-height: normal;">Lưu lại</span>
+            </div>
+          </button>
+          <button [disabled]="isActiveEditBaseInfo" nz-button nzType="primary" style="margin-right: 8px;"
+            (click)="editBaseInfoPartner()">
+            <div style="display: flex; align-items: center;">
+              <span nz-icon nzType="edit"></span>
+              <span style="margin-left: 6px; line-height: normal;">Chỉnh sửa</span>
+            </div>
+          </button>
+          <button nz-button nzType="default" (click)="cancelBaseInfoPartner()">
+            <div style="display: flex; align-items: center;">
+              <span nz-icon nzType="close"></span>
+              <span style="margin-left: 4px; line-height: normal;">Huỷ bỏ</span>
+            </div>
+          </button>
         </div>
       </div>
     </div>
   </div>
-  <form [formGroup]="formBaseInfoCreatePartner">
+  <form [formGroup]="formBaseInfoEmployee">
     <div nz-row [nzGutter]="[16, 24]">
       <div nz-col class="gutter-row" [nzSpan]="24">
         <div class="inner-box">
           <!-- Header Base Information -->
           <div style="display: flex; justify-content: space-between; align-items: center;">
             <span style="font-weight: 500; font-size: 18px;">Thông tin cơ bản</span>
-            <div>
+            <!-- <div>
               <button [disabled]="!isActiveEditBaseInfo" nz-button nzType="primary" style="margin-right: 8px;"
-                (click)="saveBaseInfoPartner()">
+                (click)="saveBaseInfoEmployee()">
                 <div style="display: flex; align-items: center;">
                   <span nz-icon nzType="save"></span>
                   <span style="margin-left: 6px; line-height: normal;">Lưu lại</span>
@@ -49,7 +71,7 @@
                   <span style="margin-left: 4px; line-height: normal;">Huỷ bỏ</span>
                 </div>
               </button>
-            </div>
+            </div> -->
           </div>
 
           <!-- Content Base Information -->
@@ -80,19 +102,19 @@
                     </div>
                     <div nz-col class="gutter-row" [nzSpan]="12">
                       <input style="border-radius: 4px;" nzSize="default" nz-input type="text" formControlName='code'
-                        placeholder="Nhập mã doanh nghiệp">
+                        placeholder="Nhập mã nhân viên">
                     </div>
                   </div>
 
                   <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
                     style="display: flex; align-items: center; padding: 8px 0;">
                     <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
-                      Tên doanh nghiệp
+                      Tên nhân viên
                       <span style="color: tomato; margin-left: 4px;">*</span>
                     </div>
                     <div nz-col class="gutter-row" [nzSpan]="12">
                       <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
-                        formControlName='companyName' placeholder="Nhập tên doanh nghiệp">
+                        formControlName='companyName' placeholder="Nhập tên nhân viên">
                     </div>
                   </div>
 
@@ -131,45 +153,44 @@
                     </div>
                     <div nz-col class="gutter-row" [nzSpan]="12">
                       <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
-                        placeholder="Nhập điện thoại doanh nghiệp" formControlName='phone'>
+                        placeholder="Nhập điện thoại nhân viên" formControlName='phone'>
                     </div>
                   </div>
 
                   <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
                     style="display: flex; align-items: center; padding: 8px 0;">
                     <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
-                      Email doanh nghiệp
+                      Email nhân viên
                     </div>
                     <div nz-col class="gutter-row" [nzSpan]="12">
                       <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
-                        placeholder="Nhập email doanh nghiệp" formControlName='email'>
+                        placeholder="Nhập email nhân viên" formControlName='email'>
                     </div>
                   </div>
 
                   <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
                     style="display: flex; align-items: center; padding: 8px 0;">
                     <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
-                      Địa chỉ doanh nghiệp
+                      Địa chỉ nhân viên
                       <span style="color: tomato; margin-left: 4px;">*</span>
                     </div>
                     <div nz-col class="gutter-row" [nzSpan]="12">
                       <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
-                        placeholder="Nhập địa chỉ doanh nghiệp" formControlName='address'>
+                        placeholder="Nhập địa chỉ nhân viên" formControlName='address'>
                     </div>
                   </div>
 
                   <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
                     style="display: flex; align-items: center; padding: 8px 0;">
                     <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
-                      Chủ doanh nghiệp
+                      Chủ nhân viên
                     </div>
                     <div nz-col class="gutter-row" [nzSpan]="12">
                       <!-- <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
-                        placeholder="Nhập chủ doanh nghiệp" formControlName='name'> -->
+                        placeholder="Nhập chủ nhân viên" formControlName='name'> -->
 
                       <nz-select style="border-radius: 4px;" nzSize="default" nzMode="default"
-                        formControlName='businessOwnerId' nzPlaceHolder="Nhập chủ doanh nghiệp" nzAllowClear
-                        nzShowSearch>
+                        formControlName='businessOwnerId' nzPlaceHolder="Nhập chủ nhân viên" nzAllowClear nzShowSearch>
                         <nz-option *ngFor="let employee of employees"
                           nzLabel="{{employee.fullname}} - {{employee.username}}" [nzValue]="employee.id"></nz-option>
                       </nz-select>
@@ -220,13 +241,13 @@
             <span style="font-weight: 500; font-size: 16px;">Quản lý thông tin hợp đồng</span>
             <div>
               <button nz-button nzType="primary" style="margin-right: 8px;" [disabled]="!itemPartner?.id"
-                (click)="saveUpdateContractInfoForPartner()">
+                (click)="saveUpdateContractInfoForEmployee()">
                 <div style="display: flex; align-items: center;">
                   <span nz-icon nzType="save"></span>
                   <span style="margin-left: 6px; line-height: normal;">Lưu lại</span>
                 </div>
               </button>
-              <button nz-button nzType="default" (click)="cancelUpdateContractInfoForPartner()">
+              <button nz-button nzType="default" (click)="cancelUpdateContractInfoForEmployee()">
                 <div style="display: flex; align-items: center;">
                   <span nz-icon nzType="close"></span>
                   <span style="margin-left: 4px; line-height: normal;">Huỷ bỏ</span>

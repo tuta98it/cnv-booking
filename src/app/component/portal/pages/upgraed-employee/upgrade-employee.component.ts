@@ -22,6 +22,7 @@ import { MONTHS_OPTIONS, MonthsOfTheYear } from 'src/app/enums/months-of-the-yea
 import { UserType } from 'src/app/enums/user-type.enum';
 import { removeAccents } from 'src/app/shared/utils/filters/remove-accents';
 import { GeneralService } from 'src/app/service/general-service';
+import { EmployeeStatus } from 'src/app/enums/employee-status.enum';
 
 type TableScroll = 'unset' | 'scroll' | 'fixed';
 
@@ -35,7 +36,7 @@ export class UpgradeEmployeeComponent implements OnInit {
   ActionTypePageVHL = ActionTypePageVHL;
   MenuCreatePartner = MenuCreatePartner;
   MENU_CREATE_PARTNER_OPTION = MENU_CREATE_PARTNER_OPTION;
-  PartnerStatus = PartnerStatus;
+  EmployeeStatus = EmployeeStatus;
   PARTNER_STATUS_OPTIONS = PARTNER_STATUS_OPTIONS;
   AllowDebtPartner = AllowDebtPartner;
   selectedMenu = MenuCreatePartner.ContractManagement;
@@ -49,7 +50,7 @@ export class UpgradeEmployeeComponent implements OnInit {
   MonthsOfTheYear = MonthsOfTheYear;
   MONTHS_OPTIONS = MONTHS_OPTIONS;
   PAYMENT_PERIOD_DAYS_OPTIONS = [];
-  actionPartnerVHL: any;
+  actionEmployeeVHL: any;
   settingTableListEmployeesForm: FormGroup;
   allCheckedEmployee = false;
   indeterminateEmployee = false;
@@ -59,7 +60,7 @@ export class UpgradeEmployeeComponent implements OnInit {
   settingTableEmployeesValue: NZTableSettingCustoms;
   listOfEmployees: readonly any[] = [];
   displayDataEmployee: readonly any[] = [];
-  formBaseInfoCreatePartner: FormGroup;
+  formBaseInfoEmployee: FormGroup;
   formBaseBusinessContractUpdate: FormGroup;
   settingUploadAuthorizationFile: UploadFileSetting;
   settingUploadBusinessLicenseFile: UploadFileSetting;
@@ -91,17 +92,23 @@ export class UpgradeEmployeeComponent implements OnInit {
     private router: Router,
   ) {
 
-    this.formBaseInfoCreatePartner = this.formBuilder.group({
+    this.formBaseInfoEmployee = this.formBuilder.group({
       id: [null],
-      status: new FormControl({ value: PartnerStatus.CreatingProfile, disabled: this.actionPartnerVHL == ActionTypePageVHL.Create }, Validators.required),
-      code: new FormControl({ value: null, disabled: false }, Validators.required),
-      companyName: new FormControl({ value: null, disabled: false }, Validators.required),
-      taxCode: new FormControl({ value: null, disabled: false }, Validators.required),
-      phone: new FormControl({ value: null, disabled: false }),
-      email: new FormControl({ value: null, disabled: false }),
-      address: new FormControl({ value: null, disabled: false }, Validators.required),
-      businessOwnerId: new FormControl({ value: null, disabled: false }),
-      allowDebt: new FormControl({ value: AllowDebtPartner.ALLOW, disabled: false }, Validators.required),
+      status: new FormControl({ value: EmployeeStatus.ACTIVE, disabled: this.actionEmployeeVHL == ActionTypePageVHL.Create }, Validators.required),
+      userType: new FormControl({ value: UserType.NormalAccount, disabled: false }),
+      userCode: new FormControl({ value: null, disabled: false }),
+      fullname: new FormControl({ value: null, disabled: false }, Validators.required),
+      cccd: new FormControl({ value: null, disabled: false }, Validators.required),
+      email: new FormControl({ value: null, disabled: false }, Validators.required),
+      gender: new FormControl({ value: null, disabled: false }, Validators.required),
+      birthday: new FormControl({ value: null, disabled: false }),
+      phoneNo: new FormControl({ value: null, disabled: false }, Validators.required),
+      nationality: new FormControl({ value: null, disabled: false }),
+      directManagementUserId: new FormControl({ value: null, disabled: false }),
+      staffCode: new FormControl({ value: null, disabled: false }),
+      membershipCode: new FormControl({ value: null, disabled: false }),
+      position: new FormControl({ value: null, disabled: false }),
+      department: new FormControl({ value: null, disabled: false }),
       // partnerAuthorizationFileIDs: [{ value: [], disabled: false }, Validators.required]
       // debtMax: [null],
       // debtUsed: [null],
@@ -152,13 +159,13 @@ export class UpgradeEmployeeComponent implements OnInit {
 
   ngAfterViewInit() {
     this.settingTableEmployeesValue = this.settingTableListEmployeesForm.value as NZTableSettingCustoms;
-    this.actionPartnerVHL = this.activatedRoute.snapshot.data['type'];
+    this.actionEmployeeVHL = this.activatedRoute.snapshot.data['type'];
     this.setIsActiveEditBaseInfo(true);
     this.listOfEmployees = [];
     this.listUploadAuthorizationFile = [];
     this.listUploadBusinessLicenseFile = [];
     this.listUploadContractFile = [];
-    if (this.actionPartnerVHL == ActionTypePageVHL.Create) {
+    if (this.actionEmployeeVHL == ActionTypePageVHL.Create) {
       this.settingUploadAuthorizationFile = {
         isMultiple: true,
         action: `${this.configService.getConfig().api.baseUrl}/Upload/UploadPartnerFile?partnerId=null&type=${TypeOfDocument.AuthorizationFile}`,
@@ -202,7 +209,7 @@ export class UpgradeEmployeeComponent implements OnInit {
       } as UploadFileSetting;
 
       this.listOfEmployees = [];
-    } else if (this.actionPartnerVHL == ActionTypePageVHL.Update) {
+    } else if (this.actionEmployeeVHL == ActionTypePageVHL.Update) {
       this.setIsActiveEditBaseInfo(true);
       this.activatedRoute.queryParams.subscribe(async params => {
         let idPartner = +params['id']; // Lấy id từ query parameter
@@ -254,7 +261,7 @@ export class UpgradeEmployeeComponent implements OnInit {
           this.router.navigate([['/companies']]);
         });
         this.resetFormBaseInfoCreatePartner(this.itemPartner);
-        this.resetFormContractUpdatePartner(this.itemPartner);
+        this.resetFormContractUpdateEmployee(this.itemPartner);
 
         this.getUsersByPartnerId(this.itemPartner?.id).then((result: any) => {
           this.listOfEmployees = result;
@@ -288,8 +295,8 @@ export class UpgradeEmployeeComponent implements OnInit {
   }
 
   private async resetFormBaseInfoCreatePartner(itemPartner: any) {
-    this.formBaseInfoCreatePartner.reset({
-      status: { value: this.itemPartner?.status || PartnerStatus.CreatingProfile, disabled: this.actionPartnerVHL == ActionTypePageVHL.Create },
+    this.formBaseInfoEmployee.reset({
+      status: { value: this.itemPartner?.status || PartnerStatus.CreatingProfile, disabled: this.actionEmployeeVHL == ActionTypePageVHL.Create },
       code: this.itemPartner?.code || null,
       companyName: this.itemPartner?.companyName || null,
       taxCode: this.itemPartner?.taxCode || null,
@@ -314,7 +321,7 @@ export class UpgradeEmployeeComponent implements OnInit {
     }
   }
 
-  private async resetFormContractUpdatePartner(itemPartner: any) {
+  private async resetFormContractUpdateEmployee(itemPartner: any) {
     this.formBaseBusinessContractUpdate.reset({
       // partnerBusinessLicenseFileIDs: this.itemPartner?.partnerBusinessLicenseFileIDs,
       // partnerContractFileIDs: this.itemPartner?.partnerContractFileIDs,
@@ -605,10 +612,10 @@ export class UpgradeEmployeeComponent implements OnInit {
   }
 
 
-  saveBaseInfoPartner() {
+  saveBaseInfoEmployee() {
 
-    if (this.formBaseInfoCreatePartner.valid) {
-      let valueSave = this.formBaseInfoCreatePartner.value;
+    if (this.formBaseInfoEmployee.valid) {
+      let valueSave = this.formBaseInfoEmployee.value;
       let listPartnerAuthorizationFileIDs = this.listUploadAuthorizationFile.map((t) => t.uid);
       valueSave.partnerAuthorizationFileIDs = listPartnerAuthorizationFileIDs;
 
@@ -652,7 +659,7 @@ export class UpgradeEmployeeComponent implements OnInit {
 
     } else {
       // Đánh dấu tất cả các trường là đã được chạm (touched) để hiển thị lỗi
-      this.formBaseInfoCreatePartner.markAllAsTouched();
+      this.formBaseInfoEmployee.markAllAsTouched();
       // this.notificationService.showNotification(Constant.SUCCESS, "Tồn tại trường thông tin chưa được nhập");
       this.msg.error(`Tồn tại trường thông tin chưa được nhập`);
     }
@@ -665,12 +672,12 @@ export class UpgradeEmployeeComponent implements OnInit {
   private setIsActiveEditBaseInfo(value: boolean) {
     this.isActiveEditBaseInfo = value;
     if (this.isActiveEditBaseInfo) {
-      this.formBaseInfoCreatePartner.enable();
-      if (this.actionPartnerVHL == ActionTypePageVHL.Create) {
-        this.formBaseInfoCreatePartner.controls['status'].disable();
+      this.formBaseInfoEmployee.enable();
+      if (this.actionEmployeeVHL == ActionTypePageVHL.Create) {
+        this.formBaseInfoEmployee.controls['status'].disable();
       }
     } else {
-      this.formBaseInfoCreatePartner.disable();
+      this.formBaseInfoEmployee.disable();
     }
   }
 
@@ -681,7 +688,7 @@ export class UpgradeEmployeeComponent implements OnInit {
 
   cancelPageActionPartner() {
     this.cancelBaseInfoPartner();
-    this.cancelUpdateContractInfoForPartner();
+    this.cancelUpdateContractInfoForEmployee();
     this.router.navigate(['/companies'])
   }
 
@@ -728,7 +735,7 @@ export class UpgradeEmployeeComponent implements OnInit {
 
   }
 
-  saveUpdateContractInfoForPartner() {
+  saveUpdateContractInfoForEmployee() {
     let partnerBusinessLicenseFileIds = this.listUploadBusinessLicenseFile?.map((bl: any) => bl.uid) ?? null;
     this.formBaseBusinessContractUpdate.controls['partnerBusinessLicenseFileIDs'].setValue(partnerBusinessLicenseFileIds);
 
@@ -762,13 +769,13 @@ export class UpgradeEmployeeComponent implements OnInit {
 
     } else {
       // Đánh dấu tất cả các trường là đã được chạm (touched) để hiển thị lỗi
-      this.formBaseInfoCreatePartner.markAllAsTouched();
+      this.formBaseInfoEmployee.markAllAsTouched();
       // this.notificationService.showNotification(Constant.SUCCESS, "Tồn tại trường thông tin chưa được nhập");
       this.msg.error(`Tồn tại trường thông tin chưa được nhập`);
     }
   }
 
-  cancelUpdateContractInfoForPartner() {
+  cancelUpdateContractInfoForEmployee() {
     this.formBaseBusinessContractUpdate.reset();
   }
 }
