@@ -349,6 +349,7 @@ export class ActionPartnerComponent implements OnInit {
       ...option,
       checked: selectedServices.includes(option.value)
     }));
+
     this.listUploadBusinessLicenseFile = [];
     const partnerBusinessLicenseFiles = await itemPartner.partnerFiles.filter((f: { type: TypeOfDocument }) => f.type == TypeOfDocument.BusinessLicenseFile);
     for (const partnerFile of partnerBusinessLicenseFiles) {
@@ -789,5 +790,7 @@ export class ActionPartnerComponent implements OnInit {
     this.formBaseBusinessContractUpdate.reset();
   }
 
-
+  navigatePage(url: string) {
+    this.router.navigate([url])
+  }
 }

@@ -12,3 +12,8 @@ export const TEXT_USER_TYPE = {
   [UserType.MasterAccount]: "Master Account",
   [UserType.NormalAccount] : "Normal Account",
 }
+
+export const USES_TYPE_OPTIONS = [
+  { label: 'Master Account', value: UserType.MasterAccount },
+  { label: 'Normal Account', value: UserType.NormalAccount },
+]

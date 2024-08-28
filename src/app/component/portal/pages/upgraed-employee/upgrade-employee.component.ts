@@ -8,7 +8,6 @@ import { NzTableLayout, NzTablePaginationPosition, NzTablePaginationType, NzTabl
 import { NZTableSettingCustoms } from 'src/app/Interfaces/nz-table-seting.interface';
 import { ActionTypePageVHL } from 'src/app/enums/action-type-page-vhl.enum';
 import { AllowDebtPartner } from 'src/app/shared/constants/allow-debt-partner.class';
-import { PARTNER_STATUS_OPTIONS, PartnerStatus } from 'src/app/enums/partner-status.enum';
 import { UploadFileSetting } from 'src/app/Interfaces/upload-file-setting.interface';
 import { AppConfigService } from 'src/app-config.service';
 import { TypeOfDocument } from 'src/app/enums/type-of-document.enum';
@@ -19,10 +18,12 @@ import { PaymentPeriod, PAYMENT_PERIOD_VHL_OPTIONS, PAYMENT_PERIOD_FULL_OPTIONS 
 import { Weekdays, WEEKDAYS_OPTIONS } from 'src/app/enums/weekdays.enum';
 import { DAYS_OF_MONTH_OPTIONS, DaysOfMonth } from 'src/app/enums/days-of-month.enum';
 import { MONTHS_OPTIONS, MonthsOfTheYear } from 'src/app/enums/months-of-the-year.enum';
-import { UserType } from 'src/app/enums/user-type.enum';
+import { USES_TYPE_OPTIONS, TEXT_USER_TYPE, UserType } from 'src/app/enums/user-type.enum';
 import { removeAccents } from 'src/app/shared/utils/filters/remove-accents';
 import { GeneralService } from 'src/app/service/general-service';
-import { EmployeeStatus } from 'src/app/enums/employee-status.enum';
+import { USER_STATUS_OPTIONS, UserStatus } from 'src/app/enums/user-status.enum';
+import { TEXT_PARTNER_STATUS } from 'src/app/enums/partner-status.enum';
+import { Gender, GENDER_OPTIONS, TEXT_GENDER } from 'src/app/enums/gender.enum';
 
 type TableScroll = 'unset' | 'scroll' | 'fixed';
 
@@ -36,8 +37,19 @@ export class UpgradeEmployeeComponent implements OnInit {
   ActionTypePageVHL = ActionTypePageVHL;
   MenuCreatePartner = MenuCreatePartner;
   MENU_CREATE_PARTNER_OPTION = MENU_CREATE_PARTNER_OPTION;
-  EmployeeStatus = EmployeeStatus;
-  PARTNER_STATUS_OPTIONS = PARTNER_STATUS_OPTIONS;
+
+  EmployeeStatus = UserStatus;
+  EMPLOYEE_STATUS_OPTIONS = USER_STATUS_OPTIONS;
+  TEXT_PARTNER_STATUS = TEXT_PARTNER_STATUS;
+
+  UserType = UserType;
+  TEXT_USER_TYPE = TEXT_USER_TYPE;
+  USES_TYPE_OPTIONS = USES_TYPE_OPTIONS;
+
+  Gender = Gender;
+  GENDER_OPTIONS = GENDER_OPTIONS;
+  TEXT_GENDER = TEXT_GENDER;
+
   AllowDebtPartner = AllowDebtPartner;
   selectedMenu = MenuCreatePartner.ContractManagement;
   PaymentPeriod = PaymentPeriod;
@@ -62,9 +74,6 @@ export class UpgradeEmployeeComponent implements OnInit {
   displayDataEmployee: readonly any[] = [];
   formBaseInfoEmployee: FormGroup;
   formBaseBusinessContractUpdate: FormGroup;
-  settingUploadAuthorizationFile: UploadFileSetting;
-  settingUploadBusinessLicenseFile: UploadFileSetting;
-  settingUploadContractFile: UploadFileSetting;
   listUploadAuthorizationFile: NzUploadFile[];
   listUploadBusinessLicenseFile: NzUploadFile[];
   listUploadContractFile: NzUploadFile[];
@@ -77,7 +86,7 @@ export class UpgradeEmployeeComponent implements OnInit {
     { label: 'Dịch vụ vé máy bay', value: BusinessServiceType.AirlineTicketBookingService, disabled: false, checked: true },
     { label: 'Dich vụ đặt khách sạn', value: BusinessServiceType.HotelBookingService, disabled: false, checked: false },
   ];
-  itemPartner: any = null;
+  itemEmployee: any = null;
   employees: any;
   isActiveEditBaseInfo: boolean = false;
   searchEmployee: string = '';
@@ -94,13 +103,13 @@ export class UpgradeEmployeeComponent implements OnInit {
 
     this.formBaseInfoEmployee = this.formBuilder.group({
       id: [null],
-      status: new FormControl({ value: EmployeeStatus.ACTIVE, disabled: this.actionEmployeeVHL == ActionTypePageVHL.Create }, Validators.required),
+      status: new FormControl({ value: UserStatus.ACTIVE, disabled: this.actionEmployeeVHL == ActionTypePageVHL.Create }, Validators.required),
       userType: new FormControl({ value: UserType.NormalAccount, disabled: false }),
-      userCode: new FormControl({ value: null, disabled: false }),
+      userCode: new FormControl({ value: null, disabled: this.actionEmployeeVHL == ActionTypePageVHL.Create }),
       fullname: new FormControl({ value: null, disabled: false }, Validators.required),
-      cccd: new FormControl({ value: null, disabled: false }, Validators.required),
+      personalIdentifier: new FormControl({ value: null, disabled: false }, Validators.required),
       email: new FormControl({ value: null, disabled: false }, Validators.required),
-      gender: new FormControl({ value: null, disabled: false }, Validators.required),
+      gender: new FormControl({ value: Gender.MALE, disabled: false }, Validators.required),
       birthday: new FormControl({ value: null, disabled: false }),
       phoneNo: new FormControl({ value: null, disabled: false }, Validators.required),
       nationality: new FormControl({ value: null, disabled: false }),
@@ -109,10 +118,6 @@ export class UpgradeEmployeeComponent implements OnInit {
       membershipCode: new FormControl({ value: null, disabled: false }),
       position: new FormControl({ value: null, disabled: false }),
       department: new FormControl({ value: null, disabled: false }),
-      // partnerAuthorizationFileIDs: [{ value: [], disabled: false }, Validators.required]
-      // debtMax: [null],
-      // debtUsed: [null],
-      // debtRemain: [null],
     });
 
     this.formBaseBusinessContractUpdate = this.formBuilder.group({
@@ -166,104 +171,19 @@ export class UpgradeEmployeeComponent implements OnInit {
     this.listUploadBusinessLicenseFile = [];
     this.listUploadContractFile = [];
     if (this.actionEmployeeVHL == ActionTypePageVHL.Create) {
-      this.settingUploadAuthorizationFile = {
-        isMultiple: true,
-        action: `${this.configService.getConfig().api.baseUrl}/Upload/UploadPartnerFile?partnerId=null&type=${TypeOfDocument.AuthorizationFile}`,
-        header: {
-          Authorization: 'Bearer ' + localStorage.getItem(Constant.TOKEN),
-        },
-        name: `postedFile`,
-        showUploadList: {
-          showPreviewIcon: true,
-          showDownloadIcon: true,
-          showRemoveIcon: true
-        }
-      } as UploadFileSetting;
-
-      this.settingUploadBusinessLicenseFile = {
-        isMultiple: true,
-        action: `${this.configService.getConfig().api.baseUrl}/Upload/UploadPartnerFile?partnerId=null&type=${TypeOfDocument.BusinessLicenseFile}`,
-        header: {
-          Authorization: 'Bearer ' + localStorage.getItem(Constant.TOKEN),
-        },
-        name: `postedFile`,
-        showUploadList: {
-          showPreviewIcon: true,
-          showDownloadIcon: true,
-          showRemoveIcon: true
-        }
-      } as UploadFileSetting;
-
-      this.settingUploadContractFile = {
-        isMultiple: true,
-        action: `${this.configService.getConfig().api.baseUrl}/Upload/UploadPartnerFile?partnerId=null&type=${TypeOfDocument.ContractFile}`,
-        header: {
-          Authorization: 'Bearer ' + localStorage.getItem(Constant.TOKEN),
-        },
-        name: `postedFile`,
-        showUploadList: {
-          showPreviewIcon: true,
-          showDownloadIcon: true,
-          showRemoveIcon: true
-        }
-      } as UploadFileSetting;
-
       this.listOfEmployees = [];
+      this.resetFormBaseInfoCreatePartner(null);
     } else if (this.actionEmployeeVHL == ActionTypePageVHL.Update) {
       this.setIsActiveEditBaseInfo(true);
       this.activatedRoute.queryParams.subscribe(async params => {
         let idPartner = +params['id']; // Lấy id từ query parameter
 
-        this.settingUploadAuthorizationFile = {
-          isMultiple: true,
-          action: `${this.configService.getConfig().api.baseUrl}/Upload/UploadPartnerFile?partnerId=${idPartner}&type=${TypeOfDocument.AuthorizationFile}`,
-          header: {
-            Authorization: 'Bearer ' + localStorage.getItem(Constant.TOKEN),
-          },
-          name: `postedFile`,
-          showUploadList: {
-            showPreviewIcon: true,
-            showDownloadIcon: true,
-            showRemoveIcon: true
-          }
-        } as UploadFileSetting;
-
-        this.settingUploadBusinessLicenseFile = {
-          isMultiple: true,
-          action: `${this.configService.getConfig().api.baseUrl}/Upload/UploadPartnerFile?partnerId=${idPartner}&type=${TypeOfDocument.BusinessLicenseFile}`,
-          header: {
-            Authorization: 'Bearer ' + localStorage.getItem(Constant.TOKEN),
-          },
-          name: `postedFile`,
-          showUploadList: {
-            showPreviewIcon: true,
-            showDownloadIcon: true,
-            showRemoveIcon: true
-          }
-        } as UploadFileSetting;
-
-        this.settingUploadContractFile = {
-          isMultiple: true,
-          action: `${this.configService.getConfig().api.baseUrl}/Upload/UploadPartnerFile?partnerId=${idPartner}&type=${TypeOfDocument.ContractFile}`,
-          header: {
-            Authorization: 'Bearer ' + localStorage.getItem(Constant.TOKEN),
-          },
-          name: `postedFile`,
-          showUploadList: {
-            showPreviewIcon: true,
-            showDownloadIcon: true,
-            showRemoveIcon: true
-          }
-        } as UploadFileSetting;
-
-        this.itemPartner = await this.getPartnerById(idPartner).catch((reject) => {
+        this.itemEmployee = await this.getPartnerById(idPartner).catch((reject) => {
           this.notificationService.showNotification(Constant.ERROR, `Lỗi truy vận dữ liệu doanh nghiệp`);
           this.router.navigate([['/companies']]);
         });
-        this.resetFormBaseInfoCreatePartner(this.itemPartner);
-        this.resetFormContractUpdateEmployee(this.itemPartner);
-
-        this.getUsersByPartnerId(this.itemPartner?.id).then((result: any) => {
+        this.resetFormBaseInfoCreatePartner(this.itemEmployee);
+        this.getUsersByPartnerId(this.itemEmployee?.id).then((result: any) => {
           this.listOfEmployees = result;
         });
       });
@@ -286,7 +206,7 @@ export class UpgradeEmployeeComponent implements OnInit {
       if (empty) {
         this.listOfEmployees = [];
       } else {
-        this.getUsersByPartnerId(this.itemPartner?.id).then((result: any) => {
+        this.getUsersByPartnerId(this.itemEmployee?.id).then((result: any) => {
           this.listOfEmployees = result;
         });
       }
@@ -296,70 +216,64 @@ export class UpgradeEmployeeComponent implements OnInit {
 
   private async resetFormBaseInfoCreatePartner(itemPartner: any) {
     this.formBaseInfoEmployee.reset({
-      status: { value: this.itemPartner?.status || PartnerStatus.CreatingProfile, disabled: this.actionEmployeeVHL == ActionTypePageVHL.Create },
-      code: this.itemPartner?.code || null,
-      companyName: this.itemPartner?.companyName || null,
-      taxCode: this.itemPartner?.taxCode || null,
-      phone: this.itemPartner?.phone || null,
-      email: this.itemPartner?.email || null,
-      address: this.itemPartner?.address || null,
-      businessOwnerId: this.itemPartner?.businessOwnerId || null,
-      allowDebt: this.itemPartner?.allowDebt || AllowDebtPartner.ALLOW
+      id: itemPartner?.id || null,
+      status: { value: itemPartner?.status || UserStatus.ACTIVE, disabled: this.actionEmployeeVHL == ActionTypePageVHL.Create },
+      userType: itemPartner?.userType || UserType.NormalAccount,
+      userCode: { value: itemPartner?.userCode || null, disabled: this.actionEmployeeVHL == ActionTypePageVHL.Create },
+      fullname: itemPartner?.fullname || null,
+      personalIdentifier: itemPartner?.personalIdentifier || null,
+      email: itemPartner?.email || null,
+      gender: itemPartner?.gender || Gender.MALE,
+      birthday: itemPartner?.birthday || null,
+      phoneNo: itemPartner?.phoneNo || null,
+      nationality: itemPartner?.nationality || null,
+      directManagementUserId: itemPartner?.directManagementUserId || null,
+      staffCode: itemPartner?.staffCode || null,
+      membershipCode: itemPartner?.membershipCode || null,
+      position: itemPartner?.position || null,
+      department: itemPartner?.department || null,
     });
-
-    this.listUploadAuthorizationFile = [];
-    //console.log('partnerFiles : ', itemPartner.partnerFiles);
-    let partnerAuthorizationFiles = await itemPartner.partnerFiles.filter((f: { type: TypeOfDocument }) => f.type == TypeOfDocument.AuthorizationFile);
-    //console.log('partnerAuthorizationFiles : ', partnerAuthorizationFiles);
-    for (const partnerFile of partnerAuthorizationFiles) {
-      const objPartner = {
-        uid: partnerFile.id.toString(),
-        name: partnerFile.fileName,
-        url: `${this.configService.getConfig().api.baseUrl}/${partnerFile.filePath}`,
-      }
-      this.listUploadAuthorizationFile.push(objPartner)
-    }
   }
 
-  private async resetFormContractUpdateEmployee(itemPartner: any) {
-    this.formBaseBusinessContractUpdate.reset({
-      // partnerBusinessLicenseFileIDs: this.itemPartner?.partnerBusinessLicenseFileIDs,
-      // partnerContractFileIDs: this.itemPartner?.partnerContractFileIDs,
-      personInChargeId: itemPartner?.personInChargeId,
-      startTimeContractDate: itemPartner?.startTimeContractDate,
-      endTimeContractDate: itemPartner?.endTimeContractDate,
-      emailToReceiveInvoice: itemPartner?.emailToReceiveInvoice,
-      paymentPeriodType: itemPartner?.paymentPeriodType,
-      dayOfPeriodType: itemPartner?.dayOfPeriodType,
-      debtMax: itemPartner?.debtMax,
-      warningLimitPrice: itemPartner?.warningLimitPrice,
-      typeOfServices: itemPartner?.typeOfServices,
-      positionPersonInCharge: { value: itemPartner?.positionPersonInCharge, disabled: true },
-      phoneNumberPersonInCharge: { value: itemPartner?.phoneNumberPersonInCharge, disabled: true },
-      emailPersonInCharge: { value: itemPartner?.emailPersonInCharge, disabled: true }
-    });
+  // private async resetFormContractUpdateEmployee(itemPartner: any) {
+  //   this.formBaseBusinessContractUpdate.reset({
+  //     // partnerBusinessLicenseFileIDs: this.itemPartner?.partnerBusinessLicenseFileIDs,
+  //     // partnerContractFileIDs: this.itemPartner?.partnerContractFileIDs,
+  //     personInChargeId: itemPartner?.personInChargeId,
+  //     startTimeContractDate: itemPartner?.startTimeContractDate,
+  //     endTimeContractDate: itemPartner?.endTimeContractDate,
+  //     emailToReceiveInvoice: itemPartner?.emailToReceiveInvoice,
+  //     paymentPeriodType: itemPartner?.paymentPeriodType,
+  //     dayOfPeriodType: itemPartner?.dayOfPeriodType,
+  //     debtMax: itemPartner?.debtMax,
+  //     warningLimitPrice: itemPartner?.warningLimitPrice,
+  //     typeOfServices: itemPartner?.typeOfServices,
+  //     positionPersonInCharge: { value: itemPartner?.positionPersonInCharge, disabled: true },
+  //     phoneNumberPersonInCharge: { value: itemPartner?.phoneNumberPersonInCharge, disabled: true },
+  //     emailPersonInCharge: { value: itemPartner?.emailPersonInCharge, disabled: true }
+  //   });
 
-    this.listUploadBusinessLicenseFile = [];
-    const partnerBusinessLicenseFiles = await itemPartner.partnerFiles.filter((f: { type: TypeOfDocument }) => f.type == TypeOfDocument.BusinessLicenseFile);
-    for (const partnerFile of partnerBusinessLicenseFiles) {
-      const objPartner = {
-        uid: partnerFile.id.toString(),
-        name: partnerFile.fileName,
-        url: `${this.configService.getConfig().api.baseUrl}/${partnerFile.filePath}`,
-      }
-      this.listUploadBusinessLicenseFile.push(objPartner)
-    }
-    this.listUploadContractFile = [];
-    const partnerContractFileFiles = await itemPartner.partnerFiles.filter((f: { type: TypeOfDocument }) => f.type == TypeOfDocument.ContractFile);
-    for (const partnerFile of partnerContractFileFiles) {
-      const objPartner = {
-        uid: partnerFile.id.toString(),
-        name: partnerFile.fileName,
-        url: `${this.configService.getConfig().api.baseUrl}/${partnerFile.filePath}`,
-      }
-      this.listUploadContractFile.push(objPartner);
-    }
-  }
+  //   this.listUploadBusinessLicenseFile = [];
+  //   const partnerBusinessLicenseFiles = await itemPartner.partnerFiles.filter((f: { type: TypeOfDocument }) => f.type == TypeOfDocument.BusinessLicenseFile);
+  //   for (const partnerFile of partnerBusinessLicenseFiles) {
+  //     const objPartner = {
+  //       uid: partnerFile.id.toString(),
+  //       name: partnerFile.fileName,
+  //       url: `${this.configService.getConfig().api.baseUrl}/${partnerFile.filePath}`,
+  //     }
+  //     this.listUploadBusinessLicenseFile.push(objPartner)
+  //   }
+  //   this.listUploadContractFile = [];
+  //   const partnerContractFileFiles = await itemPartner.partnerFiles.filter((f: { type: TypeOfDocument }) => f.type == TypeOfDocument.ContractFile);
+  //   for (const partnerFile of partnerContractFileFiles) {
+  //     const objPartner = {
+  //       uid: partnerFile.id.toString(),
+  //       name: partnerFile.fileName,
+  //       url: `${this.configService.getConfig().api.baseUrl}/${partnerFile.filePath}`,
+  //     }
+  //     this.listUploadContractFile.push(objPartner);
+  //   }
+  // }
 
   private getPartnerById(partnerId: number): Promise<any> {
     return new Promise((resolve, reject) => {
@@ -455,7 +369,7 @@ export class UpgradeEmployeeComponent implements OnInit {
         removeAccents(en.email?.trim()).toLowerCase().includes(keyword)
       );
     } else {
-      this.getUsersByPartnerId(this.itemPartner?.id).then((result: any) => {
+      this.getUsersByPartnerId(this.itemEmployee?.id).then((result: any) => {
         this.listOfEmployees = result;
       });
     }
@@ -613,47 +527,43 @@ export class UpgradeEmployeeComponent implements OnInit {
 
 
   saveBaseInfoEmployee() {
-
     if (this.formBaseInfoEmployee.valid) {
       let valueSave = this.formBaseInfoEmployee.value;
-      let listPartnerAuthorizationFileIDs = this.listUploadAuthorizationFile.map((t) => t.uid);
-      valueSave.partnerAuthorizationFileIDs = listPartnerAuthorizationFileIDs;
-
-      if (this.itemPartner?.id) {
-        this.generalService.updateBaseInfoById(valueSave, this.itemPartner?.id).subscribe((res: any) => {
+      if (this.itemEmployee?.id) {
+        this.generalService.createBaseInfoForPartner(valueSave).subscribe((res: any) => {
           if (res.isValid) {
-            this.notificationService.showNotification(Constant.SUCCESS, `Cập nhật thông tin doanh nghiệp thành công`);
-            this.itemPartner = res.data;
-            this.setIsActiveEditBaseInfo(this.itemPartner?.id == null);
+            this.notificationService.showNotification(Constant.SUCCESS, `Cập nhật thông tin nhân viên thành công`);
+            this.itemEmployee = res.data;
+            this.setIsActiveEditBaseInfo(this.itemEmployee?.id == null);
           } else {
             if (res.errors && res.errors.length > 0) {
               res.errors.forEach((el: any) => {
                 this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
               });
             } else {
-              this.notificationService.showNotification(Constant.ERROR, 'Cập nhật thông tin doanh nghiệp không thành công');
+              this.notificationService.showNotification(Constant.ERROR, 'Cập nhật thông tin nhân viên không thành công');
             }
           }
         }, error => {
-          this.notificationService.showNotification(Constant.ERROR, 'Cập nhật thông tin đối tác thất bại do lỗi hệ thống');
+          this.notificationService.showNotification(Constant.ERROR, 'Cập nhật thông tin nhân viên thất bại do lỗi hệ thống');
         });
       } else {
-        this.generalService.addBaseInfoPartner(valueSave).subscribe((res: any) => {
+        this.generalService.updateBaseInfoForPartnerById(valueSave).subscribe((res: any) => {
           if (res.isValid) {
-            this.notificationService.showNotification(Constant.SUCCESS, `Tạo mới thông tin doanh nghiệp thành công`);
-            this.itemPartner = res.data;
-            this.setIsActiveEditBaseInfo(this.itemPartner?.id == null);
+            this.notificationService.showNotification(Constant.SUCCESS, `Tạo mới thông tin nhân viên thành công`);
+            this.itemEmployee = res.data;
+            this.setIsActiveEditBaseInfo(this.itemEmployee?.id == null);
           } else {
             if (res.errors && res.errors.length > 0) {
               res.errors.forEach((el: any) => {
                 this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
               });
             } else {
-              this.notificationService.showNotification(Constant.ERROR, 'Tạo mới thông tin doanh nghiệp không thành công');
+              this.notificationService.showNotification(Constant.ERROR, 'Tạo mới thông tin nhân viên không thành công');
             }
           }
         }, error => {
-          this.notificationService.showNotification(Constant.ERROR, 'Tạo mới thông tin đối tác thất bại do lỗi hệ thống');
+          this.notificationService.showNotification(Constant.ERROR, 'Tạo mới thông tin nhân viên thất bại do lỗi hệ thống');
         });
       }
 
@@ -683,7 +593,7 @@ export class UpgradeEmployeeComponent implements OnInit {
 
   cancelBaseInfoPartner() {
     this.setIsActiveEditBaseInfo(true);
-    this.resetFormBaseInfoCreatePartner(this.itemPartner);
+    this.resetFormBaseInfoCreatePartner(this.itemEmployee);
   }
 
   cancelPageActionPartner() {
@@ -747,8 +657,8 @@ export class UpgradeEmployeeComponent implements OnInit {
 
     if (this.formBaseBusinessContractUpdate.valid) {
       let valueSave = this.formBaseBusinessContractUpdate.value;
-      if (this.itemPartner?.id) {
-        this.generalService.updateContractInfoForPartner(this.itemPartner?.id, valueSave).subscribe((res: any) => {
+      if (this.itemEmployee?.id) {
+        this.generalService.updateContractInfoForPartner(this.itemEmployee?.id, valueSave).subscribe((res: any) => {
           if (res.isValid) {
             this.notificationService.showNotification(Constant.SUCCESS, `Cập nhật thông tin hợp đồng doan nghiệp thành công`);
           } else {

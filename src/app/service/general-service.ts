@@ -461,6 +461,21 @@ export class GeneralService extends BaseService {
     return this.post(UrlConstant.LIST_USER + `/ChangeUserPassword/${id}`, newPass);
   }
 
+  upgradeEmployeeForPartner(newEmployee: any): Observable<any> {
+    return this.post(UrlConstant.LIST_USER + `/AddOrUpdateEmployeeForPartner`, newEmployee);
+  }
+
+
+  createBaseInfoForPartner(newEmployee: any): Observable<any> {
+    return this.post(UrlConstant.LIST_USER + `/CreateBaseInfoForPartner`, newEmployee);
+  }
+
+
+  updateBaseInfoForPartnerById(newEmployee: any): Observable<any> {
+    return this.post(UrlConstant.LIST_USER + `/UpdateBaseInfoForPartnerById`, newEmployee);
+  }
+
+
 
   //Partners
   getListPartner(): Observable<any[]> {
