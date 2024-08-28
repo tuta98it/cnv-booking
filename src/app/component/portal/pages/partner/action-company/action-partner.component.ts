@@ -341,7 +341,14 @@ export class ActionPartnerComponent implements OnInit {
       phoneNumberPersonInCharge: { value: itemPartner?.phoneNumberPersonInCharge, disabled: true },
       emailPersonInCharge: { value: itemPartner?.emailPersonInCharge, disabled: true }
     });
-
+    // Assuming typeOfServices is a string representation of the array
+    const typeOfServices: string = itemPartner.typeOfServices;
+    const selectedServices = JSON.parse(typeOfServices) as number[]; // Convert the string to an array of numbers
+    // Update checkOptionsBusinessServiceVHL based on selectedServices
+    this.checkOptionsBusinessServiceVHL = this.checkOptionsBusinessServiceVHL.map(option => ({
+      ...option,
+      checked: selectedServices.includes(option.value)
+    }));
     this.listUploadBusinessLicenseFile = [];
     const partnerBusinessLicenseFiles = await itemPartner.partnerFiles.filter((f: { type: TypeOfDocument }) => f.type == TypeOfDocument.BusinessLicenseFile);
     for (const partnerFile of partnerBusinessLicenseFiles) {
