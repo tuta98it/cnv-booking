@@ -63,23 +63,10 @@ export class UpgradeEmployeeComponent implements OnInit {
   MONTHS_OPTIONS = MONTHS_OPTIONS;
   PAYMENT_PERIOD_DAYS_OPTIONS = [];
   actionEmployeeVHL: any;
-  settingTableListEmployeesForm: FormGroup;
-  allCheckedEmployee = false;
   indeterminateEmployee = false;
   fixedColumn = false;
-  scrollX: string | null = null;
-  scrollY: string | null = null;
-  settingTableEmployeesValue: NZTableSettingCustoms;
   listOfEmployees: readonly any[] = [];
-  displayDataEmployee: readonly any[] = [];
   formBaseInfoEmployee: FormGroup;
-  listUploadAuthorizationFile: NzUploadFile[];
-  listUploadBusinessLicenseFile: NzUploadFile[];
-  listUploadContractFile: NzUploadFile[];
-  partnerIdInfoBaseReturn?: number;
-
-  listOfOption: string[] = ['a10', 'c12', 'c13'];
-  listOfSelectedValue = ['a10', 'c12'];
 
   checkOptionsBusinessServiceVHL = [
     { label: 'Dịch vụ vé máy bay', value: BusinessServiceType.AirlineTicketBookingService, disabled: false, checked: true },
@@ -122,38 +109,12 @@ export class UpgradeEmployeeComponent implements OnInit {
     });
 
 
-
-    this.settingTableListEmployeesForm = this.formBuilder.group({
-      bordered: [false],
-      loading: [false],
-      pagination: [true],
-      sizeChanger: [false],
-      title: [false],
-      header: [true],
-      footer: [false],
-      expandable: [true],
-      checkbox: [true],
-      fixHeader: [false],
-      noResult: [false],
-      noResultText: 'Danh sách nhân viên đang trống. Hãy nhấn vào “Thêm mới” để tạo mới các tài khoản nhân viên cho doanh nghiệp',
-      ellipsis: [false],
-      simple: [false],
-      size: 'small' as NzTableSize,
-      paginationType: 'default' as NzTablePaginationType,
-      tableScroll: 'unset' as TableScroll,
-      tableLayout: 'auto' as NzTableLayout,
-      position: 'bottom' as NzTablePaginationPosition
-    });
   }
 
   ngAfterViewInit() {
-    this.settingTableEmployeesValue = this.settingTableListEmployeesForm.value as NZTableSettingCustoms;
     this.actionEmployeeVHL = this.activatedRoute.snapshot.data['type'];
     this.setIsActiveEditBaseInfo(true);
     this.listOfEmployees = [];
-    this.listUploadAuthorizationFile = [];
-    this.listUploadBusinessLicenseFile = [];
-    this.listUploadContractFile = [];
 
     this.activatedRoute.queryParams.subscribe(async params => {
       let idPartner = +params['partnerId']; // Lấy id từ query parameter
@@ -170,46 +131,19 @@ export class UpgradeEmployeeComponent implements OnInit {
     } else if (this.actionEmployeeVHL == ActionTypePageVHL.Update) {
       this.setIsActiveEditBaseInfo(true);
       this.activatedRoute.queryParams.subscribe(async params => {
-        let idPartner = +params['id']; // Lấy id từ query parameter
-
-        this.itemEmployee = await this.getPartnerById(idPartner).catch((reject) => {
-          this.notificationService.showNotification(Constant.ERROR, `Lỗi truy vấn dữ liệu doanh nghiệp`);
+        let idEmployee = +params['employeeId']; // Lấy id từ query parameter
+        this.itemEmployee = await this.getEmployeeById(idEmployee).catch((reject) => {
+          this.notificationService.showNotification(Constant.ERROR, `Lỗi truy vấn dữ liệu nhân viên`);
           this.location.back();
         });
         this.resetFormBaseInfoCreateEmployee(this.itemEmployee);
-        this.getUsersByPartnerId(this.itemEmployee?.id).then((result: any) => {
-          this.listOfEmployees = result;
-        });
       });
     }
   }
 
   ngOnInit(): void {
-    // Lấy giá trị status từ route data
-    this.settingTableListEmployeesForm.valueChanges.subscribe(value => {
-      this.settingTableEmployeesValue = value as NZTableSettingCustoms;
-    });
-    this.settingTableListEmployeesForm.controls.tableScroll.valueChanges.subscribe(scroll => {
-      this.fixedColumn = scroll === 'fixed';
-      this.scrollX = scroll === 'scroll' || scroll === 'fixed' ? '100vw' : null;
-    });
-    this.settingTableListEmployeesForm.controls.fixHeader.valueChanges.subscribe(fixed => {
-      this.scrollY = fixed ? '240px' : null;
-    });
-    this.settingTableListEmployeesForm.controls.noResult.valueChanges.subscribe(async empty => {
-      if (empty) {
-        this.listOfEmployees = [];
-      } else {
-        this.getUsersByPartnerId(this.itemEmployee?.id).then((result: any) => {
-          this.listOfEmployees = result;
-        });
-      }
-    });
     this.getEmployees();
   }
-
-
-
 
   private async resetFormBaseInfoCreateEmployee(itemEmployee: any) {
     this.formBaseInfoEmployee.reset({
@@ -232,51 +166,25 @@ export class UpgradeEmployeeComponent implements OnInit {
     });
   }
 
-  // private async resetFormContractUpdateEmployee(itemPartner: any) {
-  //   this.formBaseBusinessContractUpdate.reset({
-  //     // partnerBusinessLicenseFileIDs: this.itemPartner?.partnerBusinessLicenseFileIDs,
-  //     // partnerContractFileIDs: this.itemPartner?.partnerContractFileIDs,
-  //     personInChargeId: itemPartner?.personInChargeId,
-  //     startTimeContractDate: itemPartner?.startTimeContractDate,
-  //     endTimeContractDate: itemPartner?.endTimeContractDate,
-  //     emailToReceiveInvoice: itemPartner?.emailToReceiveInvoice,
-  //     paymentPeriodType: itemPartner?.paymentPeriodType,
-  //     dayOfPeriodType: itemPartner?.dayOfPeriodType,
-  //     debtMax: itemPartner?.debtMax,
-  //     warningLimitPrice: itemPartner?.warningLimitPrice,
-  //     typeOfServices: itemPartner?.typeOfServices,
-  //     positionPersonInCharge: { value: itemPartner?.positionPersonInCharge, disabled: true },
-  //     phoneNumberPersonInCharge: { value: itemPartner?.phoneNumberPersonInCharge, disabled: true },
-  //     emailPersonInCharge: { value: itemPartner?.emailPersonInCharge, disabled: true }
-  //   });
-
-  //   this.listUploadBusinessLicenseFile = [];
-  //   const partnerBusinessLicenseFiles = await itemPartner.partnerFiles.filter((f: { type: TypeOfDocument }) => f.type == TypeOfDocument.BusinessLicenseFile);
-  //   for (const partnerFile of partnerBusinessLicenseFiles) {
-  //     const objPartner = {
-  //       uid: partnerFile.id.toString(),
-  //       name: partnerFile.fileName,
-  //       url: `${this.configService.getConfig().api.baseUrl}/${partnerFile.filePath}`,
-  //     }
-  //     this.listUploadBusinessLicenseFile.push(objPartner)
-  //   }
-  //   this.listUploadContractFile = [];
-  //   const partnerContractFileFiles = await itemPartner.partnerFiles.filter((f: { type: TypeOfDocument }) => f.type == TypeOfDocument.ContractFile);
-  //   for (const partnerFile of partnerContractFileFiles) {
-  //     const objPartner = {
-  //       uid: partnerFile.id.toString(),
-  //       name: partnerFile.fileName,
-  //       url: `${this.configService.getConfig().api.baseUrl}/${partnerFile.filePath}`,
-  //     }
-  //     this.listUploadContractFile.push(objPartner);
-  //   }
-  // }
-
   private getPartnerById(partnerId: number): Promise<any> {
     return new Promise((resolve, reject) => {
       this.generalService.getPartnerById(partnerId).subscribe((res: any) => {
         if (res) {
 
+          resolve(res);
+        } else {
+          reject("Không tìm thấy doanh nghiệp này");
+        }
+      }, error => {
+        reject(error)
+      });
+    });
+  }
+
+  private getEmployeeById(employeeId: number): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.generalService.getUserById(employeeId).subscribe((res: any) => {
+        if (res) {
           resolve(res);
         } else {
           reject("Không tìm thấy doanh nghiệp này");
@@ -301,227 +209,6 @@ export class UpgradeEmployeeComponent implements OnInit {
     }, error => {
     });
   }
-
-
-  private getUsersByPartnerId(idPartner: number): Promise<any> {
-    return new Promise((resolve, reject) => {
-      this.generalService.getUsersByPartnerId(idPartner).subscribe((res: any) => {
-        if (res.isValid) {
-          let stt = 0;
-          res.data.forEach(en => {
-            stt++;
-            en.stt = stt;
-            en.checked = true;
-          });
-          resolve(res.data);
-        } else {
-          if (res.errors && res.errors.length > 0) {
-            res.errors.forEach((el: any) => {
-              this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
-            });
-          } else {
-            this.notificationService.showNotification(Constant.ERROR, 'Lấy ra danh sách nhân viên doanh nghiệp không thành công');
-          }
-          reject(res.errors);
-        }
-      }, error => {
-        this.notificationService.showNotification(Constant.ERROR, 'Lấy ra danh sách nhân viên doanh nghiệp thất bại do lỗi hệ thống');
-        reject(error);
-      });
-    });
-
-  }
-
-
-
-  currentPageDataChangeEmployee($event: readonly any[]): void {
-    this.displayDataEmployee = $event;
-    this.refreshStatusEmployee();
-  }
-
-  refreshStatusEmployee(): void {
-    const validDataEmployee = this.displayDataEmployee.filter(value => !value.disabled);
-    const allCheckedEmployee = validDataEmployee.length > 0 && validDataEmployee.every(value => value.checked === true);
-    const allUnCheckedEmployee = validDataEmployee.every(value => !value.checked);
-    this.allCheckedEmployee = allCheckedEmployee;
-    this.indeterminateEmployee = !allCheckedEmployee && !allUnCheckedEmployee;
-  }
-
-  checkAllEmployees(value: boolean): void {
-    this.displayDataEmployee.forEach(data => {
-      if (!data.disabled) {
-        data.checked = value;
-      }
-    });
-    this.refreshStatusEmployee();
-  }
-
-  onSearchEmployee() {
-    const keyword = removeAccents(this.searchEmployee.trim().toLowerCase());
-    if (keyword) {
-      this.listOfEmployees = this.listOfEmployees.filter((en) =>
-        removeAccents(en.fullname?.trim()).toLowerCase().includes(keyword) ||
-        removeAccents(en.username?.trim()).toLowerCase().includes(keyword) ||
-        removeAccents(en.phoneNo?.trim()).toLowerCase().includes(keyword) ||
-        removeAccents(en.email?.trim()).toLowerCase().includes(keyword)
-      );
-    } else {
-      this.getUsersByPartnerId(this.itemEmployee?.id).then((result: any) => {
-        this.listOfEmployees = result;
-      });
-    }
-  }
-
-  handleChangeUploadAuthorizationFile(info: NzUploadChangeParam): void {
-    if (info.file.status !== 'uploading') {
-
-    }
-    if (info.file.status === 'done') {
-      this.msg.success(`${info.file.name} file tải lên thành công`);
-      this.listUploadAuthorizationFile = info.fileList;
-      setTimeout(() => {
-        if (this.listUploadAuthorizationFile.length > 0) {
-          this.listUploadAuthorizationFile[this.listUploadAuthorizationFile.length - 1].uid = info.file.response.uid.toString();
-          this.listUploadAuthorizationFile[this.listUploadAuthorizationFile.length - 1].url = `${this.configService.getConfig().api.baseUrl}/${info.file.response.path}`;
-        }
-      }, 200);
-    } else if (info.file.status === 'error') {
-      this.msg.error(`${info.file.name} file tải lên thất bại.`);
-    }
-  }
-
-  handleChangeUploadContractFile(info: NzUploadChangeParam): void {
-    if (info.file.status !== 'uploading') {
-
-    }
-    if (info.file.status === 'done') {
-      this.msg.success(`${info.file.name} file tải lên thành công`);
-      this.listUploadContractFile = info.fileList;
-      setTimeout(() => {
-        if (this.listUploadContractFile.length > 0) {
-          this.listUploadContractFile[this.listUploadContractFile.length - 1].uid = info.file.response.uid.toString();
-          this.listUploadContractFile[this.listUploadContractFile.length - 1].url = `${this.configService.getConfig().api.baseUrl}/${info.file.response.path}`;
-        }
-      }, 200);
-    } else if (info.file.status === 'error') {
-      this.msg.error(`${info.file.name} file tải lên thất bại.`);
-    }
-  }
-
-
-  handleChangeUploadBusinessLicenseFile(info: NzUploadChangeParam): void {
-    if (info.file.status !== 'uploading') {
-
-    }
-    if (info.file.status === 'done') {
-      this.msg.success(`${info.file.name} file tải lên thành công`);
-      this.listUploadBusinessLicenseFile = info.fileList;
-      setTimeout(() => {
-        if (this.listUploadBusinessLicenseFile.length > 0) {
-          this.listUploadBusinessLicenseFile[this.listUploadBusinessLicenseFile.length - 1].uid = info.file.response.uid.toString();
-          this.listUploadBusinessLicenseFile[this.listUploadBusinessLicenseFile.length - 1].url = `${this.configService.getConfig().api.baseUrl}/${info.file.response.path}`;
-        }
-      }, 200);
-    } else if (info.file.status === 'error') {
-      this.msg.error(`${info.file.name} file tải lên thất bại.`);
-    }
-  }
-
-
-  handleRemoveUploadAuthorizationFile(file: NzUploadFile) {
-    if (file?.uid) {
-      this.generalService.removeFile(file.uid).subscribe({
-        next: (res: any) => {
-          if (res) {
-            if (res.ret && res.ret.length > 0) {
-              res.ret.forEach((el: any) => {
-                if (el.code === 0) {
-                  this.listUploadAuthorizationFile = this.listUploadAuthorizationFile.filter(en => en.uid !== file.uid);
-                  this.msg.success(`Đã xoá file ${file.name}.`);
-                } else if (res.code === 404) {
-                  this.msg.error(`Không tìm thấy file ${file.name}.`);
-                } else {
-                  this.msg.error(`Đã có lỗi xảy ra. Không thể xoá file ${file.name}`);
-                }
-              });
-            }
-          } else {
-            this.msg.error(`Xoá file ${file.name} thất bại.`);
-          }
-        },
-        error: (error: any) => {
-          this.msg.error(`Lỗi hệ thống, Không thể xoá file ${file.name}`);
-        },
-        complete: () => {
-
-        }
-      });
-    }
-  }
-
-  handleRemoveUploadContractFile(file: NzUploadFile) {
-    if (file?.uid) {
-      this.generalService.removeFile(file.uid).subscribe({
-        next: (res: any) => {
-          if (res) {
-            if (res.ret && res.ret.length > 0) {
-              res.ret.forEach((el: any) => {
-                if (el.code === 0) {
-                  this.listUploadContractFile = this.listUploadContractFile.filter(en => en.uid !== file.uid);
-                  this.msg.success(`Đã xoá file ${file.name}.`);
-                } else if (res.code === 404) {
-                  this.msg.error(`Không tìm thấy file ${file.name}.`);
-                } else {
-                  this.msg.error(`Đã có lỗi xảy ra. Không thể xoá file ${file.name}`);
-                }
-              });
-            }
-          } else {
-            this.msg.error(`Xoá file ${file.name} thất bại.`);
-          }
-        },
-        error: (error: any) => {
-          this.msg.error(`Lỗi hệ thống, Không thể xoá file ${file.name}`);
-        },
-        complete: () => {
-
-        }
-      });
-    }
-  }
-
-
-  handleRemoveUploadBusinessLicenseFile(file: NzUploadFile) {
-    if (file?.uid) {
-      this.generalService.removeFile(file.uid).subscribe({
-        next: (res: any) => {
-          if (res) {
-            if (res.ret && res.ret.length > 0) {
-              res.ret.forEach((el: any) => {
-                if (el.code === 0) {
-                  this.listUploadBusinessLicenseFile = this.listUploadBusinessLicenseFile.filter(en => en.uid !== file.uid);
-                  this.msg.success(`Đã xoá file ${file.name}.`);
-                } else if (res.code === 404) {
-                  this.msg.error(`Không tìm thấy file ${file.name}.`);
-                } else {
-                  this.msg.error(`Đã có lỗi xảy ra. Không thể xoá file ${file.name}`);
-                }
-              });
-            }
-          } else {
-            this.msg.error(`Xoá file ${file.name} thất bại.`);
-          }
-        },
-        error: (error: any) => {
-          this.msg.error(`Lỗi hệ thống, Không thể xoá file ${file.name}`);
-        },
-        complete: () => {
-
-        }
-      });
-    }
-  }
-
 
   saveBaseInfoEmployee() {
     if (this.formBaseInfoEmployee.valid) {
@@ -599,7 +286,7 @@ export class UpgradeEmployeeComponent implements OnInit {
 
   cancelPageActionEmployee() {
     this.cancelBaseInfoPartner();
-    this.router.navigate(['/companies'])
+    this.location.back();
   }
 
   changeValuePaymentPeriod(value: any) {
@@ -616,23 +303,5 @@ export class UpgradeEmployeeComponent implements OnInit {
         this.PAYMENT_PERIOD_DAYS_OPTIONS = [];
         break;
     }
-  }
-
-
-
-
-  private getEmployeeById(employeeId: number): Promise<any> {
-    return new Promise((resolve, reject) => {
-      this.generalService.getUserById(employeeId).subscribe((res: any) => {
-        if (res) {
-          resolve(res);
-        } else {
-          reject("No employee found");
-        }
-      }, error => {
-        reject(error)
-      });
-    });
-
   }
 }
