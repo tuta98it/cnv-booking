@@ -466,13 +466,13 @@ export class GeneralService extends BaseService {
   }
 
 
-  createBaseInfoForPartner(newEmployee: any): Observable<any> {
+  createEmployeeBaseInfoForPartner(newEmployee: any): Observable<any> {
     return this.post(UrlConstant.LIST_USER + `/CreateBaseInfoForPartner`, newEmployee);
   }
 
 
-  updateBaseInfoForPartnerById(newEmployee: any): Observable<any> {
-    return this.post(UrlConstant.LIST_USER + `/UpdateBaseInfoForPartnerById`, newEmployee);
+  updateEmployeeBaseInfoForPartnerById(employeeId: number, updateEmployee: any): Observable<any> {
+    return this.put(UrlConstant.LIST_USER + `/UpdateBaseInfoForPartnerById/${employeeId}`, updateEmployee);
   }
 
 

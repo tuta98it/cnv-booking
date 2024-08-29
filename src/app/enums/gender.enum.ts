@@ -1,7 +1,7 @@
 // Enum for Gender
 export enum Gender {
-  MALE = 0,
-  FEMALE = 1,
+  FEMALE = 0,
+  MALE = 1,
   OTHER = 2, // Optional: Add more options if needed
 }
 

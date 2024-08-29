@@ -24,7 +24,7 @@ import { GeneralService } from 'src/app/service/general-service';
 import { USER_STATUS_OPTIONS, UserStatus } from 'src/app/enums/user-status.enum';
 import { TEXT_PARTNER_STATUS } from 'src/app/enums/partner-status.enum';
 import { Gender, GENDER_OPTIONS, TEXT_GENDER } from 'src/app/enums/gender.enum';
-
+import { Location } from '@angular/common';
 type TableScroll = 'unset' | 'scroll' | 'fixed';
 
 @Component({
@@ -87,6 +87,7 @@ export class UpgradeEmployeeComponent implements OnInit {
     { label: 'Dich vụ đặt khách sạn', value: BusinessServiceType.HotelBookingService, disabled: false, checked: false },
   ];
   itemEmployee: any = null;
+  partnerForEmployee: any = null;
   employees: any;
   isActiveEditBaseInfo: boolean = false;
   searchEmployee: string = '';
@@ -99,13 +100,14 @@ export class UpgradeEmployeeComponent implements OnInit {
     private generalService: GeneralService,
     private notificationService: NotificationService,
     private router: Router,
+    private location: Location
   ) {
 
     this.formBaseInfoEmployee = this.formBuilder.group({
       id: [null],
       status: new FormControl({ value: UserStatus.ACTIVE, disabled: this.actionEmployeeVHL == ActionTypePageVHL.Create }, Validators.required),
       userType: new FormControl({ value: UserType.NormalAccount, disabled: false }),
-      userCode: new FormControl({ value: null, disabled: this.actionEmployeeVHL == ActionTypePageVHL.Create }),
+      userCode: new FormControl({ value: null, disabled: true }),
       fullname: new FormControl({ value: null, disabled: false }, Validators.required),
       personalIdentifier: new FormControl({ value: null, disabled: false }, Validators.required),
       email: new FormControl({ value: null, disabled: false }, Validators.required),
@@ -170,19 +172,29 @@ export class UpgradeEmployeeComponent implements OnInit {
     this.listUploadAuthorizationFile = [];
     this.listUploadBusinessLicenseFile = [];
     this.listUploadContractFile = [];
+
+    this.activatedRoute.queryParams.subscribe(async params => {
+      let idPartner = +params['partnerId']; // Lấy id từ query parameter
+
+      this.partnerForEmployee = await this.getPartnerById(idPartner).catch((reject) => {
+        this.notificationService.showNotification(Constant.ERROR, `Lỗi truy vấn dữ liệu doanh nghiệp`);
+        this.location.back();
+      });
+    });
+
     if (this.actionEmployeeVHL == ActionTypePageVHL.Create) {
       this.listOfEmployees = [];
-      this.resetFormBaseInfoCreatePartner(null);
+      this.resetFormBaseInfoCreateEmployee(null);
     } else if (this.actionEmployeeVHL == ActionTypePageVHL.Update) {
       this.setIsActiveEditBaseInfo(true);
       this.activatedRoute.queryParams.subscribe(async params => {
         let idPartner = +params['id']; // Lấy id từ query parameter
 
         this.itemEmployee = await this.getPartnerById(idPartner).catch((reject) => {
-          this.notificationService.showNotification(Constant.ERROR, `Lỗi truy vận dữ liệu doanh nghiệp`);
-          this.router.navigate([['/companies']]);
+          this.notificationService.showNotification(Constant.ERROR, `Lỗi truy vấn dữ liệu doanh nghiệp`);
+          this.location.back();
         });
-        this.resetFormBaseInfoCreatePartner(this.itemEmployee);
+        this.resetFormBaseInfoCreateEmployee(this.itemEmployee);
         this.getUsersByPartnerId(this.itemEmployee?.id).then((result: any) => {
           this.listOfEmployees = result;
         });
@@ -214,24 +226,27 @@ export class UpgradeEmployeeComponent implements OnInit {
     this.getEmployees();
   }
 
-  private async resetFormBaseInfoCreatePartner(itemPartner: any) {
+
+
+
+  private async resetFormBaseInfoCreateEmployee(itemEmployee: any) {
     this.formBaseInfoEmployee.reset({
-      id: itemPartner?.id || null,
-      status: { value: itemPartner?.status || UserStatus.ACTIVE, disabled: this.actionEmployeeVHL == ActionTypePageVHL.Create },
-      userType: itemPartner?.userType || UserType.NormalAccount,
-      userCode: { value: itemPartner?.userCode || null, disabled: this.actionEmployeeVHL == ActionTypePageVHL.Create },
-      fullname: itemPartner?.fullname || null,
-      personalIdentifier: itemPartner?.personalIdentifier || null,
-      email: itemPartner?.email || null,
-      gender: itemPartner?.gender || Gender.MALE,
-      birthday: itemPartner?.birthday || null,
-      phoneNo: itemPartner?.phoneNo || null,
-      nationality: itemPartner?.nationality || null,
-      directManagementUserId: itemPartner?.directManagementUserId || null,
-      staffCode: itemPartner?.staffCode || null,
-      membershipCode: itemPartner?.membershipCode || null,
-      position: itemPartner?.position || null,
-      department: itemPartner?.department || null,
+      id: itemEmployee?.id || null,
+      status: { value: itemEmployee?.status || UserStatus.ACTIVE, disabled: this.actionEmployeeVHL == ActionTypePageVHL.Create },
+      userType: itemEmployee?.userType || UserType.NormalAccount,
+      userCode: { value: itemEmployee?.userCode || null, disabled: true },
+      fullname: itemEmployee?.fullname || null,
+      personalIdentifier: itemEmployee?.personalIdentifier || null,
+      email: itemEmployee?.email || null,
+      gender: itemEmployee?.gender || Gender.MALE,
+      birthday: itemEmployee?.birthday || null,
+      phoneNo: itemEmployee?.phoneNo || null,
+      nationality: itemEmployee?.nationality || null,
+      directManagementUserId: itemEmployee?.directManagementUserId || null,
+      staffCode: itemEmployee?.staffCode || null,
+      membershipCode: itemEmployee?.membershipCode || null,
+      position: itemEmployee?.position || null,
+      department: itemEmployee?.department || null,
     });
   }
 
@@ -328,7 +343,7 @@ export class UpgradeEmployeeComponent implements OnInit {
           reject(res.errors);
         }
       }, error => {
-        this.notificationService.showNotification(Constant.ERROR, 'TLấy ra danh sách nhân viên doanh nghiệp thất bại do lỗi hệ thống');
+        this.notificationService.showNotification(Constant.ERROR, 'Lấy ra danh sách nhân viên doanh nghiệp thất bại do lỗi hệ thống');
         reject(error);
       });
     });
@@ -528,12 +543,15 @@ export class UpgradeEmployeeComponent implements OnInit {
 
   saveBaseInfoEmployee() {
     if (this.formBaseInfoEmployee.valid) {
-      let valueSave = this.formBaseInfoEmployee.value;
+      let payload = this.formBaseInfoEmployee.value;
+      payload = { partnerId: this.partnerForEmployee.id, ...payload };
+
       if (this.itemEmployee?.id) {
-        this.generalService.createBaseInfoForPartner(valueSave).subscribe((res: any) => {
+        this.generalService.updateEmployeeBaseInfoForPartnerById(this.itemEmployee.id, payload).subscribe((res: any) => {
           if (res.isValid) {
             this.notificationService.showNotification(Constant.SUCCESS, `Cập nhật thông tin nhân viên thành công`);
             this.itemEmployee = res.data;
+            this.resetFormBaseInfoCreateEmployee(this.itemEmployee);
             this.setIsActiveEditBaseInfo(this.itemEmployee?.id == null);
           } else {
             if (res.errors && res.errors.length > 0) {
@@ -548,10 +566,11 @@ export class UpgradeEmployeeComponent implements OnInit {
           this.notificationService.showNotification(Constant.ERROR, 'Cập nhật thông tin nhân viên thất bại do lỗi hệ thống');
         });
       } else {
-        this.generalService.updateBaseInfoForPartnerById(valueSave).subscribe((res: any) => {
+        this.generalService.createEmployeeBaseInfoForPartner(payload).subscribe((res: any) => {
           if (res.isValid) {
             this.notificationService.showNotification(Constant.SUCCESS, `Tạo mới thông tin nhân viên thành công`);
             this.itemEmployee = res.data;
+            this.resetFormBaseInfoCreateEmployee(this.itemEmployee);
             this.setIsActiveEditBaseInfo(this.itemEmployee?.id == null);
           } else {
             if (res.errors && res.errors.length > 0) {
@@ -575,7 +594,7 @@ export class UpgradeEmployeeComponent implements OnInit {
     }
   }
 
-  editBaseInfoPartner() {
+  editBaseInfoEmployee() {
     this.setIsActiveEditBaseInfo(true);
   }
 
@@ -593,7 +612,7 @@ export class UpgradeEmployeeComponent implements OnInit {
 
   cancelBaseInfoPartner() {
     this.setIsActiveEditBaseInfo(true);
-    this.resetFormBaseInfoCreatePartner(this.itemEmployee);
+    this.resetFormBaseInfoCreateEmployee(this.itemEmployee);
   }
 
   cancelPageActionPartner() {

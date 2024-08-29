@@ -260,7 +260,7 @@ export class ActionPartnerComponent implements OnInit {
         } as UploadFileSetting;
 
         this.itemPartner = await this.getPartnerById(idPartner).catch((reject) => {
-          this.notificationService.showNotification(Constant.ERROR, `Lỗi truy vận dữ liệu doanh nghiệp`);
+          this.notificationService.showNotification(Constant.ERROR, `Lỗi truy vấn dữ liệu doanh nghiệp`);
           this.router.navigate([['/companies']]);
         });
         this.resetFormBaseInfoCreatePartner(this.itemPartner);
@@ -791,6 +791,6 @@ export class ActionPartnerComponent implements OnInit {
   }
 
   navigatePage(url: string) {
-    this.router.navigate([url])
+    this.router.navigate([`${url}`], {queryParams: {partnerId: this.itemPartner.id}})
   }
 }

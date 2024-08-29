@@ -27,7 +27,7 @@
             </div>
           </button>
           <button [disabled]="isActiveEditBaseInfo" nz-button nzType="primary" style="margin-right: 8px;"
-            (click)="editBaseInfoPartner()">
+            (click)="editBaseInfoEmployee()">
             <div style="display: flex; align-items: center;">
               <span nz-icon nzType="edit"></span>
               <span style="margin-left: 6px; line-height: normal;">Chỉnh sửa</span>
@@ -79,14 +79,14 @@
           <div style="height: 1px; margin: 16px 0; background-color: #0000000f;"></div>
           <form [formGroup]="formBaseInfoEmployee">
             <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
-              <div nz-col class="gutter-row" [nzSpan]="8">
+              <div nz-col class="gutter-row" [nzSpan]="9">
                 <div>
                   <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
                     style="display: flex; align-items: center; padding: 8px 0;">
-                    <div nz-col class="gutter-row" [nzSpan]="7">
+                    <div nz-col class="gutter-row" [nzSpan]="5">
                       Trạng thái
                     </div>
-                    <div nz-col class="gutter-row" [nzSpan]="16">
+                    <div nz-col class="gutter-row" [nzSpan]="19">
                       <nz-select nzShowSearch nzMode="default" nzPlaceHolder="Trạng thái hoạt động"
                         formControlName='status'>
                         <nz-option *ngFor="let op of EMPLOYEE_STATUS_OPTIONS" nzLabel="{{op.label}}"
@@ -97,11 +97,11 @@
 
                   <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
                     style="display: flex; align-items: center; padding: 8px 0;">
-                    <div nz-col class="gutter-row" [nzSpan]="7" style="display: flex; align-items: center;">
+                    <div nz-col class="gutter-row" [nzSpan]="5" style="display: flex; align-items: center;">
                       Vai trò
                       <span style="color: tomato; margin-left: 4px;">*</span>
                     </div>
-                    <div nz-col class="gutter-row" [nzSpan]="16">
+                    <div nz-col class="gutter-row" [nzSpan]="19">
                       <nz-radio-group formControlName='userType'>
                         <label nz-radio [nzValue]="UserType.MasterAccount">Master Account</label>
                         <label nz-radio [nzValue]="UserType.NormalAccount">Normal Account</label>
@@ -111,10 +111,10 @@
 
                   <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
                     style="display: flex; align-items: center; padding: 8px 0;">
-                    <div nz-col class="gutter-row" [nzSpan]="7" style="display: flex; align-items: center;">
+                    <div nz-col class="gutter-row" [nzSpan]="5" style="display: flex; align-items: center;">
                       Mã người dùng
                     </div>
-                    <div nz-col class="gutter-row" [nzSpan]="16">
+                    <div nz-col class="gutter-row" [nzSpan]="19">
                       <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
                         formControlName='userCode' placeholder="Mã người dùng hệ thống tự tạo">
                     </div>
@@ -122,29 +122,37 @@
 
                   <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
                     style="display: flex; align-items: center; padding: 8px 0;">
-                    <div nz-col class="gutter-row" [nzSpan]="7" style="display: flex; align-items: center;">
+                    <div nz-col class="gutter-row" [nzSpan]="5" style="display: flex; align-items: center;">
                       Họ và tên
                       <span style="color: tomato; margin-left: 4px;">*</span>
                     </div>
-                    <div nz-col class="gutter-row" [nzSpan]="16">
+                    <div nz-col class="gutter-row" [nzSpan]="8">
                       <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
                         formControlName='fullname' placeholder="Nhập họ và tên">
+                    </div>
+                    <div nz-col class="gutter-row" [nzSpan]="3" style="display: flex; align-items: center;">
+                      CCCD
+                      <span style="color: tomato; margin-left: 4px;">*</span>
+                    </div>
+                    <div nz-col class="gutter-row" [nzSpan]="8">
+                      <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
+                        formControlName='personalIdentifier' placeholder="Nhập cccd">
                     </div>
                   </div>
 
                   <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
                     style="display: flex; align-items: center; padding: 8px 0;">
-                    <div nz-col class="gutter-row" [nzSpan]="7" style="display: flex; align-items: center;">
+                    <div nz-col class="gutter-row" [nzSpan]="5" style="display: flex; align-items: center;">
                       Email <span style="color: tomato; margin-left: 4px;">*</span>
                     </div>
-                    <div nz-col class="gutter-row" [nzSpan]="16">
+                    <div nz-col class="gutter-row" [nzSpan]="19">
                       <input style="border-radius: 4px;" nzSize="default" nz-input type="text" formControlName='email'
                         placeholder="Nhập email">
                     </div>
                   </div>
                 </div>
               </div>
-              <div nz-col class="gutter-row" [nzSpan]="10">
+              <div nz-col class="gutter-row" [nzSpan]="9">
                 <div>
                   <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
                     style="display: flex; align-items: center; padding: 8px 0;">
@@ -180,7 +188,7 @@
                         placeholder="Nhập số điện thoại" formControlName='phoneNo'>
                     </div>
                     <div nz-col class="gutter-row" [nzSpan]="4" style="display: flex; align-items: center;">
-                      Quốc tịch <span style="color: tomato; margin-left: 4px;">*</span>
+                      Quốc tịch
                     </div>
                     <div nz-col class="gutter-row" [nzSpan]="7">
                       <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
