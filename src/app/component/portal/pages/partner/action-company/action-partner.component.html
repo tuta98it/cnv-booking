@@ -209,7 +209,7 @@
       <div class="inner-box">
         <ul nz-menu nzMode="horizontal">
           <li nz-menu-item [nzSelected]="selectedMenu == option.value"
-            *ngFor="let option of MENU_CREATE_PARTNER_OPTION; let i = index" (click)="selectedMenu = option.value">
+            *ngFor="let option of MENU_UPGRADE_PARTNER_OPTION; let i = index" (click)="selectedMenu = option.value">
             {{option.label}}
           </li>
         </ul>
@@ -456,13 +456,13 @@
                 </button>
                 <nz-dropdown-menu [disabled]="!itemPartner?.id" #menuListEmployeesVHL="nzDropdownMenu">
                   <ul nz-menu>
-                    <li nz-menu-item style="padding: 0.5rem 0;">
+                    <li nz-menu-item style="padding: 0.5rem 0;" [nzDisabled]="!itemPartner?.id">
                       <div style="display: flex; align-items: center;">
                         <span nz-icon nzType="plus"></span>
-                        <span style="margin-left: 6px; line-height: normal;" (click)="navigatePage('companies/employee-action/create')">Thêm nhân viên</span>
+                        <span style="margin-left: 6px; line-height: normal;" (click)="navigatePage('companies/employee-action/create', ActionTypePageVHL.Create)">Thêm nhân viên</span>
                       </div>
                     </li>
-                    <li nz-menu-item style="padding: 0.5rem 0;">
+                    <li nz-menu-item style="padding: 0.5rem 0;" [nzDisabled]="!itemPartner?.id">
                       <div style="display: flex; align-items: center;">
                         <span nz-icon nzType="upload"></span>
                         <span style="margin-left: 6px; line-height: normal;">Tải lên file excel</span>
@@ -539,8 +539,8 @@
                     <td>{{ data.membershipCode }}</td>
                     <td [nzRight]="fixedColumn" [nzEllipsis]="settingTableEmployeesValue.ellipsis"
                       class="text-aligin-center">
-                      <button title="Sửa thông tin tài khoản" nz-button nzSize="small" nzType="default"
-                        class="button-update">
+                      <button title="Sửa thông tin thông tin nhân viên" nz-button nzSize="small" nzType="default"
+                        class="button-update" (click)="navigatePage('companies/employee-action/update', ActionTypePageVHL.Update, data.id)">
                         <span class="fa fa-edit fa-fw"></span>
                       </button>
 

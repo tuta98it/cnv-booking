@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzUploadChangeParam, NzUploadFile } from 'ng-zorro-antd/upload';
-import { MENU_CREATE_PARTNER_OPTION, MenuCreatePartner } from 'src/app/enums/menu-create-partner.enum';
+import { MENU_UPGRADE_PARTNER_OPTION, MenuUpgradePartner } from 'src/app/enums/menu-upgrade-partner.enum';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NzTableLayout, NzTablePaginationPosition, NzTablePaginationType, NzTableSize } from 'ng-zorro-antd/table';
 import { NZTableSettingCustoms } from 'src/app/Interfaces/nz-table-seting.interface';
@@ -43,12 +43,12 @@ type TableScroll = 'unset' | 'scroll' | 'fixed';
 export class ActionPartnerComponent implements OnInit {
 
   ActionTypePageVHL = ActionTypePageVHL;
-  MenuCreatePartner = MenuCreatePartner;
-  MENU_CREATE_PARTNER_OPTION = MENU_CREATE_PARTNER_OPTION;
+  MenuCreatePartner = MenuUpgradePartner;
+  MENU_UPGRADE_PARTNER_OPTION = MENU_UPGRADE_PARTNER_OPTION;
   PartnerStatus = PartnerStatus;
   PARTNER_STATUS_OPTIONS = PARTNER_STATUS_OPTIONS;
   AllowDebtPartner = AllowDebtPartner;
-  selectedMenu = MenuCreatePartner.ContractManagement;
+  selectedMenu = MenuUpgradePartner.ContractManagement;
   PaymentPeriod = PaymentPeriod;
   PAYMENT_PERIOD_VHL_OPTIONS = PAYMENT_PERIOD_VHL_OPTIONS;
   PAYMENT_PERIOD_FULL_OPTIONS = PAYMENT_PERIOD_FULL_OPTIONS;
@@ -790,7 +790,16 @@ export class ActionPartnerComponent implements OnInit {
     this.formBaseBusinessContractUpdate.reset();
   }
 
-  navigatePage(url: string) {
-    this.router.navigate([`${url}`], {queryParams: {partnerId: this.itemPartner.id}})
+  navigatePage(url: string, typeAction: number, idEmployee?: number) {
+    switch (typeAction) {
+      case ActionTypePageVHL.Create:
+        this.router.navigate([`${url}`], { queryParams: { partnerId: this.itemPartner.id } })
+        break;
+      case ActionTypePageVHL.Update:
+        this.router.navigate([`${url}`], { queryParams: { employeeId: idEmployee, partnerId: this.itemPartner.id } })
+        break;
+      default:
+        break;
+    }
   }
 }
