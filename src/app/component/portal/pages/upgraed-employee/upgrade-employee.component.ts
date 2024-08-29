@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzUploadChangeParam, NzUploadFile } from 'ng-zorro-antd/upload';
-import { MENU_UPGRADE_PARTNER_OPTION, MenuUpgradePartner } from 'src/app/enums/menu-upgrade-partner.enum';
+import { MENU_UPGRADE_EMPLOYEE_OPTION, MenuUpgradeEmployee } from 'src/app/enums/menu-upgrade-employee.enum';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NzTableLayout, NzTablePaginationPosition, NzTablePaginationType, NzTableSize } from 'ng-zorro-antd/table';
 import { NZTableSettingCustoms } from 'src/app/Interfaces/nz-table-seting.interface';
@@ -35,8 +35,8 @@ type TableScroll = 'unset' | 'scroll' | 'fixed';
 export class UpgradeEmployeeComponent implements OnInit {
 
   ActionTypePageVHL = ActionTypePageVHL;
-  MenuCreatePartner = MenuUpgradePartner;
-  MENU_UPGRADE_PARTNER_OPTION = MENU_UPGRADE_PARTNER_OPTION;
+  MenuUpgradeEmployee = MenuUpgradeEmployee;
+  MENU_UPGRADE_EMPLOYEE_OPTION = MENU_UPGRADE_EMPLOYEE_OPTION;
 
   EmployeeStatus = UserStatus;
   EMPLOYEE_STATUS_OPTIONS = USER_STATUS_OPTIONS;
@@ -51,7 +51,7 @@ export class UpgradeEmployeeComponent implements OnInit {
   TEXT_GENDER = TEXT_GENDER;
 
   AllowDebtPartner = AllowDebtPartner;
-  selectedMenu = MenuUpgradePartner.ContractManagement;
+  selectedMenu = MenuUpgradeEmployee.CompanyInfo;
   PaymentPeriod = PaymentPeriod;
   PAYMENT_PERIOD_VHL_OPTIONS = PAYMENT_PERIOD_VHL_OPTIONS;
   PAYMENT_PERIOD_FULL_OPTIONS = PAYMENT_PERIOD_FULL_OPTIONS;
@@ -73,7 +73,6 @@ export class UpgradeEmployeeComponent implements OnInit {
   listOfEmployees: readonly any[] = [];
   displayDataEmployee: readonly any[] = [];
   formBaseInfoEmployee: FormGroup;
-  formBaseBusinessContractUpdate: FormGroup;
   listUploadAuthorizationFile: NzUploadFile[];
   listUploadBusinessLicenseFile: NzUploadFile[];
   listUploadContractFile: NzUploadFile[];
@@ -122,24 +121,7 @@ export class UpgradeEmployeeComponent implements OnInit {
       department: new FormControl({ value: null, disabled: false }),
     });
 
-    this.formBaseBusinessContractUpdate = this.formBuilder.group({
-      partnerBusinessLicenseFileIDs: [null],
-      partnerContractFileIDs: [null, [Validators.required]],
-      personInChargeId: [null, [Validators.required]],
-      startTimeContractDate: [null, [Validators.required]],
-      endTimeContractDate: [null, [Validators.required]],
-      emailToReceiveInvoice: [null, [Validators.required]],
-      paymentPeriodType: [null, [Validators.required]],
-      dayOfPeriodType: [null, [Validators.required]],
-      debtMax: [null, [Validators.required]],
-      warningLimitPrice: [null, [Validators.required]],
-      typeOfServices: [null, [Validators.required]],
 
-      positionPersonInCharge: new FormControl({ value: null, disabled: true }),
-      phoneNumberPersonInCharge: new FormControl({ value: null, disabled: true }),
-      emailPersonInCharge: new FormControl({ value: null, disabled: true }),
-
-    });
 
     this.settingTableListEmployeesForm = this.formBuilder.group({
       bordered: [false],
@@ -615,9 +597,8 @@ export class UpgradeEmployeeComponent implements OnInit {
     this.resetFormBaseInfoCreateEmployee(this.itemEmployee);
   }
 
-  cancelPageActionPartner() {
+  cancelPageActionEmployee() {
     this.cancelBaseInfoPartner();
-    this.cancelUpdateContractInfoForEmployee();
     this.router.navigate(['/companies'])
   }
 
@@ -638,16 +619,7 @@ export class UpgradeEmployeeComponent implements OnInit {
   }
 
 
-  async onSelectPersonInCharge(employeeId: any) {
-    try {
-      const itemEmployee = await this.getEmployeeById(employeeId);
-      this.formBaseBusinessContractUpdate.controls['positionPersonInCharge'].setValue(itemEmployee?.position ?? "");
-      this.formBaseBusinessContractUpdate.controls['phoneNumberPersonInCharge'].setValue(itemEmployee?.phoneNo ?? "");
-      this.formBaseBusinessContractUpdate.controls['emailPersonInCharge'].setValue(itemEmployee?.email ?? "");
-    } catch (error) {
-      this.msg.error("Error fetching employee data: ", error);
-    }
-  }
+
 
   private getEmployeeById(employeeId: number): Promise<any> {
     return new Promise((resolve, reject) => {
@@ -662,49 +634,5 @@ export class UpgradeEmployeeComponent implements OnInit {
       });
     });
 
-  }
-
-  saveUpdateContractInfoForEmployee() {
-    let partnerBusinessLicenseFileIds = this.listUploadBusinessLicenseFile?.map((bl: any) => bl.uid) ?? null;
-    this.formBaseBusinessContractUpdate.controls['partnerBusinessLicenseFileIDs'].setValue(partnerBusinessLicenseFileIds);
-
-    let partnerContractFileIds = this.listUploadContractFile?.map((bl: any) => bl.uid) ?? null;
-    this.formBaseBusinessContractUpdate.controls['partnerContractFileIDs'].setValue(partnerContractFileIds);
-
-    let partnerTypeOfServices = this.checkOptionsBusinessServiceVHL?.filter(option => option.checked).map(option => option.value) ?? null;
-    this.formBaseBusinessContractUpdate.controls['typeOfServices'].setValue(JSON.stringify(partnerTypeOfServices));
-
-    if (this.formBaseBusinessContractUpdate.valid) {
-      let valueSave = this.formBaseBusinessContractUpdate.value;
-      if (this.itemEmployee?.id) {
-        this.generalService.updateContractInfoForPartner(this.itemEmployee?.id, valueSave).subscribe((res: any) => {
-          if (res.isValid) {
-            this.notificationService.showNotification(Constant.SUCCESS, `Cập nhật thông tin hợp đồng doan nghiệp thành công`);
-          } else {
-            if (res.errors && res.errors.length > 0) {
-              res.errors.forEach((el: any) => {
-                this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
-              });
-            } else {
-              this.notificationService.showNotification(Constant.ERROR, 'Cập nhật thông tin hợp đồng doan nghiệp không thành công');
-            }
-          }
-        }, error => {
-          this.notificationService.showNotification(Constant.ERROR, 'Cập nhật thông tin hợp đồng doan nghiệp thất bại do lỗi hệ thống');
-        });
-      } else {
-        this.msg.error(`Doanh nghiệp không tồn tại`);
-      }
-
-    } else {
-      // Đánh dấu tất cả các trường là đã được chạm (touched) để hiển thị lỗi
-      this.formBaseInfoEmployee.markAllAsTouched();
-      // this.notificationService.showNotification(Constant.SUCCESS, "Tồn tại trường thông tin chưa được nhập");
-      this.msg.error(`Tồn tại trường thông tin chưa được nhập`);
-    }
-  }
-
-  cancelUpdateContractInfoForEmployee() {
-    this.formBaseBusinessContractUpdate.reset();
   }
 }

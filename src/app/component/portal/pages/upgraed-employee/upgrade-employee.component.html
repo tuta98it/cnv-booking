@@ -33,7 +33,7 @@
               <span style="margin-left: 6px; line-height: normal;">Chỉnh sửa</span>
             </div>
           </button>
-          <button nz-button nzType="default" (click)="cancelBaseInfoPartner()">
+          <button nz-button nzType="default" (click)="cancelPageActionEmployee()">
             <div style="display: flex; align-items: center;">
               <span nz-icon nzType="close"></span>
               <span style="margin-left: 4px; line-height: normal;">Huỷ bỏ</span>
@@ -359,215 +359,190 @@
       <div class="inner-box">
         <ul nz-menu nzMode="horizontal">
           <li nz-menu-item [nzSelected]="selectedMenu == option.value"
-            *ngFor="let option of MENU_UPGRADE_PARTNER_OPTION; let i = index" (click)="selectedMenu = option.value">
+            *ngFor="let option of MENU_UPGRADE_EMPLOYEE_OPTION; let i = index" (click)="selectedMenu = option.value">
             {{option.label}}
           </li>
         </ul>
         <div style="margin: 16px 0;"></div>
 
-        <div *ngIf="selectedMenu == MenuCreatePartner.ContractManagement">
+        <div *ngIf="selectedMenu == MenuUpgradeEmployee.CompanyInfo">
           <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span style="font-weight: 500; font-size: 16px;">Quản lý thông tin hợp đồng</span>
-            <div>
-              <button nz-button nzType="primary" style="margin-right: 8px;" [disabled]="!itemEmployee?.id"
-                (click)="saveUpdateContractInfoForEmployee()">
-                <div style="display: flex; align-items: center;">
-                  <span nz-icon nzType="save"></span>
-                  <span style="margin-left: 6px; line-height: normal;">Lưu lại</span>
-                </div>
-              </button>
-              <button nz-button nzType="default" (click)="cancelUpdateContractInfoForEmployee()">
-                <div style="display: flex; align-items: center;">
-                  <span nz-icon nzType="close"></span>
-                  <span style="margin-left: 4px; line-height: normal;">Huỷ bỏ</span>
-                </div>
-              </button>
-            </div>
+            <span style="font-weight: 500; font-size: 16px;">Thông tin doanh nghiệp</span>
           </div>
-          <form [formGroup]="formBaseBusinessContractUpdate">
-            <div>
-              <div style="height: 1px; margin: 16px 0; background-color: #0000000f;"></div>
-              <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
-                <div nz-col class="gutter-row" [nzSpan]="12">
-                  <div>
-                    <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
-                      style="display: flex; align-items: center; padding: 8px 0;">
-                      <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
 
-                      </div>
-                      <div nz-col class="gutter-row" [nzSpan]="12">
-
-                      </div>
+          <div>
+            <div style="height: 1px; margin: 16px 0; background-color: #0000000f;"></div>
+            <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
+              <div nz-col class="gutter-row" [nzSpan]="12">
+                <div>
+                  <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                    style="display: flex; align-items: center; padding: 8px 0;">
+                    <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
+                      Mã số thuế
                     </div>
-
-                    <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
-                      style="display: flex; align-items: center; padding: 8px 0;">
-                      <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
-                      </div>
-                      <div nz-col class="gutter-row" [nzSpan]="12">
-
-                      </div>
-                    </div>
-
-                    <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
-                      style="display: flex; align-items: center; padding: 8px 0;">
-                      <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
-                        Người phụ trách
-                        <span style="color: tomato; margin-left: 4px;">*</span>
-                      </div>
-                      <div nz-col class="gutter-row" [nzSpan]="12">
-                        <nz-select style="border-radius: 4px;" nzSize="default" nzMode="default"
-                          nzPlaceHolder="Nhập người phụ trách" formControlName='personInChargeId'
-                          (ngModelChange)="onSelectPersonInCharge($event)" nzAllowClear nzShowSearch>
-                          <nz-option *ngFor="let employee of employees"
-                            nzLabel="{{employee.fullname}} - {{employee.username}}" [nzValue]="employee.id"></nz-option>
-                        </nz-select>
-                      </div>
-                    </div>
-
-                    <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
-                      style="display: flex; align-items: center; padding: 8px 0;">
-                      <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
-                        Chức vụ
-                        <span style="color: tomato; margin-left: 4px;">*</span>
-                      </div>
-                      <div nz-col class="gutter-row" [nzSpan]="12">
-                        <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
-                          formControlName='positionPersonInCharge' placeholder="Nhập chức vụ">
-                      </div>
-                    </div>
-
-                    <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
-                      style="display: flex; align-items: center; padding: 8px 0;">
-                      <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
-                        Số điện thoại
-                        <span style="color: tomato; margin-left: 4px;">*</span>
-                      </div>
-                      <div nz-col class="gutter-row" [nzSpan]="12">
-                        <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
-                          formControlName='phoneNumberPersonInCharge' placeholder="Nhập số điện thoại">
-                      </div>
-                    </div>
-
-                    <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
-                      style="display: flex; align-items: center; padding: 8px 0;">
-                      <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
-                        Email cá nhân
-                        <span style="color: tomato; margin-left: 4px;">*</span>
-                      </div>
-                      <div nz-col class="gutter-row" [nzSpan]="12">
-                        <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
-                          formControlName='emailPersonInCharge' placeholder="Nhập email cá nhân">
-                      </div>
+                    <div nz-col class="gutter-row" [nzSpan]="12">
+                      {{partnerForEmployee?.taxCode}}
                     </div>
                   </div>
-                </div>
-                <div nz-col class="gutter-row" [nzSpan]="12">
-                  <div>
-                    <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
-                      style="display: flex; align-items: center; padding: 8px 0;">
-                      <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
-                        Thời gian bẳt đầu HĐ
-                        <span style="color: tomato; margin-left: 4px;">*</span>
-                      </div>
-                      <div nz-col class="gutter-row" [nzSpan]="12">
-                        <nz-date-picker [nzMode]="'date'" nzSize="default" style="border-radius: 4px; width: 100%;"
-                          nzFormat="dd/MM/yyyy" nzPlaceHolder="Chọn thời gian bắt đầu"
-                          formControlName='startTimeContractDate'></nz-date-picker>
-                      </div>
+
+                  <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                    style="display: flex; align-items: center; padding: 8px 0;">
+                    <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
+                      Tên doanh nghiệp
                     </div>
-
-                    <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
-                      style="display: flex; align-items: center; padding: 8px 0;">
-                      <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
-                        Thời gian kết thúc HĐ
-                        <span style="color: tomato; margin-left: 4px;">*</span>
-                      </div>
-                      <div nz-col class="gutter-row" [nzSpan]="12">
-                        <nz-date-picker [nzMode]="'date'" nzSize="default" style="border-radius: 4px; width: 100%;"
-                          nzFormat="dd/MM/yyyy" nzPlaceHolder="Chọn thời gian kết thúc"
-                          formControlName='endTimeContractDate'></nz-date-picker>
-                      </div>
+                    <div nz-col class="gutter-row" [nzSpan]="12">
+                      {{partnerForEmployee?.companyName}}
                     </div>
+                  </div>
 
-                    <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
-                      style="display: flex; align-items: center; padding: 8px 0;">
-                      <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
-                        Email nhận hoá đơn
-                        <span style="color: tomato; margin-left: 4px;">*</span>
-                      </div>
-                      <div nz-col class="gutter-row" [nzSpan]="12">
-                        <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
-                          placeholder="Nhập email nhận hoá đơn" formControlName='emailToReceiveInvoice'>
-                      </div>
+                  <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                    style="display: flex; align-items: center; padding: 8px 0;">
+                    <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
+                      Mã doanh nghiệp
                     </div>
-
-                    <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
-                      style="display: flex; align-items: center; padding: 8px 0;">
-                      <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
-                        Thời gian thanh toán
-                        <span style="color: tomato; margin-left: 4px;">*</span>
-                      </div>
-                      <div nz-col class="gutter-row" [nzSpan]="6">
-                        <nz-select (ngModelChange)="changeValuePaymentPeriod($event)" nzAllowClear
-                          nzPlaceHolder="Chọn kỳ thanh toán" formControlName='paymentPeriodType'>
-                          <nz-option *ngFor="let op of PAYMENT_PERIOD_VHL_OPTIONS" nzLabel="{{op.label}}"
-                            [nzValue]="op.value"></nz-option>
-                        </nz-select>
-                      </div>
-
-                      <div nz-col class="gutter-row" [nzSpan]="6">
-                        <nz-select nzPlaceHolder="Chọn ngày trong kỳ" formControlName='dayOfPeriodType' nzAllowClear
-                          nzShowSearch>
-                          <nz-option *ngFor="let op of PAYMENT_PERIOD_DAYS_OPTIONS" nzLabel="{{op.label}}"
-                            [nzValue]="op.value"></nz-option>
-                        </nz-select>
-                      </div>
+                    <div nz-col class="gutter-row" [nzSpan]="12">
+                      {{partnerForEmployee?.code}}
                     </div>
+                  </div>
 
-                    <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
-                      style="display: flex; align-items: center; padding: 8px 0;">
-                      <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
-                        Hạn mức tối đa
-                        <span style="color: tomato; margin-left: 4px;">*</span>
-                      </div>
-                      <div nz-col class="gutter-row" [nzSpan]="12">
-                        <input style="border-radius: 4px;" nzSize="default" formControlName='debtMax' nz-input
-                          type="text" placeholder="Nhập hạn mức tối đa">
-                      </div>
+                  <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                    style="display: flex; align-items: center; padding: 8px 0;">
+                    <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
+                      Số điện thoại
                     </div>
-
-                    <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
-                      style="display: flex; align-items: center; padding: 8px 0;">
-                      <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
-                        Hạn mức cảnh báo
-                        <span style="color: tomato; margin-left: 4px;">*</span>
-                      </div>
-                      <div nz-col class="gutter-row" [nzSpan]="12">
-                        <input style="border-radius: 4px;" nzSize="default" formControlName='warningLimitPrice' nz-input
-                          type="text" placeholder="Nhập hạn mức cảnh báo">
-                      </div>
+                    <div nz-col class="gutter-row" [nzSpan]="12">
+                      {{partnerForEmployee?.phone}}
                     </div>
+                  </div>
 
-                    <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
-                      style="display: flex; align-items: center; padding: 8px 0;">
-                      <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
-                        Dịch vụ đăng kí
-                        <span style="color: tomato; margin-left: 4px;">*</span>
-                      </div>
-                      <div nz-col class="gutter-row" [nzSpan]="12">
-                        <nz-checkbox-group [(ngModel)]="checkOptionsBusinessServiceVHL"
-                          [ngModelOptions]="{standalone: true}"></nz-checkbox-group>
-                      </div>
+                  <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                    style="display: flex; align-items: center; padding: 8px 0;">
+                    <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
+                      Địa chỉ doanh nghiệp
+                    </div>
+                    <div nz-col class="gutter-row" [nzSpan]="12">
+                      {{partnerForEmployee?.address}}
+                    </div>
+                  </div>
+
+
+                  <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                    style="display: flex; align-items: center; padding: 8px 0;">
+                    <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
+                      Email doanh nghiệp
+                    </div>
+                    <div nz-col class="gutter-row" [nzSpan]="12">
+                      {{partnerForEmployee?.email}}
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </form>
-        </div>
+              <!-- <div nz-col class="gutter-row" [nzSpan]="12">
+                <div>
+                  <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                    style="display: flex; align-items: center; padding: 8px 0;">
+                    <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
+                      Thời gian bẳt đầu HĐ
+                      <span style="color: tomato; margin-left: 4px;">*</span>
+                    </div>
+                    <div nz-col class="gutter-row" [nzSpan]="12">
+                      <nz-date-picker [nzMode]="'date'" nzSize="default" style="border-radius: 4px; width: 100%;"
+                        nzFormat="dd/MM/yyyy" nzPlaceHolder="Chọn thời gian bắt đầu"
+                        formControlName='startTimeContractDate'></nz-date-picker>
+                    </div>
+                  </div>
 
-        <div *ngIf="selectedMenu == MenuCreatePartner.ListEmployees">
+                  <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                    style="display: flex; align-items: center; padding: 8px 0;">
+                    <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
+                      Thời gian kết thúc HĐ
+                      <span style="color: tomato; margin-left: 4px;">*</span>
+                    </div>
+                    <div nz-col class="gutter-row" [nzSpan]="12">
+                      <nz-date-picker [nzMode]="'date'" nzSize="default" style="border-radius: 4px; width: 100%;"
+                        nzFormat="dd/MM/yyyy" nzPlaceHolder="Chọn thời gian kết thúc"
+                        formControlName='endTimeContractDate'></nz-date-picker>
+                    </div>
+                  </div>
+
+                  <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                    style="display: flex; align-items: center; padding: 8px 0;">
+                    <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
+                      Email nhận hoá đơn
+                      <span style="color: tomato; margin-left: 4px;">*</span>
+                    </div>
+                    <div nz-col class="gutter-row" [nzSpan]="12">
+                      <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
+                        placeholder="Nhập email nhận hoá đơn" formControlName='emailToReceiveInvoice'>
+                    </div>
+                  </div>
+
+                  <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                    style="display: flex; align-items: center; padding: 8px 0;">
+                    <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
+                      Thời gian thanh toán
+                      <span style="color: tomato; margin-left: 4px;">*</span>
+                    </div>
+                    <div nz-col class="gutter-row" [nzSpan]="6">
+                      <nz-select (ngModelChange)="changeValuePaymentPeriod($event)" nzAllowClear
+                        nzPlaceHolder="Chọn kỳ thanh toán" formControlName='paymentPeriodType'>
+                        <nz-option *ngFor="let op of PAYMENT_PERIOD_VHL_OPTIONS" nzLabel="{{op.label}}"
+                          [nzValue]="op.value"></nz-option>
+                      </nz-select>
+                    </div>
+
+                    <div nz-col class="gutter-row" [nzSpan]="6">
+                      <nz-select nzPlaceHolder="Chọn ngày trong kỳ" formControlName='dayOfPeriodType' nzAllowClear
+                        nzShowSearch>
+                        <nz-option *ngFor="let op of PAYMENT_PERIOD_DAYS_OPTIONS" nzLabel="{{op.label}}"
+                          [nzValue]="op.value"></nz-option>
+                      </nz-select>
+                    </div>
+                  </div>
+
+                  <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                    style="display: flex; align-items: center; padding: 8px 0;">
+                    <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
+                      Hạn mức tối đa
+                      <span style="color: tomato; margin-left: 4px;">*</span>
+                    </div>
+                    <div nz-col class="gutter-row" [nzSpan]="12">
+                      <input style="border-radius: 4px;" nzSize="default" formControlName='debtMax' nz-input type="text"
+                        placeholder="Nhập hạn mức tối đa">
+                    </div>
+                  </div>
+
+                  <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                    style="display: flex; align-items: center; padding: 8px 0;">
+                    <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
+                      Hạn mức cảnh báo
+                      <span style="color: tomato; margin-left: 4px;">*</span>
+                    </div>
+                    <div nz-col class="gutter-row" [nzSpan]="12">
+                      <input style="border-radius: 4px;" nzSize="default" formControlName='warningLimitPrice' nz-input
+                        type="text" placeholder="Nhập hạn mức cảnh báo">
+                    </div>
+                  </div>
+
+                  <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                    style="display: flex; align-items: center; padding: 8px 0;">
+                    <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
+                      Dịch vụ đăng kí
+                      <span style="color: tomato; margin-left: 4px;">*</span>
+                    </div>
+                    <div nz-col class="gutter-row" [nzSpan]="12">
+                      <nz-checkbox-group [(ngModel)]="checkOptionsBusinessServiceVHL"
+                        [ngModelOptions]="{standalone: true}"></nz-checkbox-group>
+                    </div>
+                  </div>
+                </div>
+              </div> -->
+            </div>
+          </div>
+
+        </div>
+        <!--
+        <div *ngIf="selectedMenu == MenuUpgradeEmployee.CompanyInfo">
 
           <div style="display: flex; justify-content: space-between; align-items: center;">
             <span style="font-weight: 500; font-size: 16px;">Danh sách nhân viên</span>
@@ -704,9 +679,9 @@
           </div>
         </div>
 
-        <div *ngIf="selectedMenu == MenuCreatePartner.AccountInfomation">
+        <div *ngIf="selectedMenu == MenuUpgradeEmployee.CompanyInfo">
           <span style="font-weight: 500; font-size: 16px;">Thông tin tài khoản</span>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
