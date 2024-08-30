@@ -22,6 +22,7 @@ import {
 import { TypeOfDocument } from 'src/app/enums/type-of-document.enum';
 import { Router } from '@angular/router';
 import { PARTNER_STATUS_OPTIONS } from 'src/app/enums/partner-status.enum';
+import { UserRegisterComponent } from './../user-register/user-register.component';
 @Component({
   selector: 'app-partner',
   templateUrl: './partner.component.html',
@@ -319,7 +320,7 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
   }
 
   navigatePageUpdatePartner(idPartner: number) {
-    this.router.navigate([`/companies/update`], { queryParams : {id : idPartner}});
+    this.router.navigate([`/companies/update`], { queryParams: { id: idPartner } });
 
   }
 
@@ -680,4 +681,6 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
     }
     return textSatus;
   }
+
+
 }

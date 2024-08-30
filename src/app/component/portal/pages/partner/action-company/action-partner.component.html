@@ -471,7 +471,7 @@
                   </ul>
                 </nz-dropdown-menu>
               </div>
-              <button [disabled]="!itemPartner?.id" nz-button nzType="default" style="margin-right: 0.5rem;">
+              <button [disabled]="!itemPartner?.id" nz-button nzType="default" style="margin-right: 0.5rem;" (click)="downloadExcelEmployeeForPartner(itemPartner?.id)">
                 <div style="display: flex; align-items: center;">
                   <span nz-icon nzType="download"></span>
                   <span style="margin-left: 6px; line-height: normal;">Xuất file excel</span>

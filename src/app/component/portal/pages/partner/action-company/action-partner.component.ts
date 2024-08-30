@@ -22,6 +22,7 @@ import { DAYS_OF_MONTH_OPTIONS, DaysOfMonth } from 'src/app/enums/days-of-month.
 import { MONTHS_OPTIONS, MonthsOfTheYear } from 'src/app/enums/months-of-the-year.enum';
 import { UserType } from 'src/app/enums/user-type.enum';
 import { removeAccents } from 'src/app/shared/utils/filters/remove-accents';
+import { DatePipe } from '@angular/common';
 
 // interface ItemData {
 //   name: string;
@@ -99,6 +100,7 @@ export class ActionPartnerComponent implements OnInit {
     private generalService: GeneralService,
     private notificationService: NotificationService,
     private router: Router,
+    private datePipe: DatePipe,
   ) {
 
     this.formBaseInfoCreatePartner = this.formBuilder.group({
@@ -800,6 +802,40 @@ export class ActionPartnerComponent implements OnInit {
         break;
       default:
         break;
+    }
+  }
+
+  downloadExcelEmployeeForPartner(partnerId?: number) {
+    if (partnerId) {
+      this.generalService.downloadExcelEmployeeForPartner(partnerId).subscribe({
+        next: (blob) => {
+          if (blob) {
+            // Create a new Blob object
+            const fileUrl = window.URL.createObjectURL(blob);
+
+
+            // Create a link element to trigger download
+            const a = document.createElement('a');
+            a.href = fileUrl;
+
+            // Get the current date
+            const formattedDate = this.datePipe.transform(new Date(), 'HHmmddMMyy')?.toLowerCase();
+            a.download = `DSNV-${this.itemPartner.companyName.replace(/\s/g, "_")}-${formattedDate}.xls`; // You can set the filename here
+            document.body.appendChild(a);
+            a.click();
+
+            // Clean up
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(fileUrl);
+          } else {
+            this.notificationService.showNotification(Constant.ERROR, "Tạo file thất bại");
+
+          }
+        }
+      });
+    }
+    else {
+      this.notificationService.showNotification(Constant.ERROR, "Doanh nghiệp không xác định")
     }
   }
 }

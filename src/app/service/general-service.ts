@@ -476,6 +476,10 @@ export class GeneralService extends BaseService {
   }
 
 
+  downloadExcelEmployeeForPartner(partnerId: number): Observable<any> {
+    return this.post(UrlConstant.LIST_USER + `/DownloadExcelEmployeeForPartner`, {"partnerId": partnerId}, {},  "blob");
+  }
+
 
   //Partners
   getListPartner(): Observable<any[]> {

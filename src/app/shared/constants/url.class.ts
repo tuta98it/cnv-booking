@@ -2,7 +2,7 @@ export class UrlConstant {
   public static readonly LOGIN = '/oauth/token';
   public static readonly LOGOUT = '/login/logout';
   public static readonly VALIDATE = '/login/validate';
-  public static readonly LIST_USER = '/user';
+  public static readonly LIST_USER = '/User';
   public static readonly DELETE_USER = '/users/delete/';
   public static readonly ADD_USER = '/users';
   public static readonly DETAIL_USER = '/users';
