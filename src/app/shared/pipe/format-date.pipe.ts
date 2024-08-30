@@ -56,7 +56,7 @@ export class DateFormatPipe extends DatePipe implements PipeTransform {
       case 0:
         return 'Nữ';
       case 2:
-        return 'KXĐ';
+        return 'Unknown';
       default:
         return '';
     }

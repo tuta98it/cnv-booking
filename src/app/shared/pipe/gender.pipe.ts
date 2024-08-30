@@ -12,7 +12,7 @@ export class GenderPipe implements PipeTransform {
     } else if (gender == false || gender == 0) {
       return "Nữ"
     } else {
-      return "KXĐ"
+      return "Unknown"
     }
   }
 }

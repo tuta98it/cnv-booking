@@ -9,7 +9,7 @@ export class EmployeePipePipe implements PipeTransform {
     if (employeeId >= 1) {
       let findEmployee = employees.find((objEmployee: any) => objEmployee.id === employeeId);
       if (findEmployee) {
-        return `${findEmployee.fullname ?? ''}${findEmployee.email ?  ` - ${findEmployee.email}` : ''}} `;
+        return `${findEmployee.fullname ?? ''}${findEmployee.email ?  ` - ${findEmployee.email}` : ''}`;
       }else{
         return 'Unknown';
       }
