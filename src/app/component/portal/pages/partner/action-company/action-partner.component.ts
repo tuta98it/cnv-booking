@@ -75,8 +75,10 @@ export class ActionPartnerComponent implements OnInit {
   settingUploadAuthorizationFile: UploadFileSetting;
   settingUploadBusinessLicenseFile: UploadFileSetting;
   settingUploadContractFile: UploadFileSetting;
+  settingUploadEmployeeForPartnerFile: UploadFileSetting;
   listUploadAuthorizationFile: NzUploadFile[];
   listUploadBusinessLicenseFile: NzUploadFile[];
+  listUploadEmployeeForPartnerFile: NzUploadFile[];
   listUploadContractFile: NzUploadFile[];
   partnerIdInfoBaseReturn?: number;
 
@@ -170,6 +172,7 @@ export class ActionPartnerComponent implements OnInit {
     this.listUploadAuthorizationFile = [];
     this.listUploadBusinessLicenseFile = [];
     this.listUploadContractFile = [];
+    this.listUploadEmployeeForPartnerFile = [];
     if (this.actionPartnerVHL == ActionTypePageVHL.Create) {
       this.titleActionCompanyPage = "Thêm mới doanh nghiệp";
       this.settingUploadAuthorizationFile = {
@@ -211,6 +214,20 @@ export class ActionPartnerComponent implements OnInit {
           showPreviewIcon: true,
           showDownloadIcon: true,
           showRemoveIcon: true
+        }
+      } as UploadFileSetting;
+
+      this.settingUploadEmployeeForPartnerFile = {
+        isMultiple: false,
+        action: `${this.configService.getConfig().api.baseUrl}/api/ImportExcel/ImportEmployeeForPartner?PartnerId=null`,
+        header: {
+          Authorization: 'Bearer ' + localStorage.getItem(Constant.TOKEN),
+        },
+        name: `postedFile`,
+        showUploadList: {
+          showPreviewIcon: false,
+          showDownloadIcon: false,
+          showRemoveIcon: false
         }
       } as UploadFileSetting;
 
@@ -262,6 +279,19 @@ export class ActionPartnerComponent implements OnInit {
           }
         } as UploadFileSetting;
 
+        this.settingUploadEmployeeForPartnerFile = {
+          isMultiple: false,
+          action: `${this.configService.getConfig().api.baseUrl}/api/ImportExcel/ImportEmployeeForPartner?PartnerId=${idPartner}`,
+          header: {
+            Authorization: 'Bearer ' + localStorage.getItem(Constant.TOKEN),
+          },
+          name: `postedFile`,
+          showUploadList: {
+            showPreviewIcon: false,
+            showDownloadIcon: false,
+            showRemoveIcon: false
+          }
+        } as UploadFileSetting;
         this.itemPartner = await this.getPartnerById(idPartner).catch((reject) => {
           this.notificationService.showNotification(Constant.ERROR, `Lỗi truy vấn dữ liệu doanh nghiệp`);
           this.router.navigate([['/companies']]);
@@ -531,6 +561,28 @@ export class ActionPartnerComponent implements OnInit {
     }
   }
 
+  handleChangeUploadEmployeeForPartnerFile(info: NzUploadChangeParam): void {
+    if (info.file.status !== 'uploading') {
+
+    }
+    if (info.file.status === 'done') {
+      this.listUploadEmployeeForPartnerFile = info.fileList;
+      setTimeout(() => {
+        console.log("info: ", info);
+        if (info.file.response.isValid) {
+          this.msg.success(`${info.file.name} file tải lên thành công`);
+        } else {
+          this.msg.error(`${info.file.name} file tải lên thất bại.`);
+        }
+        // if (this.listUploadEmployeeForPartnerFile.length > 0) {
+        //   this.listUploadEmployeeForPartnerFile[this.listUploadEmployeeForPartnerFile.length - 1].uid = info.file.response.uid.toString();
+        //   this.listUploadEmployeeForPartnerFile[this.listUploadEmployeeForPartnerFile.length - 1].url = `${this.configService.getConfig().api.baseUrl}/${info.file.response.path}`;
+        // }
+      }, 200);
+    } else if (info.file.status === 'error') {
+      this.msg.error(`${info.file.name} file tải lên thất bại.`);
+    }
+  }
 
   handleRemoveUploadAuthorizationFile(file: NzUploadFile) {
     if (file?.uid) {
@@ -562,6 +614,7 @@ export class ActionPartnerComponent implements OnInit {
       });
     }
   }
+
 
   handleRemoveUploadContractFile(file: NzUploadFile) {
     if (file?.uid) {
@@ -626,6 +679,37 @@ export class ActionPartnerComponent implements OnInit {
     }
   }
 
+
+  handleRemoveUploadEmployeeForPartner(file: NzUploadFile) {
+    if (file?.uid) {
+      this.generalService.removeFile(file.uid).subscribe({
+        next: (res: any) => {
+          if (res) {
+            if (res.ret && res.ret.length > 0) {
+              res.ret.forEach((el: any) => {
+                if (el.code === 0) {
+                  this.listUploadEmployeeForPartnerFile = this.listUploadEmployeeForPartnerFile.filter(en => en.uid !== file.uid);
+                  this.msg.success(`Đã xoá file ${file.name}.`);
+                } else if (res.code === 404) {
+                  this.msg.error(`Không tìm thấy file ${file.name}.`);
+                } else {
+                  this.msg.error(`Đã có lỗi xảy ra. Không thể xoá file ${file.name}`);
+                }
+              });
+            }
+          } else {
+            this.msg.error(`Xoá file ${file.name} thất bại.`);
+          }
+        },
+        error: (error: any) => {
+          this.msg.error(`Lỗi hệ thống, Không thể xoá file ${file.name}`);
+        },
+        complete: () => {
+
+        }
+      });
+    }
+  }
 
   saveBaseInfoPartner() {
 
@@ -805,6 +889,9 @@ export class ActionPartnerComponent implements OnInit {
       default:
         break;
     }
+  }
+  downloadFileEmployeeForPartnerTemplate() {
+    window.open(`${this.configService.getConfig().api.baseUrl}/Uploads/FileMau/file_mau_import_nhan_vien_30082024.xls`, '_blank')
   }
 
   downloadExcelEmployeeForPartner(partnerId?: number) {

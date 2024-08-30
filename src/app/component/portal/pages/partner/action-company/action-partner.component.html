@@ -464,14 +464,33 @@
                       </div>
                     </li>
                     <li nz-menu-item style="padding: 0.5rem 0;" [nzDisabled]="!itemPartner?.id">
-                      <div style="display: flex; align-items: center;">
-                        <span nz-icon nzType="upload"></span>
-                        <span style="margin-left: 6px; line-height: normal;">Tải lên file excel</span>
-                      </div>
+                      <nz-upload *ngIf="settingUploadEmployeeForPartnerFile && settingUploadEmployeeForPartnerFile?.action"
+                        [nzMultiple]="settingUploadEmployeeForPartnerFile?.isMultiple"
+                        [nzAction]="settingUploadEmployeeForPartnerFile?.action"
+                        [nzName]="settingUploadEmployeeForPartnerFile?.name"
+                        [nzHeaders]="settingUploadEmployeeForPartnerFile?.header"
+                        [nzRemove]="handleRemoveUploadAuthorizationFile"
+                        [nzShowUploadList]="false"
+                        [nzFileList]="listUploadEmployeeForPartnerFile"
+                        (nzChange)="handleChangeUploadEmployeeForPartnerFile($event)">
+                        <div style="display: flex; align-items: center;">
+                          <span nz-icon nzType="upload"></span>
+                          <span style="margin-left: 6px; line-height: normal;">Tải lên file excel</span>
+                        </div>
+                      </nz-upload>
                     </li>
                   </ul>
                 </nz-dropdown-menu>
               </div>
+
+              <button nz-button nzType="default" style="margin-right: 0.5rem;"
+              (click)="downloadFileEmployeeForPartnerTemplate()">
+              <div style="display: flex; align-items: center;">
+                <span nz-icon nzType="download"></span>
+                <span style="margin-left: 6px; line-height: normal;">Tải file mẫu</span>
+              </div>
+            </button>
+
               <button [disabled]="!itemPartner?.id" nz-button nzType="default" style="margin-right: 0.5rem;"
                 (click)="downloadExcelEmployeeForPartner(itemPartner?.id)">
                 <div style="display: flex; align-items: center;">
@@ -479,6 +498,7 @@
                   <span style="margin-left: 6px; line-height: normal;">Xuất file excel</span>
                 </div>
               </button>
+
               <button [disabled]="!itemPartner?.id" nz-button nzType="default" nzDanger>
                 <div style="display: flex; align-items: center;">
                   <span nz-icon nzType="lock"></span>
