@@ -2,8 +2,7 @@
   <div nz-row [nzGutter]="[16, 24]">
     <div nz-col class="gutter-row" [nzSpan]="24">
       <div class="inner-box" style="display: flex; justify-content: space-between; align-items: center;">
-        <span style="font-weight: 500; font-size: 18px;">{{ actionPartnerVHL == ActionTypePageVHL.Create ? 'Thêm mới' :
-          'Cập nhật'}} doanh nghiệp</span>
+        <span style="font-weight: 500; font-size: 18px;">{{titleActionCompanyPage}}</span>
         <div>
           <button nz-button nzType="default" style="margin-right: 8px;">
             <div style="display: flex; align-items: center;">
@@ -459,7 +458,9 @@
                     <li nz-menu-item style="padding: 0.5rem 0;" [nzDisabled]="!itemPartner?.id">
                       <div style="display: flex; align-items: center;">
                         <span nz-icon nzType="plus"></span>
-                        <span style="margin-left: 6px; line-height: normal;" (click)="navigatePage('companies/employee-action/create', ActionTypePageVHL.Create)">Thêm nhân viên</span>
+                        <span style="margin-left: 6px; line-height: normal;"
+                          (click)="navigatePage('companies/employee-action/create', ActionTypePageVHL.Create)">Thêm nhân
+                          viên</span>
                       </div>
                     </li>
                     <li nz-menu-item style="padding: 0.5rem 0;" [nzDisabled]="!itemPartner?.id">
@@ -471,7 +472,8 @@
                   </ul>
                 </nz-dropdown-menu>
               </div>
-              <button [disabled]="!itemPartner?.id" nz-button nzType="default" style="margin-right: 0.5rem;" (click)="downloadExcelEmployeeForPartner(itemPartner?.id)">
+              <button [disabled]="!itemPartner?.id" nz-button nzType="default" style="margin-right: 0.5rem;"
+                (click)="downloadExcelEmployeeForPartner(itemPartner?.id)">
                 <div style="display: flex; align-items: center;">
                   <span nz-icon nzType="download"></span>
                   <span style="margin-left: 6px; line-height: normal;">Xuất file excel</span>
@@ -540,7 +542,8 @@
                     <td [nzRight]="fixedColumn" [nzEllipsis]="settingTableEmployeesValue.ellipsis"
                       class="text-aligin-center">
                       <button title="Sửa thông tin thông tin nhân viên" nz-button nzSize="small" nzType="default"
-                        class="button-update" (click)="navigatePage('companies/employee-action/update', ActionTypePageVHL.Update, data.id)">
+                        class="button-update"
+                        (click)="navigatePage('companies/employee-action/update', ActionTypePageVHL.Update, data.id)">
                         <span class="fa fa-edit fa-fw"></span>
                       </button>
 

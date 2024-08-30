@@ -42,7 +42,7 @@ type TableScroll = 'unset' | 'scroll' | 'fixed';
   styleUrls: ['./action-partner.component.scss']
 })
 export class ActionPartnerComponent implements OnInit {
-
+  titleActionCompanyPage: string = "Thêm mới doanh nghiệp"
   ActionTypePageVHL = ActionTypePageVHL;
   MenuCreatePartner = MenuUpgradePartner;
   MENU_UPGRADE_PARTNER_OPTION = MENU_UPGRADE_PARTNER_OPTION;
@@ -171,6 +171,7 @@ export class ActionPartnerComponent implements OnInit {
     this.listUploadBusinessLicenseFile = [];
     this.listUploadContractFile = [];
     if (this.actionPartnerVHL == ActionTypePageVHL.Create) {
+      this.titleActionCompanyPage = "Thêm mới doanh nghiệp";
       this.settingUploadAuthorizationFile = {
         isMultiple: true,
         action: `${this.configService.getConfig().api.baseUrl}/Upload/UploadPartnerFile?partnerId=null&type=${TypeOfDocument.AuthorizationFile}`,
@@ -265,6 +266,7 @@ export class ActionPartnerComponent implements OnInit {
           this.notificationService.showNotification(Constant.ERROR, `Lỗi truy vấn dữ liệu doanh nghiệp`);
           this.router.navigate([['/companies']]);
         });
+        this.titleActionCompanyPage = this.itemPartner?.companyName ?? "";
         this.resetFormBaseInfoCreatePartner(this.itemPartner);
         this.resetFormContractUpdatePartner(this.itemPartner);
 
