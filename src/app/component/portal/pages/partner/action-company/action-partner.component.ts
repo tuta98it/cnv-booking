@@ -459,7 +459,7 @@ export class ActionPartnerComponent implements OnInit {
           reject(res.errors);
         }
       }, error => {
-        this.notificationService.showNotification(Constant.ERROR, 'TLấy ra danh sách nhân viên doanh nghiệp thất bại do lỗi hệ thống');
+        this.notificationService.showNotification(Constant.ERROR, 'Lấy ra danh sách nhân viên doanh nghiệp thất bại do lỗi hệ thống');
         reject(error);
       });
     });
