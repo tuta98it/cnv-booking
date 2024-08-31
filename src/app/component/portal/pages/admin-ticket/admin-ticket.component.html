@@ -41,16 +41,18 @@
   <dxi-column caption="Tên khách hàng" [width]="300" dataField="passengerName"
     cssClass="vertical-align-middle"></dxi-column>
   <dxi-column caption="Hãng bay" dataField="airlineName" [width]="200" cssClass="vertical-align-middle"></dxi-column>
-  <dxi-column caption="Mã đặt chỗ" [width]="200" dataField="bookingNumber"
+  <dxi-column caption="Mã đặt chỗ" [width]="120" dataField="bookingNumber"
     cssClass="vertical-align-middle"></dxi-column>
-  <dxi-column caption="Số vé" [width]="200" dataField="ticketNumber" cssClass="vertical-align-middle"></dxi-column>
+  <dxi-column caption="Số vé" [width]="170" dataField="ticketNumber" cssClass="vertical-align-middle"></dxi-column>
   <dxi-column caption="Ngày đặt vé" [width]="200" dataField="dateCreated" dataType="date" format="HH:mm dd/MM/yyyy"
     cssClass="vertical-align-middle"></dxi-column>
-  <dxi-column caption="Trạng thái hệ thống" cssClass="text-center vertical-align-middle" [width]="200"
+  <dxi-column caption="Trạng thái hệ thống" cssClass="text-center vertical-align-middle" [width]="150"
     cellTemplate="cellSystemCancelled" cssClass="vertical-align-middle"></dxi-column>
   <dxi-column caption="Lý do huỷ" [width]="150" dataField="noteSystemCancelled" dataTyp="string"
     cssClass="vertical-align-middle"></dxi-column>
-  <dxi-column caption="Xuất vé" cellTemplate="cellBillet" cssClass="vertical-align-middle text-center"></dxi-column>
+  <dxi-column caption="Xuất vé" [width]="100" cellTemplate="cellBillet"
+    cssClass="vertical-align-middle text-center"></dxi-column>
+  <dxi-column caption="Thao tác" cellTemplate="action" cssClass="vertical-align-middle text-center"></dxi-column>
 
   <div *dxTemplate="let ticketFlightExport of 'cellSystemCancelled'">
     <nz-switch [ngModel]="!ticketFlightExport.data.systemCancelled" [nzControl]="true" nzCheckedChildren="Tính công nợ"
@@ -69,6 +71,13 @@
       Lỗi đặt vé
     </div>
   </div>
+
+  <div *dxTemplate="let item of 'action'">
+    <div *ngIf="item.data.status === 'TICKETED'">
+      <a (click)="onOpenViewInVoice(item.data)"><span nz-icon nzType="container" nzTheme="outline"></span></a>
+    </div>
+  </div>
+
 
   <dxo-summary>
     <dxi-total-item column="passengerName" displayFormat="Số bản ghi: {0}" summaryType="count">
@@ -126,7 +135,9 @@
                       {{bookingPassenger.firstName}}</strong></label>
                 </div>
                 <div class="passenger-departmember-ship" style="margin-left: 2rem;">
-                  <label >Thẻ thành viên: <strong [style.color]="bookingPassenger?.departMembership ? 'black' : 'red'">{{bookingPassenger?.departMembership ? bookingPassenger.departMembership : 'Chưa có thông tin'}}</strong></label>
+                  <label>Thẻ thành viên: <strong
+                      [style.color]="bookingPassenger?.departMembership ? 'black' : 'red'">{{bookingPassenger?.departMembership
+                      ? bookingPassenger.departMembership : 'Chưa có thông tin'}}</strong></label>
                 </div>
               </div>
 
@@ -293,4 +304,30 @@
       Ấn đồng ý để tiếp tục.
     </span>
   </ng-container>
+</nz-modal>
+
+<nz-modal [(nzVisible)]="isVisibleViewInVoice" nzOkDanger="true" nzCancelText="Đóng"
+  (nzOnCancel)="isVisibleViewInVoice = false">
+  <div *nzModalTitle style="display: flex; align-items: baseline;">
+    <div>Hóa đơn</div>
+  </div>
+  <ng-container *nzModalContent>
+    <div class="d-flex">
+      <div class="position-relative mr-3 flex-grow-1">
+        <div class="border p-1">
+          <span *ngIf="nameOfOrderFile === ''">{{'Chưa tải lên hóa đơn'}}</span>
+          <a *ngIf="nameOfOrderFile !== ''" (click)="viewOrderFile()">{{nameOfOrderFile}}</a>
+        </div>
+        <div *ngIf="nameOfOrderFile" nz-icon nzType="close" nzTheme="outline" class="customise-close-icon"
+          (click)="deleteOrderFile()"></div>
+      </div>
+      <button nz-button nzType="primary" (click)="showDialogSelectFile()">
+        Tải lên
+      </button>
+      <input type="file" #fileInput (change)="onFileSelected($event)" style="display: none;" accept=":not(.exe)">
+    </div>
+  </ng-container>
+  <div *nzModalFooter>
+    <button nz-button nzType="default" (click)="isVisibleViewInVoice = false">Đóng</button>
+  </div>
 </nz-modal>
