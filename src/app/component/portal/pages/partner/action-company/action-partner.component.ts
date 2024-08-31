@@ -459,7 +459,7 @@ export class ActionPartnerComponent implements OnInit {
             stt++;
             en.stt = stt;
             en.checked = false;
-            en.disabled = (en.status == UserStatus.ACTIVE),
+            en.disabled = (en.status == UserStatus.LOCKED),
             en.isLoadingActiveUser = false;
           });
           resolve(res.data);
