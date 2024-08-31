@@ -36,10 +36,13 @@ import { DataAirlineTicketsComponent } from './pages/data-airline-tickets/data-a
 import { DataHotelsComponent } from './pages/data-hotels/data-hotels.component';
 
 import {
-  DxButtonModule, DxTabPanelModule, DxDataGridModule, DxDataGridComponent, DxNumberBoxModule
+  DxButtonModule, DxTabPanelModule, DxDataGridModule, DxNumberBoxModule,
 } from 'devextreme-angular';
 import { UtilitHotelComponent } from './pages/utility/utility-hotel/utility-hotel.component';
 import { UtilitRoomComponent } from './pages/utility/utility-room/utility-room.component';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { UploadService } from 'src/app/service/upload-service';
+
 const antDesignIcons = AllIcons as {
   [key: string]: IconDefinition;
 };
@@ -79,7 +82,7 @@ const icons: IconDefinition[] = Object.keys(antDesignIcons).map(key => antDesign
     DxTabPanelModule,
     DxDataGridModule,
   ],
-  providers: [GeneralService, FileManagerService, MenuService, SignalRService, DateFormatPipe,]
+  providers: [GeneralService, FileManagerService, MenuService, SignalRService, DateFormatPipe,UploadService]
 })
 export class PortalModule {
 

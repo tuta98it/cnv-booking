@@ -107,5 +107,11 @@
       }
     }
   }
-
+}
+.customise-close-icon {
+  position: absolute; /* Đặt biểu tượng ở vị trí tuyệt đối trong phạm vi phần tử cha */
+  top: 50%; /* Căn giữa theo chiều dọc */
+  right: 10px; /* Căn về bên phải và cách một khoảng nhỏ (10px) */
+  transform: translateY(-50%); /* Điều chỉnh để biểu tượng căn giữa theo chiều dọc */
+  cursor: pointer; /* Thêm con trỏ để chỉ ra rằng biểu tượng có thể nhấp được */
 }
