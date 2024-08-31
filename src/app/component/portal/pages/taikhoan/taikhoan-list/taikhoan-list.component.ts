@@ -234,7 +234,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
   }
   setStatusUser(user: any, changeIsActiveUser: boolean) {
     // Delete workspace here
-    this.generalService.setStatusTaikhoan(user.id, changeIsActiveUser).subscribe({
+    this.generalService.setStatusUser(user.id, changeIsActiveUser).subscribe({
       next: (res) => {
         if (res.ret && res.ret[0].code !== 0) {
           this.notificationService.showNotification(Constant.ERROR, 'Thiết lập trạng thái tài khoản không thành công');

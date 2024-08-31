@@ -23,6 +23,9 @@ import { MONTHS_OPTIONS, MonthsOfTheYear } from 'src/app/enums/months-of-the-yea
 import { UserType } from 'src/app/enums/user-type.enum';
 import { removeAccents } from 'src/app/shared/utils/filters/remove-accents';
 import { DatePipe } from '@angular/common';
+import { TEXT_USER_STATUS, USER_STATUS_OPTIONS, UserStatus } from 'src/app/enums/user-status.enum';
+import { LockType } from 'src/app/enums/lock-type.enum';
+import { NzModalService } from 'ng-zorro-antd/modal';
 
 // interface ItemData {
 //   name: string;
@@ -59,6 +62,15 @@ export class ActionPartnerComponent implements OnInit {
   DAYS_OF_MONTH_OPTIONS = DAYS_OF_MONTH_OPTIONS;
   MonthsOfTheYear = MonthsOfTheYear;
   MONTHS_OPTIONS = MONTHS_OPTIONS;
+
+
+  UserStatus = UserStatus;
+  USER_STATUS_OPTIONS = USER_STATUS_OPTIONS;
+  TEXT_USER_STATUS = TEXT_USER_STATUS;
+
+  LockType = LockType;
+
+
   PAYMENT_PERIOD_DAYS_OPTIONS = [];
   actionPartnerVHL: any;
   settingTableListEmployeesForm: FormGroup;
@@ -103,6 +115,7 @@ export class ActionPartnerComponent implements OnInit {
     private notificationService: NotificationService,
     private router: Router,
     private datePipe: DatePipe,
+    private modalService: NzModalService,
   ) {
 
     this.formBaseInfoCreatePartner = this.formBuilder.group({
@@ -429,7 +442,6 @@ export class ActionPartnerComponent implements OnInit {
         this.employees.forEach(en => {
           stt++;
           en.stt = stt;
-          en.checked = true;
         });
       }
     }, error => {
@@ -438,6 +450,7 @@ export class ActionPartnerComponent implements OnInit {
 
 
   private getUsersByPartnerId(idPartner: number): Promise<any> {
+    this.settingTableEmployeesValue.loading = true;
     return new Promise((resolve, reject) => {
       this.generalService.getUsersByPartnerId(idPartner).subscribe((res: any) => {
         if (res.isValid) {
@@ -445,9 +458,12 @@ export class ActionPartnerComponent implements OnInit {
           res.data.forEach(en => {
             stt++;
             en.stt = stt;
-            en.checked = true;
+            en.checked = false;
+            en.disabled = (en.status == UserStatus.ACTIVE),
+            en.isLoadingActiveUser = false;
           });
           resolve(res.data);
+          this.settingTableEmployeesValue.loading = false;
         } else {
           if (res.errors && res.errors.length > 0) {
             res.errors.forEach((el: any) => {
@@ -927,4 +943,161 @@ export class ActionPartnerComponent implements OnInit {
       this.notificationService.showNotification(Constant.ERROR, "Doanh nghiệp không xác định")
     }
   }
+
+
+  showLockAccountConfirm(type: LockType, employee?: any): void {
+    employee.isLoadingActiveUser = true;
+    switch (type) {
+      case LockType.SINGLE:
+        this.modalService.confirm({
+          nzTitle: `<b>Bạn có chắc muốn khoá tài khoản ${employee.username}?</b>`,
+          nzContent: 'Ấn đồng ý để tiếp tục',
+          nzOkDanger: true,
+          nzOkText: 'Đồng ý',
+          nzCancelText: 'Không',
+          nzOnOk: () => this.lockEmployeeAccount(employee.id).then(r => this.cancelActiveUserConfirm(employee)),
+          nzOnCancel: () => this.cancelActiveUserConfirm(employee)
+        });
+        break;
+      case LockType.MULTIPLE:
+        this.listOfEmployees.forEach(e => {
+          if (e.checked) {
+            this.modalService.confirm({
+              nzTitle: `<b>Bạn có chắc muốn khoá các tài khoản này?</b>`,
+              nzContent: 'Ấn đồng ý để tiếp tục',
+              nzOkDanger: true,
+              nzOkText: 'Đồng ý',
+              nzCancelText: 'Không',
+              nzOnOk: () => this.multiLockEmployeeAccount().then(r => this.cancelActiveUserConfirm(employee)),
+              nzOnCancel: () => this.cancelActiveUserConfirm(employee)
+            });
+          }
+        });
+        break;
+      default:
+        break;
+    }
+  }
+
+
+  showUnlockAccountConfirm(type: LockType, employee: any): void {
+    employee.isLoadingActiveUser = true;
+    switch (type) {
+      case LockType.SINGLE:
+        this.modalService.confirm({
+          nzTitle: `<b>Bạn có chắc muốn mở khoá tài khoản ${employee.username}?</b>`,
+          nzContent: 'Ấn đồng ý để tiếp tục',
+          nzOkDanger: false,
+          nzOkText: 'Đồng ý',
+          nzCancelText: 'Không',
+          nzOnOk: () => this.unlockEmployeeAccount(employee.id).then(r => this.cancelActiveUserConfirm(employee)),
+          nzOnCancel: () => this.cancelActiveUserConfirm(employee),
+        });
+        break;
+      case LockType.MULTIPLE:
+        this.listOfEmployees.forEach(e => {
+          if (e.checked) {
+            this.modalService.confirm({
+              nzTitle: `<b>Bạn có chắc muốn mở khoá các tài khoản này?</b>`,
+              nzContent: 'Ấn đồng ý để tiếp tục',
+              nzOkDanger: false,
+              nzOkText: 'Đồng ý',
+              nzCancelText: 'Không',
+              nzOnOk: () => this.multiUnlockEmployeeAccount().then(r => this.cancelActiveUserConfirm(employee)),
+              nzOnCancel: () => this.cancelActiveUserConfirm(employee)
+            });
+          }
+        });
+        break;
+      default:
+        break;
+    }
+  }
+
+  private cancelActiveUserConfirm(employee: any) {
+    employee.isLoadingActiveUser = false;
+    this.getUsersByPartnerId(this.itemPartner?.id).then((result: any) => {
+      this.listOfEmployees = result;
+    });
+  }
+
+  private multiLockEmployeeAccount() {
+    return new Promise((resolve, reject) => {
+      this.listOfEmployees.forEach(e => {
+        if (e.checked) {
+          this.lockEmployeeAccount(e.id);
+        }
+      });
+
+      resolve(true);
+    });
+
+  }
+
+  private multiUnlockEmployeeAccount() {
+    return new Promise((resolve, reject) => {
+      this.listOfEmployees.forEach(e => {
+        if (e.checked) {
+          this.unlockEmployeeAccount(e.id);
+        }
+      });
+    });
+
+  }
+
+  private lockEmployeeAccount(idUser: any) {
+    return new Promise((resolve, reject) => {
+      let isActive = false;
+      this.generalService.setStatusUser(idUser, isActive).subscribe({
+        next: (res) => {
+          if (res.ret && res.ret[0].code !== 0) {
+            this.notificationService.showNotification(Constant.ERROR, 'Khoá tài khoản không thành công');
+          } else {
+            this.notificationService.showNotification(Constant.SUCCESS, 'Khoá tài khoản thành công');
+            resolve(true)
+          }
+        },
+
+        error: (error) => {
+          this.notificationService.showNotification(Constant.ERROR, 'Khoá tài khoản đã gặp lỗi');
+        },
+
+        complete: () => {
+
+        }
+
+      }).add(() => {
+      });
+    });
+
+  }
+
+  private unlockEmployeeAccount(idUser: any) {
+
+    return new Promise((resolve, reject) => {
+      let isActive = true;
+      this.generalService.setStatusUser(idUser, isActive).subscribe({
+        next: (res) => {
+          if (res.ret && res.ret[0].code !== 0) {
+            this.notificationService.showNotification(Constant.ERROR, 'Mở khoá tài khoản không thành công');
+          } else {
+            this.notificationService.showNotification(Constant.SUCCESS, 'Mở khoá tài khoản thành công');
+            resolve(true);
+          }
+        },
+
+        error: (error) => {
+          this.notificationService.showNotification(Constant.ERROR, 'Mở khoá tài khoản đã gặp lỗi');
+        },
+
+        complete: () => {
+
+        }
+
+      }).add(() => {
+      });
+    })
+
+  }
+
 }

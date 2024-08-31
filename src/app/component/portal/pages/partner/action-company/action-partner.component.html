@@ -485,7 +485,7 @@
 
 
               <div>
-                <button [disabled]="!itemPartner?.id" nz-button nz-dropdown nzType="primary"
+                <button [disabled]="!itemPartner?.id" nz-button nz-dropdown nzType="dashed"
                   style="margin-right: 0.5rem;" [nzDropdownMenu]="menuListEmployeesVHLExport">
                   <div style="display: flex; align-items: center;">
                     <span nz-icon nzType="plus"></span>
@@ -495,13 +495,15 @@
                 </button>
                 <nz-dropdown-menu [disabled]="!itemPartner?.id" #menuListEmployeesVHLExport="nzDropdownMenu">
                   <ul nz-menu>
-                    <li nz-menu-item style="padding: 0.5rem 0;" [nzDisabled]="!itemPartner?.id" (click)="downloadFileEmployeeForPartnerTemplate()">
+                    <li nz-menu-item style="padding: 0.5rem 0;" [nzDisabled]="!itemPartner?.id"
+                      (click)="downloadFileEmployeeForPartnerTemplate()">
                       <div style="display: flex; align-items: center;">
                         <span nz-icon nzType="download"></span>
                         <span style="margin-left: 6px; line-height: normal;">Tải file mẫu</span>
                       </div>
                     </li>
-                    <li nz-menu-item style="padding: 0.5rem 0;" [nzDisabled]="!itemPartner?.id" (click)="downloadExcelEmployeeForPartner(itemPartner?.id)">
+                    <li nz-menu-item style="padding: 0.5rem 0;" [nzDisabled]="!itemPartner?.id"
+                      (click)="downloadExcelEmployeeForPartner(itemPartner?.id)">
                       <div style="display: flex; align-items: center;">
                         <span nz-icon nzType="download"></span>
                         <span style="margin-left: 6px; line-height: normal;">Xuất file excel</span>
@@ -510,7 +512,8 @@
                   </ul>
                 </nz-dropdown-menu>
               </div>
-              <button [disabled]="!itemPartner?.id" nz-button nzType="default" nzDanger>
+              <button [disabled]="!itemPartner?.id" nz-button nzType="default" nzDanger
+                (click)="showLockAccountConfirm(LockType.MULTIPLE)">
                 <div style="display: flex; align-items: center;">
                   <span nz-icon nzType="lock"></span>
                   <span style="margin-left: 4px; line-height: normal;">Khoá tài khoản</span>
@@ -556,43 +559,47 @@
               </thead>
               <tbody>
                 <ng-container *ngFor="let data of tagEmployeeTable.data">
-                  <tr>
+                  <tr >
                     <td [nzLeft]="fixedColumn" *ngIf="settingTableEmployeesValue.expandable" [(nzExpand)]="data.expand">
                     </td>
                     <td [nzLeft]="fixedColumn" *ngIf="settingTableEmployeesValue.checkbox" [(nzChecked)]="data.checked"
-                      (nzCheckedChange)="refreshStatusEmployee()"></td>
-                    <td [nzLeft]="fixedColumn">{{ data.userType | userTypePipe }}</td>
-                    <td>{{ data.userCode }}</td>
-                    <td>{{ data.fullname }}</td>
-                    <td>{{ data.status | partnerStatusPipe}}</td>
+                      (nzCheckedChange)="refreshStatusEmployee()" [nzDisabled]="data.disabled"></td>
+                    <td [nzLeft]="fixedColumn" [nzDisabled]="data.disabled">{{ data.userType | userTypePipe }}</td>
+                    <td [nzDisabled]="data.disabled">{{ data.userCode }}</td>
+                    <td [nzDisabled]="data.disabled">{{ data.fullname }}</td>
+                    <td [nzDisabled]="data.disabled">{{ data.status | partnerStatusPipe}}</td>
                     <td [nzEllipsis]="settingTableEmployeesValue.ellipsis">{{ data.email }}</td>
-                    <td>{{ data.phoneNo }}</td>
-                    <td>{{ data.gender | genderPipe }}</td>
-                    <td>{{ data.directManagementUserId | employeePipe : employees }}</td>
-                    <td>{{ data.membershipCode }}</td>
+                    <td [nzDisabled]="data.disabled">{{ data.phoneNo }}</td>
+                    <td [nzDisabled]="data.disabled">{{ data.gender | genderPipe }}</td>
+                    <td [nzDisabled]="data.disabled">{{ data.directManagementUserId | employeePipe : employees }}</td>
+                    <td [nzDisabled]="data.disabled">{{ data.membershipCode }}</td>
                     <td [nzRight]="fixedColumn" [nzEllipsis]="settingTableEmployeesValue.ellipsis"
                       class="text-aligin-center">
                       <button title="Sửa thông tin thông tin nhân viên" nz-button nzSize="small" nzType="default"
                         class="button-update"
-                        (click)="navigatePage('companies/employee-action/update', ActionTypePageVHL.Update, data.id)">
+                        (click)="navigatePage('companies/employee-action/update', ActionTypePageVHL.Update, data.id)" [disabled]="data.disabled">
                         <span class="fa fa-edit fa-fw"></span>
                       </button>
 
 
                       <button title="Thiết lập lại mật khẩu" nz-button nzSize="small" nzType="default"
-                        class="button-update">
+                        class="button-update" [disabled]="data.disabled">
                         <span class="fa fa-key fa-fw"></span>
                       </button>
 
 
 
-                      <button title="Khóa quyền truy cập trang Customer Portal" nz-button nzSize="small"
-                        nzType="default" class="button-update ant-btn-red">
+                      <button *ngIf="data.status == UserStatus.ACTIVE" title="Khóa quyền truy cập trang Customer Portal"
+                        nz-button nzSize="small" nzType="default" class="button-update ant-btn-red"
+                        (click)="showLockAccountConfirm(LockType.SINGLE, data)" [nzLoading]="data.isLoadingActiveUser">
                         <span class="fa fa-lock fa-fw"></span>
                       </button>
 
-                      <button title="Mở khóa quyền truy cập trang Customer Portal" nz-button nzSize="small"
-                        nzType="default" class="button-update">
+                      <button *ngIf="data.status == UserStatus.LOCKED"
+                        title="Mở khóa quyền truy cập trang Customer Portal" nz-button nzSize="small" nzType="default"
+                        class="button-update" (click)="showUnlockAccountConfirm(LockType.SINGLE, data)"
+                        [nzLoading]="data.isLoadingActiveUser">
+
                         <span class='fa fa-unlock fa-fw '></span>
                       </button>
 

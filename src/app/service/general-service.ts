@@ -392,7 +392,7 @@ export class GeneralService extends BaseService {
   deleteTaikhoan(id: number): Observable<any> {
     return this.delete(UrlConstant.LIST_TAIKHOAN + '/' + id, null);
   }
-  setStatusTaikhoan(idUser: number, newStatus: boolean): any {
+  setStatusUser(idUser: number, newStatus: boolean): Observable<any> {
     return this.put(`${UrlConstant.LIST_TAIKHOAN}/SetStatusUser/${idUser}?isActive=${newStatus}`, '');
   }
   addTaikhoan(item: any): any {
