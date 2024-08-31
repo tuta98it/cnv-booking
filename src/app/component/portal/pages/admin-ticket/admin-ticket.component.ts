@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { GeneralService } from 'src/app/service/general-service';
@@ -12,10 +12,8 @@ import { exportDataGrid } from 'devextreme/excel_exporter';
 import { saveAs } from 'file-saver-es';
 import {
   DxDataGridComponent,
-  DxTemplateDirective,
-  DxTooltipComponent,
-  DxTooltipModule,
 } from "devextreme-angular";
+import { UploadService } from 'src/app/service/upload-service';
 @Component({
   selector: 'app-admin-ticket',
   templateUrl: './admin-ticket.component.html',
@@ -33,8 +31,9 @@ export class AdminTicketComponent extends TableSelectionAbstract implements OnIn
   searchText = '';
   isVisibleTicketDetail: boolean = false;
   nzVisibleCancelSystem: boolean = false;
+  isVisibleViewInVoice: boolean = false;
   systemCancelBookingFligh = {
-    submitted:  false,
+    submitted: false,
     nodeSystemCancelled: '',
   }
   item: any;
@@ -51,6 +50,7 @@ export class AdminTicketComponent extends TableSelectionAbstract implements OnIn
     private generalService: GeneralService,
     private dateFormatPipe: DateFormatPipe,
     private modalService: NzModalService,
+    private uploadService: UploadService
   ) {
     super('id');
   }
@@ -167,8 +167,74 @@ export class AdminTicketComponent extends TableSelectionAbstract implements OnIn
       }
     })
   }
-
-
+  onOpenViewInVoice(data: any) {
+    this.item = data;
+    this.isVisibleViewInVoice = true;
+    if(this.item.pdfFile){
+      this.nameOfOrderFile = this.item.pdfFile.split('/').pop();
+    }
+    else{
+      this.nameOfOrderFile = '';
+    }
+  }
+  @ViewChild('fileInput', { static: false }) fileInput!: ElementRef<HTMLInputElement>;
+  selectedFile: File | null = null;
+  nameOfOrderFile: string = '';
+  showDialogSelectFile() {
+    this.fileInput.nativeElement.click()
+  }
+  onFileSelected(event: any): void { // đã chọn file đính kèm
+    const input = event.target as HTMLInputElement; // trỏ đến thẻ input chứa file
+    if (input.files && input.files.length > 0) { // input có chứa file
+      let file = input.files[0]; // lấy ra file
+      const fileExtension = file.name.split('.').pop()?.toLowerCase(); // lấy ra đuôi của file
+      if (fileExtension === 'pdf') {
+        this.selectedFile = file; // nếu không phải file .exe thì cho phép thêm
+        this.nameOfOrderFile = file.name;
+        this.uploadOrderFile();
+      } else {
+        this.fileInput.nativeElement.value = '';
+        this.notificationService.showNotification(Constant.ERROR, 'Chỉ nhận file pdf');
+      }
+    }
+  }
+  viewOrderFile() {
+    window.open(this.uploadService.getFile(this.item.pdfFile), '_blank');
+      // w;
+  }
+  uploadOrderFile() {
+    let formData = new FormData();
+    formData.append("postedFile", this.selectedFile);
+    formData.append("orderTicketId", this.item.id);
+    this.uploadService.uploadOrderTicketPdfFile(formData).subscribe({
+      next: (res) => {
+        this.notificationService.showNotification(Constant.SUCCESS, 'Tải hóa đơn thành công');
+        this.item.pdfFile = res.path;
+        this.nameOfOrderFile = res.fileName;
+      },
+      error: (error) => {
+        this.notificationService.showNotification(Constant.ERROR, 'Tải hóa đơn không thành công');
+      },
+      complete: () => {
+        this.getListData();
+      }
+    });
+  }
+  deleteOrderFile(){
+    this.uploadService.removeOrderTicketPdfFile(this.item.id).subscribe({
+      next: (res) => {
+        this.notificationService.showNotification(Constant.SUCCESS, 'Xóa hóa đơn thành công');
+        this.fileInput.nativeElement.value = '';
+        this.nameOfOrderFile = '';
+      },
+      error: (error) => {
+        this.notificationService.showNotification(Constant.ERROR, 'Xóa hóa đơn không thành công');
+      },
+      complete: () => {
+        this.getListData();
+      }
+    });
+  }
   private convertRotueBookingReservations(route: string): any {
     // Tách chuỗi theo dấu "|"
     const parts = route.trim().split("|");
@@ -222,11 +288,11 @@ export class AdminTicketComponent extends TableSelectionAbstract implements OnIn
 
   changeSystemStatusTicketExport(idBookingTicketFlightExp: any, noteSystemCancelled: any) {
     this.systemCancelBookingFligh.submitted = true;
-    if(!noteSystemCancelled){
+    if (!noteSystemCancelled) {
       this.notificationService.showNotification(Constant.ERROR, 'Nội dung ghi chú không được để trống');
       return;
     }
-    let payload = {noteSystemCancelled: noteSystemCancelled};
+    let payload = { noteSystemCancelled: noteSystemCancelled };
     this.generalService.markCanceledSystemTicketFlightExport(idBookingTicketFlightExp, payload).subscribe({
       next: (res) => {
         if (res.ret && res.ret[0].code !== 0) {
