@@ -76,6 +76,7 @@ export class ActionPartnerComponent implements OnInit {
   settingTableListEmployeesForm: FormGroup;
   allCheckedEmployee = false;
   indeterminateEmployee = false;
+  allUnCheckedEmployee = false;
   fixedColumn = false;
   scrollX: string | null = null;
   scrollY: string | null = null;
@@ -460,7 +461,7 @@ export class ActionPartnerComponent implements OnInit {
             en.stt = stt;
             en.checked = false;
             en.disabled = (en.status == UserStatus.LOCKED),
-            en.isLoadingActiveUser = false;
+              en.isLoadingActiveUser = false;
           });
           resolve(res.data);
           this.settingTableEmployeesValue.loading = false;
@@ -493,6 +494,7 @@ export class ActionPartnerComponent implements OnInit {
     const validDataEmployee = this.displayDataEmployee.filter(value => !value.disabled);
     const allCheckedEmployee = validDataEmployee.length > 0 && validDataEmployee.every(value => value.checked === true);
     const allUnCheckedEmployee = validDataEmployee.every(value => !value.checked);
+    this.allUnCheckedEmployee = allUnCheckedEmployee;
     this.allCheckedEmployee = allCheckedEmployee;
     this.indeterminateEmployee = !allCheckedEmployee && !allUnCheckedEmployee;
   }
@@ -946,33 +948,33 @@ export class ActionPartnerComponent implements OnInit {
 
 
   showLockAccountConfirm(type: LockType, employee?: any): void {
-    employee.isLoadingActiveUser = true;
+
     switch (type) {
       case LockType.SINGLE:
+        employee.isLoadingActiveUser = true;
         this.modalService.confirm({
           nzTitle: `<b>Bạn có chắc muốn khoá tài khoản ${employee.username}?</b>`,
           nzContent: 'Ấn đồng ý để tiếp tục',
           nzOkDanger: true,
           nzOkText: 'Đồng ý',
           nzCancelText: 'Không',
-          nzOnOk: () => this.lockEmployeeAccount(employee.id).then(r => this.cancelActiveUserConfirm(employee)),
+          nzOnOk: () => this.lockEmployeeAccount(employee).then(r => this.cancelActiveUserConfirm(employee)),
           nzOnCancel: () => this.cancelActiveUserConfirm(employee)
         });
         break;
       case LockType.MULTIPLE:
-        this.listOfEmployees.forEach(e => {
-          if (e.checked) {
-            this.modalService.confirm({
-              nzTitle: `<b>Bạn có chắc muốn khoá các tài khoản này?</b>`,
-              nzContent: 'Ấn đồng ý để tiếp tục',
-              nzOkDanger: true,
-              nzOkText: 'Đồng ý',
-              nzCancelText: 'Không',
-              nzOnOk: () => this.multiLockEmployeeAccount().then(r => this.cancelActiveUserConfirm(employee)),
-              nzOnCancel: () => this.cancelActiveUserConfirm(employee)
-            });
-          }
-        });
+        if (!this.allUnCheckedEmployee) {
+          this.modalService.confirm({
+            nzTitle: `<b>Bạn có chắc muốn khoá các tài khoản này?</b>`,
+            nzContent: 'Ấn đồng ý để tiếp tục',
+            nzOkDanger: true,
+            nzOkText: 'Đồng ý',
+            nzCancelText: 'Không',
+            nzOnOk: () => this.multiLockEmployeeAccount().then(r => this.cancelActiveUserConfirm(employee)),
+            nzOnCancel: () => this.cancelActiveUserConfirm(employee)
+          });
+        }
+
         break;
       default:
         break;
@@ -990,7 +992,7 @@ export class ActionPartnerComponent implements OnInit {
           nzOkDanger: false,
           nzOkText: 'Đồng ý',
           nzCancelText: 'Không',
-          nzOnOk: () => this.unlockEmployeeAccount(employee.id).then(r => this.cancelActiveUserConfirm(employee)),
+          nzOnOk: () => this.unlockEmployeeAccount(employee).then(r => this.cancelActiveUserConfirm(employee)),
           nzOnCancel: () => this.cancelActiveUserConfirm(employee),
         });
         break;
@@ -1015,7 +1017,9 @@ export class ActionPartnerComponent implements OnInit {
   }
 
   private cancelActiveUserConfirm(employee: any) {
-    employee.isLoadingActiveUser = false;
+    if(employee){
+      employee.isLoadingActiveUser = false;
+    }
     this.getUsersByPartnerId(this.itemPartner?.id).then((result: any) => {
       this.listOfEmployees = result;
     });
@@ -1025,7 +1029,7 @@ export class ActionPartnerComponent implements OnInit {
     return new Promise((resolve, reject) => {
       this.listOfEmployees.forEach(e => {
         if (e.checked) {
-          this.lockEmployeeAccount(e.id);
+          this.lockEmployeeAccount(e);
         }
       });
 
@@ -1038,22 +1042,22 @@ export class ActionPartnerComponent implements OnInit {
     return new Promise((resolve, reject) => {
       this.listOfEmployees.forEach(e => {
         if (e.checked) {
-          this.unlockEmployeeAccount(e.id);
+          this.unlockEmployeeAccount(e);
         }
       });
     });
 
   }
 
-  private lockEmployeeAccount(idUser: any) {
+  private lockEmployeeAccount(employee: any) {
     return new Promise((resolve, reject) => {
       let isActive = false;
-      this.generalService.setStatusUser(idUser, isActive).subscribe({
+      this.generalService.setStatusUser(employee.id, isActive).subscribe({
         next: (res) => {
           if (res.ret && res.ret[0].code !== 0) {
             this.notificationService.showNotification(Constant.ERROR, 'Khoá tài khoản không thành công');
           } else {
-            this.notificationService.showNotification(Constant.SUCCESS, 'Khoá tài khoản thành công');
+            this.notificationService.showNotification(Constant.SUCCESS, `Khoá tài khoản ${employee.username} thành công`);
             resolve(true)
           }
         },
@@ -1072,16 +1076,16 @@ export class ActionPartnerComponent implements OnInit {
 
   }
 
-  private unlockEmployeeAccount(idUser: any) {
+  private unlockEmployeeAccount(employee: any) {
 
     return new Promise((resolve, reject) => {
       let isActive = true;
-      this.generalService.setStatusUser(idUser, isActive).subscribe({
+      this.generalService.setStatusUser(employee.id, isActive).subscribe({
         next: (res) => {
           if (res.ret && res.ret[0].code !== 0) {
             this.notificationService.showNotification(Constant.ERROR, 'Mở khoá tài khoản không thành công');
           } else {
-            this.notificationService.showNotification(Constant.SUCCESS, 'Mở khoá tài khoản thành công');
+            this.notificationService.showNotification(Constant.SUCCESS, `Mở khoá tài khoản ${employee.username} thành công`);
             resolve(true);
           }
         },

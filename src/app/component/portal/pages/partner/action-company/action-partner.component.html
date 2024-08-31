@@ -512,8 +512,8 @@
                   </ul>
                 </nz-dropdown-menu>
               </div>
-              <button [disabled]="!itemPartner?.id" nz-button nzType="default" nzDanger
-                (click)="showLockAccountConfirm(LockType.MULTIPLE)">
+              <button [disabled]="!itemPartner?.id || allUnCheckedEmployee" nz-button nzType="default" nzDanger
+                (click)="showLockAccountConfirm(LockType.MULTIPLE)" >
                 <div style="display: flex; align-items: center;">
                   <span nz-icon nzType="lock"></span>
                   <span style="margin-left: 4px; line-height: normal;">Khoá tài khoản</span>
