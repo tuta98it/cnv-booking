@@ -19,7 +19,7 @@
     </button>
   </div>
 </div>
-<dx-data-grid id="gridContainer" [dataSource]="filteredDatas" #ListHotels [showColumnLines]="true" [showRowLines]="true"
+<dx-data-grid [dataSource]="filteredDatas" #ListHotels [showColumnLines]="true" [showRowLines]="true"
   [height]="dxGridHeight" [rowAlternationEnabled]="true" [showBorders]="true" [allowColumnResizing]="true"
   columnResizingMode="widget" [columnMinWidth]="50" [columnAutoWidth]="true" (onExporting)="onExporting($event)"
   [focusedRowEnabled]="true" keyExpr="stt">

@@ -102,6 +102,7 @@ export class MasterPageComponent implements OnInit, OnDestroy {
   VAN_BAN: boolean;
   QUAN_LY_DANH_MUC: boolean;
   tinhThanhs = [];
+  isCollapsed = false;
   constructor(
     private router: Router,
     private route: ActivatedRoute,

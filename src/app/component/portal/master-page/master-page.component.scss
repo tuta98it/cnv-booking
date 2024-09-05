@@ -5,7 +5,6 @@ body {
 $height-logo-box: 0px;
 
 
-
 .dx-theme-generic-typography {
   font: Roboto, RobotoFallback, "Noto Kufi Arabic", Helvetica, Arial, sans-serif !important;
 }
@@ -143,12 +142,13 @@ $height-top-header: 50px;
 
     nz-sider.menu-vhl {
       height: 100%;
+      margin-right: 10px;
       .logo {
         display: flex;
         align-items: center;
-        height: 32px;
+        height: 48px;
         background-color: #F8F9FA;
-        margin: 16px;
+        padding: 4px;
 
         span.icon-vhl {
           font-size: xx-large;
@@ -166,7 +166,7 @@ $height-top-header: 50px;
       }
 
       &.ant-layout-sider {
-        background: #F8F9FA;
+        background: #ffffff;
       }
 
       div.ant-layout-sider-trigger.ng-star-inserted {
@@ -178,18 +178,12 @@ $height-top-header: 50px;
       }
 
       ul {
-        max-height: calc(100% - #{$height-logo-box} - 115px);
-        overflow: auto;
-
         li.ant-menu-item {
-          width: 98% !important;
           display: flex;
           align-items: center;
         }
 
         li.ant-menu-submenu {
-          width: 98% !important;
-
           div.ant-menu-submenu-title {
             display: flex;
             align-items: center;
@@ -199,7 +193,8 @@ $height-top-header: 50px;
     }
 
     nz-layout.container-vhl {
-      background-color: #FFF;
+      background-color: #f0f2f5;
+
       nz-header {
         display: flex;
         justify-content: flex-end;
@@ -214,7 +209,8 @@ $height-top-header: 50px;
 
         div.content-vhl {
           height: 100%;
-          padding: 0.5rem;
+          padding: 1rem;
+          background: #FFF;
         }
       }
 
@@ -228,7 +224,16 @@ $height-top-header: 50px;
       }
     }
 
-
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      img{
+        max-height: 80%;
+        flex-shrink: 0;
+        width: 100%;
+      }
+    }
 
   }
 }
@@ -276,4 +281,64 @@ footer {
   }
 
 
+}
+
+.sl-user {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+::ng-deep .ant-layout-header {
+  height: 48px;
+  line-height: 48px;
+  display: flex;
+  justify-content: space-between;
+  background: #FFF;
+  margin-bottom: 10px;
+  padding: 0 1.5rem;
+}
+.trigger {
+  font-size: 18px;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+.trigger:hover {
+  color: #1890ff;
+}
+
+::ng-deep {
+  .menu-vhl {
+    overflow: hidden;
+  }
+
+  .menu-vhl .ant-layout-sider-children {
+    overflow-y: auto; /* Show scrollbar when hovering */
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* Custom slim scrollbar */
+  .ant-layout-sider-children::-webkit-scrollbar {
+    width: 6px;
+    transition: all 0.5s ease;
+  }
+
+  .ant-layout-sider-children::-webkit-scrollbar-thumb {
+    background-color: rgba(136, 136, 136, 0); /* Start invisible */
+    border-radius: 10px;
+    transition: background-color 0.5s ease; /* Smooth fade effect */
+  }
+
+  .menu-vhl:hover .ant-layout-sider-children::-webkit-scrollbar-thumb {
+    background-color: #EEE !important; /* Fully visible on hover */
+    opacity: 0.5 !important;
+    transition: all 0.5s ease;
+  }
+  ul.ant-menu-inline{
+    border-right: none;
+  }
+  .ant-menu > li.ant-menu-item, .ant-menu > li.ant-menu-submenu{
+    border-bottom: solid 1px #EEE;
+  }
 }
