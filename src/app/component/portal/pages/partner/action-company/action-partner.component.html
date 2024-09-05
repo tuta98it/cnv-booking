@@ -55,14 +55,14 @@
           <div>
             <div style="height: 1px; margin: 16px 0; background-color: #0000000f;"></div>
             <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
-              <div nz-col class="gutter-row" [nzSpan]="12">
+              <div nz-col class="gutter-row" [nzSpan]="8">
                 <div>
                   <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
                     style="display: flex; align-items: center; padding: 8px 0;">
-                    <div nz-col class="gutter-row" [nzSpan]="6">
+                    <div nz-col class="gutter-row" [nzSpan]="8">
                       Trạng thái
                     </div>
-                    <div nz-col class="gutter-row" [nzSpan]="12">
+                    <div nz-col class="gutter-row" [nzSpan]="14">
                       <nz-select nzShowSearch nzMode="default" nzPlaceHolder="Trạng thái hoạt động"
                         formControlName='status'>
                         <nz-option *ngFor="let op of PARTNER_STATUS_OPTIONS" nzLabel="{{op.label}}"
@@ -73,11 +73,11 @@
 
                   <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
                     style="display: flex; align-items: center; padding: 8px 0;">
-                    <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
+                    <div nz-col class="gutter-row" [nzSpan]="8" style="display: flex; align-items: center;">
                       Mã tạo hồ sơ
                       <span style="color: tomato; margin-left: 4px;">*</span>
                     </div>
-                    <div nz-col class="gutter-row" [nzSpan]="12">
+                    <div nz-col class="gutter-row" [nzSpan]="14">
                       <input style="border-radius: 4px;" nzSize="default" nz-input type="text" formControlName='code'
                         placeholder="Nhập mã doanh nghiệp">
                     </div>
@@ -85,11 +85,11 @@
 
                   <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
                     style="display: flex; align-items: center; padding: 8px 0;">
-                    <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
+                    <div nz-col class="gutter-row" [nzSpan]="8" style="display: flex; align-items: center;">
                       Tên doanh nghiệp
                       <span style="color: tomato; margin-left: 4px;">*</span>
                     </div>
-                    <div nz-col class="gutter-row" [nzSpan]="12">
+                    <div nz-col class="gutter-row" [nzSpan]="14">
                       <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
                         formControlName='companyName' placeholder="Nhập tên doanh nghiệp">
                     </div>
@@ -97,11 +97,11 @@
 
                   <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
                     style="display: flex; align-items: center; padding: 8px 0;">
-                    <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
+                    <div nz-col class="gutter-row" [nzSpan]="8" style="display: flex; align-items: center;">
                       Mã số thuế
                       <span style="color: tomato; margin-left: 4px;">*</span>
                     </div>
-                    <div nz-col class="gutter-row" [nzSpan]="12">
+                    <div nz-col class="gutter-row" [nzSpan]="14">
                       <input style="border-radius: 4px;" nzSize="default" nz-input type="text" formControlName='taxCode'
                         placeholder="Nhập mã số thuế">
                     </div>
@@ -109,10 +109,10 @@
 
                   <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
                     style="display: flex; align-items: center; padding: 8px 0;">
-                    <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
+                    <div nz-col class="gutter-row" [nzSpan]="8" style="display: flex; align-items: center;">
                       Cho phép công nợ
                     </div>
-                    <div nz-col class="gutter-row" [nzSpan]="12">
+                    <div nz-col class="gutter-row" [nzSpan]="14">
                       <nz-radio-group formControlName='allowDebt'>
                         <label nz-radio [nzValue]="AllowDebtPartner.ALLOW">Có</label>
                         <label nz-radio [nzValue]="AllowDebtPartner.NOTALLOW">Không</label>
@@ -121,7 +121,83 @@
                   </div>
                 </div>
               </div>
-              <div nz-col class="gutter-row" [nzSpan]="12">
+              <div nz-col class="gutter-row" [nzSpan]="8">
+                <div>
+                  <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                    style="display: flex; align-items: center; padding: 8px 0;">
+                    <div nz-col class="gutter-row" [nzSpan]="8" style="display: flex; align-items: center;">
+                      Số điện thoại
+                    </div>
+                    <div nz-col class="gutter-row" [nzSpan]="14">
+                      <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
+                        placeholder="Nhập điện thoại doanh nghiệp" formControlName='phone'>
+                    </div>
+                  </div>
+
+                  <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                    style="display: flex; align-items: center; padding: 8px 0;">
+                    <div nz-col class="gutter-row" [nzSpan]="8" style="display: flex; align-items: center;">
+                      Email doanh nghiệp
+                    </div>
+                    <div nz-col class="gutter-row" [nzSpan]="14">
+                      <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
+                        placeholder="Nhập email doanh nghiệp" formControlName='email'>
+                    </div>
+                  </div>
+
+                  <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                    style="display: flex; align-items: center; padding: 8px 0;">
+                    <div nz-col class="gutter-row" [nzSpan]="8" style="display: flex; align-items: center;">
+                      Địa chỉ doanh nghiệp
+                      <span style="color: tomato; margin-left: 4px;">*</span>
+                    </div>
+                    <div nz-col class="gutter-row" [nzSpan]="14">
+                      <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
+                        placeholder="Nhập địa chỉ doanh nghiệp" formControlName='address'>
+                    </div>
+                  </div>
+
+                  <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                    style="display: flex; align-items: center; padding: 8px 0;">
+                    <div nz-col class="gutter-row" [nzSpan]="8" style="display: flex; align-items: center;">
+                      Chủ doanh nghiệp
+                    </div>
+                    <div nz-col class="gutter-row" [nzSpan]="14">
+                      <!-- <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
+                        placeholder="Nhập chủ doanh nghiệp" formControlName='name'> -->
+
+                      <nz-select style="border-radius: 4px;" nzSize="default" nzMode="default"
+                        formControlName='businessOwnerId' nzPlaceHolder="Nhập chủ doanh nghiệp" nzAllowClear
+                        nzShowSearch>
+                        <nz-option *ngFor="let employee of employees"
+                          nzLabel="{{employee.fullname}} - {{employee.username}}" [nzValue]="employee.id"></nz-option>
+                      </nz-select>
+                    </div>
+                  </div>
+
+                  <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                    style="display: flex; align-items: center; padding: 8px 0;">
+                    <div nz-col class="gutter-row" [nzSpan]="8" style="display: flex; align-items: center;">
+                      File giấy uỷ quyền
+                    </div>
+                    <div nz-col class="gutter-row" [nzSpan]="14">
+                      <nz-upload *ngIf="settingUploadAuthorizationFile && settingUploadAuthorizationFile?.action"
+                        [nzMultiple]="settingUploadAuthorizationFile?.isMultiple"
+                        [nzAction]="settingUploadAuthorizationFile?.action"
+                        [nzName]="settingUploadAuthorizationFile?.name"
+                        [nzHeaders]="settingUploadAuthorizationFile?.header"
+                        [nzRemove]="handleRemoveUploadAuthorizationFile"
+                        [nzShowUploadList]="settingUploadAuthorizationFile?.showUploadList"
+                        [nzFileList]="listUploadAuthorizationFile"
+                        (nzChange)="handleChangeUploadAuthorizationFile($event)">
+                        <button nz-button nzType="default" [nzSize]="'default'" nzShape="round"><span nz-icon
+                            nzType="upload"></span></button>
+                      </nz-upload>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div nz-col class="gutter-row" [nzSpan]="4">
                 <div>
                   <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
                     style="display: flex; align-items: center; padding: 8px 0;">
@@ -145,56 +221,32 @@
                     </div>
                   </div>
 
+                </div>
+              </div>
+              <div nz-col class="gutter-row" [nzSpan]="4">
+                <div>
                   <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
                     style="display: flex; align-items: center; padding: 8px 0;">
                     <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
-                      Địa chỉ doanh nghiệp
-                      <span style="color: tomato; margin-left: 4px;">*</span>
+                      Số điện thoại
                     </div>
                     <div nz-col class="gutter-row" [nzSpan]="12">
                       <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
-                        placeholder="Nhập địa chỉ doanh nghiệp" formControlName='address'>
+                        placeholder="Nhập điện thoại doanh nghiệp" formControlName='phone'>
                     </div>
                   </div>
 
                   <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
                     style="display: flex; align-items: center; padding: 8px 0;">
                     <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
-                      Chủ doanh nghiệp
+                      Email doanh nghiệp
                     </div>
                     <div nz-col class="gutter-row" [nzSpan]="12">
-                      <!-- <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
-                        placeholder="Nhập chủ doanh nghiệp" formControlName='name'> -->
-
-                      <nz-select style="border-radius: 4px;" nzSize="default" nzMode="default"
-                        formControlName='businessOwnerId' nzPlaceHolder="Nhập chủ doanh nghiệp" nzAllowClear
-                        nzShowSearch>
-                        <nz-option *ngFor="let employee of employees"
-                          nzLabel="{{employee.fullname}} - {{employee.username}}" [nzValue]="employee.id"></nz-option>
-                      </nz-select>
+                      <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
+                        placeholder="Nhập email doanh nghiệp" formControlName='email'>
                     </div>
                   </div>
 
-                  <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
-                    style="display: flex; align-items: center; padding: 8px 0;">
-                    <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
-                      File giấy uỷ quyền
-                    </div>
-                    <div nz-col class="gutter-row" [nzSpan]="12">
-                      <nz-upload *ngIf="settingUploadAuthorizationFile && settingUploadAuthorizationFile?.action"
-                        [nzMultiple]="settingUploadAuthorizationFile?.isMultiple"
-                        [nzAction]="settingUploadAuthorizationFile?.action"
-                        [nzName]="settingUploadAuthorizationFile?.name"
-                        [nzHeaders]="settingUploadAuthorizationFile?.header"
-                        [nzRemove]="handleRemoveUploadAuthorizationFile"
-                        [nzShowUploadList]="settingUploadAuthorizationFile?.showUploadList"
-                        [nzFileList]="listUploadAuthorizationFile"
-                        (nzChange)="handleChangeUploadAuthorizationFile($event)">
-                        <button nz-button nzType="default" [nzSize]="'default'" nzShape="round"><span nz-icon
-                            nzType="upload"></span></button>
-                      </nz-upload>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
