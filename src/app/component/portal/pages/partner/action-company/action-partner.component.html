@@ -197,56 +197,115 @@
                   </div>
                 </div>
               </div>
-              <div nz-col class="gutter-row" [nzSpan]="4">
-                <div>
-                  <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
-                    style="display: flex; align-items: center; padding: 8px 0;">
-                    <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
-                      Số điện thoại
-                    </div>
-                    <div nz-col class="gutter-row" [nzSpan]="12">
-                      <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
-                        placeholder="Nhập điện thoại doanh nghiệp" formControlName='phone'>
-                    </div>
+              <div *ngIf="formBaseInfoCreatePartner.get('allowDebt')?.value == AllowDebtPartner.ALLOW" nz-col
+                class="gutter-row" [nzSpan]="4">
+                <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                  style="display: flex; align-items: center; padding: 8px 0;">
+                  <div nz-col class="gutter-row" [nzSpan]="24" style="display: flex; align-items: center;">
+                    Số dư hiện tại
                   </div>
-
-                  <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
-                    style="display: flex; align-items: center; padding: 8px 0;">
-                    <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
-                      Email doanh nghiệp
-                    </div>
-                    <div nz-col class="gutter-row" [nzSpan]="12">
-                      <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
-                        placeholder="Nhập email doanh nghiệp" formControlName='email'>
-                    </div>
+                </div>
+                <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                  style="display: flex; align-items: center; padding: 8px 0;">
+                  <div nz-col class="gutter-row fs-xl" [nzSpan]="24" style="display: flex; align-items: center;">
+                    {{debtBearingSales?.currentBalance ? debtBearingSales?.currentBalance : '-' }} đ
                   </div>
-
+                </div>
+                <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                  style="display: flex; align-items: center; padding: 8px 0;">
+                  <div nz-col class="gutter-row" [nzSpan]="24" style="display: flex; align-items: center;">
+                    Hạn mức tối đa
+                  </div>
+                </div>
+                <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                  style="display: flex; align-items: center; padding: 8px 0;">
+                  <div nz-col class="gutter-row fs-xl" [nzSpan]="24" style="display: flex; align-items: center;">
+                    {{debtBearingSales?.debtMax ? debtBearingSales?.debtMax : '-' }} đ
+                  </div>
                 </div>
               </div>
-              <div nz-col class="gutter-row" [nzSpan]="4">
-                <div>
-                  <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
-                    style="display: flex; align-items: center; padding: 8px 0;">
-                    <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
-                      Số điện thoại
-                    </div>
-                    <div nz-col class="gutter-row" [nzSpan]="12">
-                      <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
-                        placeholder="Nhập điện thoại doanh nghiệp" formControlName='phone'>
-                    </div>
+              <div *ngIf="formBaseInfoCreatePartner.get('allowDebt')?.value == AllowDebtPartner.ALLOW" nz-col
+                class="gutter-row" [nzSpan]="4">
+                <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                  style="display: flex; align-items: center; padding: 8px 0;">
+                  <div nz-col class="gutter-row" [nzSpan]="24" style="display: flex; align-items: center;">
+                    Phát sinh trong kỳ
                   </div>
-
-                  <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
-                    style="display: flex; align-items: center; padding: 8px 0;">
-                    <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
-                      Email doanh nghiệp
-                    </div>
-                    <div nz-col class="gutter-row" [nzSpan]="12">
-                      <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
-                        placeholder="Nhập email doanh nghiệp" formControlName='email'>
-                    </div>
+                </div>
+                <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                  style="display: flex; align-items: center; padding: 8px 0;">
+                  <div nz-col class="gutter-row fs-xl" [nzSpan]="24" style="display: flex; align-items: center;">
+                    {{debtBearingSales?.amountIncurredDuringPeriod ? debtBearingSales?.amountIncurredDuringPeriod : '-'
+                    }} đ
                   </div>
+                </div>
+                <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                  style="display: flex; align-items: center; padding: 8px 0;">
+                  <div nz-col class="gutter-row" [nzSpan]="24" style="display: flex; align-items: center;">
+                    Hạn mức sử dụng
+                  </div>
+                </div>
+                <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                  style="display: flex; align-items: center; padding: 8px 0;">
+                  <div nz-col class="gutter-row fs-xl" [nzSpan]="24" style="display: flex; align-items: center;">
+                    {{debtBearingSales?.usageLimit ? debtBearingSales?.usageLimit : '-' }} đ
+                  </div>
+                </div>
+              </div>
 
+
+              <div *ngIf="formBaseInfoCreatePartner.get('allowDebt')?.value == AllowDebtPartner.NOTALLOW" nz-col
+                class="gutter-row" [nzSpan]="4">
+                <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                  style="display: flex; align-items: center; padding: 8px 0;">
+                  <div nz-col class="gutter-row" [nzSpan]="24" style="display: flex; align-items: center;">
+                    Số dư đầu kỳ
+                  </div>
+                </div>
+                <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                  style="display: flex; align-items: center; padding: 8px 0;">
+                  <div nz-col class="gutter-row fs-xl" [nzSpan]="24" style="display: flex; align-items: center;">
+                    {{debtFreeRevenue?.beginningBalance ? debtFreeRevenue?.beginningBalance : '-' }} đ
+                  </div>
+                </div>
+                <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                  style="display: flex; align-items: center; padding: 8px 0;">
+                  <div nz-col class="gutter-row" [nzSpan]="24" style="display: flex; align-items: center;">
+                    Phát sinh tăng trong kỳ
+                  </div>
+                </div>
+                <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                  style="display: flex; align-items: center; padding: 8px 0;">
+                  <div nz-col class="gutter-row fs-xl" [nzSpan]="24" style="display: flex; align-items: center;">
+                    {{debtFreeRevenue?.increaseInGeneration ? debtFreeRevenue?.increaseInGeneration : '-' }} đ
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="formBaseInfoCreatePartner.get('allowDebt')?.value == AllowDebtPartner.NOTALLOW" nz-col
+                class="gutter-row" [nzSpan]="4">
+                <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                  style="display: flex; align-items: center; padding: 8px 0;">
+                  <div nz-col class="gutter-row" [nzSpan]="24" style="display: flex; align-items: center;">
+                    Phát sinh giảm trong kỳ
+                  </div>
+                </div>
+                <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                  style="display: flex; align-items: center; padding: 8px 0;">
+                  <div nz-col class="gutter-row fs-xl" [nzSpan]="24" style="display: flex; align-items: center;">
+                    {{debtFreeRevenue?.decreaseInGeneration ? debtFreeRevenue?.decreaseInGeneration : '-' }} đ
+                  </div>
+                </div>
+                <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                  style="display: flex; align-items: center; padding: 8px 0;">
+                  <div nz-col class="gutter-row" [nzSpan]="24" style="display: flex; align-items: center;">
+                    Số dư cuối kỳ
+                  </div>
+                </div>
+                <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                  style="display: flex; align-items: center; padding: 8px 0;">
+                  <div nz-col class="gutter-row fs-xl" [nzSpan]="24" style="display: flex; align-items: center;">
+                    {{debtFreeRevenue?.endingBalance ? debtFreeRevenue?.endingBalance : '-' }} đ
+                  </div>
                 </div>
               </div>
             </div>
@@ -565,7 +624,7 @@
                 </nz-dropdown-menu>
               </div>
               <button [disabled]="!itemPartner?.id || allUnCheckedEmployee" nz-button nzType="default" nzDanger
-                (click)="showLockAccountConfirm(LockType.MULTIPLE)" >
+                (click)="showLockAccountConfirm(LockType.MULTIPLE)">
                 <div style="display: flex; align-items: center;">
                   <span nz-icon nzType="lock"></span>
                   <span style="margin-left: 4px; line-height: normal;">Khoá tài khoản</span>
@@ -611,7 +670,7 @@
               </thead>
               <tbody>
                 <ng-container *ngFor="let data of tagEmployeeTable.data">
-                  <tr >
+                  <tr>
                     <td [nzLeft]="fixedColumn" *ngIf="settingTableEmployeesValue.expandable" [(nzExpand)]="data.expand">
                     </td>
                     <td [nzLeft]="fixedColumn" *ngIf="settingTableEmployeesValue.checkbox" [(nzChecked)]="data.checked"
@@ -629,7 +688,8 @@
                       class="text-aligin-center">
                       <button title="Sửa thông tin thông tin nhân viên" nz-button nzSize="small" nzType="default"
                         class="button-update"
-                        (click)="navigatePage('companies/employee-action/update', ActionTypePageVHL.Update, data.id)" [disabled]="data.disabled">
+                        (click)="navigatePage('companies/employee-action/update', ActionTypePageVHL.Update, data.id)"
+                        [disabled]="data.disabled">
                         <span class="fa fa-edit fa-fw"></span>
                       </button>
 
@@ -668,7 +728,121 @@
         </div>
 
         <div *ngIf="selectedMenu == MenuCreatePartner.AccountInfomation">
-          <span style="font-weight: 500; font-size: 16px;">Thông tin tài khoản</span>
+          <!-- Header list emloyees -->
+          <div *ngIf="formBaseInfoCreatePartner.get('allowDebt')?.value == AllowDebtPartner.ALLOW"
+            style="display: flex; justify-content: space-between; align-items: center; font-size: 16px;">
+            <div>
+              Hạng mức sử dụng {{debtBearingSales?.usageLimit ? debtBearingSales?.usageLimit : '-' }} đ
+            </div>
+
+            <div>
+              Dư nợ đầu kỳ {{debtBearingSales?.beginningBalance ? debtBearingSales.beginningBalance : '-' }} đ
+            </div>
+
+            <div>
+              Phát sinh trong kỳ {{debtBearingSales?.amountIncurredDuringPeriod ?
+              debtBearingSales.amountIncurredDuringPeriod : '-' }} đ
+            </div>
+
+            <div>
+              Dư nợ cuối kỳ {{debtBearingSales?.endingBalance ? debtBearingSales.endingBalance : '-' }} đ
+            </div>
+
+            <div>
+              Hạn thanh toán
+            </div>
+
+          </div>
+
+          <div *ngIf="formBaseInfoCreatePartner.get('allowDebt')?.value == AllowDebtPartner.NOTALLOW"
+            style="display: flex; justify-content: space-between; align-items: center; font-size: 16px;">
+            <div>
+              Số dư đầu kỳ {{debtFreeRevenue?.beginningBalance ? debtFreeRevenue.beginningBalance : '-' }} đ
+            </div>
+
+            <div>
+              Phát sinh tăng trong kỳ {{debtFreeRevenue?.increaseInGeneration ? debtFreeRevenue.increaseInGeneration :
+              '-' }} đ
+            </div>
+
+            <div>
+              Phát sinh giảm trong kỳ {{debtFreeRevenue?.decreaseInGeneration ? debtFreeRevenue.decreaseInGeneration :
+              '-' }} đ
+            </div>
+
+
+            <div>
+              Số dư cuối kỳ {{debtFreeRevenue?.endingBalance ? debtFreeRevenue.endingBalance : '-' }} đ
+            </div>
+
+          </div>
+
+
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px;">
+            <span style="font-weight: 500; font-size: 16px;">Biến động số dư</span>
+            <div style="display: flex; align-items: center;">
+              <button [disabled]="!itemPartner?.id" nz-button nzType="primary" style="margin-right: 0.5rem;">
+                <div style="display: flex; align-items: center;">
+                  <span style="margin: 0 6px; line-height: normal;">In bảng kê khai</span>
+                </div>
+              </button>
+
+              <button [disabled]="!itemPartner?.id" nz-button nzType="primary" style="margin-right: 0.5rem; background-color: #3B82F6;">
+                <div style="display: flex; align-items: center;">
+                  <span style="margin: 0 6px; line-height: normal;">Nạp tiền tài khoản</span>
+                </div>
+              </button>
+
+              <button [disabled]="!itemPartner?.id" nz-button nzType="default">
+                <div style="display: flex; align-items: center;">
+                  <span style="margin-left: 4px; line-height: normal;">Xem chi tiết</span>
+                </div>
+              </button>
+            </div>
+          </div>
+          <div style="margin: 16px 0;"></div>
+          <!-- Content lisst employees -->
+          <div>
+            <nz-table #tagBalanceFluctuation [nzScroll]="{ x: scrollX, y: scrollY }"
+              [nzData]="listOfBalanceFluctuations" [nzTableLayout]="settingTableBalanceFluctuationValue.tableLayout"
+              [nzBordered]="settingTableBalanceFluctuationValue.bordered"
+              [nzSimple]="settingTableBalanceFluctuationValue.simple"
+              [nzLoading]="settingTableBalanceFluctuationValue.loading"
+              [nzPaginationType]="settingTableBalanceFluctuationValue.paginationType"
+              [nzPaginationPosition]="settingTableBalanceFluctuationValue.position"
+              [nzShowSizeChanger]="settingTableBalanceFluctuationValue.sizeChanger"
+              [nzFrontPagination]="settingTableBalanceFluctuationValue.pagination"
+              [nzShowPagination]="settingTableBalanceFluctuationValue.pagination"
+              [nzFooter]="settingTableBalanceFluctuationValue.footer ? 'Here is Footer' : null"
+              [nzTitle]="settingTableBalanceFluctuationValue.title ? 'Here is Title' : null"
+              [nzNoResult]="settingTableBalanceFluctuationValue.noResultText ? settingTableBalanceFluctuationValue.noResultText : ''"
+              [nzSize]="settingTableBalanceFluctuationValue.size"
+              (nzCurrentPageDataChange)="currentPageDataChangeBalanceFluctuation($event)">
+              <thead>
+                <tr *ngIf="settingTableBalanceFluctuationValue.header">
+                  <th nzWidth="40px" [nzLeft]="fixedColumn">STT</th>
+                  <th [nzLeft]="fixedColumn">Thời gian giao dịch</th>
+                  <th [nzLeft]="fixedColumn">Người thực hiện</th>
+                  <th>Số tiền phát sinh</th>
+                  <th>Nội dung giao dịch</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngFor="let data of tagBalanceFluctuation.data">
+                  <tr>
+                    <td [nzLeft]="fixedColumn">
+                      {{ data.stt }}
+                    </td>
+                    <td [nzLeft]="fixedColumn" [nzDisabled]="data.disabled">{{ data.transactionTime | dateFormat }}</td>
+                    <td [nzDisabled]="data.disabled">{{ data.implementPersonInfo }}</td>
+                    <td [nzDisabled]="data.disabled">{{ data.amount }}</td>
+                    <td [nzDisabled]="data.disabled">{{ data.transactionContent}}</td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </nz-table>
+          </div>
+
         </div>
       </div>
     </div>

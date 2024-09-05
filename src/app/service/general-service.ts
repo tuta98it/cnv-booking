@@ -452,6 +452,7 @@ export class GeneralService extends BaseService {
   }
 
 
+
   // putAccountForPartner(id: any, newData: any) {
   //   return this.put(UrlConstant.LIST_USER + `/PutAccountForPartner/${id}`, newData);
   // }
@@ -477,7 +478,7 @@ export class GeneralService extends BaseService {
 
 
   downloadExcelEmployeeForPartner(partnerId: number): Observable<any> {
-    return this.post(UrlConstant.LIST_USER + `/DownloadExcelEmployeeForPartner`, {"partnerId": partnerId}, {},  "blob");
+    return this.post(UrlConstant.LIST_USER + `/DownloadExcelEmployeeForPartner`, { "partnerId": partnerId }, {}, "blob");
   }
 
 
@@ -486,7 +487,7 @@ export class GeneralService extends BaseService {
     return this.get(UrlConstant.LIST_PARTNERS);
   }
 
-  getPartnerById(partnerId : number): Observable<any[]> {
+  getPartnerById(partnerId: number): Observable<any[]> {
     return this.get(`${UrlConstant.LIST_PARTNERS}/${partnerId}`);
   }
   // getListPartner(): Observable<any[]> {
@@ -556,6 +557,11 @@ export class GeneralService extends BaseService {
 
   resetDebtForPartnerByID(idPartner: any): Observable<any> {
     return this.post(UrlConstant.LIST_PARTNERS + `/ResetDebt/${idPartner}`, idPartner);
+  }
+
+
+  accountBalanceInformationByPartner(partnerId: number): Observable<any> {
+    return this.post(UrlConstant.LIST_PARTNERS + `/AccountBalanceInformationByPartner`, { PartnerId: partnerId });
   }
 
   // Booking

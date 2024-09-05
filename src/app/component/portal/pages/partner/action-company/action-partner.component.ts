@@ -74,6 +74,7 @@ export class ActionPartnerComponent implements OnInit {
   PAYMENT_PERIOD_DAYS_OPTIONS = [];
   actionPartnerVHL: any;
   settingTableListEmployeesForm: FormGroup;
+  settingTableListBalanceFluctuationForm: FormGroup;
   allCheckedEmployee = false;
   indeterminateEmployee = false;
   allUnCheckedEmployee = false;
@@ -81,6 +82,7 @@ export class ActionPartnerComponent implements OnInit {
   scrollX: string | null = null;
   scrollY: string | null = null;
   settingTableEmployeesValue: NZTableSettingCustoms;
+  settingTableBalanceFluctuationValue: NZTableSettingCustoms;
   listOfEmployees: readonly any[] = [];
   displayDataEmployee: readonly any[] = [];
   formBaseInfoCreatePartner: FormGroup;
@@ -106,6 +108,13 @@ export class ActionPartnerComponent implements OnInit {
   employees: any;
   isActiveEditBaseInfo: boolean = false;
   searchEmployee: string = '';
+  displayDataBalanceFluctuation: readonly any[];
+  allUnCheckedBalanceFluctuation: boolean;
+  allCheckedBalanceFluctuation: boolean;
+  indeterminateBalanceFluctuation: boolean;
+  listOfBalanceFluctuations: any[];
+  debtBearingSales: any;
+  debtFreeRevenue: any;
 
   constructor(
     private msg: NzMessageService,
@@ -176,10 +185,34 @@ export class ActionPartnerComponent implements OnInit {
       tableLayout: 'auto' as NzTableLayout,
       position: 'bottom' as NzTablePaginationPosition
     });
+
+    this.settingTableListBalanceFluctuationForm = this.formBuilder.group({
+      bordered: [false],
+      loading: [false],
+      pagination: [true],
+      sizeChanger: [false],
+      title: [false],
+      header: [true],
+      footer: [false],
+      expandable: [true],
+      checkbox: [true],
+      fixHeader: [false],
+      noResult: [false],
+      noResultText: 'Danh sách biến động số dư đang trống',
+      ellipsis: [false],
+      simple: [false],
+      size: 'small' as NzTableSize,
+      paginationType: 'default' as NzTablePaginationType,
+      tableScroll: 'unset' as TableScroll,
+      tableLayout: 'auto' as NzTableLayout,
+      position: 'bottom' as NzTablePaginationPosition
+    });
   }
 
   ngAfterViewInit() {
     this.settingTableEmployeesValue = this.settingTableListEmployeesForm.value as NZTableSettingCustoms;
+    this.settingTableBalanceFluctuationValue = this.settingTableListBalanceFluctuationForm.value as NZTableSettingCustoms;
+
     this.actionPartnerVHL = this.activatedRoute.snapshot.data['type'];
     this.setIsActiveEditBaseInfo(true);
     this.listOfEmployees = [];
@@ -317,6 +350,17 @@ export class ActionPartnerComponent implements OnInit {
         this.getUsersByPartnerId(this.itemPartner?.id).then((result: any) => {
           this.listOfEmployees = result;
         });
+
+        this.getBalanceFluctuationsByPartnerId(this.itemPartner?.id).then((result: any) => {
+          this.debtBearingSales = result.debtBearingSales
+          this.debtFreeRevenue = result.debtFreeRevenue
+          this.listOfBalanceFluctuations = result.tableAccountBalancies;
+          let stt = 0;
+          this.listOfBalanceFluctuations.forEach(en => {
+            stt++;
+            en.stt = stt;
+          });
+        });
       });
     }
   }
@@ -339,6 +383,32 @@ export class ActionPartnerComponent implements OnInit {
       } else {
         this.getUsersByPartnerId(this.itemPartner?.id).then((result: any) => {
           this.listOfEmployees = result;
+        });
+      }
+    });
+
+
+    // Lấy giá trị status từ route data
+    this.settingTableListBalanceFluctuationForm.valueChanges.subscribe(value => {
+      this.settingTableBalanceFluctuationValue = value as NZTableSettingCustoms;
+    });
+    this.settingTableListBalanceFluctuationForm.controls.tableScroll.valueChanges.subscribe(scroll => {
+      this.fixedColumn = scroll === 'fixed';
+      this.scrollX = scroll === 'scroll' || scroll === 'fixed' ? '100vw' : null;
+    });
+    this.settingTableListBalanceFluctuationForm.controls.fixHeader.valueChanges.subscribe(fixed => {
+      this.scrollY = fixed ? '240px' : null;
+    });
+    this.settingTableListBalanceFluctuationForm.controls.noResult.valueChanges.subscribe(async empty => {
+      if (empty) {
+        this.listOfBalanceFluctuations = [];
+        this.debtBearingSales = null;
+        this.debtFreeRevenue = null;
+      } else {
+        this.getBalanceFluctuationsByPartnerId(this.itemPartner?.id).then((result: any) => {
+          this.debtBearingSales = result.debtBearingSales
+          this.debtFreeRevenue = result.debtFreeRevenue
+          this.listOfBalanceFluctuations = result.tableAccountBalancies;
         });
       }
     });
@@ -460,8 +530,8 @@ export class ActionPartnerComponent implements OnInit {
             stt++;
             en.stt = stt;
             en.checked = false;
-            en.disabled = (en.status == UserStatus.LOCKED),
-              en.isLoadingActiveUser = false;
+            en.disabled = (en.status == UserStatus.LOCKED);
+            en.isLoadingActiveUser = false;
           });
           resolve(res.data);
           this.settingTableEmployeesValue.loading = false;
@@ -483,11 +553,43 @@ export class ActionPartnerComponent implements OnInit {
 
   }
 
+  private getBalanceFluctuationsByPartnerId(idPartner: number): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.settingTableBalanceFluctuationValue.loading = true;
+      this.generalService.accountBalanceInformationByPartner(idPartner).subscribe((res: any) => {
+        if (res.isValid) {
+
+          this.settingTableBalanceFluctuationValue.loading = false;
+          resolve(res.data);
+        } else {
+          if (res.errors && res.errors.length > 0) {
+            res.errors.forEach((el: any) => {
+              this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+            });
+          } else {
+            this.notificationService.showNotification(Constant.ERROR, 'Lấy ra biến động số dư của doanh nghiệp không thành công');
+          }
+          reject(res.errors);
+        }
+      }, error => {
+        this.notificationService.showNotification(Constant.ERROR, 'Lấy ra biến động số dư của doanh nghiệp thất bại do lỗi hệ thống');
+        reject(error);
+      });
+    });
+
+  }
+
 
 
   currentPageDataChangeEmployee($event: readonly any[]): void {
     this.displayDataEmployee = $event;
     this.refreshStatusEmployee();
+  }
+
+
+  currentPageDataChangeBalanceFluctuation($event: readonly any[]): void {
+    this.displayDataBalanceFluctuation = $event;
+    this.refreshStatusBalanceFluctuation();
   }
 
   refreshStatusEmployee(): void {
@@ -497,6 +599,15 @@ export class ActionPartnerComponent implements OnInit {
     this.allUnCheckedEmployee = allUnCheckedEmployee;
     this.allCheckedEmployee = allCheckedEmployee;
     this.indeterminateEmployee = !allCheckedEmployee && !allUnCheckedEmployee;
+  }
+
+  refreshStatusBalanceFluctuation(): void {
+    const validDataBalanceFluctuation = this.displayDataBalanceFluctuation.filter(value => !value.disabled);
+    const allCheckedBalanceFluctuation = validDataBalanceFluctuation.length > 0 && validDataBalanceFluctuation.every(value => value.checked === true);
+    const allUnCheckedBalanceFluctuation = validDataBalanceFluctuation.every(value => !value.checked);
+    this.allUnCheckedBalanceFluctuation = allUnCheckedBalanceFluctuation;
+    this.allCheckedBalanceFluctuation = allCheckedBalanceFluctuation;
+    this.indeterminateBalanceFluctuation = !allCheckedBalanceFluctuation && !allUnCheckedBalanceFluctuation;
   }
 
   checkAllEmployees(value: boolean): void {
@@ -1017,7 +1128,7 @@ export class ActionPartnerComponent implements OnInit {
   }
 
   private cancelActiveUserConfirm(employee: any) {
-    if(employee){
+    if (employee) {
       employee.isLoadingActiveUser = false;
     }
     this.getUsersByPartnerId(this.itemPartner?.id).then((result: any) => {
