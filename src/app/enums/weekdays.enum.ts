@@ -1,19 +1,40 @@
 export enum Weekdays {
-  MON = 1,
-  TUE = 2,
-  WED = 3,
-  THU = 4,
-  FRI = 5,
-  SAT = 6,
-  SUN = 7,
+  //
+  // Summary:
+  //     Indicates Sunday.
+  Sunday = 0,
+  //
+  // Summary:
+  //     Indicates Monday.
+  Monday = 1,
+  //
+  // Summary:
+  //     Indicates Tuesday.
+  Tuesday = 2,
+  //
+  // Summary:
+  //     Indicates Wednesday.
+  Wednesday = 3,
+  //
+  // Summary:
+  //     Indicates Thursday.
+  Thursday = 4,
+  //
+  // Summary:
+  //     Indicates Friday.
+  Friday = 5,
+  //
+  // Summary:
+  //     Indicates Saturday.
+  Saturday = 6
 }
 
 export const WEEKDAYS_OPTIONS = [
-  { label: 'Thứ hai', value: Weekdays.MON },
-  { label: 'Thứ ba', value: Weekdays.TUE },
-  { label: 'Thứ tư', value: Weekdays.WED },
-  { label: 'Thứ năm', value: Weekdays.THU },
-  { label: 'Thứ sáu', value: Weekdays.FRI },
-  { label: 'Thứ bảy', value: Weekdays.SAT },
-  { label: 'Chủ nhật', value: Weekdays.SUN },
+  { label: 'Thứ hai', value: Weekdays.Monday },
+  { label: 'Thứ ba', value: Weekdays.Tuesday },
+  { label: 'Thứ tư', value: Weekdays.Wednesday },
+  { label: 'Thứ năm', value: Weekdays.Thursday },
+  { label: 'Thứ sáu', value: Weekdays.Friday },
+  { label: 'Thứ bảy', value: Weekdays.Saturday },
+  { label: 'Chủ nhật', value: Weekdays.Sunday },
 ]
