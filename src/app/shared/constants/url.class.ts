@@ -74,5 +74,6 @@ export class UrlConstant {
   // Airport
   public static readonly AIRPORT = "/Airport";
 
-
+  public static readonly ACCOUNT_DEPOSIT_HISTORIES = "/AccountDepositHistories";
+  
 }

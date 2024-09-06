@@ -1227,11 +1227,6 @@ export class ActionPartnerComponent implements OnInit {
   }
 
 
-
-
-
-
-
   showModalDepositAccount(): void {
     this.isVisibleDepositAccount = true;
   }
@@ -1240,54 +1235,28 @@ export class ActionPartnerComponent implements OnInit {
     this.isDepositAccountOkLoading = true;
     if (this.formDepositAccount.valid) {
       let valueSave = this.formDepositAccount.value;
-      // if (this.itemPartner?.id) {
-      //   this.generalService.updateBaseInfoById(valueSave, this.itemPartner?.id).subscribe((res: any) => {
-      //     if (res.isValid) {
-      //       this.notificationService.showNotification(Constant.SUCCESS, `Cập nhật thông tin doanh nghiệp thành công`);
-      //       this.itemPartner = res.data;
-      //       this.setIsActiveEditBaseInfo(this.itemPartner?.id == null);
-      //     } else {
-      //       if (res.errors && res.errors.length > 0) {
-      //         res.errors.forEach((el: any) => {
-      //           this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
-      //         });
-      //       } else {
-      //         this.notificationService.showNotification(Constant.ERROR, 'Cập nhật thông tin doanh nghiệp không thành công');
-      //       }
-      //     }
-      //   }, error => {
-      //     this.notificationService.showNotification(Constant.ERROR, 'Cập nhật thông tin đối tác thất bại do lỗi hệ thống');
-      //   });
-      // } else {
-      //   this.generalService.addBaseInfoPartner(valueSave).subscribe((res: any) => {
-      //     if (res.isValid) {
-      //       this.notificationService.showNotification(Constant.SUCCESS, `Tạo mới thông tin doanh nghiệp thành công`);
-      //       this.itemPartner = res.data;
-      //       this.setIsActiveEditBaseInfo(this.itemPartner?.id == null);
-      //     } else {
-      //       if (res.errors && res.errors.length > 0) {
-      //         res.errors.forEach((el: any) => {
-      //           this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
-      //         });
-      //       } else {
-      //         this.notificationService.showNotification(Constant.ERROR, 'Tạo mới thông tin doanh nghiệp không thành công');
-      //       }
-      //     }
-      //   }, error => {
-      //     this.notificationService.showNotification(Constant.ERROR, 'Tạo mới thông tin đối tác thất bại do lỗi hệ thống');
-      //   });
-      // }
-
+      this.generalService.depositAccount(valueSave).subscribe((res: any) => {
+        if (res.isValid) {
+          this.isDepositAccountOkLoading = true;
+          this.notificationService.showNotification(Constant.SUCCESS, `Nạp tiền cho doanh nghiệp thành công`);
+        } else {
+          if (res.errors && res.errors.length > 0) {
+            res.errors.forEach((el: any) => {
+              this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+            });
+          } else {
+            this.notificationService.showNotification(Constant.ERROR, 'Nạp tiền cho doanh nghiệp không thành công');
+          }
+        }
+      }, error => {
+        this.notificationService.showNotification(Constant.ERROR, 'Nạp tiền cho doanh nghiệp thất bại do lỗi hệ thống');
+      });
     } else {
       // Đánh dấu tất cả các trường là đã được chạm (touched) để hiển thị lỗi
       this.formDepositAccount.markAllAsTouched();
       // this.notificationService.showNotification(Constant.SUCCESS, "Tồn tại trường thông tin chưa được nhập");
       this.msg.error(`Tồn tại trường thông tin chưa được nhập`);
     }
-    // setTimeout(() => {
-    //   this.isVisibleDepositAccount = false;
-    //   this.isDepositAccountOkLoading = false;
-    // }, 3000);
   }
 
   handleDepositAccountCancel(): void {

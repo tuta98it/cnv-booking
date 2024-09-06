@@ -893,4 +893,8 @@ export class GeneralService extends BaseService {
   updateAirportByID(idAirport: any, Airport: any): Observable<any> {
     return this.put(`/api${UrlConstant.AIRPORT}/${idAirport}`, Airport);
   }
+
+  depositAccount(payloadDeposit: any): Observable<any> {
+    return this.post(`/api${UrlConstant.ACCOUNT_DEPOSIT_HISTORIES}`, payloadDeposit);
+  }
 }
