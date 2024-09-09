@@ -78,10 +78,14 @@ export class ActionPartnerComponent implements OnInit {
   allCheckedEmployee = false;
   indeterminateEmployee = false;
   allUnCheckedEmployee = false;
-  fixedColumn = false;
-  scrollX: string | null = null;
-  scrollY: string | null = null;
+  fixedColumnEmployee = false;
+  scrollXEmployeesValue: string | null = null;
+  scrollYEmployeesValue: string | null = null;
   settingTableEmployeesValue: NZTableSettingCustoms;
+
+  fixedColumnBalanceFluctuation = false;
+  scrollXBalanceFluctuationValue: string | null = null;
+  scrollYBalanceFluctuationValue: string | null = null;
   settingTableBalanceFluctuationValue: NZTableSettingCustoms;
   listOfEmployees: readonly any[] = [];
   displayDataEmployee: readonly any[] = [];
@@ -382,16 +386,16 @@ export class ActionPartnerComponent implements OnInit {
       this.settingTableEmployeesValue = value as NZTableSettingCustoms;
     });
     this.settingTableListEmployeesForm.controls.tableScroll.valueChanges.subscribe(scroll => {
-      this.fixedColumn = scroll === 'fixed';
-      this.scrollX = scroll === 'scroll' || scroll === 'fixed' ? '100vw' : null;
+      this.fixedColumnEmployee = scroll === 'fixed';
+      this.scrollXEmployeesValue = scroll === 'scroll' || scroll === 'fixed' ? '100vw' : null;
     });
     let tableScrollValue = this.settingTableListEmployeesForm.controls['tableScroll'].value;
-    this.fixedColumn = tableScrollValue === 'fixed';
-    this.scrollX = tableScrollValue === 'scroll' || tableScrollValue === 'fixed' ? '100vw' : null;
+    this.fixedColumnEmployee = tableScrollValue === 'fixed';
+    this.scrollXEmployeesValue = tableScrollValue === 'scroll' || tableScrollValue === 'fixed' ? '100vw' : null;
     this.settingTableListEmployeesForm.controls.fixHeader.valueChanges.subscribe(fixed => {
-      this.scrollY = fixed ? '240px' : null;
+      this.scrollYEmployeesValue = fixed ? '240px' : null;
     });
-    this.scrollY = this.settingTableListEmployeesForm.controls['fixHeader'].value ? '240px' : null;
+    this.scrollYEmployeesValue = this.settingTableListEmployeesForm.controls['fixHeader'].value ? '240px' : null;
     this.settingTableListEmployeesForm.controls.noResult.valueChanges.subscribe(async empty => {
       if (empty) {
         this.listOfEmployees = [];
@@ -408,12 +412,20 @@ export class ActionPartnerComponent implements OnInit {
       this.settingTableBalanceFluctuationValue = value as NZTableSettingCustoms;
     });
     this.settingTableListBalanceFluctuationForm.controls.tableScroll.valueChanges.subscribe(scroll => {
-      this.fixedColumn = scroll === 'fixed';
-      this.scrollX = scroll === 'scroll' || scroll === 'fixed' ? '100vw' : null;
+      this.fixedColumnBalanceFluctuation = scroll === 'fixed';
+      this.scrollXBalanceFluctuationValue = scroll === 'scroll' || scroll === 'fixed' ? '100vw' : null;
     });
+    let tableScrollBalanceFluctuationValue = this.settingTableListBalanceFluctuationForm.controls['tableScroll'].value;
+    this.fixedColumnBalanceFluctuation = tableScrollBalanceFluctuationValue === 'fixed';
+    this.scrollXBalanceFluctuationValue = tableScrollBalanceFluctuationValue === 'scroll' || tableScrollBalanceFluctuationValue === 'fixed' ? '100vw' : null;
+
+
     this.settingTableListBalanceFluctuationForm.controls.fixHeader.valueChanges.subscribe(fixed => {
-      this.scrollY = fixed ? '240px' : null;
+      this.scrollXBalanceFluctuationValue = fixed ? '240px' : null;
     });
+    this.scrollYBalanceFluctuationValue = this.settingTableListBalanceFluctuationForm.controls['fixHeader'].value ? '240px' : null;
+
+
     this.settingTableListBalanceFluctuationForm.controls.noResult.valueChanges.subscribe(async empty => {
       if (empty) {
         this.listOfBalanceFluctuations = [];

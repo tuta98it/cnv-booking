@@ -648,7 +648,7 @@
           <div style="margin: 16px 0;"></div>
           <!-- Content lisst employees -->
           <div>
-            <nz-table #tagEmployeeTable [nzScroll]="{ x: scrollX, y: scrollY }" [nzData]="listOfEmployees"
+            <nz-table #tagEmployeeTable [nzScroll]="{ x: scrollXEmployeesValue, y: scrollYEmployeesValue }" [nzData]="listOfEmployees"
               [nzTableLayout]="settingTableEmployeesValue.tableLayout"
               [nzBordered]="settingTableEmployeesValue.bordered" [nzSimple]="settingTableEmployeesValue.simple"
               [nzLoading]="settingTableEmployeesValue.loading"
@@ -665,12 +665,12 @@
               <thead>
                 <tr *ngIf="settingTableEmployeesValue.header">
                   <th *ngIf="settingTableEmployeesValue.checkbox" nzWidth="60px" [(nzChecked)]="allCheckedEmployee"
-                    [nzLeft]="fixedColumn" [nzIndeterminate]="indeterminateEmployee"
+                    [nzLeft]="fixedColumnEmployee" [nzIndeterminate]="indeterminateEmployee"
                     (nzCheckedChange)="checkAllEmployees($event)">
                   </th>
-                  <th nzWidth="40px" [nzLeft]="fixedColumn">STT</th>
-                  <th [nzLeft]="fixedColumn">Vai trò</th>
-                  <th [nzLeft]="fixedColumn">Mã người dùng</th>
+                  <th nzWidth="40px" [nzLeft]="fixedColumnEmployee">STT</th>
+                  <th [nzLeft]="fixedColumnEmployee">Vai trò</th>
+                  <th [nzLeft]="fixedColumnEmployee">Mã người dùng</th>
                   <th>Tên nhân viên</th>
                   <th>Trạng thái</th>
                   <th>Email</th>
@@ -678,18 +678,18 @@
                   <th>Giới tính</th>
                   <th>Quản lý trực tiếp</th>
                   <th>Mã thẻ thành viên</th>
-                  <th [nzRight]="fixedColumn" class="text-aligin-center">Thao tác</th>
+                  <th [nzRight]="fixedColumnEmployee" class="text-aligin-center">Thao tác</th>
                 </tr>
               </thead>
               <tbody>
                 <ng-container *ngFor="let data of tagEmployeeTable.data">
                   <tr>
-                    <td [nzLeft]="fixedColumn" *ngIf="settingTableEmployeesValue.checkbox" [(nzChecked)]="data.checked"
+                    <td [nzLeft]="fixedColumnEmployee" *ngIf="settingTableEmployeesValue.checkbox" [(nzChecked)]="data.checked"
                       (nzCheckedChange)="refreshStatusEmployee()" [nzDisabled]="data.disabled"></td>
-                    <td [nzLeft]="fixedColumn">
+                    <td [nzLeft]="fixedColumnEmployee">
                       {{data.stt}}
                     </td>
-                    <td [nzLeft]="fixedColumn" [nzDisabled]="data.disabled">{{ data.userType | userTypePipe }}</td>
+                    <td [nzLeft]="fixedColumnEmployee" [nzDisabled]="data.disabled">{{ data.userType | userTypePipe }}</td>
                     <td [nzDisabled]="data.disabled">{{ data.userCode }}</td>
                     <td [nzDisabled]="data.disabled">{{ data.fullname }}</td>
                     <td [nzDisabled]="data.disabled">{{ data.status | partnerStatusPipe}}</td>
@@ -698,7 +698,7 @@
                     <td [nzDisabled]="data.disabled">{{ data.gender | genderPipe }}</td>
                     <td [nzDisabled]="data.disabled">{{ data.directManagementUserId | employeePipe : employees }}</td>
                     <td [nzDisabled]="data.disabled">{{ data.membershipCode }}</td>
-                    <td [nzRight]="fixedColumn" [nzEllipsis]="settingTableEmployeesValue.ellipsis"
+                    <td [nzRight]="fixedColumnEmployee" [nzEllipsis]="settingTableEmployeesValue.ellipsis"
                       class="text-aligin-center">
                       <button title="Sửa thông tin thông tin nhân viên" nz-button nzSize="small" nzType="default"
                         class="button-update"
@@ -856,16 +856,13 @@
                                 formControlName='depositContent' placeholder="Nạp tiền vào tài khoản">
                             </div>
                           </div>
-
                         </div>
                       </form>
-
                     </div>
                   </div>
                 </div>
 
                 <div *nzModalFooter>
-
                   <button nz-button nzDanger nzType="text" (click)="handleDepositAccountCancel()">
                     <div style="display: flex; align-items: center;">
                       <span nz-icon nzType="close"></span>
@@ -893,7 +890,7 @@
           <div style="margin: 16px 0;"></div>
           <!-- Content lisst employees -->
           <div>
-            <nz-table #tagBalanceFluctuation [nzScroll]="{ x: scrollX, y: scrollY }"
+            <nz-table #tagBalanceFluctuation [nzScroll]="{ x: scrollXBalanceFluctuationValue, y: scrollYBalanceFluctuationValue }"
               [nzData]="listOfBalanceFluctuations" [nzTableLayout]="settingTableBalanceFluctuationValue.tableLayout"
               [nzBordered]="settingTableBalanceFluctuationValue.bordered"
               [nzSimple]="settingTableBalanceFluctuationValue.simple"
@@ -910,9 +907,9 @@
               (nzCurrentPageDataChange)="currentPageDataChangeBalanceFluctuation($event)">
               <thead>
                 <tr *ngIf="settingTableBalanceFluctuationValue.header">
-                  <th nzWidth="40px" [nzLeft]="fixedColumn">STT</th>
-                  <th [nzLeft]="fixedColumn">Thời gian giao dịch</th>
-                  <th [nzLeft]="fixedColumn">Người thực hiện</th>
+                  <th nzWidth="40px" [nzLeft]="fixedColumnBalanceFluctuation">STT</th>
+                  <th [nzLeft]="fixedColumnBalanceFluctuation">Thời gian giao dịch</th>
+                  <th >Người thực hiện</th>
                   <th>Số tiền phát sinh</th>
                   <th>Nội dung giao dịch</th>
                 </tr>
@@ -920,10 +917,10 @@
               <tbody>
                 <ng-container *ngFor="let data of tagBalanceFluctuation.data">
                   <tr>
-                    <td [nzLeft]="fixedColumn">
+                    <td [nzLeft]="fixedColumnBalanceFluctuation">
                       {{ data.stt }}
                     </td>
-                    <td [nzLeft]="fixedColumn" [nzDisabled]="data.disabled">{{ data.transactionTime | dateFormat }}</td>
+                    <td [nzLeft]="fixedColumnBalanceFluctuation" [nzDisabled]="data.disabled">{{ data.transactionTime | dateFormat }}</td>
                     <td [nzDisabled]="data.disabled">{{ data.implementPersonInfo }}</td>
                     <td [nzDisabled]="data.disabled">{{ data.amount }}</td>
                     <td [nzDisabled]="data.disabled">{{ data.transactionContent}}</td>
