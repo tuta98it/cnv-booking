@@ -315,7 +315,8 @@
                 </div>
                 <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
                   style="display: flex; align-items: center; padding: 8px 0;">
-                  <div nz-col class="gutter-row fs-xl" [nzSpan]="24" style="display: flex; align-items: center; color: #007AFF;">
+                  <div nz-col class="gutter-row fs-xl" [nzSpan]="24"
+                    style="display: flex; align-items: center; color: #007AFF;">
                     {{debtFreeRevenue?.endingBalance ? debtFreeRevenue?.endingBalance : '-' }} đ
                   </div>
                 </div>
@@ -359,7 +360,7 @@
           <form [formGroup]="formBaseBusinessContractUpdate">
             <div>
               <div style="height: 1px; margin: 16px 0; background-color: #0000000f;"></div>
-              <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
+              <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }" style="overflow-y: auto; max-height: 19rem;">
                 <div nz-col class="gutter-row" [nzSpan]="12">
                   <div>
                     <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
@@ -663,11 +664,11 @@
               (nzCurrentPageDataChange)="currentPageDataChangeEmployee($event)">
               <thead>
                 <tr *ngIf="settingTableEmployeesValue.header">
-                  <th nzWidth="40px" *ngIf="settingTableEmployeesValue.expandable" [nzLeft]="fixedColumn"></th>
                   <th *ngIf="settingTableEmployeesValue.checkbox" nzWidth="60px" [(nzChecked)]="allCheckedEmployee"
                     [nzLeft]="fixedColumn" [nzIndeterminate]="indeterminateEmployee"
                     (nzCheckedChange)="checkAllEmployees($event)">
                   </th>
+                  <th nzWidth="40px" [nzLeft]="fixedColumn">STT</th>
                   <th [nzLeft]="fixedColumn">Vai trò</th>
                   <th [nzLeft]="fixedColumn">Mã người dùng</th>
                   <th>Tên nhân viên</th>
@@ -683,10 +684,11 @@
               <tbody>
                 <ng-container *ngFor="let data of tagEmployeeTable.data">
                   <tr>
-                    <td [nzLeft]="fixedColumn" *ngIf="settingTableEmployeesValue.expandable" [(nzExpand)]="data.expand">
-                    </td>
                     <td [nzLeft]="fixedColumn" *ngIf="settingTableEmployeesValue.checkbox" [(nzChecked)]="data.checked"
                       (nzCheckedChange)="refreshStatusEmployee()" [nzDisabled]="data.disabled"></td>
+                    <td [nzLeft]="fixedColumn">
+                      {{data.stt}}
+                    </td>
                     <td [nzLeft]="fixedColumn" [nzDisabled]="data.disabled">{{ data.userType | userTypePipe }}</td>
                     <td [nzDisabled]="data.disabled">{{ data.userCode }}</td>
                     <td [nzDisabled]="data.disabled">{{ data.fullname }}</td>
@@ -794,11 +796,11 @@
           <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px;">
             <span style="font-weight: 500; font-size: 16px;">Biến động số dư</span>
             <div style="display: flex; align-items: center;">
-              <button [disabled]="!itemPartner?.id" nz-button nzType="primary" style="margin-right: 0.5rem;">
+              <!-- <button [disabled]="!itemPartner?.id" nz-button nzType="primary" style="margin-right: 0.5rem;">
                 <div style="display: flex; align-items: center;">
                   <span style="margin: 0 6px; line-height: normal;">In bảng kê khai</span>
                 </div>
-              </button>
+              </button> -->
 
               <button [disabled]="!itemPartner?.id" nz-button nzType="primary"
                 style="margin-right: 0.5rem; background-color: #3B82F6;" (click)="showModalDepositAccount()">
@@ -881,11 +883,11 @@
                 </div>
               </nz-modal>
 
-              <button [disabled]="!itemPartner?.id" nz-button nzType="default">
+              <!-- <button [disabled]="!itemPartner?.id" nz-button nzType="default">
                 <div style="display: flex; align-items: center;">
                   <span style="margin-left: 4px; line-height: normal;">Xem chi tiết</span>
                 </div>
-              </button>
+              </button> -->
             </div>
           </div>
           <div style="margin: 16px 0;"></div>

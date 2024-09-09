@@ -185,14 +185,14 @@ export class ActionPartnerComponent implements OnInit {
       footer: [false],
       expandable: [true],
       checkbox: [true],
-      fixHeader: [false],
+      fixHeader: [true],
       noResult: [false],
       noResultText: 'Danh sách nhân viên đang trống. Hãy nhấn vào “Thêm mới” để tạo mới các tài khoản nhân viên cho doanh nghiệp',
       ellipsis: [false],
       simple: [false],
       size: 'small' as NzTableSize,
       paginationType: 'default' as NzTablePaginationType,
-      tableScroll: 'unset' as TableScroll,
+      tableScroll: 'scroll' as TableScroll,
       tableLayout: 'auto' as NzTableLayout,
       position: 'bottom' as NzTablePaginationPosition
     });
@@ -385,9 +385,13 @@ export class ActionPartnerComponent implements OnInit {
       this.fixedColumn = scroll === 'fixed';
       this.scrollX = scroll === 'scroll' || scroll === 'fixed' ? '100vw' : null;
     });
+    let tableScrollValue = this.settingTableListEmployeesForm.controls['tableScroll'].value;
+    this.fixedColumn = tableScrollValue === 'fixed';
+    this.scrollX = tableScrollValue === 'scroll' || tableScrollValue === 'fixed' ? '100vw' : null;
     this.settingTableListEmployeesForm.controls.fixHeader.valueChanges.subscribe(fixed => {
       this.scrollY = fixed ? '240px' : null;
     });
+    this.scrollY = this.settingTableListEmployeesForm.controls['fixHeader'].value ? '240px' : null;
     this.settingTableListEmployeesForm.controls.noResult.valueChanges.subscribe(async empty => {
       if (empty) {
         this.listOfEmployees = [];
