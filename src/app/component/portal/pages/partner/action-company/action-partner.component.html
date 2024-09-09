@@ -207,7 +207,8 @@
                 </div>
                 <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
                   style="display: flex; align-items: center; padding: 8px 0;">
-                  <div nz-col class="gutter-row fs-xl" [nzSpan]="24" style="display: flex; align-items: center;">
+                  <div nz-col class="gutter-row fs-xl" [nzSpan]="24"
+                    style="display: flex; align-items: center; color: #007AFF;">
                     {{debtBearingSales?.currentBalance ? debtBearingSales?.currentBalance : '-' }} đ
                   </div>
                 </div>
@@ -235,8 +236,16 @@
                 <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
                   style="display: flex; align-items: center; padding: 8px 0;">
                   <div nz-col class="gutter-row fs-xl" [nzSpan]="24" style="display: flex; align-items: center;">
-                    {{debtBearingSales?.amountIncurredDuringPeriod ? debtBearingSales?.amountIncurredDuringPeriod : '-'
-                    }} đ
+                    <span *ngIf="debtBearingSales?.amountIncurredDuringPeriod >= 0" style="color: #495057">
+                      {{debtBearingSales?.amountIncurredDuringPeriod ? debtBearingSales?.amountIncurredDuringPeriod :
+                      '-'
+                      }} đ
+                    </span>
+                    <span *ngIf="debtBearingSales?.amountIncurredDuringPeriod < 0" style="color: #900B09">
+                      ({{debtBearingSales?.amountIncurredDuringPeriod ? debtBearingSales?.amountIncurredDuringPeriod :
+                      '-'
+                      }} đ)
+                    </span>
                   </div>
                 </div>
                 <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
@@ -247,12 +256,12 @@
                 </div>
                 <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
                   style="display: flex; align-items: center; padding: 8px 0;">
-                  <div nz-col class="gutter-row fs-xl" [nzSpan]="24" style="display: flex; align-items: center;">
+                  <div nz-col class="gutter-row fs-xl" [nzSpan]="24"
+                    style="display: flex; align-items: center; color: #188D47">
                     {{debtBearingSales?.usageLimit ? debtBearingSales?.usageLimit : '-' }} đ
                   </div>
                 </div>
               </div>
-
 
               <div *ngIf="formBaseInfoCreatePartner.get('allowDebt')?.value == AllowDebtPartner.NOTALLOW" nz-col
                 class="gutter-row" [nzSpan]="4">
@@ -264,7 +273,8 @@
                 </div>
                 <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
                   style="display: flex; align-items: center; padding: 8px 0;">
-                  <div nz-col class="gutter-row fs-xl" [nzSpan]="24" style="display: flex; align-items: center;">
+                  <div nz-col class="gutter-row fs-xl" [nzSpan]="24"
+                    style="display: flex; align-items: center; color:  #007AFF;">
                     {{debtFreeRevenue?.beginningBalance ? debtFreeRevenue?.beginningBalance : '-' }} đ
                   </div>
                 </div>
@@ -291,8 +301,10 @@
                 </div>
                 <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
                   style="display: flex; align-items: center; padding: 8px 0;">
-                  <div nz-col class="gutter-row fs-xl" [nzSpan]="24" style="display: flex; align-items: center;">
-                    {{debtFreeRevenue?.decreaseInGeneration ? debtFreeRevenue?.decreaseInGeneration : '-' }} đ
+                  <div nz-col class="gutter-row fs-xl" [nzSpan]="24"
+                    style="display: flex; align-items: center; color: #900B09;">
+                    ({{debtFreeRevenue?.decreaseInGeneration
+                    ? debtFreeRevenue?.decreaseInGeneration : '-' }} đ)
                   </div>
                 </div>
                 <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
@@ -303,7 +315,7 @@
                 </div>
                 <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
                   style="display: flex; align-items: center; padding: 8px 0;">
-                  <div nz-col class="gutter-row fs-xl" [nzSpan]="24" style="display: flex; align-items: center;">
+                  <div nz-col class="gutter-row fs-xl" [nzSpan]="24" style="display: flex; align-items: center; color: #007AFF;">
                     {{debtFreeRevenue?.endingBalance ? debtFreeRevenue?.endingBalance : '-' }} đ
                   </div>
                 </div>
@@ -766,9 +778,9 @@
               '-' }} đ
             </div>
 
-            <div>
-              Phát sinh giảm trong kỳ {{debtFreeRevenue?.decreaseInGeneration ? debtFreeRevenue.decreaseInGeneration :
-              '-' }} đ
+            <div style="color: #900B09;">
+              Phát sinh giảm trong kỳ ({{debtFreeRevenue?.decreaseInGeneration ? debtFreeRevenue.decreaseInGeneration :
+              '-' }} đ)
             </div>
 
 
