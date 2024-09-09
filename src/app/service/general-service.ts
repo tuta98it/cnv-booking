@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { UrlConstant } from '../shared/constants/url.class';
 import { Role } from '../model/role.class';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class GeneralService extends BaseService {
 
   // LOGIN
@@ -678,7 +678,7 @@ export class GeneralService extends BaseService {
     return this.post(UrlConstant.LIST_TEST_RESULT + "/SaveFile", payload);
   }
 
-  removeFile(id): any {
+  removeFilePartner(id): any {
     return this.delete(`/Partners/RemoveFile/${id}`, id);
   }
 

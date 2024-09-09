@@ -145,7 +145,8 @@ export class ActionPartnerComponent implements OnInit {
       phone: new FormControl({ value: null, disabled: false }),
       email: new FormControl({ value: null, disabled: false }),
       address: new FormControl({ value: null, disabled: false }, Validators.required),
-      businessOwnerId: new FormControl({ value: null, disabled: false }),
+      name: new FormControl({ value: null, disabled: false }),
+      // businessOwnerId: new FormControl({ value: null, disabled: false }),
       allowDebt: new FormControl({ value: AllowDebtPartner.ALLOW, disabled: false }, Validators.required),
       // partnerAuthorizationFileIDs: [{ value: [], disabled: false }, Validators.required]
       // debtMax: [null],
@@ -451,7 +452,8 @@ export class ActionPartnerComponent implements OnInit {
       phone: this.itemPartner?.phone || null,
       email: this.itemPartner?.email || null,
       address: this.itemPartner?.address || null,
-      businessOwnerId: this.itemPartner?.businessOwnerId || null,
+      // businessOwnerId: this.itemPartner?.businessOwnerId || null,
+      name: this.itemPartner?.name || null,
       allowDebt: this.itemPartner?.allowDebt || AllowDebtPartner.ALLOW
     });
 
@@ -492,7 +494,7 @@ export class ActionPartnerComponent implements OnInit {
     // Update checkOptionsBusinessServiceVHL based on selectedServices
     this.checkOptionsBusinessServiceVHL = this.checkOptionsBusinessServiceVHL.map(option => ({
       ...option,
-      checked: selectedServices.includes(option.value)
+      checked: selectedServices != null ? selectedServices.includes(option.value) : false
     }));
 
     this.listUploadBusinessLicenseFile = [];
@@ -671,7 +673,7 @@ export class ActionPartnerComponent implements OnInit {
       this.listUploadAuthorizationFile = info.fileList;
       setTimeout(() => {
         if (this.listUploadAuthorizationFile.length > 0) {
-          this.listUploadAuthorizationFile[this.listUploadAuthorizationFile.length - 1].uid = info.file.response.uid.toString();
+          this.listUploadAuthorizationFile[this.listUploadAuthorizationFile.length - 1].uid = info.file.response.partnerFileId.toString();
           this.listUploadAuthorizationFile[this.listUploadAuthorizationFile.length - 1].url = `${this.configService.getConfig().api.baseUrl}/${info.file.response.path}`;
         }
       }, 200);
@@ -689,7 +691,7 @@ export class ActionPartnerComponent implements OnInit {
       this.listUploadContractFile = info.fileList;
       setTimeout(() => {
         if (this.listUploadContractFile.length > 0) {
-          this.listUploadContractFile[this.listUploadContractFile.length - 1].uid = info.file.response.uid.toString();
+          this.listUploadContractFile[this.listUploadContractFile.length - 1].uid = info.file.response.partnerFileId.toString();
           this.listUploadContractFile[this.listUploadContractFile.length - 1].url = `${this.configService.getConfig().api.baseUrl}/${info.file.response.path}`;
         }
       }, 200);
@@ -708,7 +710,7 @@ export class ActionPartnerComponent implements OnInit {
       this.listUploadBusinessLicenseFile = info.fileList;
       setTimeout(() => {
         if (this.listUploadBusinessLicenseFile.length > 0) {
-          this.listUploadBusinessLicenseFile[this.listUploadBusinessLicenseFile.length - 1].uid = info.file.response.uid.toString();
+          this.listUploadBusinessLicenseFile[this.listUploadBusinessLicenseFile.length - 1].uid = info.file.response.partnerFileId.toString();
           this.listUploadBusinessLicenseFile[this.listUploadBusinessLicenseFile.length - 1].url = `${this.configService.getConfig().api.baseUrl}/${info.file.response.path}`;
         }
       }, 200);
@@ -731,7 +733,7 @@ export class ActionPartnerComponent implements OnInit {
           this.msg.error(`${info.file.name} file tải lên thất bại.`);
         }
         // if (this.listUploadEmployeeForPartnerFile.length > 0) {
-        //   this.listUploadEmployeeForPartnerFile[this.listUploadEmployeeForPartnerFile.length - 1].uid = info.file.response.uid.toString();
+        //   this.listUploadEmployeeForPartnerFile[this.listUploadEmployeeForPartnerFile.length - 1].uid = info.file.response.partnerFileId.toString();
         //   this.listUploadEmployeeForPartnerFile[this.listUploadEmployeeForPartnerFile.length - 1].url = `${this.configService.getConfig().api.baseUrl}/${info.file.response.path}`;
         // }
       }, 200);
@@ -740,9 +742,9 @@ export class ActionPartnerComponent implements OnInit {
     }
   }
 
-  handleRemoveUploadAuthorizationFile(file: NzUploadFile) {
+  handleRemoveUploadAuthorizationFile = (file: NzUploadFile) => {
     if (file?.uid) {
-      this.generalService.removeFile(file.uid).subscribe({
+      this.generalService.removeFilePartner(file.uid).subscribe({
         next: (res: any) => {
           if (res) {
             if (res.ret && res.ret.length > 0) {
@@ -772,9 +774,9 @@ export class ActionPartnerComponent implements OnInit {
   }
 
 
-  handleRemoveUploadContractFile(file: NzUploadFile) {
+  handleRemoveUploadContractFile = (file: NzUploadFile) => {
     if (file?.uid) {
-      this.generalService.removeFile(file.uid).subscribe({
+      this.generalService.removeFilePartner(file.uid).subscribe({
         next: (res: any) => {
           if (res) {
             if (res.ret && res.ret.length > 0) {
@@ -804,9 +806,9 @@ export class ActionPartnerComponent implements OnInit {
   }
 
 
-  handleRemoveUploadBusinessLicenseFile(file: NzUploadFile) {
+  handleRemoveUploadBusinessLicenseFile = (file: NzUploadFile) =>{
     if (file?.uid) {
-      this.generalService.removeFile(file.uid).subscribe({
+      this.generalService.removeFilePartner(file.uid).subscribe({
         next: (res: any) => {
           if (res) {
             if (res.ret && res.ret.length > 0) {
@@ -836,9 +838,9 @@ export class ActionPartnerComponent implements OnInit {
   }
 
 
-  handleRemoveUploadEmployeeForPartner(file: NzUploadFile) {
+  handleRemoveUploadEmployeeForPartner = (file: NzUploadFile) => {
     if (file?.uid) {
-      this.generalService.removeFile(file.uid).subscribe({
+      this.generalService.removeFilePartner(file.uid).subscribe({
         next: (res: any) => {
           if (res) {
             if (res.ret && res.ret.length > 0) {

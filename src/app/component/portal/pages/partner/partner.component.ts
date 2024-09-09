@@ -591,7 +591,7 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
   }
 
   removeResult(data: any) {
-    this.generalService.removeFile(data.id).subscribe((res: any) => {
+    this.generalService.removeFilePartner(data.id).subscribe((res: any) => {
       this.getListData();
       this.curFileResults = this.curFileResults.filter(en => en.id !== data.id);
     });
