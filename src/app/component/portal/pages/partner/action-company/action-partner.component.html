@@ -536,13 +536,13 @@
                         <!-- <input style="border-radius: 4px;" nzSize="default" formControlName='debtMax' nz-input
                           type="text" placeholder="Nhập hạn mức tối đa"> -->
 
-                          <nz-input-group nzSuffix="VND">
-                            <input style="border-radius: 4px;" nz-input nzSize="default" formControlName="debtMax"
-                              nz-tooltip nzTooltipTrigger="focus" nzTooltipPlacement="topLeft" nzOverlayClassName="numeric-input"
-                              [nzTooltipTitle]="tooltipTitleAmount" placeholder="Nhập hạn mức tối đa"
-                              (click)="onClickInputAmount($event, 'debtMax')"
-                              (ngModelChange)="onChangeInputAmount($event, 'debtMax')" (blur)="onBlurInputAmount()">
-                          </nz-input-group>
+                        <nz-input-group nzSuffix="VND">
+                          <input style="border-radius: 4px;" nz-input nzSize="default" formControlName="debtMax"
+                            nz-tooltip nzTooltipTrigger="focus" nzTooltipPlacement="topLeft"
+                            nzOverlayClassName="numeric-input" [nzTooltipTitle]="tooltipTitleAmount"
+                            placeholder="Nhập hạn mức tối đa" (click)="onClickInputAmount($event, 'debtMax')"
+                            (ngModelChange)="onChangeInputAmount($event, 'debtMax')" (blur)="onBlurInputAmount()">
+                        </nz-input-group>
                       </div>
                     </div>
 
@@ -556,13 +556,15 @@
                         <!-- <input style="border-radius: 4px;" nzSize="default" formControlName='warningLimitPrice' nz-input
                           type="text" placeholder="Nhập hạn mức cảnh báo"> -->
 
-                          <nz-input-group nzSuffix="VND">
-                            <input style="border-radius: 4px;" nz-input nzSize="default" formControlName="warningLimitPrice"
-                              nz-tooltip nzTooltipTrigger="focus" nzTooltipPlacement="topLeft" nzOverlayClassName="numeric-input"
-                              [nzTooltipTitle]="tooltipTitleAmount" placeholder="Nhập hạn mức cảnh báo"
-                              (click)="onClickInputAmount($event, 'warningLimitPrice')"
-                              (ngModelChange)="onChangeInputAmount($event, 'warningLimitPrice')" (blur)="onBlurInputAmount()">
-                          </nz-input-group>
+                        <nz-input-group nzSuffix="VND">
+                          <input style="border-radius: 4px;" nz-input nzSize="default"
+                            formControlName="warningLimitPrice" nz-tooltip nzTooltipTrigger="focus"
+                            nzTooltipPlacement="topLeft" nzOverlayClassName="numeric-input"
+                            [nzTooltipTitle]="tooltipTitleAmount" placeholder="Nhập hạn mức cảnh báo"
+                            (click)="onClickInputAmount($event, 'warningLimitPrice')"
+                            (ngModelChange)="onChangeInputAmount($event, 'warningLimitPrice')"
+                            (blur)="onBlurInputAmount()">
+                        </nz-input-group>
                       </div>
                     </div>
 
@@ -772,20 +774,23 @@
           <div *ngIf="formBaseInfoCreatePartner.get('allowDebt')?.value == AllowDebtPartner.ALLOW"
             style="display: flex; justify-content: space-between; align-items: center; font-size: 16px;">
             <div>
-              Hạng mức sử dụng {{debtBearingSales?.usageLimit ? (debtBearingSales?.usageLimit | currencyFormat): '-' }} đ
+              Hạng mức sử dụng {{debtBearingSales?.usageLimit ? (debtBearingSales?.usageLimit | currencyFormat): '-' }}
+              đ
             </div>
 
             <div>
-              Dư nợ đầu kỳ {{debtBearingSales?.beginningBalance ? (debtBearingSales.beginningBalance | currencyFormat) : '-' }} đ
+              Dư nợ đầu kỳ {{debtBearingSales?.beginningBalance ? (debtBearingSales.beginningBalance | currencyFormat) :
+              '-' }} đ
             </div>
 
             <div>
-              Phát sinh trong kỳ {{(debtBearingSales?.amountIncurredDuringPeriod  | currencyFormat) ?
+              Phát sinh trong kỳ {{(debtBearingSales?.amountIncurredDuringPeriod | currencyFormat) ?
               debtBearingSales.amountIncurredDuringPeriod : '-' }} đ
             </div>
 
             <div>
-              Dư nợ cuối kỳ {{debtBearingSales?.endingBalance ? (debtBearingSales.endingBalance | currencyFormat): '-' }} đ
+              Dư nợ cuối kỳ {{debtBearingSales?.endingBalance ? (debtBearingSales.endingBalance | currencyFormat): '-'
+              }} đ
             </div>
 
             <div>
@@ -798,22 +803,26 @@
           <div *ngIf="formBaseInfoCreatePartner.get('allowDebt')?.value == AllowDebtPartner.NOTALLOW"
             style="display: flex; justify-content: space-between; align-items: center; font-size: 16px;">
             <div>
-              Số dư đầu kỳ {{debtFreeRevenue?.beginningBalance ? (debtFreeRevenue.beginningBalance | currencyFormat): '-' }} đ
+              Số dư đầu kỳ {{debtFreeRevenue?.beginningBalance ? (debtFreeRevenue.beginningBalance | currencyFormat):
+              '-' }} đ
             </div>
 
             <div>
-              Phát sinh tăng trong kỳ {{debtFreeRevenue?.increaseInGeneration ? (debtFreeRevenue.increaseInGeneration | currencyFormat) :
+              Phát sinh tăng trong kỳ {{debtFreeRevenue?.increaseInGeneration ? (debtFreeRevenue.increaseInGeneration |
+              currencyFormat) :
               '-' }} đ
             </div>
 
             <div style="color: #900B09;">
-              Phát sinh giảm trong kỳ ({{debtFreeRevenue?.decreaseInGeneration ? (debtFreeRevenue.decreaseInGeneration | currencyFormat) :
+              Phát sinh giảm trong kỳ ({{debtFreeRevenue?.decreaseInGeneration ? (debtFreeRevenue.decreaseInGeneration |
+              currencyFormat) :
               '-' }} đ)
             </div>
 
 
             <div>
-              Số dư cuối kỳ {{debtFreeRevenue?.endingBalance ? (debtFreeRevenue.endingBalance | currencyFormat) : '-' }} đ
+              Số dư cuối kỳ {{debtFreeRevenue?.endingBalance ? (debtFreeRevenue.endingBalance | currencyFormat) : '-' }}
+              đ
             </div>
 
           </div>
@@ -834,77 +843,12 @@
                   <span style="margin: 0 6px; line-height: normal;">Nạp tiền tài khoản</span>
                 </div>
               </button>
-              <nz-modal [(nzVisible)]="isVisibleDepositAccount" nzTitle="Nạp tiền vào tài khoản"
-                (nzOnCancel)="handleDepositAccountCancel()" (nzOnOk)="handleDepositAccountSave()"
-                [nzOkLoading]="isDepositAccountOkLoading" nzMaskClosable="false">
-                <div *nzModalContent>
-                  <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
-                    <div nz-col class="gutter-row" [nzSpan]="24">
-                      <form [formGroup]="formDepositAccount">
-                        <div>
-                          <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
-                            style="display: flex; align-items: center; padding: 8px 0;">
-                            <div nz-col class="gutter-row" [nzSpan]="8" style="display: flex; align-items: center;">
-                              Số tiền nạp vào
-                              <span style="color: tomato; margin-left: 4px;">*</span>
-                            </div>
-                            <div nz-col class="gutter-row" [nzSpan]="16">
-                              <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
-                                formControlName='amountDeposited' placeholder="Nhập số tiền nạp vào">
-                            </div>
-                          </div>
+              <app-deposit-account [isVisibleDepositAccount]="isVisibleDepositAccount"
+                [employees]="employees"
+                [partnerId]="itemPartner?.id"
+                (cancel)="handleDepositAccountCancel()">
+              </app-deposit-account>
 
-                          <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
-                            style="display: flex; align-items: center; padding: 8px 0;">
-                            <div nz-col class="gutter-row" [nzSpan]="8" style="display: flex; align-items: center;">
-                              Người thực hiện
-                              <span style="color: tomato; margin-left: 4px;">*</span>
-                            </div>
-                            <div nz-col class="gutter-row" [nzSpan]="16">
-                              <nz-select style="border-radius: 4px;" nzSize="default" nzMode="default"
-                                formControlName='implenmentPersonId' nzPlaceHolder="Chọn người thực hiện" nzAllowClear
-                                nzShowSearch>
-                                <nz-option *ngFor="let employee of employees"
-                                  nzLabel="{{employee.fullname}} - {{employee.username}}"
-                                  [nzValue]="employee.id"></nz-option>
-                              </nz-select>
-                            </div>
-                          </div>
-
-                          <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
-                            style="display: flex; align-items: center; padding: 8px 0;">
-                            <div nz-col class="gutter-row" [nzSpan]="8" style="display: flex; align-items: center;">
-                              Nội dung nạp tiền
-                              <span style="color: tomato; margin-left: 4px;">*</span>
-                            </div>
-                            <div nz-col class="gutter-row" [nzSpan]="16">
-                              <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
-                                formControlName='depositContent' placeholder="Nạp tiền vào tài khoản">
-                            </div>
-                          </div>
-                        </div>
-                      </form>
-                    </div>
-                  </div>
-                </div>
-
-                <div *nzModalFooter>
-                  <button nz-button nzDanger nzType="text" (click)="handleDepositAccountCancel()">
-                    <div style="display: flex; align-items: center;">
-                      <span nz-icon nzType="close"></span>
-                      <span style="margin-left: 4px; line-height: normal;">Huỷ</span>
-                    </div>
-                  </button>
-
-                  <!-- [nzLoading]="isDepositAccountOkLoading"  -->
-                  <button nz-button nzType="default" style="margin-right: 8px;" (click)="handleDepositAccountSave()">
-                    <div style="display: flex; align-items: center;">
-                      <span nz-icon nzType="save"></span>
-                      <span style="margin-left: 6px; line-height: normal;">Cập nhật</span>
-                    </div>
-                  </button>
-                </div>
-              </nz-modal>
 
               <!-- <button [disabled]="!itemPartner?.id" nz-button nzType="default">
                 <div style="display: flex; align-items: center;">
