@@ -784,8 +784,8 @@
             </div>
 
             <div>
-              Phát sinh trong kỳ {{(debtBearingSales?.amountIncurredDuringPeriod | currencyFormat) ?
-              debtBearingSales.amountIncurredDuringPeriod : '-' }} đ
+              Phát sinh trong kỳ {{debtBearingSales?.amountIncurredDuringPeriod?
+              (debtBearingSales.amountIncurredDuringPeriod  | currencyFormat): '-' }} đ
             </div>
 
             <div>
