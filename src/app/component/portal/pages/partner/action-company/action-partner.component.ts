@@ -124,6 +124,10 @@ export class ActionPartnerComponent implements OnInit {
 
   isVisibleDepositAccount = false;
   isDepositAccountOkLoading = false;
+
+  formControlNameCurrent: string;
+  valueInputNumberAmount = '';
+  tooltipTitleAmount = 'Nhập số tiền';
   constructor(
     private msg: NzMessageService,
     private activatedRoute: ActivatedRoute,
@@ -442,6 +446,66 @@ export class ActionPartnerComponent implements OnInit {
     });
     this.getEmployees();
   }
+
+
+  onChangeInputAmount(value: string, controlName?: string): void {
+    this.updateValueInputAmount(value);
+    this.formControlNameCurrent = controlName;
+  }
+
+
+  onClickInputAmount(event: any, controlName?: string): void {
+    const inputElement = event.target as HTMLInputElement;
+    this.valueInputNumberAmount = inputElement.value;
+    this.formControlNameCurrent = controlName;
+    this.updateValueInputAmount(this.valueInputNumberAmount);
+  }
+
+  // '.' at the end or only '-' in the input box.
+  onBlurInputAmount(): void {
+    if (this.valueInputNumberAmount.charAt(this.valueInputNumberAmount.length - 1) === '.' || this.valueInputNumberAmount === '-') {
+      this.updateValueInputAmount(this.valueInputNumberAmount.slice(0, -1));
+      this.tooltipTitleAmount = "0 đ"
+    }
+  }
+
+
+  updateValueInputAmount(value: string): void {
+    const reg = /^-?(0|[1-9][0-9]*)(\.[0-9]*)?$/;
+    if ((!isNaN(+value) && reg.test(value)) || value === '' || value === '-') {
+      this.valueInputNumberAmount = value;
+    }
+    // Chỉ cập nhật nếu giá trị khác
+    if (this.formControlNameCurrent) {
+      const control = this.formBaseBusinessContractUpdate.get(this.formControlNameCurrent);
+      if (control && control.value !== this.valueInputNumberAmount) {
+        control.setValue(this.valueInputNumberAmount, { emitEvent: false });
+      }
+    }
+    this.updateTooltipTitleAmount();
+  }
+
+  updateTooltipTitleAmount(): void {
+    this.tooltipTitleAmount = ((this.valueInputNumberAmount !== '-' ? this.formatNumber(this.valueInputNumberAmount) : '-') || '0') + " đ";
+  }
+
+  formatNumber(value: string): string {
+    const stringValue = `${value}`;
+    const list = stringValue.split('.');
+    const prefix = list[0].charAt(0) === '-' ? '-' : '';
+    let num = prefix ? list[0].slice(1) : list[0];
+    let result = '';
+    while (num.length > 3) {
+      result = `,${num.slice(-3)}${result}`;
+      num = num.slice(0, num.length - 3);
+    }
+    if (num) {
+      result = num + result;
+    }
+    return `${prefix}${result}${list[1] ? `.${list[1]}` : ''}`;
+  }
+
+
 
   private async resetFormBaseInfoCreatePartner(itemPartner: any) {
     this.formBaseInfoCreatePartner.reset({
@@ -807,7 +871,7 @@ export class ActionPartnerComponent implements OnInit {
   }
 
 
-  handleRemoveUploadBusinessLicenseFile = (file: NzUploadFile) =>{
+  handleRemoveUploadBusinessLicenseFile = (file: NzUploadFile) => {
     if (file?.uid) {
       this.generalService.removeFilePartner(file.uid).subscribe({
         next: (res: any) => {
