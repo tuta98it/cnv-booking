@@ -157,7 +157,6 @@ export class ActionPartnerComponent implements OnInit {
     this.formBaseBusinessContractUpdate = this.formBuilder.group({
       partnerBusinessLicenseFileIDs: [null],
       partnerContractFileIDs: [null, [Validators.required]],
-      personInChargeId: [null, [Validators.required]],
       startTimeContractDate: [null, [Validators.required]],
       endTimeContractDate: [null, [Validators.required]],
       emailToReceiveInvoice: [null, [Validators.required]],
@@ -167,10 +166,11 @@ export class ActionPartnerComponent implements OnInit {
       warningLimitPrice: [null, [Validators.required]],
       typeOfServices: [null, [Validators.required]],
 
-      positionPersonInCharge: new FormControl({ value: null, disabled: true }),
-      phoneNumberPersonInCharge: new FormControl({ value: null, disabled: true }),
-      emailPersonInCharge: new FormControl({ value: null, disabled: true }),
-
+      personInChargeId: [null],
+      namePersonInCharge: new FormControl({ value: null, disabled: false }),
+      positionPersonInCharge: new FormControl({ value: null, disabled: false }),
+      phoneNumberPersonInCharge: new FormControl({ value: null, disabled: false }),
+      emailPersonInCharge: new FormControl({ value: null, disabled: false }),
     });
 
     this.formDepositAccount = this.formBuilder.group({
@@ -484,10 +484,11 @@ export class ActionPartnerComponent implements OnInit {
       debtMax: itemPartner?.debtMax,
       warningLimitPrice: itemPartner?.warningLimitPrice,
       typeOfServices: itemPartner?.typeOfServices,
-      positionPersonInCharge: { value: itemPartner?.positionPersonInCharge, disabled: true },
-      phoneNumberPersonInCharge: { value: itemPartner?.phoneNumberPersonInCharge, disabled: true },
-      emailPersonInCharge: { value: itemPartner?.emailPersonInCharge, disabled: true }
+      // positionPersonInCharge: { value: itemPartner?.positionPersonInCharge, disabled: false },
+      // phoneNumberPersonInCharge: { value: itemPartner?.phoneNumberPersonInCharge, disabled: false },
+      // emailPersonInCharge: { value: itemPartner?.emailPersonInCharge, disabled: false }
     });
+    this.onSelectPersonInCharge(itemPartner.personInChargeId);
     // Assuming typeOfServices is a string representation of the array
     const typeOfServices: string = itemPartner.typeOfServices;
     const selectedServices = JSON.parse(typeOfServices) as number[]; // Convert the string to an array of numbers
@@ -969,6 +970,7 @@ export class ActionPartnerComponent implements OnInit {
   async onSelectPersonInCharge(employeeId: any) {
     try {
       const itemEmployee = await this.getEmployeeById(employeeId);
+      this.formBaseBusinessContractUpdate.controls['namePersonInCharge'].setValue(itemEmployee?.fullname ?? "");
       this.formBaseBusinessContractUpdate.controls['positionPersonInCharge'].setValue(itemEmployee?.position ?? "");
       this.formBaseBusinessContractUpdate.controls['phoneNumberPersonInCharge'].setValue(itemEmployee?.phoneNo ?? "");
       this.formBaseBusinessContractUpdate.controls['emailPersonInCharge'].setValue(itemEmployee?.email ?? "");

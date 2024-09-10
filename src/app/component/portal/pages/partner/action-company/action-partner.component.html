@@ -411,12 +411,14 @@
                         <span style="color: tomato; margin-left: 4px;">*</span>
                       </div>
                       <div nz-col class="gutter-row" [nzSpan]="12">
-                        <nz-select style="border-radius: 4px;" nzSize="default" nzMode="default"
+                        <!-- <nz-select style="border-radius: 4px;" nzSize="default" nzMode="default"
                           nzPlaceHolder="Nhập người phụ trách" formControlName='personInChargeId'
                           (ngModelChange)="onSelectPersonInCharge($event)" nzAllowClear nzShowSearch>
                           <nz-option *ngFor="let employee of employees"
                             nzLabel="{{employee.fullname}} - {{employee.username}}" [nzValue]="employee.id"></nz-option>
-                        </nz-select>
+                        </nz-select> -->
+                        <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
+                          formControlName='namePersonInCharge' placeholder="Nhập tên người phụ trách">
                       </div>
                     </div>
 
