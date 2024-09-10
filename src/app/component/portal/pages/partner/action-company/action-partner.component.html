@@ -894,7 +894,7 @@
                     <td [nzLeft]="fixedColumnBalanceFluctuation" [nzDisabled]="data.disabled">{{ data.transactionTime |
                       dateFormat }}</td>
                     <td [nzDisabled]="data.disabled">{{ data.implementPersonInfo }}</td>
-                    <td [nzDisabled]="data.disabled">{{ data.amount | currencyFormat }}</td>
+                    <td [nzDisabled]="data.disabled">{{ data.amount | currencyFormat }} đ</td>
                     <td [nzDisabled]="data.disabled">{{ data.transactionContent}}</td>
                   </tr>
                 </ng-container>
