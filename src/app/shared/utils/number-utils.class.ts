@@ -16,8 +16,8 @@ export class NumberUtils {
   }
 
   static getMoneyStr(value: number, decimalDigit: number = 0) {
-    if (value == 0) {
-      return value;
+    if (value == 0 || value == null || value == undefined) {
+      return '0';
     }
     const valueABS = Math.abs(value);
 

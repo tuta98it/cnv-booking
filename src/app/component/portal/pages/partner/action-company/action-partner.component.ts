@@ -1009,18 +1009,18 @@ export class ActionPartnerComponent implements OnInit {
       if (this.itemPartner?.id) {
         this.generalService.updateContractInfoForPartner(this.itemPartner?.id, valueSave).subscribe((res: any) => {
           if (res.isValid) {
-            this.notificationService.showNotification(Constant.SUCCESS, `Cập nhật thông tin hợp đồng doan nghiệp thành công`);
+            this.notificationService.showNotification(Constant.SUCCESS, `Cập nhật thông tin hợp đồng doanh nghiệp thành công`);
           } else {
             if (res.errors && res.errors.length > 0) {
               res.errors.forEach((el: any) => {
                 this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
               });
             } else {
-              this.notificationService.showNotification(Constant.ERROR, 'Cập nhật thông tin hợp đồng doan nghiệp không thành công');
+              this.notificationService.showNotification(Constant.ERROR, 'Cập nhật thông tin hợp đồng doanh nghiệp không thành công');
             }
           }
         }, error => {
-          this.notificationService.showNotification(Constant.ERROR, 'Cập nhật thông tin hợp đồng doan nghiệp thất bại do lỗi hệ thống');
+          this.notificationService.showNotification(Constant.ERROR, 'Cập nhật thông tin hợp đồng doanh nghiệp thất bại do lỗi hệ thống');
         });
       } else {
         this.msg.error(`Doanh nghiệp không tồn tại`);
@@ -1090,7 +1090,6 @@ export class ActionPartnerComponent implements OnInit {
 
 
   showLockAccountConfirm(type: LockType, employee?: any): void {
-
     switch (type) {
       case LockType.SINGLE:
         employee.isLoadingActiveUser = true;

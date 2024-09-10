@@ -211,7 +211,7 @@
                   style="display: flex; align-items: center; padding: 8px 0;">
                   <div nz-col class="gutter-row fs-xl" [nzSpan]="24"
                     style="display: flex; align-items: center; color: #007AFF;">
-                    {{debtBearingSales?.currentBalance ? debtBearingSales?.currentBalance : '-' }} đ
+                    {{debtBearingSales?.currentBalance ? (debtBearingSales?.currentBalance | currencyFormat) : '-' }} đ
                   </div>
                 </div>
                 <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
@@ -223,7 +223,7 @@
                 <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
                   style="display: flex; align-items: center; padding: 8px 0;">
                   <div nz-col class="gutter-row fs-xl" [nzSpan]="24" style="display: flex; align-items: center;">
-                    {{debtBearingSales?.debtMax ? debtBearingSales?.debtMax : '-' }} đ
+                    {{debtBearingSales?.debtMax ? (debtBearingSales?.debtMax | currencyFormat) : '-' }} đ
                   </div>
                 </div>
               </div>
@@ -239,12 +239,14 @@
                   style="display: flex; align-items: center; padding: 8px 0;">
                   <div nz-col class="gutter-row fs-xl" [nzSpan]="24" style="display: flex; align-items: center;">
                     <span *ngIf="debtBearingSales?.amountIncurredDuringPeriod >= 0" style="color: #495057">
-                      {{debtBearingSales?.amountIncurredDuringPeriod ? debtBearingSales?.amountIncurredDuringPeriod :
+                      {{debtBearingSales?.amountIncurredDuringPeriod ? (debtBearingSales?.amountIncurredDuringPeriod |
+                      currencyFormat) :
                       '-'
                       }} đ
                     </span>
                     <span *ngIf="debtBearingSales?.amountIncurredDuringPeriod < 0" style="color: #900B09">
-                      ({{debtBearingSales?.amountIncurredDuringPeriod ? debtBearingSales?.amountIncurredDuringPeriod :
+                      ({{debtBearingSales?.amountIncurredDuringPeriod ? (debtBearingSales?.amountIncurredDuringPeriod |
+                      currencyFormat) :
                       '-'
                       }} đ)
                     </span>
@@ -260,7 +262,7 @@
                   style="display: flex; align-items: center; padding: 8px 0;">
                   <div nz-col class="gutter-row fs-xl" [nzSpan]="24"
                     style="display: flex; align-items: center; color: #188D47">
-                    {{debtBearingSales?.usageLimit ? debtBearingSales?.usageLimit : '-' }} đ
+                    {{debtBearingSales?.usageLimit ? (debtBearingSales?.usageLimit | currencyFormat) : '-' }} đ
                   </div>
                 </div>
               </div>
@@ -277,7 +279,8 @@
                   style="display: flex; align-items: center; padding: 8px 0;">
                   <div nz-col class="gutter-row fs-xl" [nzSpan]="24"
                     style="display: flex; align-items: center; color:  #007AFF;">
-                    {{debtFreeRevenue?.beginningBalance ? debtFreeRevenue?.beginningBalance : '-' }} đ
+                    {{debtFreeRevenue?.beginningBalance ? (debtFreeRevenue?.beginningBalance | currencyFormat) : '-' }}
+                    đ
                   </div>
                 </div>
                 <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
@@ -289,7 +292,8 @@
                 <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
                   style="display: flex; align-items: center; padding: 8px 0;">
                   <div nz-col class="gutter-row fs-xl" [nzSpan]="24" style="display: flex; align-items: center;">
-                    {{debtFreeRevenue?.increaseInGeneration ? debtFreeRevenue?.increaseInGeneration : '-' }} đ
+                    {{debtFreeRevenue?.increaseInGeneration ? (debtFreeRevenue?.increaseInGeneration | currencyFormat) :
+                    '-' }} đ
                   </div>
                 </div>
               </div>
@@ -306,7 +310,7 @@
                   <div nz-col class="gutter-row fs-xl" [nzSpan]="24"
                     style="display: flex; align-items: center; color: #900B09;">
                     ({{debtFreeRevenue?.decreaseInGeneration
-                    ? debtFreeRevenue?.decreaseInGeneration : '-' }} đ)
+                    ? (debtFreeRevenue?.decreaseInGeneration | currencyFormat) : '-' }} đ)
                   </div>
                 </div>
                 <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
@@ -319,7 +323,7 @@
                   style="display: flex; align-items: center; padding: 8px 0;">
                   <div nz-col class="gutter-row fs-xl" [nzSpan]="24"
                     style="display: flex; align-items: center; color: #007AFF;">
-                    {{debtFreeRevenue?.endingBalance ? debtFreeRevenue?.endingBalance : '-' }} đ
+                    {{debtFreeRevenue?.endingBalance ? (debtFreeRevenue?.endingBalance | currencyFormat): '-' }} đ
                   </div>
                 </div>
               </div>
@@ -752,20 +756,20 @@
           <div *ngIf="formBaseInfoCreatePartner.get('allowDebt')?.value == AllowDebtPartner.ALLOW"
             style="display: flex; justify-content: space-between; align-items: center; font-size: 16px;">
             <div>
-              Hạng mức sử dụng {{debtBearingSales?.usageLimit ? debtBearingSales?.usageLimit : '-' }} đ
+              Hạng mức sử dụng {{debtBearingSales?.usageLimit ? (debtBearingSales?.usageLimit | currencyFormat): '-' }} đ
             </div>
 
             <div>
-              Dư nợ đầu kỳ {{debtBearingSales?.beginningBalance ? debtBearingSales.beginningBalance : '-' }} đ
+              Dư nợ đầu kỳ {{debtBearingSales?.beginningBalance ? (debtBearingSales.beginningBalance | currencyFormat) : '-' }} đ
             </div>
 
             <div>
-              Phát sinh trong kỳ {{debtBearingSales?.amountIncurredDuringPeriod ?
+              Phát sinh trong kỳ {{(debtBearingSales?.amountIncurredDuringPeriod  | currencyFormat) ?
               debtBearingSales.amountIncurredDuringPeriod : '-' }} đ
             </div>
 
             <div>
-              Dư nợ cuối kỳ {{debtBearingSales?.endingBalance ? debtBearingSales.endingBalance : '-' }} đ
+              Dư nợ cuối kỳ {{debtBearingSales?.endingBalance ? (debtBearingSales.endingBalance | currencyFormat): '-' }} đ
             </div>
 
             <div>
@@ -778,22 +782,22 @@
           <div *ngIf="formBaseInfoCreatePartner.get('allowDebt')?.value == AllowDebtPartner.NOTALLOW"
             style="display: flex; justify-content: space-between; align-items: center; font-size: 16px;">
             <div>
-              Số dư đầu kỳ {{debtFreeRevenue?.beginningBalance ? debtFreeRevenue.beginningBalance : '-' }} đ
+              Số dư đầu kỳ {{debtFreeRevenue?.beginningBalance ? (debtFreeRevenue.beginningBalance | currencyFormat): '-' }} đ
             </div>
 
             <div>
-              Phát sinh tăng trong kỳ {{debtFreeRevenue?.increaseInGeneration ? debtFreeRevenue.increaseInGeneration :
+              Phát sinh tăng trong kỳ {{debtFreeRevenue?.increaseInGeneration ? (debtFreeRevenue.increaseInGeneration | currencyFormat) :
               '-' }} đ
             </div>
 
             <div style="color: #900B09;">
-              Phát sinh giảm trong kỳ ({{debtFreeRevenue?.decreaseInGeneration ? debtFreeRevenue.decreaseInGeneration :
+              Phát sinh giảm trong kỳ ({{debtFreeRevenue?.decreaseInGeneration ? (debtFreeRevenue.decreaseInGeneration | currencyFormat) :
               '-' }} đ)
             </div>
 
 
             <div>
-              Số dư cuối kỳ {{debtFreeRevenue?.endingBalance ? debtFreeRevenue.endingBalance : '-' }} đ
+              Số dư cuối kỳ {{debtFreeRevenue?.endingBalance ? (debtFreeRevenue.endingBalance | currencyFormat) : '-' }} đ
             </div>
 
           </div>
