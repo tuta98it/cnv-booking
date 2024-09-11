@@ -206,7 +206,7 @@
                       <nz-select style="border-radius: 4px;" nzSize="default" nzMode="default"
                         formControlName='directManagementUserId' nzPlaceHolder="Nhập người quản lý" nzAllowClear
                         nzShowSearch>
-                        <nz-option *ngFor="let employee of employees"
+                        <nz-option *ngFor="let employee of listOfCompanyEmployees"
                           nzLabel="{{employee.fullname}} - {{employee.username}}" [nzValue]="employee.id"></nz-option>
                       </nz-select>
                     </div>

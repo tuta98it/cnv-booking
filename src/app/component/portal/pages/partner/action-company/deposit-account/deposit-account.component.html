@@ -1,0 +1,81 @@
+<nz-modal [(nzVisible)]="isVisibleDepositAccount" nzTitle="Nạp tiền vào tài khoản"
+(nzOnCancel)="handleDepositAccountCancel()" (nzOnOk)="handleDepositAccountSave()"
+[nzOkLoading]="isDepositAccountOkLoading" nzMaskClosable="false">
+<div *nzModalContent>
+  <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
+    <div nz-col class="gutter-row" [nzSpan]="24">
+      <form [formGroup]="formDepositAccount">
+        <div>
+          <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+            style="display: flex; align-items: center; padding: 8px 0;">
+            <div nz-col class="gutter-row" [nzSpan]="8" style="display: flex; align-items: center;">
+              Số tiền nạp vào
+              <span style="color: tomato; margin-left: 4px;">*</span>
+            </div>
+            <div nz-col class="gutter-row" [nzSpan]="16">
+              <!-- <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
+                formControlName='amountDeposited' placeholder="Nhập số tiền nạp vào"> -->
+
+                <nz-input-group nzSuffix="VND">
+                  <input style="border-radius: 4px;" nz-input nzSize="default" formControlName="amountDeposited"
+                    nz-tooltip nzTooltipTrigger="focus" nzTooltipPlacement="topLeft"
+                    nzOverlayClassName="numeric-input" [nzTooltipTitle]="tooltipTitleAmount"
+                    placeholder="Số tiền cần nạp vào tài khoản" (click)="onClickInputAmount($event, 'amountDeposited')"
+                    (ngModelChange)="onChangeInputAmount($event, 'amountDeposited')" (blur)="onBlurInputAmount()">
+                </nz-input-group>
+            </div>
+          </div>
+
+          <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+            style="display: flex; align-items: center; padding: 8px 0;">
+            <div nz-col class="gutter-row" [nzSpan]="8" style="display: flex; align-items: center;">
+              Người thực hiện
+              <span style="color: tomato; margin-left: 4px;">*</span>
+            </div>
+            <div nz-col class="gutter-row" [nzSpan]="16">
+              <nz-select style="border-radius: 4px;" nzSize="default" nzMode="default"
+                formControlName='implementPersonId' nzPlaceHolder="Chọn người thực hiện" nzAllowClear
+                nzShowSearch>
+                <nz-option *ngFor="let employee of employees"
+                  nzLabel="{{employee.fullname}} - {{employee.username}}"
+                  [nzValue]="employee.id"></nz-option>
+              </nz-select>
+            </div>
+          </div>
+
+          <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+            style="display: flex; align-items: center; padding: 8px 0;">
+            <div nz-col class="gutter-row" [nzSpan]="8" style="display: flex; align-items: center;">
+              Nội dung nạp tiền
+              <span style="color: tomato; margin-left: 4px;">*</span>
+            </div>
+            <div nz-col class="gutter-row" [nzSpan]="16">
+              <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
+                formControlName='depositContent' placeholder="Nạp tiền vào tài khoản">
+
+                
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div *nzModalFooter>
+  <button nz-button nzDanger nzType="text" (click)="handleDepositAccountCancel()">
+    <div style="display: flex; align-items: center;">
+      <span nz-icon nzType="close"></span>
+      <span style="margin-left: 4px; line-height: normal;">Huỷ</span>
+    </div>
+  </button>
+
+  <!-- [nzLoading]="isDepositAccountOkLoading"  -->
+  <button nz-button nzType="default" style="margin-right: 8px;" (click)="handleDepositAccountSave()">
+    <div style="display: flex; align-items: center;">
+      <span nz-icon nzType="save"></span>
+      <span style="margin-left: 6px; line-height: normal;">Cập nhật</span>
+    </div>
+  </button>
+</div>
+</nz-modal>

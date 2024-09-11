@@ -90,7 +90,6 @@ export class ActionPartnerComponent implements OnInit {
   listOfEmployees: readonly any[] = [];
   displayDataEmployee: readonly any[] = [];
   formBaseInfoCreatePartner: FormGroup;
-  formDepositAccount: FormGroup;
   formBaseBusinessContractUpdate: FormGroup;
   settingUploadAuthorizationFile: UploadFileSetting;
   settingUploadBusinessLicenseFile: UploadFileSetting;
@@ -124,6 +123,10 @@ export class ActionPartnerComponent implements OnInit {
 
   isVisibleDepositAccount = false;
   isDepositAccountOkLoading = false;
+
+  formControlNameCurrent: string;
+  valueInputNumberAmount = '';
+  tooltipTitleAmount = 'Nhập số tiền';
   constructor(
     private msg: NzMessageService,
     private activatedRoute: ActivatedRoute,
@@ -157,7 +160,6 @@ export class ActionPartnerComponent implements OnInit {
     this.formBaseBusinessContractUpdate = this.formBuilder.group({
       partnerBusinessLicenseFileIDs: [null],
       partnerContractFileIDs: [null, [Validators.required]],
-      personInChargeId: [null, [Validators.required]],
       startTimeContractDate: [null, [Validators.required]],
       endTimeContractDate: [null, [Validators.required]],
       emailToReceiveInvoice: [null, [Validators.required]],
@@ -167,18 +169,14 @@ export class ActionPartnerComponent implements OnInit {
       warningLimitPrice: [null, [Validators.required]],
       typeOfServices: [null, [Validators.required]],
 
-      positionPersonInCharge: new FormControl({ value: null, disabled: true }),
-      phoneNumberPersonInCharge: new FormControl({ value: null, disabled: true }),
-      emailPersonInCharge: new FormControl({ value: null, disabled: true }),
-
+      personInChargeId: [null],
+      namePersonInCharge: new FormControl({ value: null, disabled: false }),
+      positionPersonInCharge: new FormControl({ value: null, disabled: false }),
+      phoneNumberPersonInCharge: new FormControl({ value: null, disabled: false }),
+      emailPersonInCharge: new FormControl({ value: null, disabled: false }),
     });
 
-    this.formDepositAccount = this.formBuilder.group({
-      id: [null],
-      amountDeposited: new FormControl({ value: null, disabled: false }, Validators.required),
-      implenmentPersonId: new FormControl({ value: null, disabled: false }, Validators.required),
-      depositContent: new FormControl({ value: null, disabled: false }, Validators.required),
-    });
+    
 
     this.settingTableListEmployeesForm = this.formBuilder.group({
       bordered: [false],
@@ -437,11 +435,76 @@ export class ActionPartnerComponent implements OnInit {
           this.debtBearingSales = result.debtBearingSales
           this.debtFreeRevenue = result.debtFreeRevenue
           this.listOfBalanceFluctuations = result.tableAccountBalancies;
+          let stt = 0;
+          this.listOfBalanceFluctuations.forEach(en => {
+            stt++;
+            en.stt = stt;
+          });
         });
       }
     });
     this.getEmployees();
   }
+
+
+  onChangeInputAmount(value: string, controlName?: string): void {
+    this.updateValueInputAmount(value);
+    this.formControlNameCurrent = controlName;
+  }
+
+
+  onClickInputAmount(event: any, controlName?: string): void {
+    const inputElement = event.target as HTMLInputElement;
+    this.valueInputNumberAmount = inputElement.value;
+    this.formControlNameCurrent = controlName;
+    this.updateValueInputAmount(this.valueInputNumberAmount);
+  }
+
+  // '.' at the end or only '-' in the input box.
+  onBlurInputAmount(): void {
+    if (this.valueInputNumberAmount.charAt(this.valueInputNumberAmount.length - 1) === '.' || this.valueInputNumberAmount === '-') {
+      this.updateValueInputAmount(this.valueInputNumberAmount.slice(0, -1));
+      this.tooltipTitleAmount = "0 đ"
+    }
+  }
+
+
+  updateValueInputAmount(value: string): void {
+    const reg = /^-?(0|[1-9][0-9]*)(\.[0-9]*)?$/;
+    if ((!isNaN(+value) && reg.test(value)) || value === '' || value === '-') {
+      this.valueInputNumberAmount = value;
+    }
+    // Chỉ cập nhật nếu giá trị khác
+    if (this.formControlNameCurrent) {
+      const control = this.formBaseBusinessContractUpdate.get(this.formControlNameCurrent);
+      if (control && control.value !== this.valueInputNumberAmount) {
+        control.setValue(this.valueInputNumberAmount, { emitEvent: false });
+      }
+    }
+    this.updateTooltipTitleAmount();
+  }
+
+  updateTooltipTitleAmount(): void {
+    this.tooltipTitleAmount = ((this.valueInputNumberAmount !== '-' ? this.formatNumber(this.valueInputNumberAmount) : '-') || '0') + " đ";
+  }
+
+  formatNumber(value: string): string {
+    const stringValue = `${value}`;
+    const list = stringValue.split('.');
+    const prefix = list[0].charAt(0) === '-' ? '-' : '';
+    let num = prefix ? list[0].slice(1) : list[0];
+    let result = '';
+    while (num.length > 3) {
+      result = `,${num.slice(-3)}${result}`;
+      num = num.slice(0, num.length - 3);
+    }
+    if (num) {
+      result = num + result;
+    }
+    return `${prefix}${result}${list[1] ? `.${list[1]}` : ''}`;
+  }
+
+
 
   private async resetFormBaseInfoCreatePartner(itemPartner: any) {
     this.formBaseInfoCreatePartner.reset({
@@ -484,10 +547,11 @@ export class ActionPartnerComponent implements OnInit {
       debtMax: itemPartner?.debtMax,
       warningLimitPrice: itemPartner?.warningLimitPrice,
       typeOfServices: itemPartner?.typeOfServices,
-      positionPersonInCharge: { value: itemPartner?.positionPersonInCharge, disabled: true },
-      phoneNumberPersonInCharge: { value: itemPartner?.phoneNumberPersonInCharge, disabled: true },
-      emailPersonInCharge: { value: itemPartner?.emailPersonInCharge, disabled: true }
+      // positionPersonInCharge: { value: itemPartner?.positionPersonInCharge, disabled: false },
+      // phoneNumberPersonInCharge: { value: itemPartner?.phoneNumberPersonInCharge, disabled: false },
+      // emailPersonInCharge: { value: itemPartner?.emailPersonInCharge, disabled: false }
     });
+    this.onSelectPersonInCharge(itemPartner.personInChargeId);
     // Assuming typeOfServices is a string representation of the array
     const typeOfServices: string = itemPartner.typeOfServices;
     const selectedServices = JSON.parse(typeOfServices) as number[]; // Convert the string to an array of numbers
@@ -608,7 +672,18 @@ export class ActionPartnerComponent implements OnInit {
 
   }
 
-
+  private updateBalanceFluctuationsBy(){
+    this.getBalanceFluctuationsByPartnerId(this.itemPartner?.id).then((result: any) => {
+      this.debtBearingSales = result.debtBearingSales
+      this.debtFreeRevenue = result.debtFreeRevenue
+      this.listOfBalanceFluctuations = result.tableAccountBalancies;
+      let stt = 0;
+      this.listOfBalanceFluctuations.forEach(en => {
+        stt++;
+        en.stt = stt;
+      });
+    });
+  }
 
   currentPageDataChangeEmployee($event: readonly any[]): void {
     this.displayDataEmployee = $event;
@@ -806,7 +881,7 @@ export class ActionPartnerComponent implements OnInit {
   }
 
 
-  handleRemoveUploadBusinessLicenseFile = (file: NzUploadFile) =>{
+  handleRemoveUploadBusinessLicenseFile = (file: NzUploadFile) => {
     if (file?.uid) {
       this.generalService.removeFilePartner(file.uid).subscribe({
         next: (res: any) => {
@@ -969,6 +1044,7 @@ export class ActionPartnerComponent implements OnInit {
   async onSelectPersonInCharge(employeeId: any) {
     try {
       const itemEmployee = await this.getEmployeeById(employeeId);
+      this.formBaseBusinessContractUpdate.controls['namePersonInCharge'].setValue(itemEmployee?.fullname ?? "");
       this.formBaseBusinessContractUpdate.controls['positionPersonInCharge'].setValue(itemEmployee?.position ?? "");
       this.formBaseBusinessContractUpdate.controls['phoneNumberPersonInCharge'].setValue(itemEmployee?.phoneNo ?? "");
       this.formBaseBusinessContractUpdate.controls['emailPersonInCharge'].setValue(itemEmployee?.email ?? "");
@@ -1007,18 +1083,18 @@ export class ActionPartnerComponent implements OnInit {
       if (this.itemPartner?.id) {
         this.generalService.updateContractInfoForPartner(this.itemPartner?.id, valueSave).subscribe((res: any) => {
           if (res.isValid) {
-            this.notificationService.showNotification(Constant.SUCCESS, `Cập nhật thông tin hợp đồng doan nghiệp thành công`);
+            this.notificationService.showNotification(Constant.SUCCESS, `Cập nhật thông tin hợp đồng doanh nghiệp thành công`);
           } else {
             if (res.errors && res.errors.length > 0) {
               res.errors.forEach((el: any) => {
                 this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
               });
             } else {
-              this.notificationService.showNotification(Constant.ERROR, 'Cập nhật thông tin hợp đồng doan nghiệp không thành công');
+              this.notificationService.showNotification(Constant.ERROR, 'Cập nhật thông tin hợp đồng doanh nghiệp không thành công');
             }
           }
         }, error => {
-          this.notificationService.showNotification(Constant.ERROR, 'Cập nhật thông tin hợp đồng doan nghiệp thất bại do lỗi hệ thống');
+          this.notificationService.showNotification(Constant.ERROR, 'Cập nhật thông tin hợp đồng doanh nghiệp thất bại do lỗi hệ thống');
         });
       } else {
         this.msg.error(`Doanh nghiệp không tồn tại`);
@@ -1088,7 +1164,6 @@ export class ActionPartnerComponent implements OnInit {
 
 
   showLockAccountConfirm(type: LockType, employee?: any): void {
-
     switch (type) {
       case LockType.SINGLE:
         employee.isLoadingActiveUser = true;
@@ -1249,35 +1324,36 @@ export class ActionPartnerComponent implements OnInit {
     this.isVisibleDepositAccount = true;
   }
 
-  handleDepositAccountSave(): void {
-    this.isDepositAccountOkLoading = true;
-    if (this.formDepositAccount.valid) {
-      let valueSave = this.formDepositAccount.value;
-      this.generalService.depositAccount(valueSave).subscribe((res: any) => {
-        if (res.isValid) {
-          this.isDepositAccountOkLoading = true;
-          this.notificationService.showNotification(Constant.SUCCESS, `Nạp tiền cho doanh nghiệp thành công`);
-        } else {
-          if (res.errors && res.errors.length > 0) {
-            res.errors.forEach((el: any) => {
-              this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
-            });
-          } else {
-            this.notificationService.showNotification(Constant.ERROR, 'Nạp tiền cho doanh nghiệp không thành công');
-          }
-        }
-      }, error => {
-        this.notificationService.showNotification(Constant.ERROR, 'Nạp tiền cho doanh nghiệp thất bại do lỗi hệ thống');
-      });
-    } else {
-      // Đánh dấu tất cả các trường là đã được chạm (touched) để hiển thị lỗi
-      this.formDepositAccount.markAllAsTouched();
-      // this.notificationService.showNotification(Constant.SUCCESS, "Tồn tại trường thông tin chưa được nhập");
-      this.msg.error(`Tồn tại trường thông tin chưa được nhập`);
-    }
-  }
+  // handleDepositAccountSave(): void {
+  //   this.isDepositAccountOkLoading = true;
+  //   if (this.formDepositAccount.valid) {
+  //     let valueSave = this.formDepositAccount.value;
+  //     this.generalService.depositAccount(valueSave).subscribe((res: any) => {
+  //       if (res.isValid) {
+  //         this.isDepositAccountOkLoading = true;
+  //         this.notificationService.showNotification(Constant.SUCCESS, `Nạp tiền cho doanh nghiệp thành công`);
+  //       } else {
+  //         if (res.errors && res.errors.length > 0) {
+  //           res.errors.forEach((el: any) => {
+  //             this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+  //           });
+  //         } else {
+  //           this.notificationService.showNotification(Constant.ERROR, 'Nạp tiền cho doanh nghiệp không thành công');
+  //         }
+  //       }
+  //     }, error => {
+  //       this.notificationService.showNotification(Constant.ERROR, 'Nạp tiền cho doanh nghiệp thất bại do lỗi hệ thống');
+  //     });
+  //   } else {
+  //     // Đánh dấu tất cả các trường là đã được chạm (touched) để hiển thị lỗi
+  //     this.formDepositAccount.markAllAsTouched();
+  //     // this.notificationService.showNotification(Constant.SUCCESS, "Tồn tại trường thông tin chưa được nhập");
+  //     this.msg.error(`Tồn tại trường thông tin chưa được nhập`);
+  //   }
+  // }
 
   handleDepositAccountCancel(): void {
     this.isVisibleDepositAccount = false;
+    this.updateBalanceFluctuationsBy();
   }
 }

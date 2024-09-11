@@ -4,12 +4,14 @@ import { GeneralService } from 'src/app/service/general-service';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { PartnerRoutingModule } from './partner-routing.module';
 import { ActionPartnerComponent } from './action-company/action-partner.component';
+import { DepositAccountComponent } from './action-company/deposit-account/deposit-account.component';
 
 
 
 @NgModule({
   declarations: [
     ActionPartnerComponent,
+    DepositAccountComponent,
   ],
   imports: [
     SharedModule,
