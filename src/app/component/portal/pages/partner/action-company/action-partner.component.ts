@@ -1086,7 +1086,7 @@ export class ActionPartnerComponent implements OnInit {
     this.formBaseBusinessContractUpdate.controls['typeOfServices'].setValue(JSON.stringify(partnerTypeOfServices));
 
     if (this.formBaseBusinessContractUpdate.valid) {
-      if (this.formBaseInfoCreatePartner.get('allowDebt')?.value == AllowDebtPartner.NOTALLOW) {
+      if (this.formBaseInfoCreatePartner.get('allowDebt')?.value == AllowDebtPartner.NOT_ALLOW) {
         this.formBaseBusinessContractUpdate.controls['debtMax'].setValue(null);
         this.formBaseBusinessContractUpdate.controls['warningLimitPrice'].setValue(null);
       }
