@@ -109,7 +109,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   tooltipTitleAmount = 'Nhập số tiền';
 
   @ViewChild('inputElementAmount', { static: false }) inputElementAmount?: ElementRef
-  formControlNameCurrent: string;
+
   isLoadingButtonSaveAirlineTicketInfo: boolean = false;
   constructor(
     public translate: TranslateService,
@@ -163,34 +163,34 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
 
   onChangeInputAmount(value: string, controlName?: string): void {
     this.updateValueInputAmount(value);
-    this.formControlNameCurrent = controlName;
+
   }
 
 
   onClickInputAmount(event: any, controlName?: string): void {
     const inputElement = event.target as HTMLInputElement;
     this.valueInputNumberAmount = inputElement.value;
-    this.formControlNameCurrent = controlName;
+
     this.updateValueInputAmount(this.valueInputNumberAmount);
   }
 
   // '.' at the end or only '-' in the input box.
-  onBlurInputAmount(): void {
+  onBlurInputAmount(controlName?: string): void {
     if (this.valueInputNumberAmount.charAt(this.valueInputNumberAmount.length - 1) === '.' || this.valueInputNumberAmount === '-') {
-      this.updateValueInputAmount(this.valueInputNumberAmount.slice(0, -1));
+      this.updateValueInputAmount(this.valueInputNumberAmount.slice(0, -1), controlName);
       this.tooltipTitleAmount = "0 đ"
     }
   }
 
 
-  updateValueInputAmount(value: string): void {
+  updateValueInputAmount(value: string, controlName?: string): void {
     const reg = /^-?(0|[1-9][0-9]*)(\.[0-9]*)?$/;
     if ((!isNaN(+value) && reg.test(value)) || value === '' || value === '-') {
       this.valueInputNumberAmount = value;
     }
     // Chỉ cập nhật nếu giá trị khác
-    if (this.formControlNameCurrent) {
-      const control = this.formAirlineTicketPopup.get(this.formControlNameCurrent);
+    if (controlName) {
+      const control = this.formAirlineTicketPopup.get(controlName);
       if (control && control.value !== this.valueInputNumberAmount) {
         control.setValue(this.valueInputNumberAmount, { emitEvent: false });
       }

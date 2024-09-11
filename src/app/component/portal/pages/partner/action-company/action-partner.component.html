@@ -28,14 +28,14 @@
           <div style="display: flex; justify-content: space-between; align-items: center;">
             <span style="font-weight: 500; font-size: 18px;">Thông tin cơ bản</span>
             <div>
-              <button [disabled]="!isActiveEditBaseInfo" nz-button nzType="primary" style="margin-right: 8px;"
+              <button *ngIf="isActiveEditBaseInfo" nz-button nzType="primary" style="margin-right: 8px;"
                 (click)="saveBaseInfoPartner()">
                 <div style="display: flex; align-items: center;">
                   <span nz-icon nzType="save"></span>
                   <span style="margin-left: 6px; line-height: normal;">Lưu lại</span>
                 </div>
               </button>
-              <button [disabled]="isActiveEditBaseInfo" nz-button nzType="primary" style="margin-right: 8px;"
+              <button *ngIf="!isActiveEditBaseInfo" nz-button nzType="primary" style="margin-right: 8px;"
                 (click)="editBaseInfoPartner()">
                 <div style="display: flex; align-items: center;">
                   <span nz-icon nzType="edit"></span>
@@ -527,6 +527,7 @@
                     </div>
 
                     <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                      *ngIf="formBaseInfoCreatePartner.get('allowDebt')?.value == AllowDebtPartner.ALLOW"
                       style="display: flex; align-items: center; padding: 8px 0;">
                       <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
                         Hạn mức tối đa
@@ -541,12 +542,13 @@
                             nz-tooltip nzTooltipTrigger="focus" nzTooltipPlacement="topLeft"
                             nzOverlayClassName="numeric-input" [nzTooltipTitle]="tooltipTitleAmount"
                             placeholder="Nhập hạn mức tối đa" (click)="onClickInputAmount($event, 'debtMax')"
-                            (ngModelChange)="onChangeInputAmount($event, 'debtMax')" (blur)="onBlurInputAmount()">
+                            (ngModelChange)="onChangeInputAmount($event, 'debtMax')" (blur)="onBlurInputAmount('debtMax')">
                         </nz-input-group>
                       </div>
                     </div>
 
                     <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                      *ngIf="formBaseInfoCreatePartner.get('allowDebt')?.value == AllowDebtPartner.ALLOW"
                       style="display: flex; align-items: center; padding: 8px 0;">
                       <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
                         Hạn mức cảnh báo
@@ -563,7 +565,7 @@
                             [nzTooltipTitle]="tooltipTitleAmount" placeholder="Nhập hạn mức cảnh báo"
                             (click)="onClickInputAmount($event, 'warningLimitPrice')"
                             (ngModelChange)="onChangeInputAmount($event, 'warningLimitPrice')"
-                            (blur)="onBlurInputAmount()">
+                            (blur)="onBlurInputAmount('warningLimitPrice')">
                         </nz-input-group>
                       </div>
                     </div>
@@ -785,7 +787,7 @@
 
             <div>
               Phát sinh trong kỳ {{debtBearingSales?.amountIncurredDuringPeriod?
-              (debtBearingSales.amountIncurredDuringPeriod  | currencyFormat): '-' }} đ
+              (debtBearingSales.amountIncurredDuringPeriod | currencyFormat): '-' }} đ
             </div>
 
             <div>
@@ -843,10 +845,8 @@
                   <span style="margin: 0 6px; line-height: normal;">Nạp tiền tài khoản</span>
                 </div>
               </button>
-              <app-deposit-account [isVisibleDepositAccount]="isVisibleDepositAccount"
-                [employees]="employees"
-                [partnerId]="itemPartner?.id"
-                (cancel)="handleDepositAccountCancel()">
+              <app-deposit-account [isVisibleDepositAccount]="isVisibleDepositAccount" [employees]="employees"
+                [partnerId]="itemPartner?.id" (cancel)="handleDepositAccountCancel()">
               </app-deposit-account>
 
 

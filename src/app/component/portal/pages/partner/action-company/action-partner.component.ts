@@ -124,7 +124,7 @@ export class ActionPartnerComponent implements OnInit {
   isVisibleDepositAccount = false;
   isDepositAccountOkLoading = false;
 
-  formControlNameCurrent: string;
+
   valueInputNumberAmount = '';
   tooltipTitleAmount = 'Nhập số tiền';
   constructor(
@@ -165,18 +165,19 @@ export class ActionPartnerComponent implements OnInit {
       emailToReceiveInvoice: [null, [Validators.required]],
       paymentPeriodType: [null, [Validators.required]],
       dayOfPeriodType: [null, [Validators.required]],
-      debtMax: [null, [Validators.required]],
-      warningLimitPrice: [null, [Validators.required]],
+      debtMax: [null, [this.formBaseInfoCreatePartner.get('allowDebt')?.value == AllowDebtPartner.ALLOW ? Validators.required : Validators.nullValidator]],
+      warningLimitPrice: [null, [this.formBaseInfoCreatePartner.get('allowDebt')?.value == AllowDebtPartner.ALLOW ? Validators.required : Validators.nullValidator]],
+
       typeOfServices: [null, [Validators.required]],
 
       personInChargeId: [null],
-      namePersonInCharge: new FormControl({ value: null, disabled: false }),
-      positionPersonInCharge: new FormControl({ value: null, disabled: false }),
-      phoneNumberPersonInCharge: new FormControl({ value: null, disabled: false }),
-      emailPersonInCharge: new FormControl({ value: null, disabled: false }),
+      namePersonInCharge: new FormControl({ value: null, disabled: false }, Validators.required),
+      positionPersonInCharge: new FormControl({ value: null, disabled: false }, Validators.required),
+      phoneNumberPersonInCharge: new FormControl({ value: null, disabled: false }, Validators.required),
+      emailPersonInCharge: new FormControl({ value: null, disabled: false }, Validators.required),
     });
 
-    
+
 
     this.settingTableListEmployeesForm = this.formBuilder.group({
       bordered: [false],
@@ -448,35 +449,37 @@ export class ActionPartnerComponent implements OnInit {
 
 
   onChangeInputAmount(value: string, controlName?: string): void {
-    this.updateValueInputAmount(value);
-    this.formControlNameCurrent = controlName;
+    this.updateValueInputAmount(value, controlName);
+
   }
 
 
   onClickInputAmount(event: any, controlName?: string): void {
     const inputElement = event.target as HTMLInputElement;
     this.valueInputNumberAmount = inputElement.value;
-    this.formControlNameCurrent = controlName;
-    this.updateValueInputAmount(this.valueInputNumberAmount);
+
+    this.updateValueInputAmount(this.valueInputNumberAmount, controlName);
   }
 
   // '.' at the end or only '-' in the input box.
-  onBlurInputAmount(): void {
+  onBlurInputAmount(controlName?: string): void {
     if (this.valueInputNumberAmount.charAt(this.valueInputNumberAmount.length - 1) === '.' || this.valueInputNumberAmount === '-') {
-      this.updateValueInputAmount(this.valueInputNumberAmount.slice(0, -1));
+      this.updateValueInputAmount(this.valueInputNumberAmount.slice(0, -1), controlName);
       this.tooltipTitleAmount = "0 đ"
     }
   }
 
 
-  updateValueInputAmount(value: string): void {
+  updateValueInputAmount(value: string, controlName?: string): void {
+    value = JSON.stringify(JSON.parse(value));
     const reg = /^-?(0|[1-9][0-9]*)(\.[0-9]*)?$/;
     if ((!isNaN(+value) && reg.test(value)) || value === '' || value === '-') {
       this.valueInputNumberAmount = value;
     }
+
     // Chỉ cập nhật nếu giá trị khác
-    if (this.formControlNameCurrent) {
-      const control = this.formBaseBusinessContractUpdate.get(this.formControlNameCurrent);
+    if (controlName) {
+      const control = this.formBaseBusinessContractUpdate.get(controlName);
       if (control && control.value !== this.valueInputNumberAmount) {
         control.setValue(this.valueInputNumberAmount, { emitEvent: false });
       }
@@ -535,6 +538,8 @@ export class ActionPartnerComponent implements OnInit {
   }
 
   private async resetFormContractUpdatePartner(itemPartner: any) {
+    console.log('itemPartner: ', itemPartner);
+
     this.formBaseBusinessContractUpdate.reset({
       // partnerBusinessLicenseFileIDs: this.itemPartner?.partnerBusinessLicenseFileIDs,
       // partnerContractFileIDs: this.itemPartner?.partnerContractFileIDs,
@@ -551,6 +556,8 @@ export class ActionPartnerComponent implements OnInit {
       // phoneNumberPersonInCharge: { value: itemPartner?.phoneNumberPersonInCharge, disabled: false },
       // emailPersonInCharge: { value: itemPartner?.emailPersonInCharge, disabled: false }
     });
+    console.log('formBaseBusinessContractUpdate: ', this.formBaseBusinessContractUpdate.value);
+
     this.onSelectPersonInCharge(itemPartner.personInChargeId);
     // Assuming typeOfServices is a string representation of the array
     const typeOfServices: string = itemPartner.typeOfServices;
@@ -672,7 +679,7 @@ export class ActionPartnerComponent implements OnInit {
 
   }
 
-  private updateBalanceFluctuationsBy(){
+  private updateBalanceFluctuationsBy() {
     this.getBalanceFluctuationsByPartnerId(this.itemPartner?.id).then((result: any) => {
       this.debtBearingSales = result.debtBearingSales
       this.debtFreeRevenue = result.debtFreeRevenue
@@ -1079,6 +1086,10 @@ export class ActionPartnerComponent implements OnInit {
     this.formBaseBusinessContractUpdate.controls['typeOfServices'].setValue(JSON.stringify(partnerTypeOfServices));
 
     if (this.formBaseBusinessContractUpdate.valid) {
+      if (this.formBaseInfoCreatePartner.get('allowDebt')?.value == AllowDebtPartner.NOTALLOW) {
+        this.formBaseBusinessContractUpdate.controls['debtMax'].setValue(null);
+        this.formBaseBusinessContractUpdate.controls['warningLimitPrice'].setValue(null);
+      }
       let valueSave = this.formBaseBusinessContractUpdate.value;
       if (this.itemPartner?.id) {
         this.generalService.updateContractInfoForPartner(this.itemPartner?.id, valueSave).subscribe((res: any) => {
