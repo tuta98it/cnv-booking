@@ -459,7 +459,7 @@ export class ActionPartnerComponent implements OnInit {
 
     this.listUploadAuthorizationFile = [];
     //console.log('partnerFiles : ', itemPartner.partnerFiles);
-    let partnerAuthorizationFiles = await itemPartner.partnerFiles.filter((f: { type: TypeOfDocument }) => f.type == TypeOfDocument.AuthorizationFile);
+    let partnerAuthorizationFiles = await itemPartner?.partnerFiles.filter((f: { type: TypeOfDocument }) => f.type == TypeOfDocument.AuthorizationFile);
     //console.log('partnerAuthorizationFiles : ', partnerAuthorizationFiles);
     for (const partnerFile of partnerAuthorizationFiles) {
       const objPartner = {
@@ -498,7 +498,7 @@ export class ActionPartnerComponent implements OnInit {
     }));
 
     this.listUploadBusinessLicenseFile = [];
-    const partnerBusinessLicenseFiles = await itemPartner.partnerFiles.filter((f: { type: TypeOfDocument }) => f.type == TypeOfDocument.BusinessLicenseFile);
+    const partnerBusinessLicenseFiles = await itemPartner?.partnerFiles.filter((f: { type: TypeOfDocument }) => f.type == TypeOfDocument.BusinessLicenseFile);
     for (const partnerFile of partnerBusinessLicenseFiles) {
       const objPartner = {
         uid: partnerFile.id.toString(),
@@ -508,7 +508,7 @@ export class ActionPartnerComponent implements OnInit {
       this.listUploadBusinessLicenseFile.push(objPartner)
     }
     this.listUploadContractFile = [];
-    const partnerContractFileFiles = await itemPartner.partnerFiles.filter((f: { type: TypeOfDocument }) => f.type == TypeOfDocument.ContractFile);
+    const partnerContractFileFiles = await itemPartner?.partnerFiles.filter((f: { type: TypeOfDocument }) => f.type == TypeOfDocument.ContractFile);
     for (const partnerFile of partnerContractFileFiles) {
       const objPartner = {
         uid: partnerFile.id.toString(),
