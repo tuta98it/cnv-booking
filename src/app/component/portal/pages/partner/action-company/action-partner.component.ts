@@ -127,6 +127,8 @@ export class ActionPartnerComponent implements OnInit {
 
   valueInputNumberAmount = '';
   tooltipTitleAmount = 'Nhập số tiền';
+  isEditBaseBusinessContract: Boolean = false;
+
   constructor(
     private msg: NzMessageService,
     private activatedRoute: ActivatedRoute,
@@ -159,22 +161,22 @@ export class ActionPartnerComponent implements OnInit {
 
     this.formBaseBusinessContractUpdate = this.formBuilder.group({
       partnerBusinessLicenseFileIDs: [null],
-      partnerContractFileIDs: [null, [Validators.required]],
-      startTimeContractDate: [null, [Validators.required]],
-      endTimeContractDate: [null, [Validators.required]],
-      emailToReceiveInvoice: [null, [Validators.required]],
-      paymentPeriodType: [null, [Validators.required]],
-      dayOfPeriodType: [null, [Validators.required]],
-      debtMax: [null, [this.formBaseInfoCreatePartner.get('allowDebt')?.value == AllowDebtPartner.ALLOW ? Validators.required : Validators.nullValidator]],
-      warningLimitPrice: [null, [this.formBaseInfoCreatePartner.get('allowDebt')?.value == AllowDebtPartner.ALLOW ? Validators.required : Validators.nullValidator]],
+      partnerContractFileIDs: new FormControl({ value: null, disabled: true }, Validators.required),
+      startTimeContractDate: new FormControl({ value: null, disabled: true }, Validators.required),
+      endTimeContractDate: new FormControl({ value: null, disabled: true }, Validators.required),
+      emailToReceiveInvoice: new FormControl({ value: null, disabled: true }, Validators.required),
+      paymentPeriodType: new FormControl({ value: null, disabled: true }, Validators.required),
+      dayOfPeriodType: new FormControl({ value: null, disabled: true }, Validators.required),
+      debtMax: [{ value: null, disabled: true }, [this.formBaseInfoCreatePartner.get('allowDebt')?.value == AllowDebtPartner.ALLOW ? Validators.required : Validators.nullValidator]],
+      warningLimitPrice: [{ value: null, disabled: true }, [this.formBaseInfoCreatePartner.get('allowDebt')?.value == AllowDebtPartner.ALLOW ? Validators.required : Validators.nullValidator]],
 
-      typeOfServices: [null, [Validators.required]],
+      typeOfServices: new FormControl({ value: null, disabled: true }, Validators.required),
 
       personInChargeId: [null],
-      namePersonInCharge: new FormControl({ value: null, disabled: false }, Validators.required),
-      positionPersonInCharge: new FormControl({ value: null, disabled: false }, Validators.required),
-      phoneNumberPersonInCharge: new FormControl({ value: null, disabled: false }, Validators.required),
-      emailPersonInCharge: new FormControl({ value: null, disabled: false }, Validators.required),
+      namePersonInCharge: new FormControl({ value: null, disabled: true }, Validators.required),
+      positionPersonInCharge: new FormControl({ value: null, disabled: true }, Validators.required),
+      phoneNumberPersonInCharge: new FormControl({ value: null, disabled: true }, Validators.required),
+      emailPersonInCharge: new FormControl({ value: null, disabled: true }, Validators.required),
     });
 
 
@@ -961,6 +963,7 @@ export class ActionPartnerComponent implements OnInit {
         this.generalService.updateBaseInfoById(valueSave, this.itemPartner?.id).subscribe((res: any) => {
           if (res.isValid) {
             this.notificationService.showNotification(Constant.SUCCESS, `Cập nhật thông tin doanh nghiệp thành công`);
+            this.changeValueBaseBusinessContractReversal(true);
             this.itemPartner = res.data;
             this.setIsActiveEditBaseInfo(this.itemPartner?.id == null);
           } else {
@@ -1094,6 +1097,7 @@ export class ActionPartnerComponent implements OnInit {
         this.generalService.updateContractInfoForPartner(this.itemPartner?.id, valueSave).subscribe((res: any) => {
           if (res.isValid) {
             this.notificationService.showNotification(Constant.SUCCESS, `Cập nhật thông tin hợp đồng doanh nghiệp thành công`);
+            this.changeValueBaseBusinessContractReversal()
           } else {
             if (res.errors && res.errors.length > 0) {
               res.errors.forEach((el: any) => {
@@ -1115,6 +1119,19 @@ export class ActionPartnerComponent implements OnInit {
       this.formBaseInfoCreatePartner.markAllAsTouched();
       // this.notificationService.showNotification(Constant.SUCCESS, "Tồn tại trường thông tin chưa được nhập");
       this.msg.error(`Tồn tại trường thông tin chưa được nhập`);
+    }
+  }
+
+  changeValueBaseBusinessContractReversal(value?: boolean) {
+    if (value) {
+      this.isEditBaseBusinessContract = value;
+    } else {
+      this.isEditBaseBusinessContract = !this.isEditBaseBusinessContract
+    }
+    if (this.isEditBaseBusinessContract) {
+      this.formBaseBusinessContractUpdate.enable();
+    } else {
+      this.formBaseBusinessContractUpdate.disable();
     }
   }
 
