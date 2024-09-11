@@ -113,9 +113,9 @@
                       Cho phép công nợ
                     </div>
                     <div nz-col class="gutter-row" [nzSpan]="14">
-                      <nz-radio-group formControlName='allowDebt'>
+                      <nz-radio-group formControlName='allowDebt' (ngModelChange)="changeAllowDebt()">
                         <label nz-radio [nzValue]="AllowDebtPartner.ALLOW">Có</label>
-                        <label nz-radio [nzValue]="AllowDebtPartner.NOTALLOW">Không</label>
+                        <label nz-radio [nzValue]="AllowDebtPartner.NOT_ALLOW">Không</label>
                       </nz-radio-group>
                     </div>
                   </div>
@@ -192,7 +192,7 @@
                         [nzShowUploadList]="settingUploadAuthorizationFile?.showUploadList"
                         [nzFileList]="listUploadAuthorizationFile"
                         (nzChange)="handleChangeUploadAuthorizationFile($event)">
-                        <button nz-button nzType="default" [nzSize]="'default'" nzShape="round"><span nz-icon
+                        <button [disabled]="!isActiveEditBaseInfo" nz-button nzType="default" [nzSize]="'default'" nzShape="round"><span nz-icon
                             nzType="upload"></span></button>
                       </nz-upload>
                     </div>
@@ -267,7 +267,7 @@
                 </div>
               </div>
 
-              <div *ngIf="formBaseInfoCreatePartner.get('allowDebt')?.value == AllowDebtPartner.NOTALLOW" nz-col
+              <div *ngIf="formBaseInfoCreatePartner.get('allowDebt')?.value == AllowDebtPartner.NOT_ALLOW" nz-col
                 class="gutter-row" [nzSpan]="4">
                 <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
                   style="display: flex; align-items: center; padding: 8px 0;">
@@ -297,7 +297,7 @@
                   </div>
                 </div>
               </div>
-              <div *ngIf="formBaseInfoCreatePartner.get('allowDebt')?.value == AllowDebtPartner.NOTALLOW" nz-col
+              <div *ngIf="formBaseInfoCreatePartner.get('allowDebt')?.value == AllowDebtPartner.NOT_ALLOW" nz-col
                 class="gutter-row" [nzSpan]="4">
                 <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
                   style="display: flex; align-items: center; padding: 8px 0;">
@@ -802,7 +802,7 @@
 
           </div>
 
-          <div *ngIf="formBaseInfoCreatePartner.get('allowDebt')?.value == AllowDebtPartner.NOTALLOW"
+          <div *ngIf="formBaseInfoCreatePartner.get('allowDebt')?.value == AllowDebtPartner.NOT_ALLOW"
             style="display: flex; justify-content: space-between; align-items: center; font-size: 16px;">
             <div>
               Số dư đầu kỳ {{debtFreeRevenue?.beginningBalance ? (debtFreeRevenue.beginningBalance | currencyFormat):

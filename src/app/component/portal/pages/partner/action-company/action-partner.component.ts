@@ -471,7 +471,6 @@ export class ActionPartnerComponent implements OnInit {
 
 
   updateValueInputAmount(value: string, controlName?: string): void {
-    value = JSON.stringify(JSON.parse(value));
     const reg = /^-?(0|[1-9][0-9]*)(\.[0-9]*)?$/;
     if ((!isNaN(+value) && reg.test(value)) || value === '' || value === '-') {
       this.valueInputNumberAmount = value;
@@ -1366,5 +1365,28 @@ export class ActionPartnerComponent implements OnInit {
   handleDepositAccountCancel(): void {
     this.isVisibleDepositAccount = false;
     this.updateBalanceFluctuationsBy();
+  }
+
+  changeAllowDebt() {
+    const allowDebt = this.formBaseInfoCreatePartner.get('allowDebt')?.value === AllowDebtPartner.ALLOW;
+    console.log("allowDebt: ", allowDebt);
+
+    // Update validators for debtMax and warningLimitPrice based on allowDebt
+    this.formBaseBusinessContractUpdate.get('debtMax')?.setValidators(
+      allowDebt ? Validators.required : Validators.nullValidator
+    );
+    this.formBaseBusinessContractUpdate.get('warningLimitPrice')?.setValidators(
+      allowDebt ? Validators.required : Validators.nullValidator
+    );
+
+    // Update the validation state of the entire form
+    this.formBaseBusinessContractUpdate.get('debtMax')?.updateValueAndValidity();
+    this.formBaseBusinessContractUpdate.get('warningLimitPrice')?.updateValueAndValidity();
+
+
+
+    // this.formBaseBusinessContractUpdate.updateValueAndValidity();
+    // this.formBaseBusinessContractUpdate.get('debtMax')?.updateValueAndValidity();
+    // this.formBaseBusinessContractUpdate.get('warningLimitPrice')?.updateValueAndValidity();
   }
 }
