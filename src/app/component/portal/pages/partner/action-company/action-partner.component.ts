@@ -539,8 +539,6 @@ export class ActionPartnerComponent implements OnInit {
   }
 
   private async resetFormContractUpdatePartner(itemPartner: any) {
-    console.log('itemPartner: ', itemPartner);
-
     this.formBaseBusinessContractUpdate.reset({
       // partnerBusinessLicenseFileIDs: this.itemPartner?.partnerBusinessLicenseFileIDs,
       // partnerContractFileIDs: this.itemPartner?.partnerContractFileIDs,
@@ -557,7 +555,6 @@ export class ActionPartnerComponent implements OnInit {
       // phoneNumberPersonInCharge: { value: itemPartner?.phoneNumberPersonInCharge, disabled: false },
       // emailPersonInCharge: { value: itemPartner?.emailPersonInCharge, disabled: false }
     });
-    console.log('formBaseBusinessContractUpdate: ', this.formBaseBusinessContractUpdate.value);
 
     this.onSelectPersonInCharge(itemPartner.personInChargeId);
     // Assuming typeOfServices is a string representation of the array
@@ -952,58 +949,62 @@ export class ActionPartnerComponent implements OnInit {
     }
   }
 
-  saveBaseInfoPartner() {
+  saveBaseInfoPartner(): Promise<any> {
+    return new Promise((resolve, rejects) => {
+      this.formBaseInfoCreatePartner.enable();
+      if (this.formBaseInfoCreatePartner.valid) {
+        let valueSave = this.formBaseInfoCreatePartner.value;
+        let listPartnerAuthorizationFileIDs = this.listUploadAuthorizationFile.map((t) => t.uid);
+        valueSave.partnerAuthorizationFileIDs = listPartnerAuthorizationFileIDs;
 
-    if (this.formBaseInfoCreatePartner.valid) {
-      let valueSave = this.formBaseInfoCreatePartner.value;
-      let listPartnerAuthorizationFileIDs = this.listUploadAuthorizationFile.map((t) => t.uid);
-      valueSave.partnerAuthorizationFileIDs = listPartnerAuthorizationFileIDs;
-
-      if (this.itemPartner?.id) {
-        this.generalService.updateBaseInfoById(valueSave, this.itemPartner?.id).subscribe((res: any) => {
-          if (res.isValid) {
-            this.notificationService.showNotification(Constant.SUCCESS, `Cập nhật thông tin doanh nghiệp thành công`);
-            this.changeValueBaseBusinessContractReversal(true);
-            this.itemPartner = res.data;
-            this.setIsActiveEditBaseInfo(this.itemPartner?.id == null);
-          } else {
-            if (res.errors && res.errors.length > 0) {
-              res.errors.forEach((el: any) => {
-                this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
-              });
+        if (this.itemPartner?.id) {
+          this.generalService.updateBaseInfoById(valueSave, this.itemPartner?.id).subscribe((res: any) => {
+            if (res.isValid) {
+              this.notificationService.showNotification(Constant.SUCCESS, `Cập nhật thông tin doanh nghiệp thành công`);
+              this.changeValueBaseBusinessContractReversal(true);
+              this.itemPartner = res.data;
+              this.setIsActiveEditBaseInfo(this.itemPartner?.id == null);
+              resolve(true);
             } else {
-              this.notificationService.showNotification(Constant.ERROR, 'Cập nhật thông tin doanh nghiệp không thành công');
+              if (res.errors && res.errors.length > 0) {
+                res.errors.forEach((el: any) => {
+                  this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+                });
+              } else {
+                this.notificationService.showNotification(Constant.ERROR, 'Cập nhật thông tin doanh nghiệp không thành công');
+              }
             }
-          }
-        }, error => {
-          this.notificationService.showNotification(Constant.ERROR, 'Cập nhật thông tin đối tác thất bại do lỗi hệ thống');
-        });
+          }, error => {
+            this.notificationService.showNotification(Constant.ERROR, 'Cập nhật thông tin đối tác thất bại do lỗi hệ thống');
+          });
+        } else {
+          this.generalService.addBaseInfoPartner(valueSave).subscribe((res: any) => {
+            if (res.isValid) {
+              this.notificationService.showNotification(Constant.SUCCESS, `Tạo mới thông tin doanh nghiệp thành công`);
+              this.itemPartner = res.data;
+              this.setIsActiveEditBaseInfo(this.itemPartner?.id == null);
+            } else {
+              if (res.errors && res.errors.length > 0) {
+                res.errors.forEach((el: any) => {
+                  this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+                });
+              } else {
+                this.notificationService.showNotification(Constant.ERROR, 'Tạo mới thông tin doanh nghiệp không thành công');
+              }
+            }
+          }, error => {
+            this.notificationService.showNotification(Constant.ERROR, 'Tạo mới thông tin đối tác thất bại do lỗi hệ thống');
+          });
+        }
+
       } else {
-        this.generalService.addBaseInfoPartner(valueSave).subscribe((res: any) => {
-          if (res.isValid) {
-            this.notificationService.showNotification(Constant.SUCCESS, `Tạo mới thông tin doanh nghiệp thành công`);
-            this.itemPartner = res.data;
-            this.setIsActiveEditBaseInfo(this.itemPartner?.id == null);
-          } else {
-            if (res.errors && res.errors.length > 0) {
-              res.errors.forEach((el: any) => {
-                this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
-              });
-            } else {
-              this.notificationService.showNotification(Constant.ERROR, 'Tạo mới thông tin doanh nghiệp không thành công');
-            }
-          }
-        }, error => {
-          this.notificationService.showNotification(Constant.ERROR, 'Tạo mới thông tin đối tác thất bại do lỗi hệ thống');
-        });
+        // Đánh dấu tất cả các trường là đã được chạm (touched) để hiển thị lỗi
+        this.formBaseInfoCreatePartner.markAllAsTouched();
+        // this.notificationService.showNotification(Constant.SUCCESS, "Tồn tại trường thông tin chưa được nhập");
+        this.msg.error(`Tồn tại trường thông tin chưa được nhập`);
       }
+    })
 
-    } else {
-      // Đánh dấu tất cả các trường là đã được chạm (touched) để hiển thị lỗi
-      this.formBaseInfoCreatePartner.markAllAsTouched();
-      // this.notificationService.showNotification(Constant.SUCCESS, "Tồn tại trường thông tin chưa được nhập");
-      this.msg.error(`Tồn tại trường thông tin chưa được nhập`);
-    }
   }
 
   editBaseInfoPartner() {
@@ -1078,48 +1079,52 @@ export class ActionPartnerComponent implements OnInit {
   }
 
   saveUpdateContractInfoForPartner() {
-    let partnerBusinessLicenseFileIds = this.listUploadBusinessLicenseFile?.map((bl: any) => bl.uid) ?? null;
-    this.formBaseBusinessContractUpdate.controls['partnerBusinessLicenseFileIDs'].setValue(partnerBusinessLicenseFileIds);
+    return new Promise((resolve, reject) => {
+      let partnerBusinessLicenseFileIds = this.listUploadBusinessLicenseFile?.map((bl: any) => bl.uid) ?? null;
+      this.formBaseBusinessContractUpdate.controls['partnerBusinessLicenseFileIDs'].setValue(partnerBusinessLicenseFileIds);
 
-    let partnerContractFileIds = this.listUploadContractFile?.map((bl: any) => bl.uid) ?? null;
-    this.formBaseBusinessContractUpdate.controls['partnerContractFileIDs'].setValue(partnerContractFileIds);
+      let partnerContractFileIds = this.listUploadContractFile?.map((bl: any) => bl.uid) ?? null;
+      this.formBaseBusinessContractUpdate.controls['partnerContractFileIDs'].setValue(partnerContractFileIds);
 
-    let partnerTypeOfServices = this.checkOptionsBusinessServiceVHL?.filter(option => option.checked).map(option => option.value) ?? null;
-    this.formBaseBusinessContractUpdate.controls['typeOfServices'].setValue(JSON.stringify(partnerTypeOfServices));
+      let partnerTypeOfServices = this.checkOptionsBusinessServiceVHL?.filter(option => option.checked).map(option => option.value) ?? null;
+      this.formBaseBusinessContractUpdate.controls['typeOfServices'].setValue(JSON.stringify(partnerTypeOfServices));
 
-    if (this.formBaseBusinessContractUpdate.valid) {
-      if (this.formBaseInfoCreatePartner.get('allowDebt')?.value == AllowDebtPartner.NOT_ALLOW) {
-        this.formBaseBusinessContractUpdate.controls['debtMax'].setValue(null);
-        this.formBaseBusinessContractUpdate.controls['warningLimitPrice'].setValue(null);
-      }
-      let valueSave = this.formBaseBusinessContractUpdate.value;
-      if (this.itemPartner?.id) {
-        this.generalService.updateContractInfoForPartner(this.itemPartner?.id, valueSave).subscribe((res: any) => {
-          if (res.isValid) {
-            this.notificationService.showNotification(Constant.SUCCESS, `Cập nhật thông tin hợp đồng doanh nghiệp thành công`);
-            this.changeValueBaseBusinessContractReversal()
-          } else {
-            if (res.errors && res.errors.length > 0) {
-              res.errors.forEach((el: any) => {
-                this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
-              });
+      if (this.formBaseBusinessContractUpdate.valid) {
+        if (this.formBaseInfoCreatePartner.get('allowDebt')?.value == AllowDebtPartner.NOT_ALLOW) {
+          this.formBaseBusinessContractUpdate.controls['debtMax'].setValue(null);
+          this.formBaseBusinessContractUpdate.controls['warningLimitPrice'].setValue(null);
+        }
+        let valueSave = this.formBaseBusinessContractUpdate.value;
+        if (this.itemPartner?.id) {
+          this.generalService.updateContractInfoForPartner(this.itemPartner?.id, valueSave).subscribe((res: any) => {
+            if (res.isValid) {
+              this.notificationService.showNotification(Constant.SUCCESS, `Cập nhật thông tin hợp đồng doanh nghiệp thành công`);
+              this.changeValueBaseBusinessContractReversal();
+              resolve(true);
             } else {
-              this.notificationService.showNotification(Constant.ERROR, 'Cập nhật thông tin hợp đồng doanh nghiệp không thành công');
+              if (res.errors && res.errors.length > 0) {
+                res.errors.forEach((el: any) => {
+                  this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+                });
+              } else {
+                this.notificationService.showNotification(Constant.ERROR, 'Cập nhật thông tin hợp đồng doanh nghiệp không thành công');
+              }
             }
-          }
-        }, error => {
-          this.notificationService.showNotification(Constant.ERROR, 'Cập nhật thông tin hợp đồng doanh nghiệp thất bại do lỗi hệ thống');
-        });
-      } else {
-        this.msg.error(`Doanh nghiệp không tồn tại`);
-      }
+          }, error => {
+            this.notificationService.showNotification(Constant.ERROR, 'Cập nhật thông tin hợp đồng doanh nghiệp thất bại do lỗi hệ thống');
+          });
+        } else {
+          this.msg.error(`Doanh nghiệp không tồn tại`);
+        }
 
-    } else {
-      // Đánh dấu tất cả các trường là đã được chạm (touched) để hiển thị lỗi
-      this.formBaseInfoCreatePartner.markAllAsTouched();
-      // this.notificationService.showNotification(Constant.SUCCESS, "Tồn tại trường thông tin chưa được nhập");
-      this.msg.error(`Tồn tại trường thông tin chưa được nhập`);
-    }
+      } else {
+        // Đánh dấu tất cả các trường là đã được chạm (touched) để hiển thị lỗi
+        this.formBaseInfoCreatePartner.markAllAsTouched();
+        // this.notificationService.showNotification(Constant.SUCCESS, "Tồn tại trường thông tin chưa được nhập");
+        this.msg.error(`Tồn tại trường thông tin chưa được nhập`);
+      }
+    });
+
   }
 
   changeValueBaseBusinessContractReversal(value?: boolean) {
@@ -1386,7 +1391,6 @@ export class ActionPartnerComponent implements OnInit {
 
   changeAllowDebt() {
     const allowDebt = this.formBaseInfoCreatePartner.get('allowDebt')?.value === AllowDebtPartner.ALLOW;
-    console.log("allowDebt: ", allowDebt);
 
     // Update validators for debtMax and warningLimitPrice based on allowDebt
     this.formBaseBusinessContractUpdate.get('debtMax')?.setValidators(
@@ -1405,5 +1409,45 @@ export class ActionPartnerComponent implements OnInit {
     // this.formBaseBusinessContractUpdate.updateValueAndValidity();
     // this.formBaseBusinessContractUpdate.get('debtMax')?.updateValueAndValidity();
     // this.formBaseBusinessContractUpdate.get('warningLimitPrice')?.updateValueAndValidity();
+  }
+
+
+  handlerSendApprovalRequest() {
+    this.saveBaseInfoPartner().then((result) => {
+      this.saveUpdateContractInfoForPartner().then((result) => {
+        this.sendApprovalRequest().then((data) => {
+          this.itemPartner = data;
+        })
+      })
+    })
+  }
+  sendApprovalRequest(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.generalService.sendApprovalRequest(this.itemPartner.id).subscribe({
+        next: (res: any) => {
+          if (res.isValid) {
+            this.notificationService.showNotification(Constant.SUCCESS, `Gửi duyệt thành công`);
+            resolve(res.data);
+            this.settingTableEmployeesValue.loading = false;
+          } else {
+            if (res.errors && res.errors.length > 0) {
+              res.errors.forEach((el: any) => {
+                this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+              });
+            } else {
+              this.notificationService.showNotification(Constant.ERROR, 'Lấy ra danh sách nhân viên doanh nghiệp không thành công');
+            }
+            reject(res.errors);
+          }
+        },
+        error: (err: any) => {
+          this.notificationService.showNotification(Constant.ERROR, 'Lấy ra danh sách nhân viên doanh nghiệp thất bại do lỗi hệ thống');
+          reject(err);
+        },
+        complete: () => {
+
+        }
+      });
+    });
   }
 }
