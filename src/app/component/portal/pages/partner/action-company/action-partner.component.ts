@@ -475,8 +475,6 @@ export class ActionPartnerComponent implements OnInit {
 
 
     this.isLockPage.valueChanges.subscribe((value: any) => {
-      console.log(value);
-
       if (value == true) {
         this.isActiveEditBaseInfo.setValue(false);
         this.changeValueBaseBusinessContractReversal(false)
@@ -502,6 +500,8 @@ export class ActionPartnerComponent implements OnInit {
     if (status == PartnerStatus.CreatingProfile) {
       this.isLockPage.setValue(false);
     } else if (status == PartnerStatus.PendingApproval) {
+      this.isLockPage.setValue(true);
+    } else if (status == PartnerStatus.Active) {
       this.isLockPage.setValue(true);
     } else {
       this.isActiveEditBaseInfo.setValue(false);
@@ -1485,27 +1485,57 @@ export class ActionPartnerComponent implements OnInit {
       })
     })
   }
+
   sendApprovalRequest(): Promise<any> {
     return new Promise((resolve, reject) => {
       this.generalService.sendApprovalRequest(this.itemPartner.id).subscribe({
         next: (res: any) => {
           if (res.isValid) {
-            this.notificationService.showNotification(Constant.SUCCESS, `Gửi duyệt thành công`);
+            this.notificationService.showNotification(Constant.SUCCESS, `Đã gửi yêu cầu phê duyệt doanh nghiệp ${this.itemPartner?.companyName ? this.itemPartner?.companyName : ""} thành công`);
             resolve(res.data);
-            this.settingTableEmployeesValue.loading = false;
           } else {
             if (res.errors && res.errors.length > 0) {
               res.errors.forEach((el: any) => {
                 this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
               });
             } else {
-              this.notificationService.showNotification(Constant.ERROR, 'Lấy ra danh sách nhân viên doanh nghiệp không thành công');
+              this.notificationService.showNotification(Constant.ERROR, `Gửi yêu cầu phê duyệt doanh nghiệp ${this.itemPartner?.companyName ? this.itemPartner?.companyName : ""} không thành công`);
             }
             reject(res.errors);
           }
         },
         error: (err: any) => {
-          this.notificationService.showNotification(Constant.ERROR, 'Lấy ra danh sách nhân viên doanh nghiệp thất bại do lỗi hệ thống');
+          this.notificationService.showNotification(Constant.ERROR, `Không thể gửi yêu cầu phê duyệt doanh nghiệp ${this.itemPartner?.companyName ? this.itemPartner?.companyName : ""} do lỗi hệ thống`);
+          reject(err);
+        },
+        complete: () => {
+
+        }
+      });
+    });
+  }
+
+  submitRequestForApprovalConfirmation(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.generalService.submitRequestForApprovalConfirmation(this.itemPartner.id).subscribe({
+        next: (res: any) => {
+          if (res.isValid) {
+            this.notificationService.showNotification(Constant.SUCCESS, `${this.itemPartner?.companyName ? this.itemPartner?.companyName : "doanh nghiệp"} đã được duyệt thành công`);
+            resolve(res.data);
+            this.itemPartner = res.data;
+          } else {
+            if (res.errors && res.errors.length > 0) {
+              res.errors.forEach((el: any) => {
+                this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+              });
+            } else {
+              this.notificationService.showNotification(Constant.ERROR, `Duyệt ${this.itemPartner?.companyName ? this.itemPartner?.companyName : "doanh nghiệp"} không thành cônng`);
+            }
+            reject(res.errors);
+          }
+        },
+        error: (err: any) => {
+          this.notificationService.showNotification(Constant.ERROR, `Duyệt ${this.itemPartner?.companyName ? this.itemPartner?.companyName : "doanh nghiệp"} thất bại do lỗi hệ thống`);
           reject(err);
         },
         complete: () => {

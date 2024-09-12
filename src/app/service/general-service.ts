@@ -568,6 +568,11 @@ export class GeneralService extends BaseService {
   sendApprovalRequest(partnerId: number): Observable<any> {
     return this.post(UrlConstant.LIST_PARTNERS + `/SendApprovalRequest`, { partnerId: partnerId });
   }
+
+
+  submitRequestForApprovalConfirmation(partnerId: number): Observable<any> {
+    return this.post(UrlConstant.LIST_PARTNERS + `/SubmitRequestForApprovalConfirmation`, { partnerId: partnerId });
+  }
   // Booking
 
   // Xuất vé

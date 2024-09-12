@@ -4,7 +4,8 @@
       <div class="inner-box" style="display: flex; justify-content: space-between; align-items: center;">
         <span style="font-weight: 500; font-size: 18px;">{{titleActionCompanyPage}}</span>
         <div>
-          <button *ngIf="itemPartner?.status == PartnerStatus.CreatingProfile" nz-button nzType="default" style="margin-right: 8px;" (click)="handlerSendApprovalRequest()">
+          <button *ngIf="itemPartner?.status == PartnerStatus.CreatingProfile" nz-button nzType="default"
+            style="margin-right: 8px;" (click)="handlerSendApprovalRequest()">
             <div style="display: flex; align-items: center;">
               <span nz-icon nzType="send"></span>
               <span style="margin-left: 6px; line-height: normal;">Gửi duyệt</span>
@@ -12,21 +13,37 @@
           </button>
 
 
-          <button *ngIf="itemPartner?.status == PartnerStatus.PendingApproval" nz-button nzType="default" style="margin-right: 8px;">
+          <button *ngIf="itemPartner?.status == PartnerStatus.PendingApproval" nz-button nzType="default"
+            style="margin-right: 8px;" (click)="submitRequestForApprovalConfirmation()">
             <div style="display: flex; align-items: center;">
               <span nz-icon nzType="send"></span>
               <span style="margin-left: 6px; line-height: normal;">Phê duyệt</span>
             </div>
           </button>
 
+          <button *ngIf="itemPartner?.status == PartnerStatus.Active" nz-button nzType="default" (click)="cancelPageActionPartner()" style="margin-right: 8px;">
+            <div style=" display: flex; align-items: center;">
+              <span nz-icon nzType="arrow-left"></span>
+              <span style="margin-left: 4px; line-height: normal;">Quay lại</span>
+            </div>
+          </button>
 
+          <button *ngIf="itemPartner?.status == PartnerStatus.Active" nz-button nzType="text"
+            style="text-decoration: none; color: #40a9ff; border-color: #40a9ff; cursor: default;">
+            <div style="display: flex; align-items: center;">
+              <span nz-icon nzType="check"></span>
+              <span style="margin-left: 6px; line-height: normal;">Đã duyệt</span>
+            </div>
+          </button>
 
-          <button nz-button nzDanger nzType="text" (click)="cancelPageActionPartner()">
+          <button *ngIf="itemPartner?.status != PartnerStatus.Active" nz-button nzDanger nzType="text" (click)="cancelPageActionPartner()" style="margin-left: 8px;">
             <div style="display: flex; align-items: center;">
               <span nz-icon nzType="close"></span>
               <span style="margin-left: 4px; line-height: normal;">Huỷ bỏ</span>
             </div>
           </button>
+
+
         </div>
       </div>
     </div>
@@ -46,14 +63,15 @@
                   <span style="margin-left: 6px; line-height: normal;">Lưu lại</span>
                 </div>
               </button>
-              <button *ngIf="!isActiveEditBaseInfo.value" [disabled]="isLockPage.value"  nz-button nzType="primary" style="margin-right: 8px;"
-                (click)="editBaseInfoPartner()">
+              <button *ngIf="!isActiveEditBaseInfo.value" [disabled]="isLockPage.value" nz-button nzType="primary"
+                style="margin-right: 8px;" (click)="editBaseInfoPartner()">
                 <div style="display: flex; align-items: center;">
                   <span nz-icon nzType="edit"></span>
                   <span style="margin-left: 6px; line-height: normal;">Chỉnh sửa</span>
                 </div>
               </button>
-              <button *ngIf="isActiveEditBaseInfo.value" nz-button nzDanger nzType="default" (click)="cancelBaseInfoPartner()">
+              <button *ngIf="isActiveEditBaseInfo.value" nz-button nzDanger nzType="default"
+                (click)="cancelBaseInfoPartner()">
                 <div style="display: flex; align-items: center;">
                   <span nz-icon nzType="close"></span>
                   <span style="margin-left: 4px; line-height: normal;">Huỷ bỏ</span>
@@ -203,8 +221,8 @@
                         [nzShowUploadList]="settingUploadAuthorizationFile?.showUploadList"
                         [nzFileList]="listUploadAuthorizationFile"
                         (nzChange)="handleChangeUploadAuthorizationFile($event)">
-                        <button [disabled]="!isActiveEditBaseInfo.value" nz-button nzType="default" [nzSize]="'default'" nzShape="round"><span nz-icon
-                            nzType="upload"></span></button>
+                        <button [disabled]="!isActiveEditBaseInfo.value" nz-button nzType="default" [nzSize]="'default'"
+                          nzShape="round"><span nz-icon nzType="upload"></span></button>
                       </nz-upload>
                     </div>
                   </div>
@@ -359,21 +377,23 @@
           <div style="display: flex; justify-content: space-between; align-items: center;">
             <span style="font-weight: 500; font-size: 16px;">Quản lý thông tin hợp đồng</span>
             <div>
-              <button nz-button nzType="primary" style="margin-right: 8px;" [disabled]="!itemPartner?.id " *ngIf="isEditBaseBusinessContract"
-                (click)="saveUpdateContractInfoForPartner()">
+              <button nz-button nzType="primary" style="margin-right: 8px;" [disabled]="!itemPartner?.id "
+                *ngIf="isEditBaseBusinessContract" (click)="saveUpdateContractInfoForPartner()">
                 <div style="display: flex; align-items: center;">
                   <span nz-icon nzType="save"></span>
                   <span style="margin-left: 6px; line-height: normal;">Lưu lại</span>
                 </div>
               </button>
-              <button nz-button nzType="primary" style="margin-right: 8px;" [disabled]="!itemPartner?.id || isLockPage.value" *ngIf="!isEditBaseBusinessContract"
-              (click)="changeValueBaseBusinessContractReversal()">
-              <div style="display: flex; align-items: center;">
-                <span nz-icon nzType="edit"></span>
-                <span style="margin-left: 6px; line-height: normal;">Chỉnh sửa</span>
-              </div>
-            </button>
-              <button *ngIf="isEditBaseBusinessContract" nz-button nzDanger nzType="default" (click)="cancelUpdateContractInfoForPartner()">
+              <button nz-button nzType="primary" style="margin-right: 8px;"
+                [disabled]="!itemPartner?.id || isLockPage.value" *ngIf="!isEditBaseBusinessContract"
+                (click)="changeValueBaseBusinessContractReversal()">
+                <div style="display: flex; align-items: center;">
+                  <span nz-icon nzType="edit"></span>
+                  <span style="margin-left: 6px; line-height: normal;">Chỉnh sửa</span>
+                </div>
+              </button>
+              <button *ngIf="isEditBaseBusinessContract" nz-button nzDanger nzType="default"
+                (click)="cancelUpdateContractInfoForPartner()">
                 <div style="display: flex; align-items: center;">
                   <span nz-icon nzType="close"></span>
                   <span style="margin-left: 4px; line-height: normal;">Huỷ bỏ</span>
@@ -402,8 +422,8 @@
                           [nzShowUploadList]="settingUploadBusinessLicenseFile?.showUploadList"
                           [nzFileList]="listUploadBusinessLicenseFile"
                           (nzChange)="handleChangeUploadBusinessLicenseFile($event)">
-                          <button [disabled]="!isEditBaseBusinessContract" nz-button nzType="default" [nzSize]="'default'" nzShape="round"><span nz-icon
-                              nzType="upload"></span></button>
+                          <button [disabled]="!isEditBaseBusinessContract" nz-button nzType="default"
+                            [nzSize]="'default'" nzShape="round"><span nz-icon nzType="upload"></span></button>
                         </nz-upload>
                       </div>
                     </div>
@@ -420,8 +440,8 @@
                           [nzHeaders]="settingUploadContractFile?.header" [nzRemove]="handleRemoveUploadContractFile"
                           [nzShowUploadList]="settingUploadContractFile?.showUploadList"
                           [nzFileList]="listUploadContractFile" (nzChange)="handleChangeUploadContractFile($event)">
-                          <button [disabled]="!isEditBaseBusinessContract" nz-button nzType="default" [nzSize]="'default'" nzShape="round"><span nz-icon
-                              nzType="upload"></span></button>
+                          <button [disabled]="!isEditBaseBusinessContract" nz-button nzType="default"
+                            [nzSize]="'default'" nzShape="round"><span nz-icon nzType="upload"></span></button>
                         </nz-upload>
                       </div>
                     </div>
@@ -560,7 +580,8 @@
                             nz-tooltip nzTooltipTrigger="focus" nzTooltipPlacement="topLeft"
                             nzOverlayClassName="numeric-input" [nzTooltipTitle]="tooltipTitleAmount"
                             placeholder="Nhập hạn mức tối đa" (click)="onClickInputAmount($event, 'debtMax')"
-                            (ngModelChange)="onChangeInputAmount($event, 'debtMax')" (blur)="onBlurInputAmount('debtMax')">
+                            (ngModelChange)="onChangeInputAmount($event, 'debtMax')"
+                            (blur)="onBlurInputAmount('debtMax')">
                         </nz-input-group>
                       </div>
                     </div>
@@ -595,7 +616,8 @@
                         <span style="color: tomato; margin-left: 4px;">*</span>
                       </div>
                       <div nz-col class="gutter-row" [nzSpan]="12">
-                        <nz-checkbox-group [disabled]="!isEditBaseBusinessContract" [(ngModel)]="checkOptionsBusinessServiceVHL"
+                        <nz-checkbox-group [disabled]="!isEditBaseBusinessContract"
+                          [(ngModel)]="checkOptionsBusinessServiceVHL"
                           [ngModelOptions]="{standalone: true}"></nz-checkbox-group>
                       </div>
                     </div>
@@ -611,9 +633,9 @@
           <div style="display: flex; justify-content: space-between; align-items: center;">
             <span style="font-weight: 500; font-size: 16px;">Danh sách nhân viên</span>
             <div style="display: flex; align-items: center;">
-              <input [disabled]="isLockPage.value" style="width: 200px; border-radius: 4px; height: 32px; margin-right: 4rem;" nzSize="default"
-                nz-input type="text" placeholder="Tìm kiếm nhân viên" [(ngModel)]="searchEmployee"
-                (keyup)="onSearchEmployee()">
+              <input [disabled]="isLockPage.value"
+                style="width: 200px; border-radius: 4px; height: 32px; margin-right: 4rem;" nzSize="default" nz-input
+                type="text" placeholder="Tìm kiếm nhân viên" [(ngModel)]="searchEmployee" (keyup)="onSearchEmployee()">
               <div>
                 <button [disabled]="!itemPartner?.id || isLockPage.value" nz-button nz-dropdown nzType="primary"
                   style="margin-right: 0.5rem;" [nzDropdownMenu]="menuListEmployeesVHL">
@@ -623,7 +645,8 @@
                     <span nz-icon nzType="down"></span>
                   </div>
                 </button>
-                <nz-dropdown-menu [disabled]="!itemPartner?.id || isLockPage.value" #menuListEmployeesVHL="nzDropdownMenu">
+                <nz-dropdown-menu [disabled]="!itemPartner?.id || isLockPage.value"
+                  #menuListEmployeesVHL="nzDropdownMenu">
                   <ul nz-menu>
                     <li nz-menu-item style="padding: 0.5rem 0;" [nzDisabled]="!itemPartner?.id || isLockPage.value">
                       <div style="display: flex; align-items: center;">
@@ -643,7 +666,7 @@
                         [nzRemove]="handleRemoveUploadAuthorizationFile" [nzShowUploadList]="false"
                         [nzFileList]="listUploadEmployeeForPartnerFile"
                         (nzChange)="handleChangeUploadEmployeeForPartnerFile($event)">
-                        <div style="display: flex; align-items: center;" >
+                        <div style="display: flex; align-items: center;">
                           <span nz-icon nzType="upload"></span>
                           <span style="margin-left: 6px; line-height: normal;">Tải lên file excel</span>
                         </div>
