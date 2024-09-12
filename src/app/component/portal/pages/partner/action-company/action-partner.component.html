@@ -42,7 +42,7 @@
                   <span style="margin-left: 6px; line-height: normal;">Chỉnh sửa</span>
                 </div>
               </button>
-              <button nz-button nzDanger nzType="default" (click)="cancelBaseInfoPartner()">
+              <button *ngIf="isActiveEditBaseInfo" nz-button nzDanger nzType="default" (click)="cancelBaseInfoPartner()">
                 <div style="display: flex; align-items: center;">
                   <span nz-icon nzType="close"></span>
                   <span style="margin-left: 4px; line-height: normal;">Huỷ bỏ</span>
@@ -362,7 +362,7 @@
                 <span style="margin-left: 6px; line-height: normal;">Chỉnh sửa</span>
               </div>
             </button>
-              <button nz-button nzDanger nzType="default" (click)="cancelUpdateContractInfoForPartner()">
+              <button *ngIf="isEditBaseBusinessContract" nz-button nzDanger nzType="default" (click)="cancelUpdateContractInfoForPartner()">
                 <div style="display: flex; align-items: center;">
                   <span nz-icon nzType="close"></span>
                   <span style="margin-left: 4px; line-height: normal;">Huỷ bỏ</span>
