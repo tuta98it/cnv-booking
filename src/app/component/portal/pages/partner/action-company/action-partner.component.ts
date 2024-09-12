@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, SimpleChanges } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzUploadChangeParam, NzUploadFile } from 'ng-zorro-antd/upload';
@@ -109,8 +109,12 @@ export class ActionPartnerComponent implements OnInit {
     { label: 'Dich vụ đặt khách sạn', value: BusinessServiceType.HotelBookingService, disabled: false, checked: false },
   ];
   itemPartner: any = null;
+
   employees: any;
-  isActiveEditBaseInfo: boolean = false;
+  // isActiveEditBaseInfo: boolean = false;
+
+  isActiveEditBaseInfo: FormControl = new FormControl(false);
+
   searchEmployee: string = '';
   displayDataBalanceFluctuation: readonly any[];
   allUnCheckedBalanceFluctuation: boolean;
@@ -128,6 +132,7 @@ export class ActionPartnerComponent implements OnInit {
   valueInputNumberAmount = '';
   tooltipTitleAmount = 'Nhập số tiền';
   isEditBaseBusinessContract: Boolean = false;
+  isLockPage: FormControl = new FormControl(false);
 
   constructor(
     private msg: NzMessageService,
@@ -231,13 +236,16 @@ export class ActionPartnerComponent implements OnInit {
     this.settingTableBalanceFluctuationValue = this.settingTableListBalanceFluctuationForm.value as NZTableSettingCustoms;
 
     this.actionPartnerVHL = this.activatedRoute.snapshot.data['type'];
-    this.setIsActiveEditBaseInfo(true);
+    // this.setIsActiveEditBaseInfo(true);
+
+
     this.listOfEmployees = [];
     this.listUploadAuthorizationFile = [];
     this.listUploadBusinessLicenseFile = [];
     this.listUploadContractFile = [];
     this.listUploadEmployeeForPartnerFile = [];
     if (this.actionPartnerVHL == ActionTypePageVHL.Create) {
+      //this.isActiveEditBaseInfo.setValue(true);
       this.titleActionCompanyPage = "Thêm mới doanh nghiệp";
       this.settingUploadAuthorizationFile = {
         isMultiple: true,
@@ -297,7 +305,8 @@ export class ActionPartnerComponent implements OnInit {
 
       this.listOfEmployees = [];
     } else if (this.actionPartnerVHL == ActionTypePageVHL.Update) {
-      this.setIsActiveEditBaseInfo(true);
+      // this.setIsActiveEditBaseInfo(true);
+      //this.isActiveEditBaseInfo.setValue(true);
       this.activatedRoute.queryParams.subscribe(async params => {
         let idPartner = +params['id']; // Lấy id từ query parameter
 
@@ -361,6 +370,7 @@ export class ActionPartnerComponent implements OnInit {
           this.router.navigate([['/companies']]);
         });
         this.titleActionCompanyPage = this.itemPartner?.companyName ?? "";
+        this.setActionPageByStatus(this.itemPartner?.status);
         this.resetFormBaseInfoCreatePartner(this.itemPartner);
         this.resetFormContractUpdatePartner(this.itemPartner);
 
@@ -446,9 +456,58 @@ export class ActionPartnerComponent implements OnInit {
         });
       }
     });
+
+
+
+    this.isActiveEditBaseInfo.valueChanges.subscribe((value: any) => {
+      if (value == true) {
+        this.formBaseInfoCreatePartner.enable();
+        if (this.actionPartnerVHL == ActionTypePageVHL.Create) {
+          this.formBaseInfoCreatePartner.controls['status'].disable();
+        }
+      } else {
+        this.formBaseInfoCreatePartner.disable();
+        setTimeout(() => {
+          this.formBaseInfoCreatePartner.controls['status'].disable();
+        }, 200);
+      }
+    });
+
+
+    this.isLockPage.valueChanges.subscribe((value: any) => {
+      console.log(value);
+
+      if (value == true) {
+        this.isActiveEditBaseInfo.setValue(false);
+        this.changeValueBaseBusinessContractReversal(false)
+      } else {
+        this.isActiveEditBaseInfo.setValue(true);
+        this.changeValueBaseBusinessContractReversal(false)
+      }
+    });
+
     this.getEmployees();
   }
 
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['itemPartner'] && this.itemPartner?.status) {
+      this.itemPartner.status.valueChanges.subscribe((status: any) => {
+        this.setActionPageByStatus(status);
+      });
+    }
+  }
+
+  private setActionPageByStatus(status: any) {
+    if (status == PartnerStatus.CreatingProfile) {
+      this.isLockPage.setValue(false);
+    } else if (status == PartnerStatus.PendingApproval) {
+      this.isLockPage.setValue(true);
+    } else {
+      this.isActiveEditBaseInfo.setValue(false);
+      this.changeValueBaseBusinessContractReversal(false)
+    }
+  }
 
   onChangeInputAmount(value: string, controlName?: string): void {
     this.updateValueInputAmount(value, controlName);
@@ -963,7 +1022,9 @@ export class ActionPartnerComponent implements OnInit {
               this.notificationService.showNotification(Constant.SUCCESS, `Cập nhật thông tin doanh nghiệp thành công`);
               this.changeValueBaseBusinessContractReversal(true);
               this.itemPartner = res.data;
-              this.setIsActiveEditBaseInfo(this.itemPartner?.id == null);
+              // this.setIsActiveEditBaseInfo(this.itemPartner?.id == null);
+              this.isActiveEditBaseInfo.setValue(this.itemPartner?.id == null);
+
               resolve(true);
             } else {
               if (res.errors && res.errors.length > 0) {
@@ -982,7 +1043,8 @@ export class ActionPartnerComponent implements OnInit {
             if (res.isValid) {
               this.notificationService.showNotification(Constant.SUCCESS, `Tạo mới thông tin doanh nghiệp thành công`);
               this.itemPartner = res.data;
-              this.setIsActiveEditBaseInfo(this.itemPartner?.id == null);
+              // this.setIsActiveEditBaseInfo(this.itemPartner?.id == null);
+              this.isActiveEditBaseInfo.setValue(this.itemPartner?.id == null);
             } else {
               if (res.errors && res.errors.length > 0) {
                 res.errors.forEach((el: any) => {
@@ -1008,23 +1070,25 @@ export class ActionPartnerComponent implements OnInit {
   }
 
   editBaseInfoPartner() {
-    this.setIsActiveEditBaseInfo(true);
+    // this.setIsActiveEditBaseInfo(true);
+    this.isActiveEditBaseInfo.setValue(true);
   }
 
-  private setIsActiveEditBaseInfo(value: boolean) {
-    this.isActiveEditBaseInfo = value;
-    if (this.isActiveEditBaseInfo) {
-      this.formBaseInfoCreatePartner.enable();
-      if (this.actionPartnerVHL == ActionTypePageVHL.Create) {
-        this.formBaseInfoCreatePartner.controls['status'].disable();
-      }
-    } else {
-      this.formBaseInfoCreatePartner.disable();
-    }
-  }
+  // private setIsActiveEditBaseInfo(value: boolean) {
+  //   this.isActiveEditBaseInfo.setValue(value);
+  //   if (this.isActiveEditBaseInfo.value) {
+  //     this.formBaseInfoCreatePartner.enable();
+  //     if (this.actionPartnerVHL == ActionTypePageVHL.Create) {
+  //       this.formBaseInfoCreatePartner.controls['status'].disable();
+  //     }
+  //   } else {
+  //     this.formBaseInfoCreatePartner.disable();
+  //   }
+  // }
 
   cancelBaseInfoPartner() {
-    this.setIsActiveEditBaseInfo(true);
+    // this.setIsActiveEditBaseInfo(true);
+    this.isActiveEditBaseInfo.setValue(true);
     this.resetFormBaseInfoCreatePartner(this.itemPartner);
   }
 
@@ -1128,7 +1192,7 @@ export class ActionPartnerComponent implements OnInit {
   }
 
   changeValueBaseBusinessContractReversal(value?: boolean) {
-    if (value) {
+    if (value != null) {
       this.isEditBaseBusinessContract = value;
     } else {
       this.isEditBaseBusinessContract = !this.isEditBaseBusinessContract
