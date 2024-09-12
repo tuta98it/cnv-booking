@@ -615,7 +615,7 @@
                 nz-input type="text" placeholder="Tìm kiếm nhân viên" [(ngModel)]="searchEmployee"
                 (keyup)="onSearchEmployee()">
               <div>
-                <button [disabled]="!itemPartner?.id" nz-button nz-dropdown nzType="primary"
+                <button [disabled]="!itemPartner?.id || isLockPage.value" nz-button nz-dropdown nzType="primary"
                   style="margin-right: 0.5rem;" [nzDropdownMenu]="menuListEmployeesVHL">
                   <div style="display: flex; align-items: center;">
                     <span nz-icon nzType="plus"></span>
@@ -659,7 +659,7 @@
                   style="margin-right: 0.5rem;" [nzDropdownMenu]="menuListEmployeesVHLExport">
                   <div style="display: flex; align-items: center;">
                     <span nz-icon nzType="plus"></span>
-                    <span style="margin: 0 6px; line-height: normal;">Tải file</span>
+                    <span style="margin: 0 6px; line-height: normal;">Xuất file</span>
                     <span nz-icon nzType="down"></span>
                   </div>
                 </button>
