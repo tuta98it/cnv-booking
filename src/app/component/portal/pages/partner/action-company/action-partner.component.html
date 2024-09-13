@@ -676,7 +676,7 @@
 
 
               <div>
-                <button [disabled]="!itemPartner?.id || isLockPage.value" nz-button nz-dropdown nzType="dashed"
+                <button  nz-button nz-dropdown nzType="dashed"
                   style="margin-right: 0.5rem;" [nzDropdownMenu]="menuListEmployeesVHLExport">
                   <div style="display: flex; align-items: center;">
                     <span nz-icon nzType="plus"></span>
@@ -686,7 +686,7 @@
                 </button>
                 <nz-dropdown-menu [disabled]="!itemPartner?.id" #menuListEmployeesVHLExport="nzDropdownMenu">
                   <ul nz-menu>
-                    <li nz-menu-item style="padding: 0.5rem 0;" [nzDisabled]="!itemPartner?.id || isLockPage.value"
+                    <li nz-menu-item style="padding: 0.5rem 0;"
                       (click)="downloadFileEmployeeForPartnerTemplate()">
                       <div style="display: flex; align-items: center;">
                         <span nz-icon nzType="download"></span>
