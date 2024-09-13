@@ -871,6 +871,11 @@ export class ActionPartnerComponent implements OnInit {
           this.msg.success(`${info.file.name} file tải lên thành công`);
         } else {
           this.msg.error(`${info.file.name} file tải lên thất bại.`);
+          info.file.response.errors.forEach((error: any) => {
+            if(error.isValid == false){
+              this.msg.error(`${error?.errorMessage ?? ""}`);
+            }
+          });
         }
         // if (this.listUploadEmployeeForPartnerFile.length > 0) {
         //   this.listUploadEmployeeForPartnerFile[this.listUploadEmployeeForPartnerFile.length - 1].uid = info.file.response.partnerFileId.toString();
