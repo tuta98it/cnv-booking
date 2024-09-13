@@ -42,8 +42,6 @@
               <span style="margin-left: 4px; line-height: normal;">Huỷ bỏ</span>
             </div>
           </button>
-
-
         </div>
       </div>
     </div>
@@ -780,9 +778,11 @@
 
 
                       <button title="Thiết lập lại mật khẩu" nz-button nzSize="small" nzType="default"
-                        class="button-update" [disabled]="data.disabled">
+                        class="button-update" [disabled]="data.disabled" (click)="showPopupChangePassword()">
                         <span class="fa fa-key fa-fw"></span>
                       </button>
+                      <app-change-password [isVisible]="isVisibleChangePassword" [idEmployee]="data?.id" (cancel)="handleCancelChangePassword()">
+                      </app-change-password>
 
 
 

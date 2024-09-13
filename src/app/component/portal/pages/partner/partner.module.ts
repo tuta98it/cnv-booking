@@ -5,12 +5,13 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { PartnerRoutingModule } from './partner-routing.module';
 import { ActionPartnerComponent } from './action-company/action-partner.component';
 import { DepositAccountComponent } from './action-company/deposit-account/deposit-account.component';
-
+import { ChangePasswordComponent } from './action-company/change-password/change-password.component';
 
 
 @NgModule({
   declarations: [
     ActionPartnerComponent,
+    ChangePasswordComponent,
     DepositAccountComponent,
   ],
   imports: [

@@ -133,6 +133,7 @@ export class ActionPartnerComponent implements OnInit {
   tooltipTitleAmount = 'Nhập số tiền';
   isEditBaseBusinessContract: Boolean = false;
   isLockPage: FormControl = new FormControl(false);
+  isVisibleChangePassword: boolean = false;
 
   constructor(
     private msg: NzMessageService,
@@ -1543,5 +1544,13 @@ export class ActionPartnerComponent implements OnInit {
         }
       });
     });
+  }
+
+  showPopupChangePassword() {
+    this.isVisibleChangePassword = true;
+  }
+
+  handleCancelChangePassword() {
+    this.isVisibleChangePassword = false;
   }
 }
