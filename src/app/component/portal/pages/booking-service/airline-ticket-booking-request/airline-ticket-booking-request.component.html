@@ -658,9 +658,9 @@
           <div nz-col class="gutter-row" nzSpan="22">
             <div class="inner-box">
               <div>
-                <nz-upload class="upload-list-inline" [nzMultiple]="true" [nzAction]="uploadUrl" nzName="postedFile"
+                <nz-upload class="upload-list-inline" [nzMultiple]="true" [nzAction]="uploadUrlFlightTicket" nzName="postedFile"
                   [nzHeaders]="uploadHeader" [nzRemove]="handleRemoveFileTicketBookingRequest"
-                  (nzChange)="handleUploadFileTicketBookingRequest1($event)" [nzFileList]="fileList"
+                  (nzChange)="handleUploadFileTicketBookingRequest1($event)" [nzFileList]="fileFlightTicketList"
                   [nzShowUploadList]="showUploadListOption">
                   <button *ngIf="optionAirlineTicketInfo == OptionAirlineTicketInfoEnum.Update" nz-button>
                     <span nz-icon nzType="upload"></span>
@@ -683,6 +683,31 @@
                   {{ uploading ? 'Đang tải file...' : 'Bắt đầu tải file lên' }}
                 </button>
               </div> -->
+            </div>
+          </div>
+        </div>
+
+        <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
+          <div nz-col class="gutter-row" nzSpan="2">
+            <div class="inner-box">
+              <label for="">File hoá đơn
+                <!-- <em class="fa fa-asterisk required" style="line-height: revert;"></em> -->
+              </label>
+            </div>
+          </div>
+          <div nz-col class="gutter-row" nzSpan="22">
+            <div class="inner-box">
+              <div>
+                <nz-upload class="upload-list-inline" [nzMultiple]="true" [nzAction]="uploadUrlInvoice" nzName="postedFile"
+                  [nzHeaders]="uploadHeader" [nzRemove]="handleRemoveFileInvoiceBookingRequest"
+                  (nzChange)="handleUploadFileInvoiceBookingRequest1($event)" [nzFileList]="fileInvoiceList"
+                  [nzShowUploadList]="showUploadListOption">
+                  <button *ngIf="optionAirlineTicketInfo == OptionAirlineTicketInfoEnum.Update" nz-button>
+                    <span nz-icon nzType="upload"></span>
+                    Nhấn để tải file
+                  </button>
+                </nz-upload>
+              </div>
             </div>
           </div>
         </div>
