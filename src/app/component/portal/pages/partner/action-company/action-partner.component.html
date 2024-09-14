@@ -825,7 +825,14 @@
 
               </div>
               <div>
-                <nz-progress [nzPercent]="((debtBearingSales?.usageLimit ? debtBearingSales?.usageLimit : 0) / (debtBearingSales?.debtMax ? debtBearingSales?.debtMax : 1)) * 100"
+                <nz-progress *ngIf="debtBearingSales?.debtMax"
+                  [nzPercent]="((debtBearingSales?.usageLimit ? debtBearingSales?.usageLimit : 0) / (debtBearingSales?.debtMax ? debtBearingSales?.debtMax : 1)) * 100"
+                  [nzShowInfo]="false" [ngModelOptions]="{standalone: true}"></nz-progress>
+
+
+                <nz-progress *ngIf="!debtBearingSales?.debtMax"
+                  [nzStatus]="'exception'"
+                  [nzPercent]="100"
                   [nzShowInfo]="false" [ngModelOptions]="{standalone: true}"></nz-progress>
               </div>
             </div>
