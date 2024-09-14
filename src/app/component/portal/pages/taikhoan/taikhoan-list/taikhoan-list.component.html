@@ -57,7 +57,7 @@
   <div *dxTemplate="let item of 'cellBtnTemplate'" style="display: flex; justify-content: space-evenly;">
 
     <button title="Chỉnh sửa thông tin tài khoản" nz-button nzSize="small" nzType="default"
-      (click)="showModalUpdate(item.data)" [disabled]="!item.data.status">
+      (click)="navigatePage('companies/employee-action/update', ActionTypePageVHL.Update, item.data)" [disabled]="!item.data.status">
       <span class="fa fa-edit fa-fw"></span>
     </button>
 

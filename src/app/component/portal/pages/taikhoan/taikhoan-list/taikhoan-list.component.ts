@@ -22,6 +22,8 @@ import {
 } from "devextreme-angular";
 import { IsEmptyPipe } from 'src/app/shared/pipe/is-empty.pipe';
 import { UserType } from 'src/app/enums/user-type.enum';
+import { ActionTypePageVHL } from 'src/app/enums/action-type-page-vhl.enum';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-taikhoan-list',
   templateUrl: './taikhoan-list.component.html',
@@ -32,7 +34,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
   // @ViewChild(DxDataGridComponent, { static: false }) dataGrid: DxDataGridComponent;
   valueNumberPhone = '';
   @ViewChild('inputElementNumberPhone', { static: false }) inputElementNumberPhone?: ElementRef
-
+  ActionTypePageVHL = ActionTypePageVHL;
   datas: any[] = [];
   userTypeEnum = UserType;
   userType : UserType = this.userTypeEnum.All;
@@ -76,6 +78,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
     private configService: AppConfigService,
     private fb: FormBuilder,
     private dateFormatPipe: DateFormatPipe,
+    private router: Router,
   ) {
     super('id');
     this.formAdd = this.fb.group({
@@ -300,6 +303,21 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
     });
 
   }
+
+
+  navigatePage(url: string, typeAction: number, employee?: any) {
+    switch (typeAction) {
+      case ActionTypePageVHL.Create:
+        this.router.navigate([`${url}`], { queryParams: { partnerId: employee.partnerId } })
+        break;
+      case ActionTypePageVHL.Update:
+        this.router.navigate([`${url}`], { queryParams: { employeeId: employee.id, partnerId: employee.partnerId } })
+        break;
+      default:
+        break;
+    }
+  }
+
 
   showModalPassword(data) {
     this.isVisiblePassword = true;
