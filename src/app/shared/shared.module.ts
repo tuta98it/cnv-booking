@@ -51,6 +51,7 @@ import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { UserTypePipe } from './pipe/user-type.pipe';
 import { PartnerStatusPipe } from './pipe/partner-status.pipe';
 import { EmployeePipePipe } from './pipe/employeePipe.pipe';
+import { NzProgressModule } from 'ng-zorro-antd/progress';
 @NgModule({
   imports: [
     CommonModule,
@@ -85,6 +86,7 @@ import { EmployeePipePipe } from './pipe/employeePipe.pipe';
     NzRateModule,
     NzCheckboxModule,
     NzToolTipModule,
+    NzProgressModule,
     DxDateBoxModule,
     AngularEditorModule,
     NzRadioModule
@@ -129,6 +131,7 @@ import { EmployeePipePipe } from './pipe/employeePipe.pipe';
     NzMessageModule,
     NzSwitchModule,
     NzRateModule,
+    NzProgressModule,
     AngularEditorModule,
     DxDateBoxModule,
     BookingHotelStatusPipe,

@@ -21,7 +21,8 @@
             </div>
           </button>
 
-          <button *ngIf="itemPartner?.status == PartnerStatus.Active" nz-button nzType="default" (click)="cancelPageActionPartner()" style="margin-right: 8px;">
+          <button *ngIf="itemPartner?.status == PartnerStatus.Active" nz-button nzType="default"
+            (click)="cancelPageActionPartner()" style="margin-right: 8px;">
             <div style=" display: flex; align-items: center;">
               <span nz-icon nzType="arrow-left"></span>
               <span style="margin-left: 4px; line-height: normal;">Quay lại</span>
@@ -36,7 +37,8 @@
             </div>
           </button>
 
-          <button *ngIf="itemPartner?.status != PartnerStatus.Active" nz-button nzDanger nzType="text" (click)="cancelPageActionPartner()" style="margin-left: 8px;">
+          <button *ngIf="itemPartner?.status != PartnerStatus.Active" nz-button nzDanger nzType="text"
+            (click)="cancelPageActionPartner()" style="margin-left: 8px;">
             <div style="display: flex; align-items: center;">
               <span nz-icon nzType="close"></span>
               <span style="margin-left: 4px; line-height: normal;">Huỷ bỏ</span>
@@ -676,8 +678,8 @@
 
 
               <div>
-                <button  nz-button nz-dropdown nzType="dashed"
-                  style="margin-right: 0.5rem;" [nzDropdownMenu]="menuListEmployeesVHLExport">
+                <button nz-button nz-dropdown nzType="dashed" style="margin-right: 0.5rem;"
+                  [nzDropdownMenu]="menuListEmployeesVHLExport">
                   <div style="display: flex; align-items: center;">
                     <span nz-icon nzType="plus"></span>
                     <span style="margin: 0 6px; line-height: normal;">Xuất file</span>
@@ -686,8 +688,7 @@
                 </button>
                 <nz-dropdown-menu [disabled]="!itemPartner?.id" #menuListEmployeesVHLExport="nzDropdownMenu">
                   <ul nz-menu>
-                    <li nz-menu-item style="padding: 0.5rem 0;"
-                      (click)="downloadFileEmployeeForPartnerTemplate()">
+                    <li nz-menu-item style="padding: 0.5rem 0;" (click)="downloadFileEmployeeForPartnerTemplate()">
                       <div style="display: flex; align-items: center;">
                         <span nz-icon nzType="download"></span>
                         <span style="margin-left: 6px; line-height: normal;">Xuất file mẫu</span>
@@ -781,7 +782,8 @@
                         class="button-update" [disabled]="data.disabled" (click)="showPopupChangePassword()">
                         <span class="fa fa-key fa-fw"></span>
                       </button>
-                      <app-change-password [isVisible]="isVisibleChangePassword" [idEmployee]="data?.id" (cancel)="handleCancelChangePassword()">
+                      <app-change-password [isVisible]="isVisibleChangePassword" [idEmployee]="data?.id"
+                        (cancel)="handleCancelChangePassword()">
                       </app-change-password>
 
 
@@ -817,9 +819,17 @@
           <div *ngIf="formBaseInfoCreatePartner.get('allowDebt')?.value == AllowDebtPartner.ALLOW"
             style="display: flex; justify-content: space-between; align-items: center; font-size: 16px;">
             <div>
-              Hạng mức sử dụng {{debtBearingSales?.usageLimit ? (debtBearingSales?.usageLimit | currencyFormat): '-' }}
-              đ
+              <div>
+                Hạn mức sử dụng {{debtBearingSales?.usageLimit ? (debtBearingSales?.usageLimit | currencyFormat): '-' }}
+                đ / {{debtBearingSales?.debtMax ? (debtBearingSales?.debtMax | currencyFormat): '-' }} đ
+
+              </div>
+              <div>
+                <nz-progress [nzPercent]="((debtBearingSales?.usageLimit ? debtBearingSales?.usageLimit : 0) / (debtBearingSales?.debtMax ? debtBearingSales?.debtMax : 1)) * 100"
+                  [nzShowInfo]="false" [ngModelOptions]="{standalone: true}"></nz-progress>
+              </div>
             </div>
+
 
             <div>
               Dư nợ đầu kỳ {{debtBearingSales?.beginningBalance ? (debtBearingSales.beginningBalance | currencyFormat) :
