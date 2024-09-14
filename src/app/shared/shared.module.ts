@@ -127,6 +127,7 @@ import {NzTabsModule} from 'ng-zorro-antd/tabs';
     NzUploadModule,
     NzCheckboxModule,
     NzToolTipModule,
+    NzProgressModule,
     NzAlertModule,
     MViewPdfComponent,
     NzImageModule,
