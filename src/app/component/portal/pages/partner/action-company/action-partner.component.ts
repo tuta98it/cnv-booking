@@ -866,17 +866,15 @@ export class ActionPartnerComponent implements OnInit {
     if (info.file.status === 'done') {
       this.listUploadEmployeeForPartnerFile = info.fileList;
       setTimeout(() => {
-        console.log("info: ", info);
+        info.file.response.errors.forEach((error: any) => {
+          this.msg.error(`${error?.errorMessage ?? ""}`);
+        });
         if (info.file.response.isValid) {
-          this.msg.success(`${info.file.name} file tải lên thành công`);
+          this.msg.success(`${info.file.name} file tải lên thành công có thề tồn tại một vài nhân viên không đặt yê cầu.`);
         } else {
-          this.msg.error(`${info.file.name} file tải lên thất bại.`);
-          info.file.response.errors.forEach((error: any) => {
-            if(error.isValid == false){
-              this.msg.error(`${error?.errorMessage ?? ""}`);
-            }
-          });
+          this.msg.error(`${info.file.name} file tải đã gặp lỗi hoặc tất các nhân viên không đặt yêu cầu.`);
         }
+
         // if (this.listUploadEmployeeForPartnerFile.length > 0) {
         //   this.listUploadEmployeeForPartnerFile[this.listUploadEmployeeForPartnerFile.length - 1].uid = info.file.response.partnerFileId.toString();
         //   this.listUploadEmployeeForPartnerFile[this.listUploadEmployeeForPartnerFile.length - 1].url = `${this.configService.getConfig().api.baseUrl}/${info.file.response.path}`;
