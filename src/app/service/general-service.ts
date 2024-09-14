@@ -696,19 +696,30 @@ export class GeneralService extends BaseService {
   getHotels(): Observable<any> {
     return this.get(`/api${UrlConstant.HOTEL}`);
   }
-
+  getHotelById(hotelId): Observable<any> {
+    return this.get(`/api/Hotel/GetHotelV2/${hotelId}`);
+  }
   addHotel(hotel: any): any {
     return this.post(`/api${UrlConstant.HOTEL}`, hotel);
   }
-
+  filterHotel(payload: any): any {
+    return this.post(`/api/Hotel/GetV2HotelFilter`, payload);
+  }
   updateHotelByID(idHotel: any, hotel: any): Observable<any> {
     return this.put(`/api${UrlConstant.HOTEL}/${idHotel}`, hotel);
   }
-
+  saveHotelContract(hotel: any): Observable<any> {
+    return this.put(`/api/Hotel/UpdateHotelContract/${hotel.id}`, hotel);
+  }
   deleteHotelByID(idHotel: any): Observable<any> {
     return this.delete(`/api${UrlConstant.HOTEL}/${idHotel}`, idHotel);
   }
-
+  getRoomHotels(hotelId: any): any {
+    return this.get(`/api/Hotel/GetRoomHotel/${hotelId}`);
+  }
+  getRoomById(roomId: any): any {
+    return this.get(`/api/Room/${roomId}`);
+  }
 
   deleteHotelImageByID(idImage: any): Observable<any> {
     return this.delete(`/api${UrlConstant.HOTEL}/DeleteHotelFile/${idImage}`, idImage);
@@ -854,6 +865,10 @@ export class GeneralService extends BaseService {
 
   SetAvailableRoom(obdjIsAvaliable: any): Observable<any> {
     return this.post(`/api${UrlConstant.ROOM}/SetAvailable`, obdjIsAvaliable);
+  }
+
+  setActiveRoom(room: any): Observable<any> {
+    return this.post(`/api/Room/SetActive`, room);
   }
 
   getProvinces(): Observable<any[]> {

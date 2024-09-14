@@ -1,0 +1,162 @@
+<div class="main-wapper">
+  <div class="toolbar">
+    <div class="before">
+      <h2 class="toolbar-title">{{editTitle}}</h2>
+    </div>
+    <div class="after">
+      <div class="buttons">
+        <button [disabled]="!formAddRoom.valid" (click)="triggerSubmit()" nz-button nzType="primary"
+                class="ant-btn-primary" type="button">
+          <em class="fas fa-save fa-fw" style="margin-right: 4px;"></em> Lưu lại
+        </button>
+        <button (click)="goHotelDetail()" nz-button nzType="default" class="ant-btn-primary" type="button">
+          <em class="fas fa-times fa-fw" style="margin-right: 4px;"></em> Hủy bỏ
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="card border-0">
+    <div class="toolbar border-bottom">
+      <div class="before">
+        <h2 class="toolbar-title">Thông tin cơ bản</h2>
+      </div>
+    </div>
+    <div class="card-body p-2">
+      <form [formGroup]="formAddRoom" class="container" (ngSubmit)="saveRoom()" #myForm="ngForm">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-inline-custom">
+              <label>Trạng thái </label>
+              <input nz-input [value]="'Đang hoạt động'" disabled/>
+            </div>
+            <div class="form-inline-custom">
+              <label>Mã loại phòng <span class="required">*</span></label>
+              <input nz-input formControlName="code" type="text"/>
+            </div>
+            <div class="form-inline-custom">
+              <label>Tên loại phòng <span class="required">*</span></label>
+              <input nz-input formControlName="name"
+                     [ngClass]="{ 'is-invalid': submitted && formControlRoom.name.errors?.required }" />
+            </div>
+            <div class="form-inline-custom">
+              <label>Số lượng phòng </label>
+              <dx-number-box [showSpinButtons]="true" width="100%" formControlName="roomNumber"></dx-number-box>
+            </div>
+            <div class="form-inline-custom">
+              <label>Số người lớn <span class="required">*</span></label>
+              <dx-number-box [showSpinButtons]="true" [min]="0" [max]="6" width="100%" formControlName="numberOfPeople"
+                             [ngClass]="{ 'is-invalid': submitted && formControlRoom.numberOfPeople.errors?.required }"
+              ></dx-number-box>
+              <label>Số trẻ em</label>
+              <dx-number-box [showSpinButtons]="true" [min]="0" [max]="6" width="100%" formControlName="childNumber"></dx-number-box>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-inline-custom">
+              <label>Loại giường </label>
+              <input nz-input formControlName="bedType" type="text" disabled/>
+            </div>
+            <div class="form-inline-custom">
+              <label>Diện tích (m2) </label>
+              <dx-number-box [showSpinButtons]="true" [min]="0" width="100%" formControlName="roomArea"
+              ></dx-number-box>
+              <label>Số giường phụ</label>
+              <dx-number-box [showSpinButtons]="true" [min]="0" width="100%" formControlName="extraBed"></dx-number-box>
+            </div>
+            <div class="form-inline-custom">
+              <label>Giá giường phụ </label>
+              <dx-number-box formControlName="extraBedPrice" format="#,##0 VNĐ"
+                             [ngClass]="{ 'is-invalid': submitted && (formControlRoom.extraBedPrice.errors?.required || formControlRoom.extraBedPrice.value == 0)}"></dx-number-box>
+            </div>
+            <div class="form-inline-custom">
+              <label>Giá nhập (có VAT) <span class="required">*</span></label>
+              <dx-number-box formControlName="costPrice" format="#,##0 VNĐ"
+                             [ngClass]="{ 'is-invalid': submitted && (formControlRoom.costPrice.errors?.required || formControlRoom.costPrice.value == 0)}"></dx-number-box>
+            </div>
+            <div class="form-inline-custom">
+              <label>Giá phòng </label>
+              <dx-number-box disabled [min]="0" format="#,##0 VNĐ" formControlName="price"></dx-number-box>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <label>Tiện ích</label>
+            <nz-checkbox-group class="grid-3" formControlName="amenities"></nz-checkbox-group>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="card border-0">
+    <nz-tabset>
+      <nz-tab nzTitle="Hình ảnh loại phòng">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-inline-custom align-items-baseline div-images">
+              <nz-upload class="upload-list-inline" [nzMultiple]="true" [nzAction]="uploadUrl" nzName="postedFile"
+                         [nzHeaders]="uploadHeader" nzListType="picture" [nzRemove]="handleRemoveImageRoom"
+                         (nzChange)="handleChangeImages($event, 'room')" [nzFileList]="fileList">
+                <button nz-button class="btn-flex">
+                  <span nz-icon nzType="upload"></span>
+                  Tải lên file ảnh
+                </button>
+              </nz-upload>
+            </div>
+          </div>
+        </div>
+      </nz-tab>
+      <nz-tab nzTitle="Giá theo giai đoạn" [nzDisabled]="!isEdit">
+        <dx-data-grid id="gridContainerPriceRoomDetail" [dataSource]="formAddRoom.value.prices" keyExpr="id"
+                      [allowColumnReordering]="true" [showBorders]="true" (onEditingStart)="logEvent('EditingStart')"
+                      (onInitNewRow)="onInitNewRowPriceDetail($event)"
+                      (onRowInserting)="onRowInsertingPriceDetail($event, formAddRoom.value.id)"
+                      (onRowInserted)="onRowInsertedPriceDetail($event)" (onRowUpdating)="onRowUpdatingPriceDetail($event)"
+                      (onRowUpdated)="onRowUpdatedPriceDetail($event)" (onRowRemoving)="+($event)"
+                      (onRowRemoved)="logEvent('RowRemoved')" (onSaving)="onSavingPriceDetail($event)"
+                      (onSaved)="logEvent('Saved')" (onEditCanceling)="logEvent('EditCanceling')"
+                      (onEditCanceled)="logEvent('EditCanceled')">
+          <dxo-paging [enabled]="true"></dxo-paging>
+          <dxo-editing mode="row" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true"
+                       [useIcons]="true">
+          </dxo-editing>
+          <dxi-column cssClass="text-center" caption="id" [width]="55" dataField="id" [fixed]="true"
+                      [allowFiltering]="false" [allowSorting]="false" [visible]="false"></dxi-column>
+
+          <dxi-column cssClass="text-center" caption="Room ID" [width]="55" dataField="roomId" [fixed]="true"
+                      [allowFiltering]="false" [allowSorting]="false" [visible]="false"></dxi-column>
+
+          <dxi-column caption="Tiêu đề" dataField="title" [width]="250" dataType="string" [fixed]="true">
+          </dxi-column>
+
+          <dxi-column caption="Giá phòng" dataField="price" [width]="150" format="#,##0 VNĐ"
+                      alignment="right"> </dxi-column>
+
+          <dxi-column caption="Thời điểm bắt đầu" dataField="fromDate" [width]="200" dataType="date"
+                      format="dd/MM/yyyy"> </dxi-column>
+
+          <dxi-column caption="Thời điểm kết thúc" dataField="toDate" [width]="200" dataType="date"
+                      format="dd/MM/yyyy"> </dxi-column>
+
+          <dxi-column caption="Trạng thái" dataField="isUse" [minWidth]="150">
+            <dxo-lookup [dataSource]="statusPriceDetail" displayExpr="name" valueExpr="value">
+            </dxo-lookup>
+          </dxi-column>
+
+          <dxo-toolbar>
+            <dxi-item name="addRowButton"></dxi-item>
+            <dxi-item location="before">
+              <div class="title-detail" style="width: 100%;">Thiết lập giá phòng theo thời gian:</div>
+            </dxi-item>
+          </dxo-toolbar>
+
+          <dxi-column type="buttons">
+            <dxi-button name="edit" text="Sửa thông tin giá"></dxi-button>
+            <dxi-button name="delete" text="Giá thông giá"></dxi-button>
+            <dxi-button name="save" text="Lưu thông giá phòng"></dxi-button>
+            <dxi-button name="cancel" text="Huỷ"></dxi-button>
+          </dxi-column>
+        </dx-data-grid>
+      </nz-tab>
+    </nz-tabset>
+  </div>
+</div>

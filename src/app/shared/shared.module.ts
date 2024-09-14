@@ -52,6 +52,7 @@ import { UserTypePipe } from './pipe/user-type.pipe';
 import { PartnerStatusPipe } from './pipe/partner-status.pipe';
 import { EmployeePipePipe } from './pipe/employeePipe.pipe';
 import { NzProgressModule } from 'ng-zorro-antd/progress';
+import {NzTabsModule} from 'ng-zorro-antd/tabs';
 @NgModule({
   imports: [
     CommonModule,
@@ -89,7 +90,8 @@ import { NzProgressModule } from 'ng-zorro-antd/progress';
     NzProgressModule,
     DxDateBoxModule,
     AngularEditorModule,
-    NzRadioModule
+    NzRadioModule,
+    NzTabsModule
   ],
   exports: [
     DateFormatPipe,
@@ -131,7 +133,6 @@ import { NzProgressModule } from 'ng-zorro-antd/progress';
     NzMessageModule,
     NzSwitchModule,
     NzRateModule,
-    NzProgressModule,
     AngularEditorModule,
     DxDateBoxModule,
     BookingHotelStatusPipe,
@@ -143,7 +144,8 @@ import { NzProgressModule } from 'ng-zorro-antd/progress';
     UserTypePipe,
     PartnerStatusPipe,
     EmployeePipePipe,
-    NzRadioModule
+    NzRadioModule,
+    NzTabsModule
   ],
   declarations: [
     DateFormatPipe,

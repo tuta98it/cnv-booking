@@ -1,0 +1,349 @@
+<div class="main-wapper">
+  <div class="toolbar">
+    <div class="before">
+      <h2 class="toolbar-title">{{editTitle}}</h2>
+    </div>
+    <div class="after">
+      <div class="buttons">
+        <button [disabled]="!formAddHotel.valid" (click)="triggerSubmit()" nz-button nzType="primary"
+                class="ant-btn-primary" type="button">
+          <em class="fas fa-save fa-fw" style="margin-right: 4px;"></em> Lưu lại
+        </button>
+        <button (click)="goListHotel()" nz-button nzType="default" class="ant-btn-primary" type="button">
+          <em class="fas fa-times fa-fw" style="margin-right: 4px;"></em> Hủy bỏ
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="card border-0">
+    <div class="toolbar border-bottom">
+      <div class="before">
+        <h2 class="toolbar-title">Thông tin cơ bản</h2>
+      </div>
+    </div>
+    <div class="card-body p-2">
+      <form [formGroup]="formAddHotel" class="container" (ngSubmit)="saveHotel()" #myForm="ngForm">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-inline-custom">
+              <label>Trạng thái </label>
+              <input nz-input [value]="'Đang hoạt động'" disabled/>
+            </div>
+            <div class="form-inline-custom">
+              <label>Mã khách sạn <span class="required">*</span></label>
+              <input nz-input formControlName="code" type="text"
+                     [ngClass]="{ 'is-invalid': submitted && formControlHotel.code.errors?.required }"/>
+            </div>
+            <div class="form-inline-custom">
+              <label>Tên khách sạn <span class="required">*</span></label>
+              <input nz-input formControlName="name" type="text"
+                     [ngClass]="{ 'is-invalid': submitted && formControlHotel.name.errors?.required }"/>
+            </div>
+            <div class="form-inline-custom">
+              <label>Hạng sao <span class="required">*</span></label>
+              <nz-rate formControlName="ratingStar"></nz-rate>
+            </div>
+            <div class="form-inline-custom">
+              <label>Link map </label>
+              <input nz-input formControlName="linkGoogleMap" type="text"/>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-inline-custom">
+              <label>Tỉnh thành <span class="required">*</span></label>
+              <nz-select nzShowSearch nzMode="default" nzPlaceHolder="--Tỉnh thành phố--" formControlName="provinceId"
+                         [ngClass]="{ 'is-invalid': submitted && formControlHotel.provinceId.errors?.required }"
+                         (ngModelChange)="getDistrictsById($event)">
+                <nz-option *ngFor="let pro of provinces" nzLabel="{{pro.name}}" [nzValue]="pro.id"></nz-option>
+              </nz-select>
+            </div>
+            <div class="form-inline-custom">
+              <label>Quận/Huyện <span class="required">*</span></label>
+              <nz-select nzShowSearch nzMode="default" nzPlaceHolder="--Quận/Huyện--" [nzDisabled]="!districts"
+                         formControlName="districtId"
+                         [ngClass]="{ 'is-invalid': submitted && formControlHotel.districtId.errors?.required }">
+                <nz-option *ngFor="let dis of districts" nzLabel="{{dis.name}}" [nzValue]="dis.id"></nz-option>
+              </nz-select>
+            </div>
+            <div class="form-inline-custom">
+              <label>Địa chỉ <span class="required">*</span></label>
+              <input nz-input formControlName="address" type="text"
+                     [ngClass]="{ 'is-invalid': submitted && formControlHotel.address.errors?.required }"/>
+            </div>
+            <div class="form-inline-custom">
+              <label>Email <span class="required">*</span></label>
+              <input nz-input formControlName="contactEmail" type="text"
+                     [ngClass]="{ 'is-invalid': submitted && formControlHotel.contactEmail.errors?.required }"/>
+            </div>
+            <div class="form-inline-custom">
+              <label>Website <span class="required">*</span></label>
+              <input nz-input formControlName="websiteUrl" type="text"
+                     [ngClass]="{ 'is-invalid': submitted && formControlHotel.websiteUrl.errors?.required }"/>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-inline-custom align-items-baseline">
+              <label>Tiện ích</label>
+              <nz-checkbox-group formControlName="amenities"></nz-checkbox-group>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="card border-0">
+    <nz-tabset>
+      <nz-tab nzTitle="Chi tiết khách sạn">
+        <!--<div class="toolbar border-bottom" >
+          <div class="before">
+            <h2 class="toolbar-title">&nbsp;</h2>
+          </div>
+          <div class="after">
+            <div class="buttons">
+              <button nz-button nzType="primary" class="ant-btn-primary" type="button">
+                <em class="fas fa-save fa-fw" style="margin-right: 4px;"></em> Lưu lại
+              </button>
+              <button nz-button nzType="default" class="ant-btn-primary" type="button">
+                <em class="fas fa-times fa-fw" style="margin-right: 4px;"></em> Hủy bỏ
+              </button>
+            </div>
+          </div>
+        </div>-->
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-inline-custom align-items-baseline">
+              <label>Mô tả ngắn <i *ngIf="hotelItem.shortDescription?.length">({{hotelItem.shortDescription?.length}}
+                /500)</i><span class="required">*</span></label>
+              <textarea class="form-control" [(ngModel)]="hotelItem.shortDescription"></textarea>
+            </div>
+            <div class="form-inline-custom align-items-baseline">
+              <label>Mô tả đầy đủ <span class="required">*</span></label>
+              <angular-editor [(ngModel)]="hotelItem.description" [placeholder]="'Mô tả khách sạn ...'"
+                              [config]="configDescriptionHotel"></angular-editor>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-inline-custom align-items-baseline">
+              <label>Ảnh khách sạn</label>
+              <nz-upload class="upload-list-inline" [nzMultiple]="true" [nzAction]="uploadUrl" nzName="postedFile"
+                         [nzHeaders]="uploadHeader" nzListType="picture" [nzRemove]="handleRemoveImageHotel"
+                         (nzChange)="handleChangeImages($event, 'hotel')" [nzFileList]="fileList">
+                <button nz-button>
+                  <span nz-icon nzType="upload"></span>
+                  Nhấn để tải ảnh
+                </button>
+              </nz-upload>
+            </div>
+          </div>
+        </div>
+      </nz-tab>
+      <nz-tab nzTitle="Quản lý hợp đồng" [nzDisabled]="!isEdit">
+        <form [formGroup]="formContract" class="container" #contractForm="ngForm">
+          <div class="toolbar border-bottom">
+            <div class="before">
+              <h2 class="toolbar-title">&nbsp;</h2>
+            </div>
+            <div class="after">
+              <div class="buttons">
+                <button (click)="saveContract()" nz-button nzType="primary" class="ant-btn-primary" type="submitted">
+                  <em class="fas fa-save fa-fw" style="margin-right: 4px;"></em> Lưu lại
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-inline-custom align-items-baseline">
+                <label>File hợp đồng </label>
+                <nz-upload *ngIf="fileContractList.length < 3" class="upload-list-inline" [nzMultiple]="true"
+                           [nzAction]="uploadContractFileUrl"
+                           nzName="postedFile"
+                           [nzHeaders]="uploadHeader" nzListType="text" [nzRemove]="handleRemoveContractFile"
+                           (nzChange)="handleChangeImages($event, 'contract')" [nzFileList]="fileContractList">
+                  <button nz-button>
+                    <span nz-icon nzType="upload"></span>
+                  </button>
+                </nz-upload>
+              </div>
+              <div class="form-inline-custom">
+                <label>Mã số thuế </label>
+                <input nz-input formControlName="taxCode" type="text"/>
+              </div>
+              <div class="form-inline-custom">
+                <label>Tên doanh nghiệp </label>
+                <input nz-input formControlName="businessName" type="text"/>
+              </div>
+              <div class="form-inline-custom">
+                <label>Tên tiếng Anh </label>
+                <input nz-input formControlName="businessNameEnglish" type="text"/>
+              </div>
+              <div class="form-inline-custom">
+                <label>Người phụ trách <span class="required">*</span></label>
+                <input nz-input formControlName="personInCharge" type="text"
+                       [ngClass]="{ 'is-invalid': submittedContract && formControlContract.personInCharge.errors?.required }"/>
+              </div>
+              <div class="form-inline-custom">
+                <label>Chức vụ </label>
+                <input nz-input formControlName="positionOfPersonInCharge" type="text"/>
+              </div>
+              <div class="form-inline-custom">
+                <label>Số điện thoại <span class="required">*</span></label>
+                <input nz-input formControlName="phoneNumberOfPersonInCharge" type="text"
+                       [ngClass]="{ 'is-invalid': submittedContract && formControlContract.phoneNumberOfPersonInCharge.errors?.required }"
+                />
+              </div>
+              <div class="form-inline-custom">
+                <label>Email cá nhân <span class="required">*</span></label>
+                <input nz-input formControlName="emailOfPersonInCharge" type="text"
+                       [ngClass]="{ 'is-invalid': submittedContract && formControlContract.emailOfPersonInCharge.errors?.required }"
+                />
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-inline-custom">
+                <label>Thời gian bắt đầu HĐ </label>
+                <dx-date-box width="100%" formControlName="beginTimeContract" placeholder="dd/MM/yyyy" type="date"
+                             [showClearButton]="true"
+                             [useMaskBehavior]="true" displayFormat="dd/MM/yyyy"
+                ></dx-date-box>
+              </div>
+              <div class="form-inline-custom">
+                <label>Thời gian kết thúc HĐ </label>
+                <dx-date-box width="100%" formControlName="endTimeContract" placeholder="dd/MM/yyyy" type="date"
+                             [showClearButton]="true"
+                             [useMaskBehavior]="true" displayFormat="dd/MM/yyyy"
+                ></dx-date-box>
+              </div>
+              <div class="form-inline-custom">
+                <label>Số tài khoản <span class="required">*</span></label>
+                <input nz-input formControlName="businessAccountNumber" type="text"/>
+              </div>
+              <div class="form-inline-custom">
+                <label>Chủ tài khoản <span class="required">*</span></label>
+                <input nz-input formControlName="businessAccountOwner" type="text"/>
+              </div>
+              <div class="form-inline-custom">
+                <label>Ngân hàng - Chi nhánh <span class="required">*</span></label>
+                <input nz-input formControlName="businessBankBranch" type="text"/>
+              </div>
+            </div>
+          </div>
+        </form>
+      </nz-tab>
+      <nz-tab nzTitle="Danh sách loại phòng" [nzDisabled]="!isEdit">
+        <div class="toolbar">
+          <div class="before">
+            <h2 class="toolbar-title">Danh sách phòng</h2>
+          </div>
+          <div class="after">
+            <div class="buttons">
+              <button (click)="addNewRoom()" nz-button nzType="primary" class="" type="submitted">
+                <em class="fas fa-save fa-fw" style="margin-right: 4px;"></em> Thêm mới phòng
+              </button>
+              <!--<button nz-button nzType="default" class="ant-btn-primary" type="button">
+                <em class="fas fa-times fa-fw" style="margin-right: 4px;"></em> Hủy bỏ
+              </button>-->
+            </div>
+          </div>
+        </div>
+        <dx-data-grid
+          class="grid theme-dependent"
+          columnResizingMode="widget"
+          [allowColumnReordering]="true"
+          [showBorders]="true"
+          [showColumnLines]="true"
+          [showRowLines]="true"
+          [columnMinWidth]="50"
+          [columnAutoWidth]="true"
+          [columnResizingMode]="'nextColumn'"
+          [allowColumnResizing]="true"
+          [dataSource]="roomHotels">
+
+          <dxi-column cssClass="text-center" caption="STT" [width]="55" dataField="stt"
+                      [allowFiltering]="false" [allowSorting]="false"></dxi-column>
+          <dxi-column caption="Mã loại phòng" [width]="100" dataField="code" dataType="string"></dxi-column>
+          <dxi-column caption="Tên loại phòng" [width]="200" dataField="name" dataType="string"></dxi-column>
+
+          <dxi-column cssClass="text-center" caption="Trạng thái" [width]="100" cellTemplate="cellActive"
+                      dataField="isActive"></dxi-column>
+
+          <dxi-column cssClass="text-center" caption="Người lớn" [width]="100" dataField="numberOfPeople"></dxi-column>
+          <dxi-column cssClass="text-center" caption="Trẻ em" [width]="100" dataField="childNumber"></dxi-column>
+          <!-- <dxi-column cssClass="text-center" caption="Diện tích phòng" [width]="150" dataField="roomArea"
+                       [format]="areaUtils.areaNumberFormat"></dxi-column>-->
+          <dxi-column caption="Số lượng phòng" [width]="400" dataField="roomNumber" dataType="string"
+                      [visible]="false"></dxi-column>
+          <dxi-column caption="Giá phòng" cssClass="text-left" [width]="150" dataField="price"
+                      cellTemplate="cellPrice"></dxi-column>
+          <dxi-column caption="Hình ảnh phòng" cssClass="text-center" [width]="200" dataField="roomFiles"
+                      cellTemplate="cellImages"></dxi-column>
+          <dxi-column caption="Còn phòng?" [visible]="true" dataField="isAvailable" cssClass="text-center" [width]="200"
+                      cellTemplate="cellIsRoom"></dxi-column>
+          <dxi-column cssClass="text-center" caption="Action" [visible]="true" [width]="100"
+                      cellTemplate="cellBtnDetailTemplate"></dxi-column>
+
+          <div *dxTemplate="let cellInfo of 'cellActive'">
+            <span class="text-success" *ngIf="cellInfo.value">Đang hoạt động</span>
+            <span class="text-danger" *ngIf="!cellInfo.value">Khóa</span>
+          </div>
+
+          <div *dxTemplate="let isAvaliableRoomOBJ of 'cellIsRoom'">
+            <nz-switch [disabled]="!hotelItem.isActive" [(ngModel)]="isAvaliableRoomOBJ.value"
+                       (click)="clickSwitchIsAvaliable(isAvaliableRoomOBJ.value, isAvaliableRoomOBJ.data.id)"></nz-switch>
+          </div>
+          <div *dxTemplate="let price of 'cellPrice'">
+            {{price.value | currencyFormat}} <i class="fa-solid fa-dong-sign" style="color: #868e96;"></i>
+          </div>
+          <div *dxTemplate="let extraBedPrice of 'cellExtraBedPrice'">
+            {{extraBedPrice.value | currencyFormat}} <i class="fa-solid fa-dong-sign" style="color: #868e96;"></i>
+          </div>
+          <div *dxTemplate="let adultSurcharge of 'cellAdultSurcharge'">
+            {{adultSurcharge.value | currencyFormat}} <i class="fa-solid fa-dong-sign" style="color: #868e96;"></i>
+          </div>
+          <div *dxTemplate="let childSurcharge of 'cellChildSurcharge'">
+            {{childSurcharge.value | currencyFormat}} <i class="fa-solid fa-dong-sign" style="color: #868e96;"></i>
+          </div>
+          <div *dxTemplate="let images of 'cellImages'">
+            <button *ngIf="images" nz-button nzSize="small" nzType="dashed" (click)="previewImages(images.value)">Xem
+              ảnh
+            </button>
+          </div>
+          <div *dxTemplate="let room of 'cellBtnDetailTemplate'">
+            <button title="Xóa phòng" nz-button nzSize="small" nzType="default"
+                    class="btn-right button-update ant-btn-red" (click)="showConfirmDeleteRoom(room.data.id)">
+              <span class="fa fa-times fa-fw"></span>
+            </button>
+            <button title="Chỉnh sửa thông tin phòng" nz-button nzSize="small"
+                    nzType="default" class="btn-right button-update" (click)="routeLinkToEdit(room.data.id)">
+              <span class="fa fa-edit fa-fw"></span>
+            </button>
+            <button [title]="room.data.isActive ? 'Khóa phòng' : 'Mở khóa phòng'" nz-button nzSize="small"
+                    nzType="default" (click)="setActive(room.data)">
+              <span class="fa fa-key fa-fw" *ngIf="room.data.isActive"></span>
+              <span class="fa fa-unlock fa-fw" *ngIf="!room.data.isActive"></span>
+            </button>
+          </div>
+        </dx-data-grid>
+      </nz-tab>
+      <nz-tab nzTitle="Lịch sử thanh toán" [nzDisabled]="!isEdit">
+        <div class="toolbar">
+          <div class="before">
+            <h2 class="toolbar-title">Lịch sử thanh toán</h2>
+          </div>
+          <div class="after">
+            <div class="buttons">
+              <!-- <button (click)="addNewRoom()" nz-button nzType="primary" class="" type="submitted">
+                 <em class="fas fa-save fa-fw" style="margin-right: 4px;"></em> Thêm mới phòng
+               </button>
+               <button nz-button nzType="default" class="ant-btn-primary" type="button">
+                 <em class="fas fa-times fa-fw" style="margin-right: 4px;"></em> Hủy bỏ
+               </button>-->
+            </div>
+          </div>
+        </div>
+        <div class="row">
+        </div>
+      </nz-tab>
+    </nz-tabset>
+  </div>
+</div>

@@ -3,6 +3,9 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from 'src/app/shared/guards/guards.class';
 import { HotelComponent } from './hotel.component';
 import { EditHotelComponent } from './edit-hotel/edit-hotel.component';
+import {HotelListComponent} from './hotel-list/hotel-list.component';
+import {HotelEditComponent} from './hotel-edit/hotel-edit.component';
+import {RoomEditComponent} from './room-edit/room-edit.component';
 const routes: Routes = [
   {
     path: '', component: HotelComponent,
@@ -18,7 +21,15 @@ const routes: Routes = [
     //   },
     // ]
   },
-  { path: 'edit-hotel', component: EditHotelComponent, canActivate: [AuthGuard] },
+  {
+    path: 'list', component: HotelListComponent,
+    canActivate: [AuthGuard],
+  },
+  { path: 'edit-hotel', component: HotelEditComponent, canActivate: [AuthGuard] },
+  { path: 'edit-hotel-old', component: EditHotelComponent, canActivate: [AuthGuard] },
+  { path: 'edit-hotel/:id', component: HotelEditComponent, canActivate: [AuthGuard] },
+  { path: 'edit-room/:hotelId', component: RoomEditComponent, canActivate: [AuthGuard] },
+  { path: 'edit-room/:hotelId/:id', component: RoomEditComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
