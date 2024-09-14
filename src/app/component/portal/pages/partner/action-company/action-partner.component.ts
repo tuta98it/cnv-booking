@@ -219,7 +219,7 @@ export class ActionPartnerComponent implements OnInit {
       footer: [false],
       expandable: [true],
       checkbox: [true],
-      fixHeader: [false],
+      fixHeader: [true],
       noResult: [false],
       noResultText: 'Danh sách biến động số dư đang trống',
       ellipsis: [false],
@@ -434,9 +434,9 @@ export class ActionPartnerComponent implements OnInit {
 
 
     this.settingTableListBalanceFluctuationForm.controls.fixHeader.valueChanges.subscribe(fixed => {
-      this.scrollXBalanceFluctuationValue = fixed ? '240px' : null;
+      this.scrollYBalanceFluctuationValue = fixed ? '175px' : null;
     });
-    this.scrollYBalanceFluctuationValue = this.settingTableListBalanceFluctuationForm.controls['fixHeader'].value ? '240px' : null;
+    this.scrollYBalanceFluctuationValue = this.settingTableListBalanceFluctuationForm.controls['fixHeader'].value ? '175px' : null;
 
 
     this.settingTableListBalanceFluctuationForm.controls.noResult.valueChanges.subscribe(async empty => {
