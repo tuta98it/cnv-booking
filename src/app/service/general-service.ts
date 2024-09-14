@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { UrlConstant } from '../shared/constants/url.class';
 import { Role } from '../model/role.class';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class GeneralService extends BaseService {
 
   // LOGIN
@@ -452,6 +452,7 @@ export class GeneralService extends BaseService {
   }
 
 
+
   // putAccountForPartner(id: any, newData: any) {
   //   return this.put(UrlConstant.LIST_USER + `/PutAccountForPartner/${id}`, newData);
   // }
@@ -477,7 +478,7 @@ export class GeneralService extends BaseService {
 
 
   downloadExcelEmployeeForPartner(partnerId: number): Observable<any> {
-    return this.post(UrlConstant.LIST_USER + `/DownloadExcelEmployeeForPartner`, {"partnerId": partnerId}, {},  "blob");
+    return this.post(UrlConstant.LIST_USER + `/DownloadExcelEmployeeForPartner`, { "partnerId": partnerId }, {}, "blob");
   }
 
 
@@ -486,7 +487,7 @@ export class GeneralService extends BaseService {
     return this.get(UrlConstant.LIST_PARTNERS);
   }
 
-  getPartnerById(partnerId : number): Observable<any[]> {
+  getPartnerById(partnerId: number): Observable<any[]> {
     return this.get(`${UrlConstant.LIST_PARTNERS}/${partnerId}`);
   }
   // getListPartner(): Observable<any[]> {
@@ -558,6 +559,20 @@ export class GeneralService extends BaseService {
     return this.post(UrlConstant.LIST_PARTNERS + `/ResetDebt/${idPartner}`, idPartner);
   }
 
+
+  accountBalanceInformationByPartner(partnerId: number): Observable<any> {
+    return this.post(UrlConstant.LIST_PARTNERS + `/AccountBalanceInformationByPartner`, { PartnerId: partnerId });
+  }
+
+
+  sendApprovalRequest(partnerId: number): Observable<any> {
+    return this.post(UrlConstant.LIST_PARTNERS + `/SendApprovalRequest`, { partnerId: partnerId });
+  }
+
+
+  submitRequestForApprovalConfirmation(partnerId: number): Observable<any> {
+    return this.post(UrlConstant.LIST_PARTNERS + `/SubmitRequestForApprovalConfirmation`, { partnerId: partnerId });
+  }
   // Booking
 
   // Xuất vé
@@ -672,7 +687,7 @@ export class GeneralService extends BaseService {
     return this.post(UrlConstant.LIST_TEST_RESULT + "/SaveFile", payload);
   }
 
-  removeFile(id): any {
+  removeFilePartner(id): any {
     return this.delete(`/Partners/RemoveFile/${id}`, id);
   }
 
@@ -901,5 +916,9 @@ export class GeneralService extends BaseService {
 
   updateAirportByID(idAirport: any, Airport: any): Observable<any> {
     return this.put(`/api${UrlConstant.AIRPORT}/${idAirport}`, Airport);
+  }
+
+  depositAccount(payloadDeposit: any): Observable<any> {
+    return this.post(`/api${UrlConstant.ACCOUNT_DEPOSIT_HISTORIES}/DepositAccount`, payloadDeposit);
   }
 }

@@ -4,13 +4,41 @@
       <div class="inner-box" style="display: flex; justify-content: space-between; align-items: center;">
         <span style="font-weight: 500; font-size: 18px;">{{titleActionCompanyPage}}</span>
         <div>
-          <button nz-button nzType="default" style="margin-right: 8px;">
+          <button *ngIf="itemPartner?.status == PartnerStatus.CreatingProfile" nz-button nzType="default"
+            style="margin-right: 8px;" (click)="handlerSendApprovalRequest()">
             <div style="display: flex; align-items: center;">
               <span nz-icon nzType="send"></span>
               <span style="margin-left: 6px; line-height: normal;">Gửi duyệt</span>
             </div>
           </button>
-          <button nz-button nzDanger nzType="text" (click)="cancelPageActionPartner()">
+
+
+          <button *ngIf="itemPartner?.status == PartnerStatus.PendingApproval" nz-button nzType="default"
+            style="margin-right: 8px;" (click)="submitRequestForApprovalConfirmation()">
+            <div style="display: flex; align-items: center;">
+              <span nz-icon nzType="send"></span>
+              <span style="margin-left: 6px; line-height: normal;">Phê duyệt</span>
+            </div>
+          </button>
+
+          <button *ngIf="itemPartner?.status == PartnerStatus.Active" nz-button nzType="default"
+            (click)="cancelPageActionPartner()" style="margin-right: 8px;">
+            <div style=" display: flex; align-items: center;">
+              <span nz-icon nzType="arrow-left"></span>
+              <span style="margin-left: 4px; line-height: normal;">Quay lại</span>
+            </div>
+          </button>
+
+          <button *ngIf="itemPartner?.status == PartnerStatus.Active" nz-button nzType="text"
+            style="text-decoration: none; color: #40a9ff; border-color: #40a9ff; cursor: default;">
+            <div style="display: flex; align-items: center;">
+              <span nz-icon nzType="check"></span>
+              <span style="margin-left: 6px; line-height: normal;">Đã duyệt</span>
+            </div>
+          </button>
+
+          <button *ngIf="itemPartner?.status != PartnerStatus.Active" nz-button nzDanger nzType="text"
+            (click)="cancelPageActionPartner()" style="margin-left: 8px;">
             <div style="display: flex; align-items: center;">
               <span nz-icon nzType="close"></span>
               <span style="margin-left: 4px; line-height: normal;">Huỷ bỏ</span>
@@ -28,21 +56,22 @@
           <div style="display: flex; justify-content: space-between; align-items: center;">
             <span style="font-weight: 500; font-size: 18px;">Thông tin cơ bản</span>
             <div>
-              <button [disabled]="!isActiveEditBaseInfo" nz-button nzType="primary" style="margin-right: 8px;"
+              <button *ngIf="isActiveEditBaseInfo.value" nz-button nzType="primary" style="margin-right: 8px;"
                 (click)="saveBaseInfoPartner()">
                 <div style="display: flex; align-items: center;">
                   <span nz-icon nzType="save"></span>
                   <span style="margin-left: 6px; line-height: normal;">Lưu lại</span>
                 </div>
               </button>
-              <button [disabled]="isActiveEditBaseInfo" nz-button nzType="primary" style="margin-right: 8px;"
-                (click)="editBaseInfoPartner()">
+              <button *ngIf="!isActiveEditBaseInfo.value" [disabled]="isLockPage.value" nz-button nzType="primary"
+                style="margin-right: 8px;" (click)="editBaseInfoPartner()">
                 <div style="display: flex; align-items: center;">
                   <span nz-icon nzType="edit"></span>
                   <span style="margin-left: 6px; line-height: normal;">Chỉnh sửa</span>
                 </div>
               </button>
-              <button nz-button nzDanger nzType="default" (click)="cancelBaseInfoPartner()">
+              <button *ngIf="isActiveEditBaseInfo.value" nz-button nzDanger nzType="default"
+                (click)="cancelBaseInfoPartner()">
                 <div style="display: flex; align-items: center;">
                   <span nz-icon nzType="close"></span>
                   <span style="margin-left: 4px; line-height: normal;">Huỷ bỏ</span>
@@ -113,9 +142,9 @@
                       Cho phép công nợ
                     </div>
                     <div nz-col class="gutter-row" [nzSpan]="14">
-                      <nz-radio-group formControlName='allowDebt'>
+                      <nz-radio-group formControlName='allowDebt' (ngModelChange)="changeAllowDebt()">
                         <label nz-radio [nzValue]="AllowDebtPartner.ALLOW">Có</label>
-                        <label nz-radio [nzValue]="AllowDebtPartner.NOTALLOW">Không</label>
+                        <label nz-radio [nzValue]="AllowDebtPartner.NOT_ALLOW">Không</label>
                       </nz-radio-group>
                     </div>
                   </div>
@@ -163,16 +192,18 @@
                       Chủ doanh nghiệp
                     </div>
                     <div nz-col class="gutter-row" [nzSpan]="14">
-                      <!-- <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
-                        placeholder="Nhập chủ doanh nghiệp" formControlName='name'> -->
+                      <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
+                        placeholder="Nhập chủ doanh nghiệp" formControlName='name'>
+                    </div>
 
+                    <!-- <div nz-col class="gutter-row" [nzSpan]="14">
                       <nz-select style="border-radius: 4px;" nzSize="default" nzMode="default"
                         formControlName='businessOwnerId' nzPlaceHolder="Nhập chủ doanh nghiệp" nzAllowClear
                         nzShowSearch>
                         <nz-option *ngFor="let employee of employees"
                           nzLabel="{{employee.fullname}} - {{employee.username}}" [nzValue]="employee.id"></nz-option>
                       </nz-select>
-                    </div>
+                    </div> -->
                   </div>
 
                   <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
@@ -190,63 +221,139 @@
                         [nzShowUploadList]="settingUploadAuthorizationFile?.showUploadList"
                         [nzFileList]="listUploadAuthorizationFile"
                         (nzChange)="handleChangeUploadAuthorizationFile($event)">
-                        <button nz-button nzType="default" [nzSize]="'default'" nzShape="round"><span nz-icon
-                            nzType="upload"></span></button>
+                        <button [disabled]="!isActiveEditBaseInfo.value" nz-button nzType="default" [nzSize]="'default'"
+                          nzShape="round"><span nz-icon nzType="upload"></span></button>
                       </nz-upload>
                     </div>
                   </div>
                 </div>
               </div>
-              <div nz-col class="gutter-row" [nzSpan]="4">
-                <div>
-                  <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
-                    style="display: flex; align-items: center; padding: 8px 0;">
-                    <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
-                      Số điện thoại
-                    </div>
-                    <div nz-col class="gutter-row" [nzSpan]="12">
-                      <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
-                        placeholder="Nhập điện thoại doanh nghiệp" formControlName='phone'>
-                    </div>
+              <div *ngIf="formBaseInfoCreatePartner.get('allowDebt')?.value == AllowDebtPartner.ALLOW" nz-col
+                class="gutter-row" [nzSpan]="4">
+                <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                  style="display: flex; align-items: center; padding: 8px 0;">
+                  <div nz-col class="gutter-row" [nzSpan]="24" style="display: flex; align-items: center;">
+                    Số dư hiện tại
                   </div>
-
-                  <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
-                    style="display: flex; align-items: center; padding: 8px 0;">
-                    <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
-                      Email doanh nghiệp
-                    </div>
-                    <div nz-col class="gutter-row" [nzSpan]="12">
-                      <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
-                        placeholder="Nhập email doanh nghiệp" formControlName='email'>
-                    </div>
+                </div>
+                <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                  style="display: flex; align-items: center; padding: 8px 0;">
+                  <div nz-col class="gutter-row fs-xl" [nzSpan]="24"
+                    style="display: flex; align-items: center; color: #007AFF;">
+                    {{debtBearingSales?.currentBalance ? (debtBearingSales?.currentBalance | currencyFormat) : '-' }} đ
                   </div>
-
+                </div>
+                <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                  style="display: flex; align-items: center; padding: 8px 0;">
+                  <div nz-col class="gutter-row" [nzSpan]="24" style="display: flex; align-items: center;">
+                    Hạn mức tối đa
+                  </div>
+                </div>
+                <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                  style="display: flex; align-items: center; padding: 8px 0;">
+                  <div nz-col class="gutter-row fs-xl" [nzSpan]="24" style="display: flex; align-items: center;">
+                    {{debtBearingSales?.debtMax ? (debtBearingSales?.debtMax | currencyFormat) : '-' }} đ
+                  </div>
                 </div>
               </div>
-              <div nz-col class="gutter-row" [nzSpan]="4">
-                <div>
-                  <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
-                    style="display: flex; align-items: center; padding: 8px 0;">
-                    <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
-                      Số điện thoại
-                    </div>
-                    <div nz-col class="gutter-row" [nzSpan]="12">
-                      <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
-                        placeholder="Nhập điện thoại doanh nghiệp" formControlName='phone'>
-                    </div>
+              <div *ngIf="formBaseInfoCreatePartner.get('allowDebt')?.value == AllowDebtPartner.ALLOW" nz-col
+                class="gutter-row" [nzSpan]="4">
+                <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                  style="display: flex; align-items: center; padding: 8px 0;">
+                  <div nz-col class="gutter-row" [nzSpan]="24" style="display: flex; align-items: center;">
+                    Phát sinh trong kỳ
                   </div>
-
-                  <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
-                    style="display: flex; align-items: center; padding: 8px 0;">
-                    <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
-                      Email doanh nghiệp
-                    </div>
-                    <div nz-col class="gutter-row" [nzSpan]="12">
-                      <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
-                        placeholder="Nhập email doanh nghiệp" formControlName='email'>
-                    </div>
+                </div>
+                <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                  style="display: flex; align-items: center; padding: 8px 0;">
+                  <div nz-col class="gutter-row fs-xl" [nzSpan]="24" style="display: flex; align-items: center;">
+                    <span *ngIf="debtBearingSales?.amountIncurredDuringPeriod >= 0" style="color: #495057">
+                      {{debtBearingSales?.amountIncurredDuringPeriod ? (debtBearingSales?.amountIncurredDuringPeriod |
+                      currencyFormat) :
+                      '-'
+                      }} đ
+                    </span>
+                    <span *ngIf="debtBearingSales?.amountIncurredDuringPeriod < 0" style="color: #900B09">
+                      ({{debtBearingSales?.amountIncurredDuringPeriod ? (debtBearingSales?.amountIncurredDuringPeriod |
+                      currencyFormat) :
+                      '-'
+                      }} đ)
+                    </span>
                   </div>
+                </div>
+                <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                  style="display: flex; align-items: center; padding: 8px 0;">
+                  <div nz-col class="gutter-row" [nzSpan]="24" style="display: flex; align-items: center;">
+                    Hạn mức sử dụng
+                  </div>
+                </div>
+                <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                  style="display: flex; align-items: center; padding: 8px 0;">
+                  <div nz-col class="gutter-row fs-xl" [nzSpan]="24"
+                    style="display: flex; align-items: center; color: #188D47">
+                    {{debtBearingSales?.usageLimit ? (debtBearingSales?.usageLimit | currencyFormat) : '-' }} đ
+                  </div>
+                </div>
+              </div>
 
+              <div *ngIf="formBaseInfoCreatePartner.get('allowDebt')?.value == AllowDebtPartner.NOT_ALLOW" nz-col
+                class="gutter-row" [nzSpan]="4">
+                <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                  style="display: flex; align-items: center; padding: 8px 0;">
+                  <div nz-col class="gutter-row" [nzSpan]="24" style="display: flex; align-items: center;">
+                    Số dư đầu kỳ
+                  </div>
+                </div>
+                <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                  style="display: flex; align-items: center; padding: 8px 0;">
+                  <div nz-col class="gutter-row fs-xl" [nzSpan]="24"
+                    style="display: flex; align-items: center; color:  #007AFF;">
+                    {{debtFreeRevenue?.beginningBalance ? (debtFreeRevenue?.beginningBalance | currencyFormat) : '-' }}
+                    đ
+                  </div>
+                </div>
+                <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                  style="display: flex; align-items: center; padding: 8px 0;">
+                  <div nz-col class="gutter-row" [nzSpan]="24" style="display: flex; align-items: center;">
+                    Phát sinh tăng trong kỳ
+                  </div>
+                </div>
+                <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                  style="display: flex; align-items: center; padding: 8px 0;">
+                  <div nz-col class="gutter-row fs-xl" [nzSpan]="24" style="display: flex; align-items: center;">
+                    {{debtFreeRevenue?.increaseInGeneration ? (debtFreeRevenue?.increaseInGeneration | currencyFormat) :
+                    '-' }} đ
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="formBaseInfoCreatePartner.get('allowDebt')?.value == AllowDebtPartner.NOT_ALLOW" nz-col
+                class="gutter-row" [nzSpan]="4">
+                <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                  style="display: flex; align-items: center; padding: 8px 0;">
+                  <div nz-col class="gutter-row" [nzSpan]="24" style="display: flex; align-items: center;">
+                    Phát sinh giảm trong kỳ
+                  </div>
+                </div>
+                <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                  style="display: flex; align-items: center; padding: 8px 0;">
+                  <div nz-col class="gutter-row fs-xl" [nzSpan]="24"
+                    style="display: flex; align-items: center; color: #900B09;">
+                    ({{debtFreeRevenue?.decreaseInGeneration
+                    ? (debtFreeRevenue?.decreaseInGeneration | currencyFormat) : '-' }} đ)
+                  </div>
+                </div>
+                <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                  style="display: flex; align-items: center; padding: 8px 0;">
+                  <div nz-col class="gutter-row" [nzSpan]="24" style="display: flex; align-items: center;">
+                    Số dư cuối kỳ
+                  </div>
+                </div>
+                <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                  style="display: flex; align-items: center; padding: 8px 0;">
+                  <div nz-col class="gutter-row fs-xl" [nzSpan]="24"
+                    style="display: flex; align-items: center; color: #007AFF;">
+                    {{debtFreeRevenue?.endingBalance ? (debtFreeRevenue?.endingBalance | currencyFormat): '-' }} đ
+                  </div>
                 </div>
               </div>
             </div>
@@ -270,14 +377,23 @@
           <div style="display: flex; justify-content: space-between; align-items: center;">
             <span style="font-weight: 500; font-size: 16px;">Quản lý thông tin hợp đồng</span>
             <div>
-              <button nz-button nzType="primary" style="margin-right: 8px;" [disabled]="!itemPartner?.id"
-                (click)="saveUpdateContractInfoForPartner()">
+              <button nz-button nzType="primary" style="margin-right: 8px;" [disabled]="!itemPartner?.id "
+                *ngIf="isEditBaseBusinessContract" (click)="saveUpdateContractInfoForPartner()">
                 <div style="display: flex; align-items: center;">
                   <span nz-icon nzType="save"></span>
                   <span style="margin-left: 6px; line-height: normal;">Lưu lại</span>
                 </div>
               </button>
-              <button nz-button nzDanger nzType="default" (click)="cancelUpdateContractInfoForPartner()">
+              <button nz-button nzType="primary" style="margin-right: 8px;"
+                [disabled]="!itemPartner?.id || isLockPage.value" *ngIf="!isEditBaseBusinessContract"
+                (click)="changeValueBaseBusinessContractReversal()">
+                <div style="display: flex; align-items: center;">
+                  <span nz-icon nzType="edit"></span>
+                  <span style="margin-left: 6px; line-height: normal;">Chỉnh sửa</span>
+                </div>
+              </button>
+              <button *ngIf="isEditBaseBusinessContract" nz-button nzDanger nzType="default"
+                (click)="cancelUpdateContractInfoForPartner()">
                 <div style="display: flex; align-items: center;">
                   <span nz-icon nzType="close"></span>
                   <span style="margin-left: 4px; line-height: normal;">Huỷ bỏ</span>
@@ -288,7 +404,7 @@
           <form [formGroup]="formBaseBusinessContractUpdate">
             <div>
               <div style="height: 1px; margin: 16px 0; background-color: #0000000f;"></div>
-              <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
+              <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }" style="overflow-y: auto; max-height: 19rem;">
                 <div nz-col class="gutter-row" [nzSpan]="12">
                   <div>
                     <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
@@ -306,8 +422,8 @@
                           [nzShowUploadList]="settingUploadBusinessLicenseFile?.showUploadList"
                           [nzFileList]="listUploadBusinessLicenseFile"
                           (nzChange)="handleChangeUploadBusinessLicenseFile($event)">
-                          <button nz-button nzType="default" [nzSize]="'default'" nzShape="round"><span nz-icon
-                              nzType="upload"></span></button>
+                          <button [disabled]="!isEditBaseBusinessContract" nz-button nzType="default"
+                            [nzSize]="'default'" nzShape="round"><span nz-icon nzType="upload"></span></button>
                         </nz-upload>
                       </div>
                     </div>
@@ -324,8 +440,8 @@
                           [nzHeaders]="settingUploadContractFile?.header" [nzRemove]="handleRemoveUploadContractFile"
                           [nzShowUploadList]="settingUploadContractFile?.showUploadList"
                           [nzFileList]="listUploadContractFile" (nzChange)="handleChangeUploadContractFile($event)">
-                          <button nz-button nzType="default" [nzSize]="'default'" nzShape="round"><span nz-icon
-                              nzType="upload"></span></button>
+                          <button [disabled]="!isEditBaseBusinessContract" nz-button nzType="default"
+                            [nzSize]="'default'" nzShape="round"><span nz-icon nzType="upload"></span></button>
                         </nz-upload>
                       </div>
                     </div>
@@ -337,12 +453,14 @@
                         <span style="color: tomato; margin-left: 4px;">*</span>
                       </div>
                       <div nz-col class="gutter-row" [nzSpan]="12">
-                        <nz-select style="border-radius: 4px;" nzSize="default" nzMode="default"
+                        <!-- <nz-select style="border-radius: 4px;" nzSize="default" nzMode="default"
                           nzPlaceHolder="Nhập người phụ trách" formControlName='personInChargeId'
                           (ngModelChange)="onSelectPersonInCharge($event)" nzAllowClear nzShowSearch>
                           <nz-option *ngFor="let employee of employees"
                             nzLabel="{{employee.fullname}} - {{employee.username}}" [nzValue]="employee.id"></nz-option>
-                        </nz-select>
+                        </nz-select> -->
+                        <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
+                          formControlName='namePersonInCharge' placeholder="Nhập tên người phụ trách">
                       </div>
                     </div>
 
@@ -447,26 +565,47 @@
                     </div>
 
                     <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                      *ngIf="formBaseInfoCreatePartner.get('allowDebt')?.value == AllowDebtPartner.ALLOW"
                       style="display: flex; align-items: center; padding: 8px 0;">
                       <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
                         Hạn mức tối đa
                         <span style="color: tomato; margin-left: 4px;">*</span>
                       </div>
                       <div nz-col class="gutter-row" [nzSpan]="12">
-                        <input style="border-radius: 4px;" nzSize="default" formControlName='debtMax' nz-input
-                          type="text" placeholder="Nhập hạn mức tối đa">
+                        <!-- <input style="border-radius: 4px;" nzSize="default" formControlName='debtMax' nz-input
+                          type="text" placeholder="Nhập hạn mức tối đa"> -->
+
+                        <nz-input-group nzSuffix="VND">
+                          <input style="border-radius: 4px;" nz-input nzSize="default" formControlName="debtMax"
+                            nz-tooltip nzTooltipTrigger="focus" nzTooltipPlacement="topLeft"
+                            nzOverlayClassName="numeric-input" [nzTooltipTitle]="tooltipTitleAmount"
+                            placeholder="Nhập hạn mức tối đa" (click)="onClickInputAmount($event, 'debtMax')"
+                            (ngModelChange)="onChangeInputAmount($event, 'debtMax')"
+                            (blur)="onBlurInputAmount('debtMax')">
+                        </nz-input-group>
                       </div>
                     </div>
 
                     <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                      *ngIf="formBaseInfoCreatePartner.get('allowDebt')?.value == AllowDebtPartner.ALLOW"
                       style="display: flex; align-items: center; padding: 8px 0;">
                       <div nz-col class="gutter-row" [nzSpan]="6" style="display: flex; align-items: center;">
                         Hạn mức cảnh báo
                         <span style="color: tomato; margin-left: 4px;">*</span>
                       </div>
                       <div nz-col class="gutter-row" [nzSpan]="12">
-                        <input style="border-radius: 4px;" nzSize="default" formControlName='warningLimitPrice' nz-input
-                          type="text" placeholder="Nhập hạn mức cảnh báo">
+                        <!-- <input style="border-radius: 4px;" nzSize="default" formControlName='warningLimitPrice' nz-input
+                          type="text" placeholder="Nhập hạn mức cảnh báo"> -->
+
+                        <nz-input-group nzSuffix="VND">
+                          <input style="border-radius: 4px;" nz-input nzSize="default"
+                            formControlName="warningLimitPrice" nz-tooltip nzTooltipTrigger="focus"
+                            nzTooltipPlacement="topLeft" nzOverlayClassName="numeric-input"
+                            [nzTooltipTitle]="tooltipTitleAmount" placeholder="Nhập hạn mức cảnh báo"
+                            (click)="onClickInputAmount($event, 'warningLimitPrice')"
+                            (ngModelChange)="onChangeInputAmount($event, 'warningLimitPrice')"
+                            (blur)="onBlurInputAmount('warningLimitPrice')">
+                        </nz-input-group>
                       </div>
                     </div>
 
@@ -477,7 +616,8 @@
                         <span style="color: tomato; margin-left: 4px;">*</span>
                       </div>
                       <div nz-col class="gutter-row" [nzSpan]="12">
-                        <nz-checkbox-group [(ngModel)]="checkOptionsBusinessServiceVHL"
+                        <nz-checkbox-group [disabled]="!isEditBaseBusinessContract"
+                          [(ngModel)]="checkOptionsBusinessServiceVHL"
                           [ngModelOptions]="{standalone: true}"></nz-checkbox-group>
                       </div>
                     </div>
@@ -493,11 +633,11 @@
           <div style="display: flex; justify-content: space-between; align-items: center;">
             <span style="font-weight: 500; font-size: 16px;">Danh sách nhân viên</span>
             <div style="display: flex; align-items: center;">
-              <input style="width: 200px; border-radius: 4px; height: 32px; margin-right: 4rem;" nzSize="default"
-                nz-input type="text" placeholder="Tìm kiếm nhân viên" [(ngModel)]="searchEmployee"
-                (keyup)="onSearchEmployee()">
+              <input [disabled]="isLockPage.value"
+                style="width: 200px; border-radius: 4px; height: 32px; margin-right: 4rem;" nzSize="default" nz-input
+                type="text" placeholder="Tìm kiếm nhân viên" [(ngModel)]="searchEmployee" (keyup)="onSearchEmployee()">
               <div>
-                <button [disabled]="!itemPartner?.id" nz-button nz-dropdown nzType="primary"
+                <button [disabled]="!itemPartner?.id || isLockPage.value" nz-button nz-dropdown nzType="primary"
                   style="margin-right: 0.5rem;" [nzDropdownMenu]="menuListEmployeesVHL">
                   <div style="display: flex; align-items: center;">
                     <span nz-icon nzType="plus"></span>
@@ -505,9 +645,10 @@
                     <span nz-icon nzType="down"></span>
                   </div>
                 </button>
-                <nz-dropdown-menu [disabled]="!itemPartner?.id" #menuListEmployeesVHL="nzDropdownMenu">
+                <nz-dropdown-menu [disabled]="!itemPartner?.id || isLockPage.value"
+                  #menuListEmployeesVHL="nzDropdownMenu">
                   <ul nz-menu>
-                    <li nz-menu-item style="padding: 0.5rem 0;" [nzDisabled]="!itemPartner?.id">
+                    <li nz-menu-item style="padding: 0.5rem 0;" [nzDisabled]="!itemPartner?.id || isLockPage.value">
                       <div style="display: flex; align-items: center;">
                         <span nz-icon nzType="plus"></span>
                         <span style="margin-left: 6px; line-height: normal;"
@@ -515,8 +656,8 @@
                           viên</span>
                       </div>
                     </li>
-                    <li nz-menu-item style="padding: 0.5rem 0;" [nzDisabled]="!itemPartner?.id">
-                      <nz-upload
+                    <li nz-menu-item style="padding: 0.5rem 0;" [nzDisabled]="!itemPartner?.id || isLockPage.value">
+                      <nz-upload [nzDisabled]="!itemPartner?.id || isLockPage.value"
                         *ngIf="settingUploadEmployeeForPartnerFile && settingUploadEmployeeForPartnerFile?.action"
                         [nzMultiple]="settingUploadEmployeeForPartnerFile?.isMultiple"
                         [nzAction]="settingUploadEmployeeForPartnerFile?.action"
@@ -537,24 +678,23 @@
 
 
               <div>
-                <button [disabled]="!itemPartner?.id" nz-button nz-dropdown nzType="dashed"
-                  style="margin-right: 0.5rem;" [nzDropdownMenu]="menuListEmployeesVHLExport">
+                <button nz-button nz-dropdown nzType="dashed" style="margin-right: 0.5rem;"
+                  [nzDropdownMenu]="menuListEmployeesVHLExport">
                   <div style="display: flex; align-items: center;">
                     <span nz-icon nzType="plus"></span>
-                    <span style="margin: 0 6px; line-height: normal;">Tải file</span>
+                    <span style="margin: 0 6px; line-height: normal;">Xuất file</span>
                     <span nz-icon nzType="down"></span>
                   </div>
                 </button>
                 <nz-dropdown-menu [disabled]="!itemPartner?.id" #menuListEmployeesVHLExport="nzDropdownMenu">
                   <ul nz-menu>
-                    <li nz-menu-item style="padding: 0.5rem 0;" [nzDisabled]="!itemPartner?.id"
-                      (click)="downloadFileEmployeeForPartnerTemplate()">
+                    <li nz-menu-item style="padding: 0.5rem 0;" (click)="downloadFileEmployeeForPartnerTemplate()">
                       <div style="display: flex; align-items: center;">
                         <span nz-icon nzType="download"></span>
-                        <span style="margin-left: 6px; line-height: normal;">Tải file mẫu</span>
+                        <span style="margin-left: 6px; line-height: normal;">Xuất file mẫu</span>
                       </div>
                     </li>
-                    <li nz-menu-item style="padding: 0.5rem 0;" [nzDisabled]="!itemPartner?.id"
+                    <li nz-menu-item style="padding: 0.5rem 0;" [nzDisabled]="!itemPartner?.id || isLockPage.value"
                       (click)="downloadExcelEmployeeForPartner(itemPartner?.id)">
                       <div style="display: flex; align-items: center;">
                         <span nz-icon nzType="download"></span>
@@ -565,7 +705,7 @@
                 </nz-dropdown-menu>
               </div>
               <button [disabled]="!itemPartner?.id || allUnCheckedEmployee" nz-button nzType="default" nzDanger
-                (click)="showLockAccountConfirm(LockType.MULTIPLE)" >
+                (click)="showLockAccountConfirm(LockType.MULTIPLE)">
                 <div style="display: flex; align-items: center;">
                   <span nz-icon nzType="lock"></span>
                   <span style="margin-left: 4px; line-height: normal;">Khoá tài khoản</span>
@@ -576,8 +716,8 @@
           <div style="margin: 16px 0;"></div>
           <!-- Content lisst employees -->
           <div>
-            <nz-table #tagEmployeeTable [nzScroll]="{ x: scrollX, y: scrollY }" [nzData]="listOfEmployees"
-              [nzTableLayout]="settingTableEmployeesValue.tableLayout"
+            <nz-table #tagEmployeeTable [nzScroll]="{ x: scrollXEmployeesValue, y: scrollYEmployeesValue }"
+              [nzData]="listOfEmployees" [nzTableLayout]="settingTableEmployeesValue.tableLayout"
               [nzBordered]="settingTableEmployeesValue.bordered" [nzSimple]="settingTableEmployeesValue.simple"
               [nzLoading]="settingTableEmployeesValue.loading"
               [nzPaginationType]="settingTableEmployeesValue.paginationType"
@@ -592,13 +732,13 @@
               (nzCurrentPageDataChange)="currentPageDataChangeEmployee($event)">
               <thead>
                 <tr *ngIf="settingTableEmployeesValue.header">
-                  <th nzWidth="40px" *ngIf="settingTableEmployeesValue.expandable" [nzLeft]="fixedColumn"></th>
                   <th *ngIf="settingTableEmployeesValue.checkbox" nzWidth="60px" [(nzChecked)]="allCheckedEmployee"
-                    [nzLeft]="fixedColumn" [nzIndeterminate]="indeterminateEmployee"
+                    [nzLeft]="fixedColumnEmployee" [nzIndeterminate]="indeterminateEmployee"
                     (nzCheckedChange)="checkAllEmployees($event)">
                   </th>
-                  <th [nzLeft]="fixedColumn">Vai trò</th>
-                  <th [nzLeft]="fixedColumn">Mã người dùng</th>
+                  <th nzWidth="40px" [nzLeft]="fixedColumnEmployee">STT</th>
+                  <th [nzLeft]="fixedColumnEmployee">Vai trò</th>
+                  <th [nzLeft]="fixedColumnEmployee">Mã người dùng</th>
                   <th>Tên nhân viên</th>
                   <th>Trạng thái</th>
                   <th>Email</th>
@@ -606,17 +746,20 @@
                   <th>Giới tính</th>
                   <th>Quản lý trực tiếp</th>
                   <th>Mã thẻ thành viên</th>
-                  <th [nzRight]="fixedColumn" class="text-aligin-center">Thao tác</th>
+                  <th [nzRight]="fixedColumnEmployee" class="text-aligin-center">Thao tác</th>
                 </tr>
               </thead>
               <tbody>
                 <ng-container *ngFor="let data of tagEmployeeTable.data">
-                  <tr >
-                    <td [nzLeft]="fixedColumn" *ngIf="settingTableEmployeesValue.expandable" [(nzExpand)]="data.expand">
+                  <tr>
+                    <td [nzLeft]="fixedColumnEmployee" *ngIf="settingTableEmployeesValue.checkbox"
+                      [(nzChecked)]="data.checked" (nzCheckedChange)="refreshStatusEmployee()"
+                      [nzDisabled]="data.disabled"></td>
+                    <td [nzLeft]="fixedColumnEmployee">
+                      {{data.stt}}
                     </td>
-                    <td [nzLeft]="fixedColumn" *ngIf="settingTableEmployeesValue.checkbox" [(nzChecked)]="data.checked"
-                      (nzCheckedChange)="refreshStatusEmployee()" [nzDisabled]="data.disabled"></td>
-                    <td [nzLeft]="fixedColumn" [nzDisabled]="data.disabled">{{ data.userType | userTypePipe }}</td>
+                    <td [nzLeft]="fixedColumnEmployee" [nzDisabled]="data.disabled">{{ data.userType | userTypePipe }}
+                    </td>
                     <td [nzDisabled]="data.disabled">{{ data.userCode }}</td>
                     <td [nzDisabled]="data.disabled">{{ data.fullname }}</td>
                     <td [nzDisabled]="data.disabled">{{ data.status | partnerStatusPipe}}</td>
@@ -625,19 +768,23 @@
                     <td [nzDisabled]="data.disabled">{{ data.gender | genderPipe }}</td>
                     <td [nzDisabled]="data.disabled">{{ data.directManagementUserId | employeePipe : employees }}</td>
                     <td [nzDisabled]="data.disabled">{{ data.membershipCode }}</td>
-                    <td [nzRight]="fixedColumn" [nzEllipsis]="settingTableEmployeesValue.ellipsis"
+                    <td [nzRight]="fixedColumnEmployee" [nzEllipsis]="settingTableEmployeesValue.ellipsis"
                       class="text-aligin-center">
                       <button title="Sửa thông tin thông tin nhân viên" nz-button nzSize="small" nzType="default"
                         class="button-update"
-                        (click)="navigatePage('companies/employee-action/update', ActionTypePageVHL.Update, data.id)" [disabled]="data.disabled">
+                        (click)="navigatePage('companies/employee-action/update', ActionTypePageVHL.Update, data.id)"
+                        [disabled]="data.disabled">
                         <span class="fa fa-edit fa-fw"></span>
                       </button>
 
 
                       <button title="Thiết lập lại mật khẩu" nz-button nzSize="small" nzType="default"
-                        class="button-update" [disabled]="data.disabled">
+                        class="button-update" [disabled]="data.disabled" (click)="showPopupChangePassword()">
                         <span class="fa fa-key fa-fw"></span>
                       </button>
+                      <app-change-password [isVisible]="isVisibleChangePassword" [idEmployee]="data?.id"
+                        (cancel)="handleCancelChangePassword()">
+                      </app-change-password>
 
 
 
@@ -668,7 +815,150 @@
         </div>
 
         <div *ngIf="selectedMenu == MenuCreatePartner.AccountInfomation">
-          <span style="font-weight: 500; font-size: 16px;">Thông tin tài khoản</span>
+          <!-- Header list emloyees -->
+          <div *ngIf="formBaseInfoCreatePartner.get('allowDebt')?.value == AllowDebtPartner.ALLOW"
+            style="display: flex; justify-content: space-between; align-items: center; font-size: 16px;">
+            <div>
+              <div>
+                Hạn mức sử dụng {{debtBearingSales?.usageLimit ? (debtBearingSales?.usageLimit | currencyFormat): '-' }}
+                đ / {{debtBearingSales?.debtMax ? (debtBearingSales?.debtMax | currencyFormat): '-' }} đ
+
+              </div>
+              <div>
+                <nz-progress *ngIf="debtBearingSales?.debtMax"
+                  [nzPercent]="((debtBearingSales?.usageLimit ? debtBearingSales?.usageLimit : 0) / (debtBearingSales?.debtMax ? debtBearingSales?.debtMax : 1)) * 100"
+                  [nzShowInfo]="false" [ngModelOptions]="{standalone: true}"></nz-progress>
+
+
+                <nz-progress *ngIf="!debtBearingSales?.debtMax"
+                  [nzStatus]="'exception'"
+                  [nzPercent]="100"
+                  [nzShowInfo]="false" [ngModelOptions]="{standalone: true}"></nz-progress>
+              </div>
+            </div>
+
+
+            <div>
+              Dư nợ đầu kỳ {{debtBearingSales?.beginningBalance ? (debtBearingSales.beginningBalance | currencyFormat) :
+              '-' }} đ
+            </div>
+
+            <div>
+              Phát sinh trong kỳ {{debtBearingSales?.amountIncurredDuringPeriod?
+              (debtBearingSales.amountIncurredDuringPeriod | currencyFormat): '-' }} đ
+            </div>
+
+            <div>
+              Dư nợ cuối kỳ {{debtBearingSales?.endingBalance ? (debtBearingSales.endingBalance | currencyFormat): '-'
+              }} đ
+            </div>
+
+            <div>
+              Hạn thanh toán {{debtBearingSales?.expirationDate ? (debtBearingSales?.expirationDate | dateFormat) : '-'
+              }}
+            </div>
+
+          </div>
+
+          <div *ngIf="formBaseInfoCreatePartner.get('allowDebt')?.value == AllowDebtPartner.NOT_ALLOW"
+            style="display: flex; justify-content: space-between; align-items: center; font-size: 16px;">
+            <div>
+              Số dư đầu kỳ {{debtFreeRevenue?.beginningBalance ? (debtFreeRevenue.beginningBalance | currencyFormat):
+              '-' }} đ
+            </div>
+
+            <div>
+              Phát sinh tăng trong kỳ {{debtFreeRevenue?.increaseInGeneration ? (debtFreeRevenue.increaseInGeneration |
+              currencyFormat) :
+              '-' }} đ
+            </div>
+
+            <div style="color: #900B09;">
+              Phát sinh giảm trong kỳ ({{debtFreeRevenue?.decreaseInGeneration ? (debtFreeRevenue.decreaseInGeneration |
+              currencyFormat) :
+              '-' }} đ)
+            </div>
+
+
+            <div>
+              Số dư cuối kỳ {{debtFreeRevenue?.endingBalance ? (debtFreeRevenue.endingBalance | currencyFormat) : '-' }}
+              đ
+            </div>
+
+          </div>
+
+
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px;">
+            <span style="font-weight: 500; font-size: 16px;">Biến động số dư</span>
+            <div style="display: flex; align-items: center;">
+              <!-- <button [disabled]="!itemPartner?.id" nz-button nzType="primary" style="margin-right: 0.5rem;">
+                <div style="display: flex; align-items: center;">
+                  <span style="margin: 0 6px; line-height: normal;">In bảng kê khai</span>
+                </div>
+              </button> -->
+
+              <button [disabled]="!itemPartner?.id || isLockPage.value" nz-button nzType="primary"
+                style="margin-right: 0.5rem; background-color: #3B82F6;" (click)="showModalDepositAccount()">
+                <div style="display: flex; align-items: center;">
+                  <span style="margin: 0 6px; line-height: normal;">Nạp tiền tài khoản</span>
+                </div>
+              </button>
+              <app-deposit-account [isVisibleDepositAccount]="isVisibleDepositAccount" [employees]="employees"
+                [partnerId]="itemPartner?.id" (cancel)="handleDepositAccountCancel()">
+              </app-deposit-account>
+
+
+              <!-- <button [disabled]="!itemPartner?.id" nz-button nzType="default">
+                <div style="display: flex; align-items: center;">
+                  <span style="margin-left: 4px; line-height: normal;">Xem chi tiết</span>
+                </div>
+              </button> -->
+            </div>
+          </div>
+          <div style="margin: 16px 0;"></div>
+          <!-- Content lisst employees -->
+          <div>
+            <nz-table #tagBalanceFluctuation
+              [nzScroll]="{ x: scrollXBalanceFluctuationValue, y: scrollYBalanceFluctuationValue }"
+              [nzData]="listOfBalanceFluctuations" [nzTableLayout]="settingTableBalanceFluctuationValue.tableLayout"
+              [nzBordered]="settingTableBalanceFluctuationValue.bordered"
+              [nzSimple]="settingTableBalanceFluctuationValue.simple"
+              [nzLoading]="settingTableBalanceFluctuationValue.loading"
+              [nzPaginationType]="settingTableBalanceFluctuationValue.paginationType"
+              [nzPaginationPosition]="settingTableBalanceFluctuationValue.position"
+              [nzShowSizeChanger]="settingTableBalanceFluctuationValue.sizeChanger"
+              [nzFrontPagination]="settingTableBalanceFluctuationValue.pagination"
+              [nzShowPagination]="settingTableBalanceFluctuationValue.pagination"
+              [nzFooter]="settingTableBalanceFluctuationValue.footer ? 'Here is Footer' : null"
+              [nzTitle]="settingTableBalanceFluctuationValue.title ? 'Here is Title' : null"
+              [nzNoResult]="settingTableBalanceFluctuationValue.noResultText ? settingTableBalanceFluctuationValue.noResultText : ''"
+              [nzSize]="settingTableBalanceFluctuationValue.size"
+              (nzCurrentPageDataChange)="currentPageDataChangeBalanceFluctuation($event)">
+              <thead>
+                <tr *ngIf="settingTableBalanceFluctuationValue.header">
+                  <th nzWidth="40px" [nzLeft]="fixedColumnBalanceFluctuation">STT</th>
+                  <th [nzLeft]="fixedColumnBalanceFluctuation">Thời gian giao dịch</th>
+                  <th>Người thực hiện</th>
+                  <th>Số tiền phát sinh</th>
+                  <th>Nội dung giao dịch</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngFor="let data of tagBalanceFluctuation.data">
+                  <tr>
+                    <td [nzLeft]="fixedColumnBalanceFluctuation">
+                      {{ data.stt }}
+                    </td>
+                    <td [nzLeft]="fixedColumnBalanceFluctuation" [nzDisabled]="data.disabled">{{ data.transactionTime |
+                      dateFormat }}</td>
+                    <td [nzDisabled]="data.disabled">{{ data.implementPersonInfo }}</td>
+                    <td [nzDisabled]="data.disabled">{{ data.amount | currencyFormat }} đ</td>
+                    <td [nzDisabled]="data.disabled">{{ data.transactionContent}}</td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </nz-table>
+          </div>
         </div>
       </div>
     </div>

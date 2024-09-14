@@ -29,6 +29,7 @@ import { HttpClient, HttpHeaders, HttpRequest, HttpResponse } from '@angular/com
 import { filter } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { resolve } from 'path';
+import { TypeOfDocument } from 'src/app/enums/type-of-document.enum';
 @Component({
   selector: 'airline-ticket-booking-request',
   templateUrl: './airline-ticket-booking-request.component.html',
@@ -62,9 +63,11 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
 
   uploading = false;
   uploadHeader: any;
-  uploadUrl = '';
+  uploadUrlFlightTicket = '';
+  uploadUrlInvoice = '';
   listFileIds: any;
-  fileList: NzUploadFile[] = [];
+  fileFlightTicketList: NzUploadFile[] = [];
+  fileInvoiceList: NzUploadFile[] = [];
   showUploadListOption = { showPreviewIcon: true, showRemoveIcon: true, showDownloadIcon: true };
 
   data: any;
@@ -109,7 +112,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   tooltipTitleAmount = 'Nhập số tiền';
 
   @ViewChild('inputElementAmount', { static: false }) inputElementAmount?: ElementRef
-  formControlNameCurrent: string;
+
   isLoadingButtonSaveAirlineTicketInfo: boolean = false;
   constructor(
     public translate: TranslateService,
@@ -127,7 +130,8 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     this.uploadHeader = {
       Authorization: 'Bearer ' + localStorage.getItem(Constant.TOKEN),
     };
-    this.uploadUrl = `${this.configService.getConfig().api.baseUrl}/Upload/UploadRequestBookingFile?RequestBookingId=null`;
+    this.uploadUrlFlightTicket = `${this.configService.getConfig().api.baseUrl}/Upload/UploadRequestBookingFile?RequestBookingId=null&TypeFile=null`;
+    this.uploadUrlInvoice = `${this.configService.getConfig().api.baseUrl}/Upload/UploadRequestBookingFile?RequestBookingId=null&TypeFile=null`;
     this.formAirlineTicketPopup = this.formBuilder.group({
       id: [null],
       typeTicket: new FormControl({ value: TypeAirlineTicket.OneWay, disabled: false }, Validators.required),
@@ -163,34 +167,34 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
 
   onChangeInputAmount(value: string, controlName?: string): void {
     this.updateValueInputAmount(value);
-    this.formControlNameCurrent = controlName;
+
   }
 
 
   onClickInputAmount(event: any, controlName?: string): void {
     const inputElement = event.target as HTMLInputElement;
     this.valueInputNumberAmount = inputElement.value;
-    this.formControlNameCurrent = controlName;
+
     this.updateValueInputAmount(this.valueInputNumberAmount);
   }
 
   // '.' at the end or only '-' in the input box.
-  onBlurInputAmount(): void {
+  onBlurInputAmount(controlName?: string): void {
     if (this.valueInputNumberAmount.charAt(this.valueInputNumberAmount.length - 1) === '.' || this.valueInputNumberAmount === '-') {
-      this.updateValueInputAmount(this.valueInputNumberAmount.slice(0, -1));
+      this.updateValueInputAmount(this.valueInputNumberAmount.slice(0, -1), controlName);
       this.tooltipTitleAmount = "0 đ"
     }
   }
 
 
-  updateValueInputAmount(value: string): void {
+  updateValueInputAmount(value: string, controlName?: string): void {
     const reg = /^-?(0|[1-9][0-9]*)(\.[0-9]*)?$/;
     if ((!isNaN(+value) && reg.test(value)) || value === '' || value === '-') {
       this.valueInputNumberAmount = value;
     }
     // Chỉ cập nhật nếu giá trị khác
-    if (this.formControlNameCurrent) {
-      const control = this.formAirlineTicketPopup.get(this.formControlNameCurrent);
+    if (controlName) {
+      const control = this.formAirlineTicketPopup.get(controlName);
       if (control && control.value !== this.valueInputNumberAmount) {
         control.setValue(this.valueInputNumberAmount, { emitEvent: false });
       }
@@ -300,7 +304,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
 
 
   beforeUpload = (file: NzUploadFile): boolean => {
-    this.fileList = this.fileList.concat(file);
+    this.fileFlightTicketList = this.fileFlightTicketList.concat(file);
     return false;
   };
 
@@ -689,16 +693,17 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     this.ticketRoundTrip = itemData.typeTicket == TypeAirlineTicket.RoundTrip
     // console.log("this.formAirlineTicketPopup : ", this.formAirlineTicketPopup.value);
     this.listFileIds = [];
-    this.fileList = [];
+    this.fileFlightTicketList = [];
     for (const file of itemData.files) {
       const objFile = {
         uid: file.id.toString(),
         name: file.fileName,
         url: `${this.configService.getConfig().api.baseUrl}/${file.filePath}`,
       };
-      this.fileList.push(objFile);
+      this.fileFlightTicketList.push(objFile);
     }
-    this.uploadUrl = `${this.configService.getConfig().api.baseUrl}/Upload/UploadRequestBookingFile?RequestBookingId=${itemData.id}`;
+    this.uploadUrlFlightTicket = `${this.configService.getConfig().api.baseUrl}/Upload/UploadRequestBookingFile?RequestBookingId=${itemData.id}&TypeFile=${TypeOfDocument.FlightTicketFile}`;
+    this.uploadUrlInvoice = `${this.configService.getConfig().api.baseUrl}/Upload/UploadRequestBookingFile?RequestBookingId=${itemData.id}&TypeFile=${TypeOfDocument.InvoiceFile}`;
   }
 
   showPopupUpdateNumberTicket(requestBooking: any) {
@@ -713,11 +718,11 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     const status = file.status;
     if (status === 'done') {
       this.msg.success(`file ${file.name} tải lên thành công.`);
-      this.fileList = fileList;
+      this.fileFlightTicketList = fileList;
       setTimeout(() => {
-        if (this.fileList.length > 0) {
-          this.fileList[this.fileList.length - 1].fileId = file.response.fileId.toString();
-          this.fileList[this.fileList.length - 1].url = `${this.configService.getConfig().api.baseUrl}/${file.response.path}`;
+        if (this.fileFlightTicketList.length > 0) {
+          this.fileFlightTicketList[this.fileFlightTicketList.length - 1].fileId = file.response.fileId.toString();
+          this.fileFlightTicketList[this.fileFlightTicketList.length - 1].url = `${this.configService.getConfig().api.baseUrl}/${file.response.path}`;
           // this.fileList[this.fileList.length - 1] = {
           //   uid: file.response.hotelFileId.toString(),
           //   name: file.response.fileName,
@@ -738,12 +743,11 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
 
 
   handleUploadFileTicketBookingRequest2BeforSelect({ file, fileList }: NzUploadChangeParam): void {
-
     this.uploading = true;
-    this.fileList.forEach((file: any) => {
+    this.fileFlightTicketList.forEach((file: any) => {
       const formData = new FormData();
       formData.append('postedFile', file);
-      const req = new HttpRequest('POST', `${this.uploadUrl}`, formData, {
+      const req = new HttpRequest('POST', `${this.uploadUrlFlightTicket}`, formData, {
         headers: new HttpHeaders({
           Authorization: 'Bearer ' + localStorage.getItem(Constant.TOKEN),
         }),
@@ -755,11 +759,11 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
           () => {
             this.uploading = false;
             this.msg.success(`File ${file.name} tải lên thành công.`);
-            this.fileList = fileList;
+            this.fileFlightTicketList = fileList;
             setTimeout(() => {
-              if (this.fileList.length > 0) {
-                this.fileList[this.fileList.length - 1].uid = file.response.fileId.toString();
-                this.fileList[this.fileList.length - 1].url = `${this.configService.getConfig().api.baseUrl}/${file.response.path}`;
+              if (this.fileFlightTicketList.length > 0) {
+                this.fileFlightTicketList[this.fileFlightTicketList.length - 1].uid = file.response.fileId.toString();
+                this.fileFlightTicketList[this.fileFlightTicketList.length - 1].url = `${this.configService.getConfig().api.baseUrl}/${file.response.path}`;
                 // this.fileList[this.fileList.length - 1] = {
                 //   uid: file.response.hotelFileId.toString(),
                 //   name: file.response.fileName,
@@ -784,6 +788,73 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   }
 
   handleRemoveFileTicketBookingRequest = async (file: NzUploadFile): Promise<void> => {
+    if (this.optionAirlineTicketInfo == this.OptionAirlineTicketInfoEnum.Update) {
+      const idFile = file.uid;
+      if (idFile) {
+        this.generalService.deleteRequestBookingFileByID(idFile).subscribe(
+          {
+            next: (res) => {
+              if (res) {
+                if (res.ret && res.ret.length > 0) {
+                  res.ret.forEach((el: any) => {
+                    if (el.code === 0) {
+                      this.msg.success(`Đã xoá file ${file.name}.`);
+                      this.getListData();
+                    } else if (res.code === 404) {
+                      this.msg.error(`Không tìm thấy file ${file.name}.`);
+                    } else {
+                      this.msg.error(`Đã có lỗi xảy ra. Không thể xoá file ${file.name}`);
+                    }
+                  });
+                }
+              } else {
+                this.notificationService.showNotification(Constant.ERROR, `Hệ thống gặp lỗi, xoá file ${file.name} thật bại.`);
+              }
+            },
+            error: (error) => {
+              this.notificationService.showNotification(Constant.ERROR, `Hệ thống gặp lỗi, xoá file ${file.name} thật bại.`);
+            },
+            complete: () => {
+              this.getListData();
+            },
+
+          }
+        );
+      }
+
+    } else {
+      this.notificationService.showNotification(Constant.ERROR, `Không thể xoá file khi ở chế độ View Ticket`);
+    }
+  }
+
+
+  handleUploadFileInvoiceBookingRequest1({ file, fileList }: NzUploadChangeParam): void {
+    const status = file.status;
+    if (status === 'done') {
+      this.msg.success(`file ${file.name} tải lên thành công.`);
+      this.fileInvoiceList = fileList;
+      setTimeout(() => {
+        if (this.fileInvoiceList.length > 0) {
+          this.fileInvoiceList[this.fileInvoiceList.length - 1].fileId = file.response.fileId.toString();
+          this.fileInvoiceList[this.fileInvoiceList.length - 1].url = `${this.configService.getConfig().api.baseUrl}/${file.response.path}`;
+          // this.fileList[this.fileList.length - 1] = {
+          //   uid: file.response.hotelFileId.toString(),
+          //   name: file.response.fileName,
+          //   url: `${this.configService.getConfig().api.baseUrl}/${file.response.path}`,
+          //   "status": "success",
+          //   "isUploading": false,
+          //   "showDownload": true,
+          // };
+        }
+      }, 200);
+      this.listFileIds.push(file.response.fileId);
+      this.formAirlineTicketPopup.controls['fileIds'].setValue(this.listFileIds);
+    } else if (status === 'error') {
+      this.msg.error(`File ${file.name} tải lên không thành công.`);
+    }
+    this.getListData();
+  }
+  handleRemoveFileInvoiceBookingRequest = async (file: NzUploadFile): Promise<void> => {
     if (this.optionAirlineTicketInfo == this.OptionAirlineTicketInfoEnum.Update) {
       const idFile = file.uid;
       if (idFile) {

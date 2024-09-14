@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, SimpleChanges } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzUploadChangeParam, NzUploadFile } from 'ng-zorro-antd/upload';
@@ -74,13 +74,19 @@ export class ActionPartnerComponent implements OnInit {
   PAYMENT_PERIOD_DAYS_OPTIONS = [];
   actionPartnerVHL: any;
   settingTableListEmployeesForm: FormGroup;
+  settingTableListBalanceFluctuationForm: FormGroup;
   allCheckedEmployee = false;
   indeterminateEmployee = false;
   allUnCheckedEmployee = false;
-  fixedColumn = false;
-  scrollX: string | null = null;
-  scrollY: string | null = null;
+  fixedColumnEmployee = false;
+  scrollXEmployeesValue: string | null = null;
+  scrollYEmployeesValue: string | null = null;
   settingTableEmployeesValue: NZTableSettingCustoms;
+
+  fixedColumnBalanceFluctuation = false;
+  scrollXBalanceFluctuationValue: string | null = null;
+  scrollYBalanceFluctuationValue: string | null = null;
+  settingTableBalanceFluctuationValue: NZTableSettingCustoms;
   listOfEmployees: readonly any[] = [];
   displayDataEmployee: readonly any[] = [];
   formBaseInfoCreatePartner: FormGroup;
@@ -103,9 +109,31 @@ export class ActionPartnerComponent implements OnInit {
     { label: 'Dich vụ đặt khách sạn', value: BusinessServiceType.HotelBookingService, disabled: false, checked: false },
   ];
   itemPartner: any = null;
+
   employees: any;
-  isActiveEditBaseInfo: boolean = false;
+  // isActiveEditBaseInfo: boolean = false;
+
+  isActiveEditBaseInfo: FormControl = new FormControl(false);
+
   searchEmployee: string = '';
+  displayDataBalanceFluctuation: readonly any[];
+  allUnCheckedBalanceFluctuation: boolean;
+  allCheckedBalanceFluctuation: boolean;
+  indeterminateBalanceFluctuation: boolean;
+  listOfBalanceFluctuations: any[];
+  debtBearingSales: any;
+  debtFreeRevenue: any;
+
+
+  isVisibleDepositAccount = false;
+  isDepositAccountOkLoading = false;
+
+
+  valueInputNumberAmount = '';
+  tooltipTitleAmount = 'Nhập số tiền';
+  isEditBaseBusinessContract: Boolean = false;
+  isLockPage: FormControl = new FormControl(false);
+  isVisibleChangePassword: boolean = false;
 
   constructor(
     private msg: NzMessageService,
@@ -128,7 +156,8 @@ export class ActionPartnerComponent implements OnInit {
       phone: new FormControl({ value: null, disabled: false }),
       email: new FormControl({ value: null, disabled: false }),
       address: new FormControl({ value: null, disabled: false }, Validators.required),
-      businessOwnerId: new FormControl({ value: null, disabled: false }),
+      name: new FormControl({ value: null, disabled: false }),
+      // businessOwnerId: new FormControl({ value: null, disabled: false }),
       allowDebt: new FormControl({ value: AllowDebtPartner.ALLOW, disabled: false }, Validators.required),
       // partnerAuthorizationFileIDs: [{ value: [], disabled: false }, Validators.required]
       // debtMax: [null],
@@ -138,22 +167,25 @@ export class ActionPartnerComponent implements OnInit {
 
     this.formBaseBusinessContractUpdate = this.formBuilder.group({
       partnerBusinessLicenseFileIDs: [null],
-      partnerContractFileIDs: [null, [Validators.required]],
-      personInChargeId: [null, [Validators.required]],
-      startTimeContractDate: [null, [Validators.required]],
-      endTimeContractDate: [null, [Validators.required]],
-      emailToReceiveInvoice: [null, [Validators.required]],
-      paymentPeriodType: [null, [Validators.required]],
-      dayOfPeriodType: [null, [Validators.required]],
-      debtMax: [null, [Validators.required]],
-      warningLimitPrice: [null, [Validators.required]],
-      typeOfServices: [null, [Validators.required]],
+      partnerContractFileIDs: new FormControl({ value: null, disabled: true }, Validators.required),
+      startTimeContractDate: new FormControl({ value: null, disabled: true }, Validators.required),
+      endTimeContractDate: new FormControl({ value: null, disabled: true }, Validators.required),
+      emailToReceiveInvoice: new FormControl({ value: null, disabled: true }, Validators.required),
+      paymentPeriodType: new FormControl({ value: null, disabled: true }, Validators.required),
+      dayOfPeriodType: new FormControl({ value: null, disabled: true }, Validators.required),
+      debtMax: [{ value: null, disabled: true }, [this.formBaseInfoCreatePartner.get('allowDebt')?.value == AllowDebtPartner.ALLOW ? Validators.required : Validators.nullValidator]],
+      warningLimitPrice: [{ value: null, disabled: true }, [this.formBaseInfoCreatePartner.get('allowDebt')?.value == AllowDebtPartner.ALLOW ? Validators.required : Validators.nullValidator]],
 
-      positionPersonInCharge: new FormControl({ value: null, disabled: true }),
-      phoneNumberPersonInCharge: new FormControl({ value: null, disabled: true }),
-      emailPersonInCharge: new FormControl({ value: null, disabled: true }),
+      typeOfServices: new FormControl({ value: null, disabled: true }, Validators.required),
 
+      personInChargeId: [null],
+      namePersonInCharge: new FormControl({ value: null, disabled: true }, Validators.required),
+      positionPersonInCharge: new FormControl({ value: null, disabled: true }, Validators.required),
+      phoneNumberPersonInCharge: new FormControl({ value: null, disabled: true }, Validators.required),
+      emailPersonInCharge: new FormControl({ value: null, disabled: true }, Validators.required),
     });
+
+
 
     this.settingTableListEmployeesForm = this.formBuilder.group({
       bordered: [false],
@@ -165,9 +197,31 @@ export class ActionPartnerComponent implements OnInit {
       footer: [false],
       expandable: [true],
       checkbox: [true],
-      fixHeader: [false],
+      fixHeader: [true],
       noResult: [false],
       noResultText: 'Danh sách nhân viên đang trống. Hãy nhấn vào “Thêm mới” để tạo mới các tài khoản nhân viên cho doanh nghiệp',
+      ellipsis: [false],
+      simple: [false],
+      size: 'small' as NzTableSize,
+      paginationType: 'default' as NzTablePaginationType,
+      tableScroll: 'scroll' as TableScroll,
+      tableLayout: 'auto' as NzTableLayout,
+      position: 'bottom' as NzTablePaginationPosition
+    });
+
+    this.settingTableListBalanceFluctuationForm = this.formBuilder.group({
+      bordered: [false],
+      loading: [false],
+      pagination: [true],
+      sizeChanger: [false],
+      title: [false],
+      header: [true],
+      footer: [false],
+      expandable: [true],
+      checkbox: [true],
+      fixHeader: [true],
+      noResult: [false],
+      noResultText: 'Danh sách biến động số dư đang trống',
       ellipsis: [false],
       simple: [false],
       size: 'small' as NzTableSize,
@@ -180,14 +234,19 @@ export class ActionPartnerComponent implements OnInit {
 
   ngAfterViewInit() {
     this.settingTableEmployeesValue = this.settingTableListEmployeesForm.value as NZTableSettingCustoms;
+    this.settingTableBalanceFluctuationValue = this.settingTableListBalanceFluctuationForm.value as NZTableSettingCustoms;
+
     this.actionPartnerVHL = this.activatedRoute.snapshot.data['type'];
-    this.setIsActiveEditBaseInfo(true);
+    // this.setIsActiveEditBaseInfo(true);
+
+
     this.listOfEmployees = [];
     this.listUploadAuthorizationFile = [];
     this.listUploadBusinessLicenseFile = [];
     this.listUploadContractFile = [];
     this.listUploadEmployeeForPartnerFile = [];
     if (this.actionPartnerVHL == ActionTypePageVHL.Create) {
+      //this.isActiveEditBaseInfo.setValue(true);
       this.titleActionCompanyPage = "Thêm mới doanh nghiệp";
       this.settingUploadAuthorizationFile = {
         isMultiple: true,
@@ -247,7 +306,8 @@ export class ActionPartnerComponent implements OnInit {
 
       this.listOfEmployees = [];
     } else if (this.actionPartnerVHL == ActionTypePageVHL.Update) {
-      this.setIsActiveEditBaseInfo(true);
+      // this.setIsActiveEditBaseInfo(true);
+      //this.isActiveEditBaseInfo.setValue(true);
       this.activatedRoute.queryParams.subscribe(async params => {
         let idPartner = +params['id']; // Lấy id từ query parameter
 
@@ -311,11 +371,23 @@ export class ActionPartnerComponent implements OnInit {
           this.router.navigate([['/companies']]);
         });
         this.titleActionCompanyPage = this.itemPartner?.companyName ?? "";
+        this.setActionPageByStatus(this.itemPartner?.status);
         this.resetFormBaseInfoCreatePartner(this.itemPartner);
         this.resetFormContractUpdatePartner(this.itemPartner);
 
         this.getUsersByPartnerId(this.itemPartner?.id).then((result: any) => {
           this.listOfEmployees = result;
+        });
+
+        this.getBalanceFluctuationsByPartnerId(this.itemPartner?.id).then((result: any) => {
+          this.debtBearingSales = result.debtBearingSales
+          this.debtFreeRevenue = result.debtFreeRevenue
+          this.listOfBalanceFluctuations = result.tableAccountBalancies;
+          let stt = 0;
+          this.listOfBalanceFluctuations.forEach(en => {
+            stt++;
+            en.stt = stt;
+          });
         });
       });
     }
@@ -327,12 +399,16 @@ export class ActionPartnerComponent implements OnInit {
       this.settingTableEmployeesValue = value as NZTableSettingCustoms;
     });
     this.settingTableListEmployeesForm.controls.tableScroll.valueChanges.subscribe(scroll => {
-      this.fixedColumn = scroll === 'fixed';
-      this.scrollX = scroll === 'scroll' || scroll === 'fixed' ? '100vw' : null;
+      this.fixedColumnEmployee = scroll === 'fixed';
+      this.scrollXEmployeesValue = scroll === 'scroll' || scroll === 'fixed' ? '100vw' : null;
     });
+    let tableScrollValue = this.settingTableListEmployeesForm.controls['tableScroll'].value;
+    this.fixedColumnEmployee = tableScrollValue === 'fixed';
+    this.scrollXEmployeesValue = tableScrollValue === 'scroll' || tableScrollValue === 'fixed' ? '100vw' : null;
     this.settingTableListEmployeesForm.controls.fixHeader.valueChanges.subscribe(fixed => {
-      this.scrollY = fixed ? '240px' : null;
+      this.scrollYEmployeesValue = fixed ? '240px' : null;
     });
+    this.scrollYEmployeesValue = this.settingTableListEmployeesForm.controls['fixHeader'].value ? '240px' : null;
     this.settingTableListEmployeesForm.controls.noResult.valueChanges.subscribe(async empty => {
       if (empty) {
         this.listOfEmployees = [];
@@ -342,8 +418,157 @@ export class ActionPartnerComponent implements OnInit {
         });
       }
     });
+
+
+    // Lấy giá trị status từ route data
+    this.settingTableListBalanceFluctuationForm.valueChanges.subscribe(value => {
+      this.settingTableBalanceFluctuationValue = value as NZTableSettingCustoms;
+    });
+    this.settingTableListBalanceFluctuationForm.controls.tableScroll.valueChanges.subscribe(scroll => {
+      this.fixedColumnBalanceFluctuation = scroll === 'fixed';
+      this.scrollXBalanceFluctuationValue = scroll === 'scroll' || scroll === 'fixed' ? '100vw' : null;
+    });
+    let tableScrollBalanceFluctuationValue = this.settingTableListBalanceFluctuationForm.controls['tableScroll'].value;
+    this.fixedColumnBalanceFluctuation = tableScrollBalanceFluctuationValue === 'fixed';
+    this.scrollXBalanceFluctuationValue = tableScrollBalanceFluctuationValue === 'scroll' || tableScrollBalanceFluctuationValue === 'fixed' ? '100vw' : null;
+
+
+    this.settingTableListBalanceFluctuationForm.controls.fixHeader.valueChanges.subscribe(fixed => {
+      this.scrollYBalanceFluctuationValue = fixed ? '175px' : null;
+    });
+    this.scrollYBalanceFluctuationValue = this.settingTableListBalanceFluctuationForm.controls['fixHeader'].value ? '175px' : null;
+
+
+    this.settingTableListBalanceFluctuationForm.controls.noResult.valueChanges.subscribe(async empty => {
+      if (empty) {
+        this.listOfBalanceFluctuations = [];
+        this.debtBearingSales = null;
+        this.debtFreeRevenue = null;
+      } else {
+        this.getBalanceFluctuationsByPartnerId(this.itemPartner?.id).then((result: any) => {
+          this.debtBearingSales = result.debtBearingSales
+          this.debtFreeRevenue = result.debtFreeRevenue
+          this.listOfBalanceFluctuations = result.tableAccountBalancies;
+          let stt = 0;
+          this.listOfBalanceFluctuations.forEach(en => {
+            stt++;
+            en.stt = stt;
+          });
+        });
+      }
+    });
+
+
+
+    this.isActiveEditBaseInfo.valueChanges.subscribe((value: any) => {
+      if (value == true) {
+        this.formBaseInfoCreatePartner.enable();
+        if (this.actionPartnerVHL == ActionTypePageVHL.Create) {
+          this.formBaseInfoCreatePartner.controls['status'].disable();
+        }
+      } else {
+        this.formBaseInfoCreatePartner.disable();
+        setTimeout(() => {
+          this.formBaseInfoCreatePartner.controls['status'].disable();
+        }, 200);
+      }
+    });
+
+
+    this.isLockPage.valueChanges.subscribe((value: any) => {
+      if (value == true) {
+        this.isActiveEditBaseInfo.setValue(false);
+        this.changeValueBaseBusinessContractReversal(false)
+      } else {
+        this.isActiveEditBaseInfo.setValue(true);
+        this.changeValueBaseBusinessContractReversal(false)
+      }
+    });
+
     this.getEmployees();
   }
+
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['itemPartner'] && this.itemPartner?.status) {
+      this.itemPartner.status.valueChanges.subscribe((status: any) => {
+        this.setActionPageByStatus(status);
+      });
+    }
+  }
+
+  private setActionPageByStatus(status: any) {
+    if (status == PartnerStatus.CreatingProfile) {
+      this.isLockPage.setValue(false);
+    } else if (status == PartnerStatus.PendingApproval) {
+      this.isLockPage.setValue(true);
+    } else if (status == PartnerStatus.Active) {
+      this.isLockPage.setValue(true);
+    } else {
+      this.isActiveEditBaseInfo.setValue(false);
+      this.changeValueBaseBusinessContractReversal(false)
+    }
+  }
+
+  onChangeInputAmount(value: string, controlName?: string): void {
+    this.updateValueInputAmount(value, controlName);
+
+  }
+
+
+  onClickInputAmount(event: any, controlName?: string): void {
+    const inputElement = event.target as HTMLInputElement;
+    this.valueInputNumberAmount = inputElement.value;
+
+    this.updateValueInputAmount(this.valueInputNumberAmount, controlName);
+  }
+
+  // '.' at the end or only '-' in the input box.
+  onBlurInputAmount(controlName?: string): void {
+    if (this.valueInputNumberAmount.charAt(this.valueInputNumberAmount.length - 1) === '.' || this.valueInputNumberAmount === '-') {
+      this.updateValueInputAmount(this.valueInputNumberAmount.slice(0, -1), controlName);
+      this.tooltipTitleAmount = "0 đ"
+    }
+  }
+
+
+  updateValueInputAmount(value: string, controlName?: string): void {
+    const reg = /^-?(0|[1-9][0-9]*)(\.[0-9]*)?$/;
+    if ((!isNaN(+value) && reg.test(value)) || value === '' || value === '-') {
+      this.valueInputNumberAmount = value;
+    }
+
+    // Chỉ cập nhật nếu giá trị khác
+    if (controlName) {
+      const control = this.formBaseBusinessContractUpdate.get(controlName);
+      if (control && control.value !== this.valueInputNumberAmount) {
+        control.setValue(this.valueInputNumberAmount, { emitEvent: false });
+      }
+    }
+    this.updateTooltipTitleAmount();
+  }
+
+  updateTooltipTitleAmount(): void {
+    this.tooltipTitleAmount = ((this.valueInputNumberAmount !== '-' ? this.formatNumber(this.valueInputNumberAmount) : '-') || '0') + " đ";
+  }
+
+  formatNumber(value: string): string {
+    const stringValue = `${value}`;
+    const list = stringValue.split('.');
+    const prefix = list[0].charAt(0) === '-' ? '-' : '';
+    let num = prefix ? list[0].slice(1) : list[0];
+    let result = '';
+    while (num.length > 3) {
+      result = `,${num.slice(-3)}${result}`;
+      num = num.slice(0, num.length - 3);
+    }
+    if (num) {
+      result = num + result;
+    }
+    return `${prefix}${result}${list[1] ? `.${list[1]}` : ''}`;
+  }
+
+
 
   private async resetFormBaseInfoCreatePartner(itemPartner: any) {
     this.formBaseInfoCreatePartner.reset({
@@ -354,13 +579,14 @@ export class ActionPartnerComponent implements OnInit {
       phone: this.itemPartner?.phone || null,
       email: this.itemPartner?.email || null,
       address: this.itemPartner?.address || null,
-      businessOwnerId: this.itemPartner?.businessOwnerId || null,
+      // businessOwnerId: this.itemPartner?.businessOwnerId || null,
+      name: this.itemPartner?.name || null,
       allowDebt: this.itemPartner?.allowDebt || AllowDebtPartner.ALLOW
     });
 
     this.listUploadAuthorizationFile = [];
     //console.log('partnerFiles : ', itemPartner.partnerFiles);
-    let partnerAuthorizationFiles = await itemPartner.partnerFiles.filter((f: { type: TypeOfDocument }) => f.type == TypeOfDocument.AuthorizationFile);
+    let partnerAuthorizationFiles = await itemPartner?.partnerFiles.filter((f: { type: TypeOfDocument }) => f.type == TypeOfDocument.AuthorizationFile);
     //console.log('partnerAuthorizationFiles : ', partnerAuthorizationFiles);
     for (const partnerFile of partnerAuthorizationFiles) {
       const objPartner = {
@@ -385,21 +611,23 @@ export class ActionPartnerComponent implements OnInit {
       debtMax: itemPartner?.debtMax,
       warningLimitPrice: itemPartner?.warningLimitPrice,
       typeOfServices: itemPartner?.typeOfServices,
-      positionPersonInCharge: { value: itemPartner?.positionPersonInCharge, disabled: true },
-      phoneNumberPersonInCharge: { value: itemPartner?.phoneNumberPersonInCharge, disabled: true },
-      emailPersonInCharge: { value: itemPartner?.emailPersonInCharge, disabled: true }
+      // positionPersonInCharge: { value: itemPartner?.positionPersonInCharge, disabled: false },
+      // phoneNumberPersonInCharge: { value: itemPartner?.phoneNumberPersonInCharge, disabled: false },
+      // emailPersonInCharge: { value: itemPartner?.emailPersonInCharge, disabled: false }
     });
+
+    this.onSelectPersonInCharge(itemPartner.personInChargeId);
     // Assuming typeOfServices is a string representation of the array
     const typeOfServices: string = itemPartner.typeOfServices;
     const selectedServices = JSON.parse(typeOfServices) as number[]; // Convert the string to an array of numbers
     // Update checkOptionsBusinessServiceVHL based on selectedServices
     this.checkOptionsBusinessServiceVHL = this.checkOptionsBusinessServiceVHL.map(option => ({
       ...option,
-      checked: selectedServices.includes(option.value)
+      checked: selectedServices != null ? selectedServices.includes(option.value) : false
     }));
 
     this.listUploadBusinessLicenseFile = [];
-    const partnerBusinessLicenseFiles = await itemPartner.partnerFiles.filter((f: { type: TypeOfDocument }) => f.type == TypeOfDocument.BusinessLicenseFile);
+    const partnerBusinessLicenseFiles = await itemPartner?.partnerFiles.filter((f: { type: TypeOfDocument }) => f.type == TypeOfDocument.BusinessLicenseFile);
     for (const partnerFile of partnerBusinessLicenseFiles) {
       const objPartner = {
         uid: partnerFile.id.toString(),
@@ -409,7 +637,7 @@ export class ActionPartnerComponent implements OnInit {
       this.listUploadBusinessLicenseFile.push(objPartner)
     }
     this.listUploadContractFile = [];
-    const partnerContractFileFiles = await itemPartner.partnerFiles.filter((f: { type: TypeOfDocument }) => f.type == TypeOfDocument.ContractFile);
+    const partnerContractFileFiles = await itemPartner?.partnerFiles.filter((f: { type: TypeOfDocument }) => f.type == TypeOfDocument.ContractFile);
     for (const partnerFile of partnerContractFileFiles) {
       const objPartner = {
         uid: partnerFile.id.toString(),
@@ -460,8 +688,8 @@ export class ActionPartnerComponent implements OnInit {
             stt++;
             en.stt = stt;
             en.checked = false;
-            en.disabled = (en.status == UserStatus.LOCKED),
-              en.isLoadingActiveUser = false;
+            en.disabled = (en.status == UserStatus.LOCKED);
+            en.isLoadingActiveUser = false;
           });
           resolve(res.data);
           this.settingTableEmployeesValue.loading = false;
@@ -483,11 +711,54 @@ export class ActionPartnerComponent implements OnInit {
 
   }
 
+  private getBalanceFluctuationsByPartnerId(idPartner: number): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.settingTableBalanceFluctuationValue.loading = true;
+      this.generalService.accountBalanceInformationByPartner(idPartner).subscribe((res: any) => {
+        if (res.isValid) {
 
+          this.settingTableBalanceFluctuationValue.loading = false;
+          resolve(res.data);
+        } else {
+          if (res.errors && res.errors.length > 0) {
+            res.errors.forEach((el: any) => {
+              this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+            });
+          } else {
+            this.notificationService.showNotification(Constant.ERROR, 'Lấy ra biến động số dư của doanh nghiệp không thành công');
+          }
+          reject(res.errors);
+        }
+      }, error => {
+        this.notificationService.showNotification(Constant.ERROR, 'Lấy ra biến động số dư của doanh nghiệp thất bại do lỗi hệ thống');
+        reject(error);
+      });
+    });
+
+  }
+
+  private updateBalanceFluctuationsBy() {
+    this.getBalanceFluctuationsByPartnerId(this.itemPartner?.id).then((result: any) => {
+      this.debtBearingSales = result.debtBearingSales
+      this.debtFreeRevenue = result.debtFreeRevenue
+      this.listOfBalanceFluctuations = result.tableAccountBalancies;
+      let stt = 0;
+      this.listOfBalanceFluctuations.forEach(en => {
+        stt++;
+        en.stt = stt;
+      });
+    });
+  }
 
   currentPageDataChangeEmployee($event: readonly any[]): void {
     this.displayDataEmployee = $event;
     this.refreshStatusEmployee();
+  }
+
+
+  currentPageDataChangeBalanceFluctuation($event: readonly any[]): void {
+    this.displayDataBalanceFluctuation = $event;
+    this.refreshStatusBalanceFluctuation();
   }
 
   refreshStatusEmployee(): void {
@@ -497,6 +768,15 @@ export class ActionPartnerComponent implements OnInit {
     this.allUnCheckedEmployee = allUnCheckedEmployee;
     this.allCheckedEmployee = allCheckedEmployee;
     this.indeterminateEmployee = !allCheckedEmployee && !allUnCheckedEmployee;
+  }
+
+  refreshStatusBalanceFluctuation(): void {
+    const validDataBalanceFluctuation = this.displayDataBalanceFluctuation.filter(value => !value.disabled);
+    const allCheckedBalanceFluctuation = validDataBalanceFluctuation.length > 0 && validDataBalanceFluctuation.every(value => value.checked === true);
+    const allUnCheckedBalanceFluctuation = validDataBalanceFluctuation.every(value => !value.checked);
+    this.allUnCheckedBalanceFluctuation = allUnCheckedBalanceFluctuation;
+    this.allCheckedBalanceFluctuation = allCheckedBalanceFluctuation;
+    this.indeterminateBalanceFluctuation = !allCheckedBalanceFluctuation && !allUnCheckedBalanceFluctuation;
   }
 
   checkAllEmployees(value: boolean): void {
@@ -533,7 +813,7 @@ export class ActionPartnerComponent implements OnInit {
       this.listUploadAuthorizationFile = info.fileList;
       setTimeout(() => {
         if (this.listUploadAuthorizationFile.length > 0) {
-          this.listUploadAuthorizationFile[this.listUploadAuthorizationFile.length - 1].uid = info.file.response.uid.toString();
+          this.listUploadAuthorizationFile[this.listUploadAuthorizationFile.length - 1].uid = info.file.response.partnerFileId.toString();
           this.listUploadAuthorizationFile[this.listUploadAuthorizationFile.length - 1].url = `${this.configService.getConfig().api.baseUrl}/${info.file.response.path}`;
         }
       }, 200);
@@ -551,7 +831,7 @@ export class ActionPartnerComponent implements OnInit {
       this.listUploadContractFile = info.fileList;
       setTimeout(() => {
         if (this.listUploadContractFile.length > 0) {
-          this.listUploadContractFile[this.listUploadContractFile.length - 1].uid = info.file.response.uid.toString();
+          this.listUploadContractFile[this.listUploadContractFile.length - 1].uid = info.file.response.partnerFileId.toString();
           this.listUploadContractFile[this.listUploadContractFile.length - 1].url = `${this.configService.getConfig().api.baseUrl}/${info.file.response.path}`;
         }
       }, 200);
@@ -570,7 +850,7 @@ export class ActionPartnerComponent implements OnInit {
       this.listUploadBusinessLicenseFile = info.fileList;
       setTimeout(() => {
         if (this.listUploadBusinessLicenseFile.length > 0) {
-          this.listUploadBusinessLicenseFile[this.listUploadBusinessLicenseFile.length - 1].uid = info.file.response.uid.toString();
+          this.listUploadBusinessLicenseFile[this.listUploadBusinessLicenseFile.length - 1].uid = info.file.response.partnerFileId.toString();
           this.listUploadBusinessLicenseFile[this.listUploadBusinessLicenseFile.length - 1].url = `${this.configService.getConfig().api.baseUrl}/${info.file.response.path}`;
         }
       }, 200);
@@ -586,14 +866,17 @@ export class ActionPartnerComponent implements OnInit {
     if (info.file.status === 'done') {
       this.listUploadEmployeeForPartnerFile = info.fileList;
       setTimeout(() => {
-        console.log("info: ", info);
+        info.file.response.errors.forEach((error: any) => {
+          this.msg.error(`${error?.errorMessage ?? ""}`);
+        });
         if (info.file.response.isValid) {
-          this.msg.success(`${info.file.name} file tải lên thành công`);
+          this.msg.success(`${info.file.name} file tải lên thành công có thề tồn tại một vài nhân viên không đặt yê cầu.`);
         } else {
-          this.msg.error(`${info.file.name} file tải lên thất bại.`);
+          this.msg.error(`${info.file.name} file tải đã gặp lỗi hoặc tất các nhân viên không đặt yêu cầu.`);
         }
+
         // if (this.listUploadEmployeeForPartnerFile.length > 0) {
-        //   this.listUploadEmployeeForPartnerFile[this.listUploadEmployeeForPartnerFile.length - 1].uid = info.file.response.uid.toString();
+        //   this.listUploadEmployeeForPartnerFile[this.listUploadEmployeeForPartnerFile.length - 1].uid = info.file.response.partnerFileId.toString();
         //   this.listUploadEmployeeForPartnerFile[this.listUploadEmployeeForPartnerFile.length - 1].url = `${this.configService.getConfig().api.baseUrl}/${info.file.response.path}`;
         // }
       }, 200);
@@ -602,9 +885,9 @@ export class ActionPartnerComponent implements OnInit {
     }
   }
 
-  handleRemoveUploadAuthorizationFile(file: NzUploadFile) {
+  handleRemoveUploadAuthorizationFile = (file: NzUploadFile) => {
     if (file?.uid) {
-      this.generalService.removeFile(file.uid).subscribe({
+      this.generalService.removeFilePartner(file.uid).subscribe({
         next: (res: any) => {
           if (res) {
             if (res.ret && res.ret.length > 0) {
@@ -634,9 +917,9 @@ export class ActionPartnerComponent implements OnInit {
   }
 
 
-  handleRemoveUploadContractFile(file: NzUploadFile) {
+  handleRemoveUploadContractFile = (file: NzUploadFile) => {
     if (file?.uid) {
-      this.generalService.removeFile(file.uid).subscribe({
+      this.generalService.removeFilePartner(file.uid).subscribe({
         next: (res: any) => {
           if (res) {
             if (res.ret && res.ret.length > 0) {
@@ -666,9 +949,9 @@ export class ActionPartnerComponent implements OnInit {
   }
 
 
-  handleRemoveUploadBusinessLicenseFile(file: NzUploadFile) {
+  handleRemoveUploadBusinessLicenseFile = (file: NzUploadFile) => {
     if (file?.uid) {
-      this.generalService.removeFile(file.uid).subscribe({
+      this.generalService.removeFilePartner(file.uid).subscribe({
         next: (res: any) => {
           if (res) {
             if (res.ret && res.ret.length > 0) {
@@ -698,9 +981,9 @@ export class ActionPartnerComponent implements OnInit {
   }
 
 
-  handleRemoveUploadEmployeeForPartner(file: NzUploadFile) {
+  handleRemoveUploadEmployeeForPartner = (file: NzUploadFile) => {
     if (file?.uid) {
-      this.generalService.removeFile(file.uid).subscribe({
+      this.generalService.removeFilePartner(file.uid).subscribe({
         next: (res: any) => {
           if (res) {
             if (res.ret && res.ret.length > 0) {
@@ -729,77 +1012,87 @@ export class ActionPartnerComponent implements OnInit {
     }
   }
 
-  saveBaseInfoPartner() {
+  saveBaseInfoPartner(): Promise<any> {
+    return new Promise((resolve, rejects) => {
+      this.formBaseInfoCreatePartner.enable();
+      if (this.formBaseInfoCreatePartner.valid) {
+        let valueSave = this.formBaseInfoCreatePartner.value;
+        let listPartnerAuthorizationFileIDs = this.listUploadAuthorizationFile.map((t) => t.uid);
+        valueSave.partnerAuthorizationFileIDs = listPartnerAuthorizationFileIDs;
 
-    if (this.formBaseInfoCreatePartner.valid) {
-      let valueSave = this.formBaseInfoCreatePartner.value;
-      let listPartnerAuthorizationFileIDs = this.listUploadAuthorizationFile.map((t) => t.uid);
-      valueSave.partnerAuthorizationFileIDs = listPartnerAuthorizationFileIDs;
+        if (this.itemPartner?.id) {
+          this.generalService.updateBaseInfoById(valueSave, this.itemPartner?.id).subscribe((res: any) => {
+            if (res.isValid) {
+              this.notificationService.showNotification(Constant.SUCCESS, `Cập nhật thông tin doanh nghiệp thành công`);
+              this.changeValueBaseBusinessContractReversal(true);
+              this.itemPartner = res.data;
+              // this.setIsActiveEditBaseInfo(this.itemPartner?.id == null);
+              this.isActiveEditBaseInfo.setValue(this.itemPartner?.id == null);
 
-      if (this.itemPartner?.id) {
-        this.generalService.updateBaseInfoById(valueSave, this.itemPartner?.id).subscribe((res: any) => {
-          if (res.isValid) {
-            this.notificationService.showNotification(Constant.SUCCESS, `Cập nhật thông tin doanh nghiệp thành công`);
-            this.itemPartner = res.data;
-            this.setIsActiveEditBaseInfo(this.itemPartner?.id == null);
-          } else {
-            if (res.errors && res.errors.length > 0) {
-              res.errors.forEach((el: any) => {
-                this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
-              });
+              resolve(true);
             } else {
-              this.notificationService.showNotification(Constant.ERROR, 'Cập nhật thông tin doanh nghiệp không thành công');
+              if (res.errors && res.errors.length > 0) {
+                res.errors.forEach((el: any) => {
+                  this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+                });
+              } else {
+                this.notificationService.showNotification(Constant.ERROR, 'Cập nhật thông tin doanh nghiệp không thành công');
+              }
             }
-          }
-        }, error => {
-          this.notificationService.showNotification(Constant.ERROR, 'Cập nhật thông tin đối tác thất bại do lỗi hệ thống');
-        });
+          }, error => {
+            this.notificationService.showNotification(Constant.ERROR, 'Cập nhật thông tin đối tác thất bại do lỗi hệ thống');
+          });
+        } else {
+          this.generalService.addBaseInfoPartner(valueSave).subscribe((res: any) => {
+            if (res.isValid) {
+              this.notificationService.showNotification(Constant.SUCCESS, `Tạo mới thông tin doanh nghiệp thành công`);
+              this.itemPartner = res.data;
+              // this.setIsActiveEditBaseInfo(this.itemPartner?.id == null);
+              this.isActiveEditBaseInfo.setValue(this.itemPartner?.id == null);
+            } else {
+              if (res.errors && res.errors.length > 0) {
+                res.errors.forEach((el: any) => {
+                  this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+                });
+              } else {
+                this.notificationService.showNotification(Constant.ERROR, 'Tạo mới thông tin doanh nghiệp không thành công');
+              }
+            }
+          }, error => {
+            this.notificationService.showNotification(Constant.ERROR, 'Tạo mới thông tin đối tác thất bại do lỗi hệ thống');
+          });
+        }
+
       } else {
-        this.generalService.addBaseInfoPartner(valueSave).subscribe((res: any) => {
-          if (res.isValid) {
-            this.notificationService.showNotification(Constant.SUCCESS, `Tạo mới thông tin doanh nghiệp thành công`);
-            this.itemPartner = res.data;
-            this.setIsActiveEditBaseInfo(this.itemPartner?.id == null);
-          } else {
-            if (res.errors && res.errors.length > 0) {
-              res.errors.forEach((el: any) => {
-                this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
-              });
-            } else {
-              this.notificationService.showNotification(Constant.ERROR, 'Tạo mới thông tin doanh nghiệp không thành công');
-            }
-          }
-        }, error => {
-          this.notificationService.showNotification(Constant.ERROR, 'Tạo mới thông tin đối tác thất bại do lỗi hệ thống');
-        });
+        // Đánh dấu tất cả các trường là đã được chạm (touched) để hiển thị lỗi
+        this.formBaseInfoCreatePartner.markAllAsTouched();
+        // this.notificationService.showNotification(Constant.SUCCESS, "Tồn tại trường thông tin chưa được nhập");
+        this.msg.error(`Tồn tại trường thông tin chưa được nhập`);
       }
+    })
 
-    } else {
-      // Đánh dấu tất cả các trường là đã được chạm (touched) để hiển thị lỗi
-      this.formBaseInfoCreatePartner.markAllAsTouched();
-      // this.notificationService.showNotification(Constant.SUCCESS, "Tồn tại trường thông tin chưa được nhập");
-      this.msg.error(`Tồn tại trường thông tin chưa được nhập`);
-    }
   }
 
   editBaseInfoPartner() {
-    this.setIsActiveEditBaseInfo(true);
+    // this.setIsActiveEditBaseInfo(true);
+    this.isActiveEditBaseInfo.setValue(true);
   }
 
-  private setIsActiveEditBaseInfo(value: boolean) {
-    this.isActiveEditBaseInfo = value;
-    if (this.isActiveEditBaseInfo) {
-      this.formBaseInfoCreatePartner.enable();
-      if (this.actionPartnerVHL == ActionTypePageVHL.Create) {
-        this.formBaseInfoCreatePartner.controls['status'].disable();
-      }
-    } else {
-      this.formBaseInfoCreatePartner.disable();
-    }
-  }
+  // private setIsActiveEditBaseInfo(value: boolean) {
+  //   this.isActiveEditBaseInfo.setValue(value);
+  //   if (this.isActiveEditBaseInfo.value) {
+  //     this.formBaseInfoCreatePartner.enable();
+  //     if (this.actionPartnerVHL == ActionTypePageVHL.Create) {
+  //       this.formBaseInfoCreatePartner.controls['status'].disable();
+  //     }
+  //   } else {
+  //     this.formBaseInfoCreatePartner.disable();
+  //   }
+  // }
 
   cancelBaseInfoPartner() {
-    this.setIsActiveEditBaseInfo(true);
+    // this.setIsActiveEditBaseInfo(true);
+    this.isActiveEditBaseInfo.setValue(true);
     this.resetFormBaseInfoCreatePartner(this.itemPartner);
   }
 
@@ -829,6 +1122,7 @@ export class ActionPartnerComponent implements OnInit {
   async onSelectPersonInCharge(employeeId: any) {
     try {
       const itemEmployee = await this.getEmployeeById(employeeId);
+      this.formBaseBusinessContractUpdate.controls['namePersonInCharge'].setValue(itemEmployee?.fullname ?? "");
       this.formBaseBusinessContractUpdate.controls['positionPersonInCharge'].setValue(itemEmployee?.position ?? "");
       this.formBaseBusinessContractUpdate.controls['phoneNumberPersonInCharge'].setValue(itemEmployee?.phoneNo ?? "");
       this.formBaseBusinessContractUpdate.controls['emailPersonInCharge'].setValue(itemEmployee?.email ?? "");
@@ -853,42 +1147,64 @@ export class ActionPartnerComponent implements OnInit {
   }
 
   saveUpdateContractInfoForPartner() {
-    let partnerBusinessLicenseFileIds = this.listUploadBusinessLicenseFile?.map((bl: any) => bl.uid) ?? null;
-    this.formBaseBusinessContractUpdate.controls['partnerBusinessLicenseFileIDs'].setValue(partnerBusinessLicenseFileIds);
+    return new Promise((resolve, reject) => {
+      let partnerBusinessLicenseFileIds = this.listUploadBusinessLicenseFile?.map((bl: any) => bl.uid) ?? null;
+      this.formBaseBusinessContractUpdate.controls['partnerBusinessLicenseFileIDs'].setValue(partnerBusinessLicenseFileIds);
 
-    let partnerContractFileIds = this.listUploadContractFile?.map((bl: any) => bl.uid) ?? null;
-    this.formBaseBusinessContractUpdate.controls['partnerContractFileIDs'].setValue(partnerContractFileIds);
+      let partnerContractFileIds = this.listUploadContractFile?.map((bl: any) => bl.uid) ?? null;
+      this.formBaseBusinessContractUpdate.controls['partnerContractFileIDs'].setValue(partnerContractFileIds);
 
-    let partnerTypeOfServices = this.checkOptionsBusinessServiceVHL?.filter(option => option.checked).map(option => option.value) ?? null;
-    this.formBaseBusinessContractUpdate.controls['typeOfServices'].setValue(JSON.stringify(partnerTypeOfServices));
+      let partnerTypeOfServices = this.checkOptionsBusinessServiceVHL?.filter(option => option.checked).map(option => option.value) ?? null;
+      this.formBaseBusinessContractUpdate.controls['typeOfServices'].setValue(JSON.stringify(partnerTypeOfServices));
 
-    if (this.formBaseBusinessContractUpdate.valid) {
-      let valueSave = this.formBaseBusinessContractUpdate.value;
-      if (this.itemPartner?.id) {
-        this.generalService.updateContractInfoForPartner(this.itemPartner?.id, valueSave).subscribe((res: any) => {
-          if (res.isValid) {
-            this.notificationService.showNotification(Constant.SUCCESS, `Cập nhật thông tin hợp đồng doan nghiệp thành công`);
-          } else {
-            if (res.errors && res.errors.length > 0) {
-              res.errors.forEach((el: any) => {
-                this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
-              });
+      if (this.formBaseBusinessContractUpdate.valid) {
+        if (this.formBaseInfoCreatePartner.get('allowDebt')?.value == AllowDebtPartner.NOT_ALLOW) {
+          this.formBaseBusinessContractUpdate.controls['debtMax'].setValue(null);
+          this.formBaseBusinessContractUpdate.controls['warningLimitPrice'].setValue(null);
+        }
+        let valueSave = this.formBaseBusinessContractUpdate.value;
+        if (this.itemPartner?.id) {
+          this.generalService.updateContractInfoForPartner(this.itemPartner?.id, valueSave).subscribe((res: any) => {
+            if (res.isValid) {
+              this.notificationService.showNotification(Constant.SUCCESS, `Cập nhật thông tin hợp đồng doanh nghiệp thành công`);
+              this.changeValueBaseBusinessContractReversal();
+              resolve(true);
             } else {
-              this.notificationService.showNotification(Constant.ERROR, 'Cập nhật thông tin hợp đồng doan nghiệp không thành công');
+              if (res.errors && res.errors.length > 0) {
+                res.errors.forEach((el: any) => {
+                  this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+                });
+              } else {
+                this.notificationService.showNotification(Constant.ERROR, 'Cập nhật thông tin hợp đồng doanh nghiệp không thành công');
+              }
             }
-          }
-        }, error => {
-          this.notificationService.showNotification(Constant.ERROR, 'Cập nhật thông tin hợp đồng doan nghiệp thất bại do lỗi hệ thống');
-        });
-      } else {
-        this.msg.error(`Doanh nghiệp không tồn tại`);
-      }
+          }, error => {
+            this.notificationService.showNotification(Constant.ERROR, 'Cập nhật thông tin hợp đồng doanh nghiệp thất bại do lỗi hệ thống');
+          });
+        } else {
+          this.msg.error(`Doanh nghiệp không tồn tại`);
+        }
 
+      } else {
+        // Đánh dấu tất cả các trường là đã được chạm (touched) để hiển thị lỗi
+        this.formBaseInfoCreatePartner.markAllAsTouched();
+        // this.notificationService.showNotification(Constant.SUCCESS, "Tồn tại trường thông tin chưa được nhập");
+        this.msg.error(`Tồn tại trường thông tin chưa được nhập`);
+      }
+    });
+
+  }
+
+  changeValueBaseBusinessContractReversal(value?: boolean) {
+    if (value != null) {
+      this.isEditBaseBusinessContract = value;
     } else {
-      // Đánh dấu tất cả các trường là đã được chạm (touched) để hiển thị lỗi
-      this.formBaseInfoCreatePartner.markAllAsTouched();
-      // this.notificationService.showNotification(Constant.SUCCESS, "Tồn tại trường thông tin chưa được nhập");
-      this.msg.error(`Tồn tại trường thông tin chưa được nhập`);
+      this.isEditBaseBusinessContract = !this.isEditBaseBusinessContract
+    }
+    if (this.isEditBaseBusinessContract) {
+      this.formBaseBusinessContractUpdate.enable();
+    } else {
+      this.formBaseBusinessContractUpdate.disable();
     }
   }
 
@@ -948,7 +1264,6 @@ export class ActionPartnerComponent implements OnInit {
 
 
   showLockAccountConfirm(type: LockType, employee?: any): void {
-
     switch (type) {
       case LockType.SINGLE:
         employee.isLoadingActiveUser = true;
@@ -1017,7 +1332,7 @@ export class ActionPartnerComponent implements OnInit {
   }
 
   private cancelActiveUserConfirm(employee: any) {
-    if(employee){
+    if (employee) {
       employee.isLoadingActiveUser = false;
     }
     this.getUsersByPartnerId(this.itemPartner?.id).then((result: any) => {
@@ -1104,4 +1419,141 @@ export class ActionPartnerComponent implements OnInit {
 
   }
 
+
+  showModalDepositAccount(): void {
+    this.isVisibleDepositAccount = true;
+  }
+
+  // handleDepositAccountSave(): void {
+  //   this.isDepositAccountOkLoading = true;
+  //   if (this.formDepositAccount.valid) {
+  //     let valueSave = this.formDepositAccount.value;
+  //     this.generalService.depositAccount(valueSave).subscribe((res: any) => {
+  //       if (res.isValid) {
+  //         this.isDepositAccountOkLoading = true;
+  //         this.notificationService.showNotification(Constant.SUCCESS, `Nạp tiền cho doanh nghiệp thành công`);
+  //       } else {
+  //         if (res.errors && res.errors.length > 0) {
+  //           res.errors.forEach((el: any) => {
+  //             this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+  //           });
+  //         } else {
+  //           this.notificationService.showNotification(Constant.ERROR, 'Nạp tiền cho doanh nghiệp không thành công');
+  //         }
+  //       }
+  //     }, error => {
+  //       this.notificationService.showNotification(Constant.ERROR, 'Nạp tiền cho doanh nghiệp thất bại do lỗi hệ thống');
+  //     });
+  //   } else {
+  //     // Đánh dấu tất cả các trường là đã được chạm (touched) để hiển thị lỗi
+  //     this.formDepositAccount.markAllAsTouched();
+  //     // this.notificationService.showNotification(Constant.SUCCESS, "Tồn tại trường thông tin chưa được nhập");
+  //     this.msg.error(`Tồn tại trường thông tin chưa được nhập`);
+  //   }
+  // }
+
+  handleDepositAccountCancel(): void {
+    this.isVisibleDepositAccount = false;
+    this.updateBalanceFluctuationsBy();
+  }
+
+  changeAllowDebt() {
+    const allowDebt = this.formBaseInfoCreatePartner.get('allowDebt')?.value === AllowDebtPartner.ALLOW;
+
+    // Update validators for debtMax and warningLimitPrice based on allowDebt
+    this.formBaseBusinessContractUpdate.get('debtMax')?.setValidators(
+      allowDebt ? Validators.required : Validators.nullValidator
+    );
+    this.formBaseBusinessContractUpdate.get('warningLimitPrice')?.setValidators(
+      allowDebt ? Validators.required : Validators.nullValidator
+    );
+
+    // Update the validation state of the entire form
+    this.formBaseBusinessContractUpdate.get('debtMax')?.updateValueAndValidity();
+    this.formBaseBusinessContractUpdate.get('warningLimitPrice')?.updateValueAndValidity();
+
+
+
+    // this.formBaseBusinessContractUpdate.updateValueAndValidity();
+    // this.formBaseBusinessContractUpdate.get('debtMax')?.updateValueAndValidity();
+    // this.formBaseBusinessContractUpdate.get('warningLimitPrice')?.updateValueAndValidity();
+  }
+
+
+  handlerSendApprovalRequest() {
+    this.saveBaseInfoPartner().then((result) => {
+      this.saveUpdateContractInfoForPartner().then((result) => {
+        this.sendApprovalRequest().then((data) => {
+          this.itemPartner = data;
+        })
+      })
+    })
+  }
+
+  sendApprovalRequest(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.generalService.sendApprovalRequest(this.itemPartner.id).subscribe({
+        next: (res: any) => {
+          if (res.isValid) {
+            this.notificationService.showNotification(Constant.SUCCESS, `Đã gửi yêu cầu phê duyệt doanh nghiệp ${this.itemPartner?.companyName ? this.itemPartner?.companyName : ""} thành công`);
+            resolve(res.data);
+          } else {
+            if (res.errors && res.errors.length > 0) {
+              res.errors.forEach((el: any) => {
+                this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+              });
+            } else {
+              this.notificationService.showNotification(Constant.ERROR, `Gửi yêu cầu phê duyệt doanh nghiệp ${this.itemPartner?.companyName ? this.itemPartner?.companyName : ""} không thành công`);
+            }
+            reject(res.errors);
+          }
+        },
+        error: (err: any) => {
+          this.notificationService.showNotification(Constant.ERROR, `Không thể gửi yêu cầu phê duyệt doanh nghiệp ${this.itemPartner?.companyName ? this.itemPartner?.companyName : ""} do lỗi hệ thống`);
+          reject(err);
+        },
+        complete: () => {
+
+        }
+      });
+    });
+  }
+
+  submitRequestForApprovalConfirmation(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.generalService.submitRequestForApprovalConfirmation(this.itemPartner.id).subscribe({
+        next: (res: any) => {
+          if (res.isValid) {
+            this.notificationService.showNotification(Constant.SUCCESS, `${this.itemPartner?.companyName ? this.itemPartner?.companyName : "doanh nghiệp"} đã được duyệt thành công`);
+            resolve(res.data);
+            this.itemPartner = res.data;
+          } else {
+            if (res.errors && res.errors.length > 0) {
+              res.errors.forEach((el: any) => {
+                this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+              });
+            } else {
+              this.notificationService.showNotification(Constant.ERROR, `Duyệt ${this.itemPartner?.companyName ? this.itemPartner?.companyName : "doanh nghiệp"} không thành cônng`);
+            }
+            reject(res.errors);
+          }
+        },
+        error: (err: any) => {
+          this.notificationService.showNotification(Constant.ERROR, `Duyệt ${this.itemPartner?.companyName ? this.itemPartner?.companyName : "doanh nghiệp"} thất bại do lỗi hệ thống`);
+          reject(err);
+        },
+        complete: () => {
+
+        }
+      });
+    });
+  }
+
+  showPopupChangePassword() {
+    this.isVisibleChangePassword = true;
+  }
+
+  handleCancelChangePassword() {
+    this.isVisibleChangePassword = false;
+  }
 }

@@ -51,6 +51,7 @@ import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { UserTypePipe } from './pipe/user-type.pipe';
 import { PartnerStatusPipe } from './pipe/partner-status.pipe';
 import { EmployeePipePipe } from './pipe/employeePipe.pipe';
+import { NzProgressModule } from 'ng-zorro-antd/progress';
 import {NzTabsModule} from 'ng-zorro-antd/tabs';
 @NgModule({
   imports: [
@@ -86,6 +87,7 @@ import {NzTabsModule} from 'ng-zorro-antd/tabs';
     NzRateModule,
     NzCheckboxModule,
     NzToolTipModule,
+    NzProgressModule,
     DxDateBoxModule,
     AngularEditorModule,
     NzRadioModule,

@@ -74,7 +74,7 @@ export class UpgradeEmployeeComponent implements OnInit {
   ];
   itemEmployee: any = null;
   partnerForEmployee: any = null;
-  employees: any;
+  listOfCompanyEmployees: any;
   isActiveEditBaseInfo: boolean = false;
   searchEmployee: string = '';
 
@@ -123,6 +123,10 @@ export class UpgradeEmployeeComponent implements OnInit {
         this.notificationService.showNotification(Constant.ERROR, `Lỗi truy vấn dữ liệu doanh nghiệp`);
         this.location.back();
       });
+
+
+      this.getListOfCompanyEmployees(idPartner);
+
     });
 
     if (this.actionEmployeeVHL == ActionTypePageVHL.Create) {
@@ -142,7 +146,6 @@ export class UpgradeEmployeeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getEmployees();
   }
 
   private async resetFormBaseInfoCreateEmployee(itemEmployee: any) {
@@ -195,18 +198,27 @@ export class UpgradeEmployeeComponent implements OnInit {
     });
   }
 
-  private getEmployees() {
-    this.generalService.queryByUserType({ userType: UserType.All }).subscribe((res: any) => {
-      if (res !== null) {
-        let stt = 0;
-        this.employees = res;
-        this.employees.forEach(en => {
-          stt++;
-          en.stt = stt;
-          en.checked = true;
-        });
+  private getListOfCompanyEmployees(idPartner: number) {
+    this.generalService.getUsersByPartnerId(idPartner).subscribe((res: any) => {
+      if (res.isValid) {
+        // let stt = 0;
+        this.listOfCompanyEmployees = res.data;
+        // this.listOfCompanyEmployees.forEach(en => {
+        //   stt++;
+        //   en.stt = stt;
+        //   en.checked = true;
+        // });
+      } else {
+        if (res.errors && res.errors.length > 0) {
+          res.errors.forEach((el: any) => {
+            this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+          });
+        } else {
+          this.notificationService.showNotification(Constant.ERROR, 'Lấy ra dữ liệu nhân viên của doanh nghiệp không thành công');
+        }
       }
     }, error => {
+      this.notificationService.showNotification(Constant.ERROR, 'Lấy ra dữ liệu nhân viên của doanh nghiệp thất bại do lỗi hệ thống');
     });
   }
 
