@@ -1,5 +1,6 @@
 
 import { NgModule} from '@angular/core';
+// @ts-ignore
 import { IconDefinition } from '@ant-design/icons-angular';
 import * as AllIcons from '@ant-design/icons-angular/icons';
 import {AdminLayoutComponent} from './admin-layout.component';

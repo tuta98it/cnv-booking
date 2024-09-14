@@ -1,0 +1,11 @@
+.grid-3{
+  display: grid;
+  grid-template-columns: 30% 30% 30%;
+  gap: 0 10px;
+}
+::ng-deep .div-images .ant-upload-list-picture{
+  display: flex;
+  .ant-upload-list-picture-container{
+    margin-right: 10px;
+  }
+}

@@ -37,6 +37,7 @@ export abstract class TableSelectionAbstract implements TableSelectionInterface 
         gridHeight = gridHeight - gridFooter.clientHeight;
       }
       this.dxGridHeight = `${gridHeight + 45}px`;
+      //alert(this.dxGridHeight);
     }, 10);
   }
   setListOfAllData(listOfAllData: any[]) {

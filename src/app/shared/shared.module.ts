@@ -51,6 +51,7 @@ import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { UserTypePipe } from './pipe/user-type.pipe';
 import { PartnerStatusPipe } from './pipe/partner-status.pipe';
 import { EmployeePipePipe } from './pipe/employeePipe.pipe';
+import {NzTabsModule} from 'ng-zorro-antd/tabs';
 @NgModule({
   imports: [
     CommonModule,
@@ -87,7 +88,8 @@ import { EmployeePipePipe } from './pipe/employeePipe.pipe';
     NzToolTipModule,
     DxDateBoxModule,
     AngularEditorModule,
-    NzRadioModule
+    NzRadioModule,
+    NzTabsModule
   ],
   exports: [
     DateFormatPipe,
@@ -140,7 +142,8 @@ import { EmployeePipePipe } from './pipe/employeePipe.pipe';
     UserTypePipe,
     PartnerStatusPipe,
     EmployeePipePipe,
-    NzRadioModule
+    NzRadioModule,
+    NzTabsModule
   ],
   declarations: [
     DateFormatPipe,

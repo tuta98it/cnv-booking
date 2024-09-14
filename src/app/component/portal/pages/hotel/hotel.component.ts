@@ -8,13 +8,16 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Constant } from 'src/app/shared/constants/constant.class';
 import { AppConfigService } from 'src/app-config.service';
 import { NotificationService } from 'src/app/service/notification.service';
+// @ts-ignore
 import { Workbook } from 'exceljs';
 import { DateFormatPipe } from 'src/app/shared/pipe/format-date.pipe';
+// @ts-ignore
 import { exportDataGrid } from 'devextreme/excel_exporter';
 import { saveAs } from 'file-saver-es';
 import { NzImageService } from 'ng-zorro-antd/image';
 // import { removeAccents } from ;
 import { removeAccents } from 'src/app/shared/utils/filters/remove-accents';
+// @ts-ignore
 import {
   DxDataGridComponent,
   DxTemplateDirective,
@@ -175,7 +178,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
     this.statusPriceDetail = [
       { name: 'Kích hoạt', value: true },
       { name: 'Vô hiệu hoá', value: false },
-    ]
+    ];
   }
 
   ngOnInit(): void {
@@ -348,7 +351,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
       item: {}
     };
     this.dataService.setData(data);
-    this.router.navigate(['hotel/edit-hotel']);
+    this.router.navigate(['hotel/edit-hotel-old']);
   }
 
   showModalUpdateHotel(data: any) {
@@ -392,7 +395,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
       item: item,
     };
     this.dataService.setData(data);
-    this.router.navigate(['hotel/edit-hotel']);
+    this.router.navigate(['hotel/edit-hotel-old']);
   }
 
   getIDUtilityHotels(utilityHotel: any) {

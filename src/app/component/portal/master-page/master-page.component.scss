@@ -142,7 +142,7 @@ $height-top-header: 50px;
 
     nz-sider.menu-vhl {
       height: 100%;
-      margin-right: 10px;
+
       .logo {
         display: flex;
         align-items: center;
@@ -209,8 +209,8 @@ $height-top-header: 50px;
 
         div.content-vhl {
           height: 100%;
-          padding: 1rem;
-          background: #FFF;
+          padding: 0 10px 10px;
+          background: #f1f1F1 !important;
         }
       }
 
@@ -228,7 +228,8 @@ $height-top-header: 50px;
       display: flex;
       align-items: center;
       gap: 15px;
-      img{
+
+      img {
         max-height: 80%;
         flex-shrink: 0;
         width: 100%;
@@ -298,11 +299,13 @@ footer {
   margin-bottom: 10px;
   padding: 0 1.5rem;
 }
+
 .trigger {
   font-size: 18px;
   cursor: pointer;
   transition: color 0.3s;
 }
+
 .trigger:hover {
   color: #1890ff;
 }
@@ -335,10 +338,93 @@ footer {
     opacity: 0.5 !important;
     transition: all 0.5s ease;
   }
-  ul.ant-menu-inline{
+
+  ul.ant-menu-inline {
     border-right: none;
   }
-  .ant-menu > li.ant-menu-item, .ant-menu > li.ant-menu-submenu{
+
+  .ant-menu > li.ant-menu-item, .ant-menu > li.ant-menu-submenu {
     border-bottom: solid 1px #EEE;
   }
+
+  .dx-pager {
+    padding: 5px 10px;
+  }
+
+  .action-button {
+    background: #FFF;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    padding: 6px 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .form-group {
+      margin-bottom: 0 !important;
+    }
+  }
+
+  .gap-10 {
+    gap: 10px;
+  }
+
+  .toolbar {
+    background: #FFF;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    padding: 6px 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .toolbar-title {
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      margin: 0;
+      height: 30px;
+      line-height: 30px;
+    }
+  }
+
+  .card {
+    margin-bottom: 10px;
+  }
+
+  .card .ant-tabs-nav-wrap {
+    padding: 0 10px;
+  }
+
+  .card .ant-tabs-tabpane {
+    padding: 10px;
+  }
+
+  .card .ant-tabs > .ant-tabs-nav {
+    margin-bottom: 0;
+  }
+
+  .card-title h2 {
+    font-size: 16px;
+  }
+
+  .buttons {
+    display: flex;
+    gap: 10px;
+  }
+
+  .form-inline-custom {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+    min-height: 34px;
+
+    label {
+      width: 120px;
+      flex-shrink: 0;
+      margin: 0;
+    }
+  }
 }
+

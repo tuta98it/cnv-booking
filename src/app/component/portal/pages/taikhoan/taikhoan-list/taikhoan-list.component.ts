@@ -1,41 +1,43 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ActionsSubject, select, Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
-import { NzModalService } from 'ng-zorro-antd/modal';
-import { GeneralService } from 'src/app/service/general-service';
-import { TableSelectionAbstract } from 'src/app/shared/component/table/table-selection.abstract';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Constant } from 'src/app/shared/constants/constant.class';
-import { AppConfigService } from 'src/app-config.service';
-import { NotificationService } from 'src/app/service/notification.service';
-import { Workbook } from 'exceljs';
-import { DateFormatPipe } from 'src/app/shared/pipe/format-date.pipe';
-import { exportDataGrid } from 'devextreme/excel_exporter';
-import { saveAs } from 'file-saver-es';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {ActionsSubject, select, Store} from '@ngrx/store';
+import {TranslateService} from '@ngx-translate/core';
+import {NzModalService} from 'ng-zorro-antd/modal';
+import {GeneralService} from 'src/app/service/general-service';
+import {TableSelectionAbstract} from 'src/app/shared/component/table/table-selection.abstract';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Constant} from 'src/app/shared/constants/constant.class';
+import {AppConfigService} from 'src/app-config.service';
+import {NotificationService} from 'src/app/service/notification.service';
+// @ts-ignore
+import {Workbook} from 'exceljs';
+import {DateFormatPipe} from 'src/app/shared/pipe/format-date.pipe';
+import {exportDataGrid} from 'devextreme/excel_exporter';
+import {saveAs} from 'file-saver-es';
 // import { removeAccents } from ;
-import { removeAccents } from 'src/app/shared/utils/filters/remove-accents'
+import {removeAccents} from 'src/app/shared/utils/filters/remove-accents';
 import {
   DxDataGridComponent,
   DxTemplateDirective,
   DxTooltipComponent,
   DxTooltipModule,
-} from "devextreme-angular";
-import { IsEmptyPipe } from 'src/app/shared/pipe/is-empty.pipe';
-import { UserType } from 'src/app/enums/user-type.enum';
+} from 'devextreme-angular';
+import {IsEmptyPipe} from 'src/app/shared/pipe/is-empty.pipe';
+import {UserType} from 'src/app/enums/user-type.enum';
+
 @Component({
   selector: 'app-taikhoan-list',
   templateUrl: './taikhoan-list.component.html',
   styleUrls: ['./taikhoan-list.component.scss']
 })
 export class TaikhoanListComponent extends TableSelectionAbstract implements OnInit, OnDestroy {
-  @ViewChild("ListAccount") dataGridDetail: DxDataGridComponent;
+  @ViewChild('ListAccount') dataGridDetail: DxDataGridComponent;
   // @ViewChild(DxDataGridComponent, { static: false }) dataGrid: DxDataGridComponent;
   valueNumberPhone = '';
-  @ViewChild('inputElementNumberPhone', { static: false }) inputElementNumberPhone?: ElementRef
+  @ViewChild('inputElementNumberPhone', {static: false}) inputElementNumberPhone?: ElementRef;
 
   datas: any[] = [];
   userTypeEnum = UserType;
-  userType : UserType = this.userTypeEnum.All;
+  userType: UserType = this.userTypeEnum.All;
   data: any;
   passwordVisible: boolean;
   repeatpasswordVisible: boolean;
@@ -67,6 +69,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
   searchText = '';
   userInfor: any;
   titleFormUser = '';
+
   constructor(
     public translate: TranslateService,
     private modalService: NzModalService,
@@ -127,6 +130,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
     this.getUserInfo();
     this.getListData();
   }
+
   onChangeNumberPhone(value: string): void {
     this.updateValueNumberPhone(value);
   }
@@ -139,6 +143,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
     this.inputElementNumberPhone!.nativeElement.value = this.valueNumberPhone;
     // this.updateTitle();
   }
+
   ngOnDestroy(): void {
 
   }
@@ -154,7 +159,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
       let service: any;
       if (this.userInfor.userType === 0) {
         // this.userInfor.userType
-        this.generalService.queryByUserType({userType : this.userType}).subscribe((res: any) => {
+        this.generalService.queryByUserType({userType: this.userType}).subscribe((res: any) => {
           if (res !== null) {
             this.datas = res;
             let stt = 0;
@@ -188,7 +193,8 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
             this.loading = false;
           }
         }, error => {
-        });;
+        });
+        ;
         // isGetAPT = true;
       } else {
         console.log('UserType không hợp lệ!');
@@ -219,7 +225,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
     let changeIsActiveUser = !user.status;
     user.isLoadingActiveUser = true;
     this.modalService.confirm({
-      nzTitle: `<b>Bạn có chắc muốn ${changeIsActiveUser ? "Active" : "Inactive"} tài khoản này?</b>`,
+      nzTitle: `<b>Bạn có chắc muốn ${changeIsActiveUser ? 'Active' : 'Inactive'} tài khoản này?</b>`,
       nzContent: 'Ấn đồng ý để tiếp tục',
       nzOkDanger: true,
       nzOkText: 'Đồng ý',
@@ -232,6 +238,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
   private cancelActiveUserConfirm(user: any) {
     user.isLoadingActiveUser = false;
   }
+
   setStatusUser(user: any, changeIsActiveUser: boolean) {
     // Delete workspace here
     this.generalService.setStatusUser(user.id, changeIsActiveUser).subscribe({
@@ -252,7 +259,9 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
         });
       }
 
-    }).add(() => { user.isLoadingActiveUser = false; });
+    }).add(() => {
+      user.isLoadingActiveUser = false;
+    });
   }
 
   showModalAdd() {
@@ -319,6 +328,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
     this.isVisibleUserGroup = true;
     this.getGroupByUser();
   }
+
   getGroupByUser() {
     this.generalService.getTaikhoanById(this.item.id).subscribe(res => {
       if (res !== null) {
@@ -365,7 +375,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
       delete formValue.id;
       formValue.status = 1;
       userType = this.userInfor.userType == 0 ? 2 : this.userInfor.userType == 1 ? 3 : null;
-      const payload = { ...formValue, 'userType': userType };
+      const payload = {...formValue, 'userType': userType};
       this.generalService.addTaikhoan(payload).subscribe((res: any) => {
         if (res.ret && res.ret[0].code !== 0) {
           this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
@@ -480,8 +490,9 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
       nzOnOk: () => this.removeUserFromGroup(this.item.id, groupId)
     });
   }
+
   removeUserFromGroup(userId, groupId) {
-    const params = { userId, groupId };
+    const params = {userId, groupId};
     this.generalService.removeUserFromGroup(params).subscribe(res => {
       this.notificationService.showNotification(Constant.SUCCESS, 'Xóa nhóm thành công');
       this.getGroupByUser();
@@ -489,8 +500,9 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
 
     });
   }
+
   addGroup2User() {
-    const payload = { userId: this.item.id, groupId: this.chooseGroup.id };
+    const payload = {userId: this.item.id, groupId: this.chooseGroup.id};
     this.generalService.addUserToGroup(payload).subscribe(res => {
       this.notificationService.showNotification(Constant.SUCCESS, 'Thêm nhóm tài khoản thành công');
       this.getGroupByUser();
@@ -518,13 +530,11 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
       autoFilterEnabled: true,
     }).then(() => {
       workbook.xlsx.writeBuffer().then((buffer) => {
-        saveAs(new Blob([buffer], { type: 'application/octet-stream' }), fileName + '.xlsx');
+        saveAs(new Blob([buffer], {type: 'application/octet-stream'}), fileName + '.xlsx');
       });
     });
     e.cancel = true;
   }
-
-
 
 
   // String.prototype.removeAccents = function() {
@@ -566,6 +576,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
 
     return false;
   }
+
   // getTinhThanh() {
   //   this.generalService.getTinhThanh(null).subscribe(res => {
   //     if (res !== null) {

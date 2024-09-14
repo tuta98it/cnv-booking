@@ -1,14 +1,15 @@
 <div class="action-button" style="clear: bottom;overflow: hidden;">
   <div class="form-group" style="float: left">
-    <h1>Danh sách book vé yêu cầu</h1>
-
-    <div style="display: flex; justify-content: center;">
-      <div style="display: flex; align-items: center; font-size: larger;">Trạng thái</div>
-      <nz-select nzShowSearch nzMode="default" nzPlaceHolder="Trạng thái" style="width: 200px; margin-left: 0.5rem;"
-        [(ngModel)]="payloadAdminrequestbooking.status" (ngModelChange)="getListData()">
-        <nz-option *ngFor="let option of AIRLINE_TICKET_BOOKING_REQUEST_STATUS_OPTIONS" [nzLabel]="option.label"
-          [nzValue]="option.value"></nz-option>
-      </nz-select>
+    <div class="d-flex align-items-center gap-10">
+      <h1>Danh sách book vé yêu cầu</h1>
+      <div style="display: flex; justify-content: center;">
+        <div style="display: flex; align-items: center; font-size: larger;">Trạng thái</div>
+        <nz-select nzShowSearch nzMode="default" nzPlaceHolder="Trạng thái" style="width: 200px; margin-left: 0.5rem;"
+                   [(ngModel)]="payloadAdminrequestbooking.status" (ngModelChange)="getListData()">
+          <nz-option *ngFor="let option of AIRLINE_TICKET_BOOKING_REQUEST_STATUS_OPTIONS" [nzLabel]="option.label"
+                     [nzValue]="option.value"></nz-option>
+        </nz-select>
+      </div>
     </div>
   </div>
   <!-- <nz-select nzShowSearch nzMode="default" nzPlaceHolder="--Đối tượng user--" style="width: 200px;"
@@ -26,7 +27,6 @@
       placeholder="Tìm kiếm theo Tên người đặt vé, SĐT, Email ..."> -->
 
 
-
     <!-- Nút xuất Excel -->
     <!-- <button nz-button nzType="primary" class="btn-green mgr10" (click)="exportData()">
       <span class="fa fa-fw fa-file-excel" style="margin-right: 4px;"></span>
@@ -36,40 +36,40 @@
 </div>
 
 <dx-data-grid id="gridContainer" [dataSource]="filteredDatas" #ListAccount [showColumnLines]="true"
-  [showRowLines]="true" [height]="dxGridHeight" [rowAlternationEnabled]="true" [showBorders]="true"
-  [allowColumnResizing]="true" columnResizingMode="widget" [columnMinWidth]="50" [columnAutoWidth]="true"
-  (onExporting)="onExporting($event)">
+              [showRowLines]="true" [height]="dxGridHeight" [rowAlternationEnabled]="true" [showBorders]="true"
+              [allowColumnResizing]="true" columnResizingMode="widget" [columnMinWidth]="50" [columnAutoWidth]="true"
+              (onExporting)="onExporting($event)">
   <dxo-load-panel [enabled]="true"></dxo-load-panel>
   <dxo-sorting mode="multiple"></dxo-sorting>
   <dxo-header-filter [visible]="true"></dxo-header-filter>
   <dxo-filter-row [visible]="true" [applyFilter]="currentFilter"></dxo-filter-row>
-  <dxo-paging [pageSize]="10"> </dxo-paging>
-  <dxo-scrolling rowRenderingMode="virtual"> </dxo-scrolling>
+  <dxo-paging [pageSize]="10"></dxo-paging>
+  <dxo-scrolling rowRenderingMode="virtual"></dxo-scrolling>
   <dxo-pager [visible]="true" [allowedPageSizes]="allowedPageSizes" [displayMode]="displayMode"
-    [showPageSizeSelector]="showPageSizeSelector" [showInfo]="showInfo"
-    [showNavigationButtons]="showNavButtons"></dxo-pager>
+             [showPageSizeSelector]="showPageSizeSelector" [showInfo]="showInfo"
+             [showNavigationButtons]="showNavButtons"></dxo-pager>
 
   <dxi-column caption="STT" [width]="55" dataField="stt" [fixed]="true" [allowFiltering]="false" [allowSorting]="false"
-    cssClass="text-center vertical-align-middle"></dxi-column>
+              cssClass="text-center vertical-align-middle"></dxi-column>
 
   <dxi-column caption="Mã yêu cầu" dataField="bookingCode" cssClass="text-left vertical-align-middle" [width]="150"
-    [fixed]="true"></dxi-column>
+              [fixed]="true"></dxi-column>
 
   <dxi-column caption="Mã phê duyệt" dataField="approvalCode" cssClass="vertical-align-middle" [width]="150"
-    [fixed]="true"></dxi-column>
+              [fixed]="true"></dxi-column>
 
   <dxi-column caption="Mã đặt chỗ" cssClass="vertical-align-middle" [width]="150" cellTemplate="cellReservationCode"
-    [fixed]="true"></dxi-column>
+              [fixed]="true"></dxi-column>
   <div *dxTemplate="let item of 'cellReservationCode'">
     {{item.data.reservationCode}}{{ item.data.returnReservationCode ? ", " + item.data.returnReservationCode : "" }}
   </div>
 
 
   <dxi-column caption="Trạng thái" dataField="status" cssClass="text-left vertical-align-middle"
-    cellTemplate="cellStatus"></dxi-column>
+              cellTemplate="cellStatus"></dxi-column>
   <div *dxTemplate="let status of 'cellStatus'" style="display: flex;">
     <nz-select nzShowSearch nzMode="default" nzPlaceHolder="Trạng thái" style="width: 200px; margin-left: 0.5rem;"
-      [(ngModel)]="status.value" (ngModelChange)="handleChangeStatusByItem(status)">
+               [(ngModel)]="status.value" (ngModelChange)="handleChangeStatusByItem(status)">
       <nz-option [nzLabel]="'Gửi yêu cầu'" [nzValue]="BookingRequestStatusEnum.SubmitRequest" *ngIf="(
         status.value == BookingRequestStatusEnum.SubmitRequest ||
         status.value == BookingRequestStatusEnum.ReserveSeat
@@ -81,10 +81,10 @@
       </nz-option>
 
       <nz-option [nzLabel]="'Đã xác nhận vé'" [nzValue]="BookingRequestStatusEnum.ReceivedTicket"
-        *ngIf="(status.value == BookingRequestStatusEnum.ReceivedTicket)"></nz-option>
+                 *ngIf="(status.value == BookingRequestStatusEnum.ReceivedTicket)"></nz-option>
 
       <nz-option [nzLabel]="'Hết hạn giữ vé'" [nzValue]="BookingRequestStatusEnum.ExpiredTicket"
-        *ngIf="(status.value == BookingRequestStatusEnum.ExpiredTicket)"></nz-option>
+                 *ngIf="(status.value == BookingRequestStatusEnum.ExpiredTicket)"></nz-option>
 
       <nz-option [nzLabel]="'Điều chỉnh vé'" [nzValue]="BookingRequestStatusEnum.AdjustTicket" *ngIf="(
         status.value == BookingRequestStatusEnum.AdjustTicket ||
@@ -123,33 +123,34 @@
   </div>
 
   <dxi-column caption="Chi phí vé" [width]="150" dataField="ticketPriceTotal" [format]="formatCurrencyVND"
-    cssClass="text-center  vertical-align-middle"></dxi-column>
+              cssClass="text-center  vertical-align-middle"></dxi-column>
 
   <dxi-column caption="Chi phí hoàn vé" [width]="150" dataField="refundFeeTotal" [format]="formatCurrencyVND"
-    cssClass="text-center vertical-align-middle"></dxi-column>
+              cssClass="text-center vertical-align-middle"></dxi-column>
 
   <dxi-column caption="Chi phí huỷ vé" [width]="150" dataField="cancelFeeTotal" [format]="formatCurrencyVND"
-    cssClass="text-center vertical-align-middle"></dxi-column>
+              cssClass="text-center vertical-align-middle"></dxi-column>
 
   <dxi-column caption="Chi phí đổi vé" [width]="150" dataField="changeFeeTotal" [format]="formatCurrencyVND"
-    cssClass="text-center vertical-align-middle"></dxi-column>
+              cssClass="text-center vertical-align-middle"></dxi-column>
 
   <dxi-column caption="Chi phí thêm hành lý" [width]="200" dataField="baggageFeeTotal" [format]="formatCurrencyVND"
-    cssClass="text-center vertical-align-middle"></dxi-column>
+              cssClass="text-center vertical-align-middle"></dxi-column>
 
   <dxi-column caption="Thao tác" [width]="200" cellTemplate="cellBtnTemplate"
-    cssClass="text-center vertical-align-middle" [fixed]="true" fixedPosition="right"></dxi-column>
+              cssClass="text-center vertical-align-middle" [fixed]="true" fixedPosition="right"></dxi-column>
   <div *dxTemplate="let item of 'cellBtnTemplate'" style="display: flex; justify-content: space-evenly;">
 
     <button title="Xem thông tin yêu cầu" nz-button nzSize="small" nzType="default"
-      (click)="showPopupViewRequestBookingTicket(item.data)">
+            (click)="showPopupViewRequestBookingTicket(item.data)">
       <span class="fa fa-eye fa-fw"></span>
     </button>
 
     <button *ngIf="
     (item.data.status == BookingRequestStatusEnum.ReserveSeat) ||
     (item.data.status == BookingRequestStatusEnum.AdjustTicket)" title="Cập nhật thông tin vé đặt" nz-button
-      nzSize="small" nzType="default" (click)="showPopupAirlineTicket(item.data, OptionAirlineTicketInfoEnum.Update)">
+            nzSize="small" nzType="default"
+            (click)="showPopupAirlineTicket(item.data, OptionAirlineTicketInfoEnum.Update)">
       <span class="fa fa-edit fa-fw"></span>
     </button>
 
@@ -159,7 +160,7 @@
     item.data.status == BookingRequestStatusEnum.ExpiredTicket ||
       item.data.status == BookingRequestStatusEnum.IssuedTicket
     )" title="Xem thông tin vé đặt" nz-button nzSize="small" nzType="default"
-      (click)="showPopupAirlineTicket(item.data, OptionAirlineTicketInfoEnum.View)">
+            (click)="showPopupAirlineTicket(item.data, OptionAirlineTicketInfoEnum.View)">
       <span class="fa fa-ticket-alt fa-fw"></span>
     </button>
 
@@ -170,7 +171,8 @@
     </button> -->
 
     <button title="Lịch sử" nz-button nzSize="small" nzType="default"
-      (click)="previewPopupRequestBookingHistory(item.data)" [nzLoading]="item.data.isLoadingRequestBookingHistory">
+            (click)="previewPopupRequestBookingHistory(item.data)"
+            [nzLoading]="item.data.isLoadingRequestBookingHistory">
       <span class="fa fa-history fa-fw"></span>
     </button>
   </div>
@@ -183,34 +185,36 @@
 
 
 <nz-modal [(nzVisible)]="isVisibleRequestBookingHistory" nzTitle="Lịch sử thay đổi trạng thái đặt vé"
-  [nzContent]="contentRequestBookingHistory" [nzFooter]="footer" nzWidth="750px" [nzStyle]="{ top: '20px' }"
-  (nzOnCancel)="handleCancelPopupRequestBookingHistory()">
+          [nzContent]="contentRequestBookingHistory" [nzFooter]="footer" nzWidth="750px" [nzStyle]="{ top: '20px' }"
+          (nzOnCancel)="handleCancelPopupRequestBookingHistory()">
   <ng-template #contentRequestBookingHistory>
     <dx-data-grid id="gridRequestBookingHistory" [dataSource]="listRequestBookingHistories"
-      #TagGridRequestBookingHistory [showColumnLines]="true" [showRowLines]="true" [height]="dxGridHeight"
-      [rowAlternationEnabled]="true" [showBorders]="true" [allowColumnResizing]="true" columnResizingMode="widget"
-      [columnMinWidth]="50" [columnAutoWidth]="true" (onExporting)="onExporting($event)">
+                  #TagGridRequestBookingHistory [showColumnLines]="true" [showRowLines]="true" [height]="dxGridHeight"
+                  [rowAlternationEnabled]="true" [showBorders]="true" [allowColumnResizing]="true"
+                  columnResizingMode="widget"
+                  [columnMinWidth]="50" [columnAutoWidth]="true" (onExporting)="onExporting($event)">
 
 
-      <dxo-load-panel [enabled]="true"></dxo-load-panel>`
+      <dxo-load-panel [enabled]="true"></dxo-load-panel>
+      `
       <dxo-scrolling rowRenderingMode="virtual"></dxo-scrolling>
       <dxo-sorting mode="multiple"></dxo-sorting>
       <dxo-header-filter [visible]="true"></dxo-header-filter>
       <dxo-filter-row [visible]="true" [applyFilter]="currentFilter"></dxo-filter-row>
 
       <dxi-column caption="STT" [width]="55" dataField="stt" [fixed]="true" [allowFiltering]="false"
-        [allowSorting]="false" cssClass="text-center vertical-align-middle"></dxi-column>
+                  [allowSorting]="false" cssClass="text-center vertical-align-middle"></dxi-column>
       <!-- <dxi-column caption="Trạng thái cũ" [fixed]="true" [width]="150" dataField="oldStatus"
         [format]="getLabelRequestBookingStatus" cssClass="vertical-align-middle"></dxi-column> -->
       <dxi-column caption="Trạng thái" [fixed]="true" dataField="newStatus" cssClass="vertical-align-middle"
-        [width]="150" [format]="getLabelRequestBookingStatus"></dxi-column>
+                  [width]="150" [format]="getLabelRequestBookingStatus"></dxi-column>
       <dxi-column caption="Người thực hiện" cssClass="vertical-align-middle" dataField="implementPerson"
-        cellTemplate="cellImplementPerson"></dxi-column>
+                  cellTemplate="cellImplementPerson"></dxi-column>
       <div *dxTemplate="let implementPerson of 'cellImplementPerson'" style="display: flex;">
         Id : {{implementPerson.value.id}}, Name: {{implementPerson.value.fullname}}
       </div>
       <dxi-column caption="Thời gian" dataField="implementTime" [width]="150" dataType="date" format="dd/MM/yy HH:mm"
-        cssClass="vertical-align-middle"></dxi-column>
+                  cssClass="vertical-align-middle"></dxi-column>
 
       <dxo-summary>
         <dxi-total-item column="oldStatus" displayFormat="Số bản ghi: {0}" summaryType="count">
@@ -218,14 +222,14 @@
       </dxo-summary>
     </dx-data-grid>
   </ng-template>
-  <ng-template #footer> </ng-template>
+  <ng-template #footer></ng-template>
 </nz-modal>
 
 <!-- Popup View/Update thông tin vé máy bay -->
 <form [formGroup]="formAirlineTicketPopup">
   <!-- [(nzVisible)]="isVisibleAirlineTicketInfo" -->
   <nz-modal [(nzVisible)]="isVisibleAirlineTicketInfo" [nzContent]="contentAirlineTicketPopup" nzWidth="1506px"
-    [nzStyle]="{ top: '20px' }" (nzOnCancel)="handleCancelArilineTicketPopup()">
+            [nzStyle]="{ top: '20px' }" (nzOnCancel)="handleCancelArilineTicketPopup()">
     <div *nzModalTitle>
       {{optionAirlineTicketInfo == OptionAirlineTicketInfoEnum.View ? "Xem" : "Cập nhật"}} thông tin vé máy bay
     </div>
@@ -242,7 +246,7 @@
           <div nz-col class="gutter-row" nzSpan="6">
             <div class="inner-box">
               <nz-select nzShowSearch nzMode="default" nzPlaceHolder="--Loại vé--" formControlName="typeTicket"
-                (ngModelChange)="handleChangeTypeTicket($event)">
+                         (ngModelChange)="handleChangeTypeTicket($event)">
                 <nz-option nzLabel="Một chiều" [nzValue]="TypeAirlineTicketEnum.OneWay"></nz-option>
                 <nz-option nzLabel="Khứ hồi" [nzValue]="TypeAirlineTicketEnum.RoundTrip"></nz-option>
               </nz-select>
@@ -273,10 +277,11 @@
             <div class="inner-box">
               <!-- <input style="border-radius: 4px;" nz-input nzSize="default" formControlName="passengers"> -->
               <nz-select [nzMaxTagCount]="6" [nzMaxTagPlaceholder]="tagPlaceHolder" nzMode="multiple"
-                [nzTokenSeparators]="[',']" nzPlaceHolder="-- Khách hàng --" [nzDropdownRender]="renderTemplate"
-                formControlName="passengers">
+                         [nzTokenSeparators]="[',']" nzPlaceHolder="-- Khách hàng --"
+                         [nzDropdownRender]="renderTemplate"
+                         formControlName="passengers">
                 <nz-option *ngFor="let passenger of listOfOptionPassengers" [nzLabel]="passenger.fullName"
-                  [nzValue]="passenger"></nz-option>
+                           [nzValue]="passenger"></nz-option>
               </nz-select>
               <ng-template #tagPlaceHolder let-selectedList>và {{ selectedList.length }} khách hàng nữa...</ng-template>
               <ng-template #renderTemplate>
@@ -284,7 +289,7 @@
                   <div nz-col class="gutter-row" nzSpan="18">
                     <div class="inner-box">
                       <input type="text" nz-input #inputElementPassenger
-                        (keyup.enter)="addItemPassenger(inputElementPassenger)" />
+                             (keyup.enter)="addItemPassenger(inputElementPassenger)"/>
                     </div>
                   </div>
                   <div nz-col class="gutter-row" nzSpan="6">
@@ -318,7 +323,7 @@
             <div nz-col class="gutter-row" nzSpan="14">
               <div class="inner-box">
                 <nz-range-picker [nzShowTime]="true" nzFormat="dd/MM/yyyy HH:mm" style="width: 100%;"
-                  formControlName="flightTimeDeparture"></nz-range-picker>
+                                 formControlName="flightTimeDeparture"></nz-range-picker>
               </div>
             </div>
             <div nz-col class="gutter-row" nzSpan="2">
@@ -331,9 +336,9 @@
             <div nz-col class="gutter-row" nzSpan="6">
               <div class="inner-box">
                 <nz-select nzShowSearch nzMode="default" nzPlaceHolder="--Hãng bay--"
-                  formControlName="airlineCodeDeparture">
+                           formControlName="airlineCodeDeparture">
                   <nz-option *ngFor="let op of AIRLINE_CODE_OPTIONS; let i = index;" [nzLabel]="op.label"
-                    [nzValue]="op.value"></nz-option>
+                             [nzValue]="op.value"></nz-option>
                 </nz-select>
               </div>
             </div>
@@ -375,8 +380,9 @@
                 <!-- <input style="border-radius: 4px;" nz-input nzSize="default"
                   formControlName="ticketHoldExpiryDateDeparture"> -->
                 <nz-date-picker [nzShowTime]="true" formControlName="ticketHoldExpiryDateDeparture" nzSize="default"
-                  style="width: 100%;" nzFormat="dd/MM/yyyy HH:mm" placeholder="Hạn giữ vé" [nzNowText]="'Bây giờ'"
-                  [nzOkText]="'OK'"></nz-date-picker>
+                                style="width: 100%;" nzFormat="dd/MM/yyyy HH:mm" placeholder="Hạn giữ vé"
+                                [nzNowText]="'Bây giờ'"
+                                [nzOkText]="'OK'"></nz-date-picker>
               </div>
             </div>
           </div>
@@ -392,10 +398,12 @@
               <div class="inner-box">
                 <nz-input-group nzSuffix="VND">
                   <input style="border-radius: 4px;" nz-input nzSize="default" formControlName="ticketPriceDeparture"
-                    nz-tooltip nzTooltipTrigger="focus" nzTooltipPlacement="topLeft" nzOverlayClassName="numeric-input"
-                    [nzTooltipTitle]="tooltipTitleAmount" placeholder="Nhập giá vé"
-                    (click)="onClickInputAmount($event, 'ticketPriceDeparture')"
-                    (ngModelChange)="onChangeInputAmount($event, 'ticketPriceDeparture')" (blur)="onBlurInputAmount()">
+                         nz-tooltip nzTooltipTrigger="focus" nzTooltipPlacement="topLeft"
+                         nzOverlayClassName="numeric-input"
+                         [nzTooltipTitle]="tooltipTitleAmount" placeholder="Nhập giá vé"
+                         (click)="onClickInputAmount($event, 'ticketPriceDeparture')"
+                         (ngModelChange)="onChangeInputAmount($event, 'ticketPriceDeparture')"
+                         (blur)="onBlurInputAmount()">
                 </nz-input-group>
 
               </div>
@@ -409,11 +417,12 @@
               <div class="inner-box">
                 <nz-input-group nzSuffix="VND">
                   <input style="border-radius: 4px;" nz-input nzSize="default" plaeholder=""
-                    formControlName="baggageFeeDeparture" nz-tooltip nzTooltipTrigger="focus"
-                    nzTooltipPlacement="topLeft" nzOverlayClassName="numeric-input"
-                    [nzTooltipTitle]="tooltipTitleAmount" placeholder="Nhập phí hành lý"
-                    (click)="onClickInputAmount($event, 'baggageFeeDeparture')"
-                    (ngModelChange)="onChangeInputAmount($event, 'baggageFeeDeparture')" (blur)="onBlurInputAmount()">
+                         formControlName="baggageFeeDeparture" nz-tooltip nzTooltipTrigger="focus"
+                         nzTooltipPlacement="topLeft" nzOverlayClassName="numeric-input"
+                         [nzTooltipTitle]="tooltipTitleAmount" placeholder="Nhập phí hành lý"
+                         (click)="onClickInputAmount($event, 'baggageFeeDeparture')"
+                         (ngModelChange)="onChangeInputAmount($event, 'baggageFeeDeparture')"
+                         (blur)="onBlurInputAmount()">
                 </nz-input-group>
 
               </div>
@@ -431,11 +440,12 @@
               <div class="inner-box">
                 <nz-input-group nzSuffix="VND">
                   <input style="border-radius: 4px;" nz-input nzSize="default" placeholder=""
-                    formControlName="refundFeeDeparture" nz-tooltip nzTooltipTrigger="focus"
-                    nzTooltipPlacement="topLeft" nzOverlayClassName="numeric-input"
-                    [nzTooltipTitle]="tooltipTitleAmount" placeholder="Nhập phí huỷ vé"
-                    (click)="onClickInputAmount($event, 'refundFeeDeparture')"
-                    (ngModelChange)="onChangeInputAmount($event, 'refundFeeDeparture')" (blur)="onBlurInputAmount()">
+                         formControlName="refundFeeDeparture" nz-tooltip nzTooltipTrigger="focus"
+                         nzTooltipPlacement="topLeft" nzOverlayClassName="numeric-input"
+                         [nzTooltipTitle]="tooltipTitleAmount" placeholder="Nhập phí huỷ vé"
+                         (click)="onClickInputAmount($event, 'refundFeeDeparture')"
+                         (ngModelChange)="onChangeInputAmount($event, 'refundFeeDeparture')"
+                         (blur)="onBlurInputAmount()">
                 </nz-input-group>
 
               </div>
@@ -449,11 +459,12 @@
               <div class="inner-box">
                 <nz-input-group nzSuffix="VND">
                   <input style="border-radius: 4px;" nz-input nzSize="default" placeholder=""
-                    formControlName="cancelFeeDeparture" nz-tooltip nzTooltipTrigger="focus"
-                    nzTooltipPlacement="topLeft" nzOverlayClassName="numeric-input"
-                    [nzTooltipTitle]="tooltipTitleAmount" placeholder="Nhập phí huỷ vé"
-                    (click)="onClickInputAmount($event, 'cancelFeeDeparture')"
-                    (ngModelChange)="onChangeInputAmount($event, 'cancelFeeDeparture')" (blur)="onBlurInputAmount()">
+                         formControlName="cancelFeeDeparture" nz-tooltip nzTooltipTrigger="focus"
+                         nzTooltipPlacement="topLeft" nzOverlayClassName="numeric-input"
+                         [nzTooltipTitle]="tooltipTitleAmount" placeholder="Nhập phí huỷ vé"
+                         (click)="onClickInputAmount($event, 'cancelFeeDeparture')"
+                         (ngModelChange)="onChangeInputAmount($event, 'cancelFeeDeparture')"
+                         (blur)="onBlurInputAmount()">
                 </nz-input-group>
 
               </div>
@@ -467,10 +478,12 @@
               <div class="inner-box">
                 <nz-input-group nzSuffix="VND">
                   <input style="border-radius: 4px;" nz-input nzSize="default" formControlName="changeFeeDeparture"
-                    nz-tooltip nzTooltipTrigger="focus" nzTooltipPlacement="topLeft" nzOverlayClassName="numeric-input"
-                    [nzTooltipTitle]="tooltipTitleAmount" placeholder="Nhập phí đổi vé"
-                    (click)="onClickInputAmount($event, 'changeFeeDeparture')"
-                    (ngModelChange)="onChangeInputAmount($event, 'changeFeeDeparture')" (blur)="onBlurInputAmount()">
+                         nz-tooltip nzTooltipTrigger="focus" nzTooltipPlacement="topLeft"
+                         nzOverlayClassName="numeric-input"
+                         [nzTooltipTitle]="tooltipTitleAmount" placeholder="Nhập phí đổi vé"
+                         (click)="onClickInputAmount($event, 'changeFeeDeparture')"
+                         (ngModelChange)="onChangeInputAmount($event, 'changeFeeDeparture')"
+                         (blur)="onBlurInputAmount()">
                 </nz-input-group>
 
               </div>
@@ -492,7 +505,7 @@
             <div nz-col class="gutter-row" nzSpan="14">
               <div class="inner-box">
                 <nz-range-picker [nzShowTime]="true" nzFormat="dd/MM/yyyy HH:mm" style="width: 100%;"
-                  formControlName="flightTimeReturn"></nz-range-picker>
+                                 formControlName="flightTimeReturn"></nz-range-picker>
               </div>
             </div>
             <div nz-col class="gutter-row" nzSpan="2">
@@ -505,9 +518,9 @@
             <div nz-col class="gutter-row" nzSpan="6">
               <div class="inner-box">
                 <nz-select nzShowSearch nzMode="default" nzPlaceHolder="--Hãng bay--"
-                  formControlName="airlineCodeReturn">
+                           formControlName="airlineCodeReturn">
                   <nz-option *ngFor="let op of AIRLINE_CODE_OPTIONS; let i = index;" [nzLabel]="op.label"
-                    [nzValue]="op.value"></nz-option>
+                             [nzValue]="op.value"></nz-option>
                 </nz-select>
               </div>
             </div>
@@ -549,8 +562,9 @@
                 <!-- <input style="border-radius: 4px;" nz-input nzSize="default"
                   formControlName="ticketHoldExpiryDateReturn"> -->
                 <nz-date-picker nzShowTime formControlName="ticketHoldExpiryDateReturn" nzSize="default"
-                  style="width: 100%;" nzFormat="dd/MM/yyyy HH:mm" placeholder="Hạn giữ vé" [nzNowText]="'Bây giờ'"
-                  [nzOkText]="'OK'"></nz-date-picker>
+                                style="width: 100%;" nzFormat="dd/MM/yyyy HH:mm" placeholder="Hạn giữ vé"
+                                [nzNowText]="'Bây giờ'"
+                                [nzOkText]="'OK'"></nz-date-picker>
               </div>
             </div>
           </div>
@@ -566,10 +580,12 @@
               <div class="inner-box">
                 <nz-input-group nzSuffix="VND">
                   <input style="border-radius: 4px;" nzSize="default" formControlName="ticketPriceReturn" nz-input
-                    nz-tooltip nzTooltipTrigger="focus" nzTooltipPlacement="topLeft" nzOverlayClassName="numeric-input"
-                    [nzTooltipTitle]="tooltipTitleAmount" placeholder="Nhập giá vé"
-                    (click)="onClickInputAmount($event, 'ticketPriceReturn')"
-                    (ngModelChange)="onChangeInputAmount($event, 'ticketPriceReturn')" (blur)="onBlurInputAmount()">
+                         nz-tooltip nzTooltipTrigger="focus" nzTooltipPlacement="topLeft"
+                         nzOverlayClassName="numeric-input"
+                         [nzTooltipTitle]="tooltipTitleAmount" placeholder="Nhập giá vé"
+                         (click)="onClickInputAmount($event, 'ticketPriceReturn')"
+                         (ngModelChange)="onChangeInputAmount($event, 'ticketPriceReturn')"
+                         (blur)="onBlurInputAmount()">
                 </nz-input-group>
               </div>
             </div>
@@ -582,10 +598,11 @@
               <div class="inner-box">
                 <nz-input-group nzSuffix="VND">
                   <input style="border-radius: 4px;" nz-input nzSize="default" formControlName="baggageFeeReturn"
-                    nz-tooltip nzTooltipTrigger="focus" nzTooltipPlacement="topLeft" nzOverlayClassName="numeric-input"
-                    [nzTooltipTitle]="tooltipTitleAmount" placeholder="Nhập thêm hành lý"
-                    (click)="onClickInputAmount($event, 'baggageFeeReturn')"
-                    (ngModelChange)="onChangeInputAmount($event, 'baggageFeeReturn')" (blur)="onBlurInputAmount()">
+                         nz-tooltip nzTooltipTrigger="focus" nzTooltipPlacement="topLeft"
+                         nzOverlayClassName="numeric-input"
+                         [nzTooltipTitle]="tooltipTitleAmount" placeholder="Nhập thêm hành lý"
+                         (click)="onClickInputAmount($event, 'baggageFeeReturn')"
+                         (ngModelChange)="onChangeInputAmount($event, 'baggageFeeReturn')" (blur)="onBlurInputAmount()">
                 </nz-input-group>
 
               </div>
@@ -601,10 +618,10 @@
               <div class="inner-box">
                 <nz-input-group nzSuffix="VND">
                   <input style="border-radius: 4px;" nz-input nzSize="default" formControlName="refundFeeReturn"
-                    nz-input nz-tooltip nzTooltipTrigger="focus" nzTooltipPlacement="topLeft"
-                    nzOverlayClassName="numeric-input" [nzTooltipTitle]="tooltipTitleAmount"
-                    placeholder="Nhập phí hoàn vé" (click)="onClickInputAmount($event, 'refundFeeReturn')"
-                    (ngModelChange)="onChangeInputAmount($event, 'refundFeeReturn')" (blur)="onBlurInputAmount()">
+                         nz-input nz-tooltip nzTooltipTrigger="focus" nzTooltipPlacement="topLeft"
+                         nzOverlayClassName="numeric-input" [nzTooltipTitle]="tooltipTitleAmount"
+                         placeholder="Nhập phí hoàn vé" (click)="onClickInputAmount($event, 'refundFeeReturn')"
+                         (ngModelChange)="onChangeInputAmount($event, 'refundFeeReturn')" (blur)="onBlurInputAmount()">
                 </nz-input-group>
 
               </div>
@@ -618,10 +635,11 @@
               <div class="inner-box">
                 <nz-input-group nzSuffix="VND">
                   <input style="border-radius: 4px;" nz-input nzSize="default" formControlName="cancelFeeReturn"
-                    nz-tooltip nzTooltipTrigger="focus" nzTooltipPlacement="topLeft" nzOverlayClassName="numeric-input"
-                    [nzTooltipTitle]="tooltipTitleAmount" placeholder="Nhập phí huỷ vé"
-                    (click)="onClickInputAmount($event, 'cancelFeeReturn')"
-                    (ngModelChange)="onChangeInputAmount($event, 'cancelFeeReturn')" (blur)="onBlurInputAmount()">
+                         nz-tooltip nzTooltipTrigger="focus" nzTooltipPlacement="topLeft"
+                         nzOverlayClassName="numeric-input"
+                         [nzTooltipTitle]="tooltipTitleAmount" placeholder="Nhập phí huỷ vé"
+                         (click)="onClickInputAmount($event, 'cancelFeeReturn')"
+                         (ngModelChange)="onChangeInputAmount($event, 'cancelFeeReturn')" (blur)="onBlurInputAmount()">
                 </nz-input-group>
 
               </div>
@@ -635,10 +653,11 @@
               <div class="inner-box">
                 <nz-input-group nzSuffix="VND">
                   <input style="border-radius: 4px;" nz-input nzSize="default" formControlName="changeFeeReturn"
-                    nz-tooltip nzTooltipTrigger="focus" nzTooltipPlacement="topLeft" nzOverlayClassName="numeric-input"
-                    [nzTooltipTitle]="tooltipTitleAmount" placeholder="Nhập phí đổi vé"
-                    (click)="onClickInputAmount($event, 'changeFeeReturn')"
-                    (ngModelChange)="onChangeInputAmount($event, 'changeFeeReturn')" (blur)="onBlurInputAmount()">
+                         nz-tooltip nzTooltipTrigger="focus" nzTooltipPlacement="topLeft"
+                         nzOverlayClassName="numeric-input"
+                         [nzTooltipTitle]="tooltipTitleAmount" placeholder="Nhập phí đổi vé"
+                         (click)="onClickInputAmount($event, 'changeFeeReturn')"
+                         (ngModelChange)="onChangeInputAmount($event, 'changeFeeReturn')" (blur)="onBlurInputAmount()">
                 </nz-input-group>
 
               </div>
@@ -659,9 +678,9 @@
             <div class="inner-box">
               <div>
                 <nz-upload class="upload-list-inline" [nzMultiple]="true" [nzAction]="uploadUrl" nzName="postedFile"
-                  [nzHeaders]="uploadHeader" [nzRemove]="handleRemoveFileTicketBookingRequest"
-                  (nzChange)="handleUploadFileTicketBookingRequest1($event)" [nzFileList]="fileList"
-                  [nzShowUploadList]="showUploadListOption">
+                           [nzHeaders]="uploadHeader" [nzRemove]="handleRemoveFileTicketBookingRequest"
+                           (nzChange)="handleUploadFileTicketBookingRequest1($event)" [nzFileList]="fileList"
+                           [nzShowUploadList]="showUploadListOption">
                   <button *ngIf="optionAirlineTicketInfo == OptionAirlineTicketInfoEnum.Update" nz-button>
                     <span nz-icon nzType="upload"></span>
                     Nhấn để tải file
@@ -693,14 +712,14 @@
         <div style="display: flex; align-items: center;">
           <span nz-icon nzType="close"></span>
           <span *ngIf="optionAirlineTicketInfo == OptionAirlineTicketInfoEnum.View"
-            style="margin-left: 4px; line-height: normal;">Đóng</span>
+                style="margin-left: 4px; line-height: normal;">Đóng</span>
           <span *ngIf=" optionAirlineTicketInfo == OptionAirlineTicketInfoEnum.Update"
-            style="margin-left: 4px; line-height: normal;">Huỷ</span>
+                style="margin-left: 4px; line-height: normal;">Huỷ</span>
         </div>
       </button>
 
       <button *ngIf="optionAirlineTicketInfo == OptionAirlineTicketInfoEnum.Update" nz-button nzType="primary"
-        [nzLoading]="isLoadingButtonSaveAirlineTicketInfo" (click)="handleSaveArilineTicketPopup()">
+              [nzLoading]="isLoadingButtonSaveAirlineTicketInfo" (click)="handleSaveArilineTicketPopup()">
         <div style="display: flex; align-items: center;">
           <span nz-icon nzType="save"></span>
           <span style="margin-left: 6px; line-height: normal;">Lưu</span>
@@ -712,7 +731,7 @@
 
 <!-- Popup cập nhật thông tin số vé cho -->
 <nz-modal [(nzVisible)]="isVisiblePopupUpdateNumberTicket" [nzContent]="contentPopupUpdateNumberTicket" nzWidth="824px"
-  [nzStyle]="{ top: '40px' }" (nzOnCancel)="handleCancelArilineTicketPopup()">
+          [nzStyle]="{ top: '40px' }" (nzOnCancel)="handleCancelArilineTicketPopup()">
   <div *nzModalTitle>
     Cập nhật số vé
   </div>
@@ -730,7 +749,7 @@
           <div nz-col class="gutter-row" nzSpan="6">
             <div class="inner-box">
               <input style="width: 200px; border-radius: 4px; height: 32px; margin-right: 10px;" nzSize="small" nz-input
-                type="text" [(ngModel)]="passenger.ticketNumber" placeholder="Nhập số vé cho chuyến bay">
+                     type="text" [(ngModel)]="passenger.ticketNumber" placeholder="Nhập số vé cho chuyến bay">
             </div>
           </div>
           <div nz-col class="gutter-row" nzSpan="4">
@@ -767,7 +786,7 @@
 
 <!-- Popup xem thông tin đặt vé máy bay -->
 <nz-modal [(nzVisible)]="isVisiblePopupViewRequestBookingTicket" [nzContent]="contentpViewRequestBookingTicket"
-  nzWidth="1200px" [nzStyle]="{ top: '40px' }" (nzOnCancel)="handleCancelRequestBookingTicketPopup()">
+          nzWidth="1200px" [nzStyle]="{ top: '40px' }" (nzOnCancel)="handleCancelRequestBookingTicketPopup()">
   <div *nzModalTitle>
     Xem thông tin yêu cầu vé
   </div>
@@ -855,7 +874,7 @@
               </div>
             </div>
             <div nz-col class="gutter-row" nzSpan="5"
-              *ngIf="itemBookingRequest.typeTicket == TypeAirlineTicketEnum.RoundTrip">
+                 *ngIf="itemBookingRequest.typeTicket == TypeAirlineTicketEnum.RoundTrip">
               <div class="inner-box">
                 <label for="" style="font-weight: 600;">Ngày về
                   <span style="color: tomato; margin-left: 4px;">(*)</span>
@@ -933,9 +952,9 @@
             <div nz-col class="gutter-row" nzSpan="6">
               <div class="inner-box">
                 <label for="" style="font-weight: 600;">Số lượng em bé < 24 tháng </label>
-                    <div>
-                      <span>{{ itemBookingRequest.inf }}</span>
-                    </div>
+                <div>
+                  <span>{{ itemBookingRequest.inf }}</span>
+                </div>
               </div>
             </div>
             <div nz-col class="gutter-row" nzSpan="6">
@@ -963,7 +982,7 @@
             </div>
           </div>
           <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
-            *ngFor="let passenger of itemBookingRequest.passengers;let i = index;">
+               *ngFor="let passenger of itemBookingRequest.passengers;let i = index;">
             <div nz-col class="gutter-row" nzSpan="5">
               <div class="inner-box">
                 <label for="" style="font-weight: 600;">1. Họ và tên
@@ -1027,7 +1046,7 @@
     </button>
 
     <button *ngIf="optionAirlineTicketInfo == OptionAirlineTicketInfoEnum.Update" nz-button nzType="primary"
-      (click)="handleSaveArilineTicketPopup()">
+            (click)="handleSaveArilineTicketPopup()">
       <div style="display: flex; align-items: center;">
         <span nz-icon nzType="save"></span>
         <span style="margin-left: 6px; line-height: normal;">Lưu</span>
