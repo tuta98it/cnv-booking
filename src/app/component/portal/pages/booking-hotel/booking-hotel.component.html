@@ -41,7 +41,6 @@
   <dxi-column caption="Trạng thái hệ thống" cssClass="text-center" [width]="200"
     cellTemplate="cellSystemCancelled"></dxi-column>
   <dxi-column caption="Lý do huỷ" [width]="150" dataField="noteSystemCancelled" dataTyp="string"></dxi-column>
-
   <div *dxTemplate="let bookingStatus of 'cellBookingStatus'">
     <div style="
     display: flex;
@@ -49,32 +48,32 @@
     flex-direction: row;
     justify-content: start;
     margin-left: 1rem">
-      <span *ngIf="bookingStatus.data.bookingStatus === 0" nz-icon nzType="issues-close" style="color: #000"
+      <span *ngIf="bookingStatus.data.bookingStatus === BookingHotelStatus.SendRequest" nz-icon nzType="issues-close" style="color: #000"
         nzTheme="outline"></span>
-      <span *ngIf="bookingStatus.data.bookingStatus === 1" nz-icon nzType="check-circle" style="color: #52c41a"
+      <span *ngIf="bookingStatus.data.bookingStatus === BookingHotelStatus.Successful" nz-icon nzType="check-circle" style="color: #52c41a"
         nzTheme="outline"></span>
-      <span *ngIf="bookingStatus.data.bookingStatus === 2" nz-icon nzType="close-circle" style="color: #dc3545"
+      <span *ngIf="bookingStatus.data.bookingStatus === BookingHotelStatus.Failure" nz-icon nzType="close-circle" style="color: #dc3545"
         nzTheme="outline"></span>
       <div style="margin-left: 0.25rem;"
-        [style.color]="(bookingStatus.data.bookingStatus === 0) ? '#000': ((bookingStatus.data.bookingStatus === 1) ? '#52c41a': (bookingStatus.data.bookingStatus === 2) ? '#dc3545': '') ">
+        [style.color]="(bookingStatus.data.bookingStatus === BookingHotelStatus.SendRequest) ? '#000': ((bookingStatus.data.bookingStatus === BookingHotelStatus.Successful) ? '#52c41a': (bookingStatus.data.bookingStatus === BookingHotelStatus.Failure) ? '#dc3545': '') ">
         {{bookingStatus.value}}
       </div>
     </div>
   </div>
   <div *dxTemplate="let item of 'cellBtnTemplate'">
-    <button *ngIf="item.data.bookingStatus !== 2" title="Từ chối yêu cầu" nz-button nzSize="small" nzType="default"
+    <button *ngIf="item.data.bookingStatus !== BookingHotelStatus.Failure" title="Từ chối yêu cầu" nz-button nzSize="small" nzType="default"
       class="btn-right button-update ant-btn-red" (click)="onRefuseBookingHotel(item.data)">
       <span class="fa fa-times fa-fw"></span>
     </button>
 
-    <button *ngIf="item.data.bookingStatus === 0 || item.data.bookingStatus === 1"
-      [title]="(item.data.bookingStatus === 0) ?  'Xác nhận thông tin đặt khách sạn' : 'Cập nhật thông tin đặt khách sạn'"
+    <button *ngIf="item.data.bookingStatus === BookingHotelStatus.SendRequest || item.data.bookingStatus === BookingHotelStatus.Successful || item.data.bookingStatus === BookingHotelStatus.Holding"
+      [title]="(item.data.bookingStatus === BookingHotelStatus.SendRequest) ?  'Xác nhận thông tin đặt khách sạn' : 'Cập nhật thông tin đặt khách sạn'"
       nz-button nzSize="small" nzType="default" class="btn-right button-update"
       (click)="onConfirmBookingHotel(item.data)">
-      <span class='{{(item.data.bookingStatus === 0) ? "fa fa-check fa-fw" : "fa fa-edit fa-fw"}}'></span>
+      <span class='{{(item.data.bookingStatus === BookingHotelStatus.SendRequest) ? "fa fa-check fa-fw" : "fa fa-edit fa-fw"}}'></span>
     </button>
 
-    <button *ngIf="item.data.bookingStatus === 1" [nzLoading]="item.data.isOnSendEmailLoading"
+    <button *ngIf="item.data.bookingStatus === BookingHotelStatus.Successful" [nzLoading]="item.data.isOnSendEmailLoading"
       title="Gửi Email xác nhận đặt khách sạn" nz-button nzSize="small" nzType="default" class="btn-right button-update"
       (click)="onConfirmSendEmailBookingHotel(item.data)">
       <span class="fa fa-paper-plane fa-fw"></span>

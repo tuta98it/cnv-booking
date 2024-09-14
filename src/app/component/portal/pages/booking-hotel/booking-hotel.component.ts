@@ -35,13 +35,15 @@ import { AngularEditorConfig } from '@kolkov/angular-editor';
 import { DataService } from 'src/app/service/data.service';
 import { Router } from '@angular/router';
 import { BookingHotelStatusPipe } from 'src/app/shared/pipe/booking-hotel-status.pipe';
-import { BOOKING_HOTEL_STATUS_TEXT } from 'src/app/enums/booking-hotel-status.enum';
+import { BOOKING_HOTEL_STATUS_TEXT, BookingHotelStatus } from 'src/app/enums/booking-hotel-status.enum';
 @Component({
   selector: 'app-hotel',
   templateUrl: './booking-hotel.component.html',
   styleUrls: ['./booking-hotel.component.scss']
 })
 export class BookingHotelComponent extends TableSelectionAbstract implements OnInit, OnDestroy {
+  BOOKING_HOTEL_STATUS_TEXT = BOOKING_HOTEL_STATUS_TEXT;
+  BookingHotelStatus = BookingHotelStatus;
   @ViewChild("ListBookingHotels") dataGridDetail: DxDataGridComponent;
   datas: any[] = [];
   data: any;
