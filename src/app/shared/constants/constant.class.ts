@@ -78,11 +78,12 @@ export class Constant {
   public static readonly QUANHUYEN = 'selectedQuanHuyenId';
 
 
-  public static readonly STATUS_BOOKING_HOTEL = [
-    { label: 'Mới tạo, chưa xử lý', value: 0 },
-    { label: 'Đã xử lý', value: 1 },
-    { label: 'Từ chối', value: 2 },
-  ]
+
+  // public static readonly STATUS_BOOKING_HOTEL = [
+  //   { label: 'Mới tạo, chưa xử lý', value: 0 },
+  //   { label: 'Đã xử lý', value: 1 },
+  //   { label: 'Từ chối', value: 2 },
+  // ]
 
   public static readonly PASSENGER_TYPE = [
     { label: 'Cá nhân', value: 0 },
