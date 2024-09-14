@@ -13,3 +13,12 @@ export const BOOKING_HOTEL_STATUS = [
   { label: 'Đặt thành công', value: BookingHotelStatus.Successful },
   { label: 'Đặt thất bại', value: BookingHotelStatus.Failure },
 ];
+
+
+export const BOOKING_HOTEL_STATUS_TEXT = {
+  [BookingHotelStatus.SendRequest]: 'Gửi yêu cầu',
+  [BookingHotelStatus.Holding]: 'Đang giữ chỗ',
+  [BookingHotelStatus.Confirmed]: 'Đã xác nhận phòng',
+  [BookingHotelStatus.Successful]: 'Đặt thành công',
+  [BookingHotelStatus.Failure ]: 'Đặt thất bại',
+};
