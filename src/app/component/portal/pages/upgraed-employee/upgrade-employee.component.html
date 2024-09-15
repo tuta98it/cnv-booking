@@ -203,7 +203,7 @@
                       Quản lý trực tiếp
                     </div>
                     <div nz-col class="gutter-row" [nzSpan]="19">
-                      <nz-select style="border-radius: 4px;" nzSize="default" nzMode="default"
+                      <nz-select [nzDisabled]="idPartner == null || idPartner == undefined" style="border-radius: 4px;" nzSize="default" nzMode="default"
                         formControlName='directManagementUserId' nzPlaceHolder="Nhập người quản lý" nzAllowClear
                         nzShowSearch>
                         <nz-option *ngFor="let employee of listOfCompanyEmployees"

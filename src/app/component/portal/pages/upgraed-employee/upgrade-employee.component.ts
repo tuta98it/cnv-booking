@@ -77,6 +77,7 @@ export class UpgradeEmployeeComponent implements OnInit {
   listOfCompanyEmployees: any;
   isActiveEditBaseInfo: boolean = false;
   searchEmployee: string = '';
+  idPartner: number = null;
 
   constructor(
     private msg: NzMessageService,
@@ -101,7 +102,7 @@ export class UpgradeEmployeeComponent implements OnInit {
       birthday: new FormControl({ value: null, disabled: false }),
       phoneNo: new FormControl({ value: null, disabled: false }, Validators.required),
       nationality: new FormControl({ value: null, disabled: false }),
-      directManagementUserId: new FormControl({ value: null, disabled: false }),
+      directManagementUserId: new FormControl({ value: null, disabled: !this.idPartner }),
       staffCode: new FormControl({ value: null, disabled: false }),
       membershipCode: new FormControl({ value: null, disabled: false }),
       position: new FormControl({ value: null, disabled: false }),
@@ -118,17 +119,14 @@ export class UpgradeEmployeeComponent implements OnInit {
 
     this.activatedRoute.queryParams.subscribe(async params => {
       let idPartner = +params['partnerId']; // Lấy id từ query parameter
-
+      this.idPartner = idPartner;
       if (idPartner) {
         this.partnerForEmployee = await this.getPartnerById(idPartner).catch((reject) => {
           this.notificationService.showNotification(Constant.ERROR, `Lỗi truy vấn dữ liệu doanh nghiệp`);
           this.location.back();
         });
+        this.getListOfCompanyEmployees(idPartner);
       }
-
-
-      this.getListOfCompanyEmployees(idPartner);
-
     });
 
     if (this.actionEmployeeVHL == ActionTypePageVHL.Create) {
@@ -169,6 +167,9 @@ export class UpgradeEmployeeComponent implements OnInit {
       position: itemEmployee?.position || null,
       department: itemEmployee?.department || null,
     });
+    if (!this.idPartner) {
+      this.formBaseInfoEmployee.controls['directManagementUserId'].disable();
+    }
   }
 
   private getPartnerById(partnerId: number): Promise<any> {
@@ -288,6 +289,12 @@ export class UpgradeEmployeeComponent implements OnInit {
       if (this.actionEmployeeVHL == ActionTypePageVHL.Create) {
         this.formBaseInfoEmployee.controls['status'].disable();
       }
+      setTimeout(() => {
+        if (!this.idPartner) {
+          this.formBaseInfoEmployee.controls['directManagementUserId'].disable();
+        }
+      }, 200);
+
     } else {
       this.formBaseInfoEmployee.disable();
     }
