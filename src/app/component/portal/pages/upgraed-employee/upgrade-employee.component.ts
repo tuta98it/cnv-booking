@@ -119,10 +119,12 @@ export class UpgradeEmployeeComponent implements OnInit {
     this.activatedRoute.queryParams.subscribe(async params => {
       let idPartner = +params['partnerId']; // Lấy id từ query parameter
 
-      this.partnerForEmployee = await this.getPartnerById(idPartner).catch((reject) => {
-        this.notificationService.showNotification(Constant.ERROR, `Lỗi truy vấn dữ liệu doanh nghiệp`);
-        this.location.back();
-      });
+      if (idPartner) {
+        this.partnerForEmployee = await this.getPartnerById(idPartner).catch((reject) => {
+          this.notificationService.showNotification(Constant.ERROR, `Lỗi truy vấn dữ liệu doanh nghiệp`);
+          this.location.back();
+        });
+      }
 
 
       this.getListOfCompanyEmployees(idPartner);

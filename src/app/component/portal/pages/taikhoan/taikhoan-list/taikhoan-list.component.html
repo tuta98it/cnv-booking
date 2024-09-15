@@ -20,7 +20,7 @@
       [(ngModel)]="searchText" (keyup)="onSearch()" placeholder="Tìm kiếm theo tên, username, ...">
 
     <!-- Nút thêm -->
-    <button nz-button nzType="primary" class="ant-btn-primary" type="button" (click)="showModalAdd()" *ngIf="checkAdd">
+    <button nz-button nzType="primary" class="ant-btn-primary" type="button" (click)="navigatePage('companies/employee-action/create', ActionTypePageVHL.Create)" *ngIf="checkAdd">
       <em class="fas fa-plus fa-fw" ></em> Thêm</button>
 
     <!-- Nút xuất Excel -->

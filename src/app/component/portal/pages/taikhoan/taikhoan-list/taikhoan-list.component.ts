@@ -308,7 +308,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
   navigatePage(url: string, typeAction: number, employee?: any) {
     switch (typeAction) {
       case ActionTypePageVHL.Create:
-        this.router.navigate([`${url}`], { queryParams: { partnerId: employee.partnerId } })
+        this.router.navigate([`${url}`], { queryParams: { partnerId: employee?.partnerId } })
         break;
       case ActionTypePageVHL.Update:
         this.router.navigate([`${url}`], { queryParams: { employeeId: employee.id, partnerId: employee.partnerId } })
