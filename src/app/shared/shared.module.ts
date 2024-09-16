@@ -53,6 +53,8 @@ import { PartnerStatusPipe } from './pipe/partner-status.pipe';
 import { EmployeePipePipe } from './pipe/employeePipe.pipe';
 import { NzProgressModule } from 'ng-zorro-antd/progress';
 import {NzTabsModule} from 'ng-zorro-antd/tabs';
+import { HotelBookingPipe } from './pipe/hotel-booking.pipe';
+import { FileNamePipe } from './pipe/file-name.pipe';
 @NgModule({
   imports: [
     CommonModule,
@@ -146,7 +148,10 @@ import {NzTabsModule} from 'ng-zorro-antd/tabs';
     PartnerStatusPipe,
     EmployeePipePipe,
     NzRadioModule,
-    NzTabsModule
+
+    NzRadioModule,
+    HotelBookingPipe,
+    FileNamePipe
   ],
   declarations: [
     DateFormatPipe,
@@ -165,7 +170,9 @@ import {NzTabsModule} from 'ng-zorro-antd/tabs';
     UserTypePipe,
     PartnerStatusPipe,
     EmployeePipePipe,
-    MViewPdfComponent
+    MViewPdfComponent,
+    HotelBookingPipe,
+    FileNamePipe
   ],
   providers: [NotificationService],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
