@@ -762,6 +762,16 @@ export class GeneralService extends BaseService {
   markCanceledSystemBookingHotelExport(idBookingHotel: any, nodeSystemCancelled: any): Observable<any> {
     return this.post(`/api${UrlConstant.BOOKING_HOTEL}/MarkCanceled/${idBookingHotel}`, nodeSystemCancelled);
   }
+  updateBookingHotelStatus(payload: any): Observable<any> {
+    return this.post(`/api${UrlConstant.BOOKING_HOTEL}/UpdateBookingHotelStatus`, payload);
+  }
+  updateBookingHotel(payload: any): Observable<any> {
+    return this.put(`/api${UrlConstant.BOOKING_HOTEL}/UpdateBookHotel`, payload);
+  }
+
+  getGetChangeStatusHistory(id: number): Observable<any> {
+    return this.get(`/api${UrlConstant.BOOKING_HOTEL}/GetChangeStatusHistory/${id}`);
+  }
 
   // Email
   // /api/Email/SendEmailConfirmedBookingHotel

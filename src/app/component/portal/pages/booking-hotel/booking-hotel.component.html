@@ -21,26 +21,87 @@
   <dxo-master-detail [enabled]="true" template="detailBookingHotel"></dxo-master-detail>
 
 
-  <dxi-column cssClass="text-center" caption="STT" [width]="55" dataField="stt" [fixed]="true" [allowFiltering]="false"
+  <dxi-column caption="STT" cssClass="text-center" [width]="55" dataField="stt" [fixed]="true" [allowFiltering]="false"
     [allowSorting]="false"></dxi-column>
+  <!-- Mã yêu cầu  -->
   <dxi-column caption="Mã yêu cầu" [width]="150" dataField="bookingCode" [fixed]="true" [width]="150"
     fixedPosition="left" dataType="string"></dxi-column>
+  <!-- trạng thái -->
+  <dxi-column caption="Trạng thái" cssClass="text-left vertical-align-middle" [fixed]="true" cellTemplate="cellStatus"
+    [width]="150"></dxi-column>
+  <!-- Thời gian đặt -->
+  <dxi-column caption="Thời gian đặt" [width]="150" dataType="date" dataField="dateCreated"
+    format="HH:mm dd/MM/yy"></dxi-column>
+  <!-- Mã phê duyệt -->
+  <dxi-column caption="Mã phê duyệt" [width]="150" dataField="approvalCode"></dxi-column>
+  <!-- Người đặt -->
+  <dxi-column caption="Người đặt" dataField="contactName"></dxi-column>
+  <!-- Ngày nhận phòng -->
+  <dxi-column caption="Ngày nhận phòng" [width]="130" cellTemplate="checkinDate"></dxi-column>
+  <dxi-column caption="Địa điểm" [width]="110" cellTemplate="placeCells"></dxi-column>
+  <!-- Mã đặt khách sạn -->
+  <!-- <dxi-column caption="Mã đặt khách sạn" [width]="200" dataField="reservationCode"></dxi-column> -->
+  <!-- Khẩn cấp -->
+  <dxi-column caption="Khẩn cấp" [width]="120" dataField="isUrgent" cellTemplate="cellIsUrgent"></dxi-column>
+  <!-- Tổng giá dịch vụ -->
+  <dxi-column caption="Tổng giá dịch vụ" [width]="180" dataField="totalPrice"></dxi-column>
+  <!-- Action -->
   <dxi-column cssClass="text-center" caption="Action" [fixed]="true" [width]="175" fixedPosition="right"
     cellTemplate="cellBtnTemplate"></dxi-column>
-  <dxi-column caption="Trạng thái" [fixed]="true" fixedPosition="left" cssClass="text-center" [width]="200" dataField="bookingStatusText"
-     cellTemplate="cellBookingStatus"></dxi-column>
-  <dxi-column caption="Mã phê duyệt" [width]="150" dataField="approvalCode"></dxi-column>
-  <dxi-column caption="Mã đặt khách sạn" [width]="200"  dataField="reservationCode"></dxi-column>
-  <dxi-column caption="Họ tên người đặt" dataField="contactName"></dxi-column>
-  <dxi-column caption="Số điện thoại" [width]="200" dataField="contactPhone"
+
+
+
+
+  <!-- <dxi-column caption="Mã đặt khách sạn" [width]="200" dataField="reservationCode"></dxi-column> -->
+  <!-- <dxi-column caption="Số điện thoại" [width]="200" dataField="contactPhone"
     [format]="phoneUtils.phoneNumberFormat"></dxi-column>
   <dxi-column caption="Email" [width]="200" dataField="contactEmail"></dxi-column>
-  <dxi-column caption="Ngày đặt" [width]="150" dataField="dateCreated" dataType="date"
-    format="HH:mm dd/MM/yy"></dxi-column>
-  <dxi-column caption="Khẩn cấp" [width]="150" dataField="isUrgent" cellTemplate="cellIsUrgent"></dxi-column>
+
   <dxi-column caption="Trạng thái hệ thống" cssClass="text-center" [width]="200"
     cellTemplate="cellSystemCancelled"></dxi-column>
-  <dxi-column caption="Lý do huỷ" [width]="150" dataField="noteSystemCancelled" dataTyp="string"></dxi-column>
+  <dxi-column caption="Lý do huỷ" [width]="150" dataField="noteSystemCancelled" dataTyp="string"></dxi-column> -->
+
+  <!-- địa điểm  -->
+  <div *dxTemplate="let place of 'placeCells'">
+    {{place.data.bookingHotelDetails[0].province.name}}
+  </div>
+  <!-- trạng thái -->
+  <div *dxTemplate="let status of 'cellStatus'" style="display: flex;">
+    <ng-container [ngSwitch]="status.data.bookingStatus">
+      <div *ngSwitchCase="STATUS_LIST[0].value">
+        <nz-select nzShowSearch nzMode="default" [(ngModel)]="status.data.bookingStatus"
+          (ngModelChange)="handleChangeStatusByItem(STATUS_LIST[0].value, $event, status)">
+          <nz-option *ngFor="let item of (status.data.bookingStatus | hotelBookingPipe)" [nzLabel]="item.name"
+            [nzValue]="item.value"></nz-option>
+        </nz-select>
+      </div>
+      <div *ngSwitchCase="STATUS_LIST[1].value">
+        <nz-select nzShowSearch nzMode="default" [(ngModel)]="status.data.bookingStatus"
+          (ngModelChange)="handleChangeStatusByItem(STATUS_LIST[1].value, $event, status)">
+          <nz-option *ngFor="let item of (status.data.bookingStatus | hotelBookingPipe)" [nzLabel]="item.name"
+            [nzValue]="item.value"></nz-option>
+        </nz-select>
+      </div>
+      <div *ngSwitchCase="STATUS_LIST[2].value">
+        <nz-select nzShowSearch nzMode="default" [(ngModel)]="status.data.bookingStatus"
+          (ngModelChange)="handleChangeStatusByItem(STATUS_LIST[2].value, $event, status)">
+          <nz-option *ngFor="let item of (status.data.bookingStatus | hotelBookingPipe)" [nzLabel]="item.name"
+            [nzValue]="item.value"></nz-option>
+        </nz-select>
+      </div>
+      <div *ngSwitchCase="STATUS_LIST[3].value">
+        {{(status.data.bookingStatus | hotelBookingPipe)[0].name}}
+      </div>
+      <div *ngSwitchCase="STATUS_LIST[4].value">
+        {{(status.data.bookingStatus | hotelBookingPipe)[0].name}}
+      </div>
+    </ng-container>
+  </div>
+
+
+  <div *dxTemplate="let bookingHotelDetails of 'checkinDate'">
+    <span>{{bookingHotelDetails.data.bookingHotelDetails[0].checkinDate | date: 'dd/MM/yyyy'}}</span>
+  </div>
   <div *dxTemplate="let bookingStatus of 'cellBookingStatus'">
     <div style="
     display: flex;
@@ -48,37 +109,57 @@
     flex-direction: row;
     justify-content: start;
     margin-left: 1rem">
-      <span *ngIf="bookingStatus.data.bookingStatus === BookingHotelStatus.SendRequest" nz-icon nzType="issues-close" style="color: #000"
+      <span *ngIf="bookingStatus.data.bookingStatus === 0" nz-icon nzType="issues-close" style="color: #000"
         nzTheme="outline"></span>
-      <span *ngIf="bookingStatus.data.bookingStatus === BookingHotelStatus.Successful" nz-icon nzType="check-circle" style="color: #52c41a"
+      <span *ngIf="bookingStatus.data.bookingStatus === 1" nz-icon nzType="check-circle" style="color: #52c41a"
         nzTheme="outline"></span>
-      <span *ngIf="bookingStatus.data.bookingStatus === BookingHotelStatus.Failure" nz-icon nzType="close-circle" style="color: #dc3545"
+      <span *ngIf="bookingStatus.data.bookingStatus === 2" nz-icon nzType="close-circle" style="color: #dc3545"
         nzTheme="outline"></span>
       <div style="margin-left: 0.25rem;"
-        [style.color]="(bookingStatus.data.bookingStatus === BookingHotelStatus.SendRequest) ? '#000': ((bookingStatus.data.bookingStatus === BookingHotelStatus.Successful) ? '#52c41a': (bookingStatus.data.bookingStatus === BookingHotelStatus.Failure) ? '#dc3545': '') ">
+        [style.color]="(bookingStatus.data.bookingStatus === 0) ? '#000': ((bookingStatus.data.bookingStatus === 1) ? '#52c41a': (bookingStatus.data.bookingStatus === 2) ? '#dc3545': '') ">
         {{bookingStatus.value}}
       </div>
     </div>
   </div>
   <div *dxTemplate="let item of 'cellBtnTemplate'">
-    <button *ngIf="item.data.bookingStatus !== BookingHotelStatus.Failure" title="Từ chối yêu cầu" nz-button nzSize="small" nzType="default"
+    <div style="display: flex;">
+      <button title="Xem yêu cầu lưu trú" nz-button nzSize="small" nzType="default" class="btn-right button-update"
+        (click)="showDetailBookingHotel(item.data.id, 'add')">
+        <span nz-icon nzType="eye" nzTheme="outline"></span>
+      </button>
+
+      <button *ngIf="item.data.bookingStatus === STATUS_LIST[3].value" title="Xem file xác nhận lưu trú" nz-button
+        nzSize="small" nzType="default" class="btn-right button-update"
+        (click)="onConfirmSendEmailBookingHotel(item.data)">
+        <span nz-icon nzType="file-pdf" nzTheme="outline"></span>
+      </button>
+
+      <button *ngIf="item.data.bookingStatus === STATUS_LIST[3].value" title="Hóa đơn" nz-button nzSize="small"
+        nzType="default" class="btn-right button-update" (click)="onOpenViewInVoice(item.data)">
+        <span nz-icon nzType="container" nzTheme="outline"></span>
+      </button>
+
+      <button title="Xem lịch sử" nz-button nzSize="small" nzType="default" class="btn-right button-update"
+        (click)="getHistoryBookingHotel(item.data.id)">
+        <span nz-icon nzType="history" nzTheme="outline"></span>
+      </button>
+    </div>
+    <!-- <button *ngIf="item.data.bookingStatus !== 2" title="Từ chối yêu cầu" nz-button nzSize="small" nzType="default"
       class="btn-right button-update ant-btn-red" (click)="onRefuseBookingHotel(item.data)">
       <span class="fa fa-times fa-fw"></span>
-    </button>
-
-    <button *ngIf="item.data.bookingStatus === BookingHotelStatus.SendRequest || item.data.bookingStatus === BookingHotelStatus.Successful || item.data.bookingStatus === BookingHotelStatus.Holding"
-      [title]="(item.data.bookingStatus === BookingHotelStatus.SendRequest) ?  'Xác nhận thông tin đặt khách sạn' : 'Cập nhật thông tin đặt khách sạn'"
+    </button> -->
+    <!-- <button *ngIf="item.data.bookingStatus ===  || item.data.bookingStatus === 1"
+      [title]="(item.data.bookingStatus === 0) ?  'Xác nhận thông tin đặt khách sạn' : 'Cập nhật thông tin đặt khách sạn'"
       nz-button nzSize="small" nzType="default" class="btn-right button-update"
       (click)="onConfirmBookingHotel(item.data)">
-      <span class='{{(item.data.bookingStatus === BookingHotelStatus.SendRequest) ? "fa fa-check fa-fw" : "fa fa-edit fa-fw"}}'></span>
-    </button>
+      <span class='{{(item.data.bookingStatus === 0) ? "fa fa-check fa-fw" : "fa fa-edit fa-fw"}}'></span>
+    </button> -->
 
-    <button *ngIf="item.data.bookingStatus === BookingHotelStatus.Successful" [nzLoading]="item.data.isOnSendEmailLoading"
+    <!-- <button  [nzLoading]="item.data.isOnSendEmailLoading"
       title="Gửi Email xác nhận đặt khách sạn" nz-button nzSize="small" nzType="default" class="btn-right button-update"
       (click)="onConfirmSendEmailBookingHotel(item.data)">
       <span class="fa fa-paper-plane fa-fw"></span>
-    </button>
-
+    </button> -->
   </div>
   <div *dxTemplate="let bookingHotel of 'detailBookingHotel'">
     <div class="action-button" style="clear: bottom;overflow: hidden;">
@@ -140,7 +221,7 @@
     </dx-data-grid>
   </div>
   <div *dxTemplate="let urgent of 'cellIsUrgent'">
-    <span [style.color]="urgent.value? '#dc3545': '#000'">{{ urgent.value ? 'Khẩn cấp' : 'Không khẩn cấp' }}</span>
+    <span [style.color]="urgent.value? '#dc3545': '#000'">{{ urgent.value ? 'Có' : 'Không' }}</span>
   </div>
   <div *dxTemplate="let hotelFlightExport of 'cellSystemCancelled'">
     <nz-switch [ngModel]="!hotelFlightExport.data.systemCancelled" [nzControl]="true" nzCheckedChildren="Tính công nợ"
@@ -266,7 +347,7 @@
 <nz-modal [(nzVisible)]="isVisibleConfirmSendEmaiBooking" [nzContent]="contentConfirmSendEmailBookingHotel"
   nzWidth="120vh" (nzOnCancel)="handleCancel()">
   <div *nzModalTitle>
-    Gửi Email xác nhận đặt phòng khách sạn tới khách hàng
+    Chỉnh sửa file xác nhận lưu trú
   </div>
   <ng-template #contentConfirmSendEmailBookingHotel>
 
@@ -321,4 +402,436 @@
       Ấn đồng ý để tiếp tục.
     </span>
   </ng-container>
+</nz-modal>
+
+<!-- HÓa đơn  -->
+<nz-modal [(nzVisible)]="isVisibleViewInVoice" nzOkDanger="true" nzCancelText="Đóng"
+  (nzOnCancel)="closeViewInVoice()">
+  <div *nzModalTitle style="display: flex; align-items: baseline;">
+    <div>Hóa đơn</div>
+  </div>
+  <ng-container *nzModalContent>
+    <form nz-form [formGroup]="orderForm">
+      <nz-form-item style="padding: 0 !important;">
+        <nz-form-label [nzSpan]="5" nzFor="pdfFile">Hóa đơn pdf <span style="color: #dc3545;">*</span></nz-form-label>
+        <nz-form-control id="pdfFile" nzErrorTip="Không được để trống">
+          <div class="d-flex">
+            <div class="position-relative mr-3 flex-grow-1">
+              <div class="border p-1">
+                <span *ngIf="!orderForm.value.pdfFile">{{'Chưa tải lên hóa đơn'}}</span>
+                <a *ngIf="orderForm.value.pdfFile" (click)="viewOrderFilePdf()">{{selectedOrderPdfFile?.name}}</a>
+                <input nz-input type="text" formControlName="pdfFile" style="display: none;">
+                <input nz-input type="file" #fileInputOrderPdf
+                  (change)="onOrderPdfFileSelected($event)" style="display: none;"
+                  accept=":not(.exe)">
+              </div>
+              <div *ngIf="orderForm.value.pdfFile" nz-icon nzType="close" nzTheme="outline" class="customise-close-icon"
+                (click)="deleteOrderPdfFile()"></div>
+            </div>
+            <button nz-button nzType="primary" (click)="showDialogSelectOrderPdfFile()">
+              Tải lên
+            </button>
+          </div>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item style="padding: 0 !important;">
+        <nz-form-label [nzSpan]="5" nzFor="xmlFile">Hóa đơn xml <span style="color: #dc3545;">*</span></nz-form-label>
+        <nz-form-control id="xmlFile" nzErrorTip="Không được để trống">
+          <div class="d-flex">
+            <div class="position-relative mr-3 flex-grow-1">
+              <div class="border p-1">
+                <span *ngIf="!orderForm.value.xmlFile">{{'Chưa tải lên hóa đơn'}}</span>
+                <a *ngIf="orderForm.value.xmlFile" (click)="viewOrderFileXml()">{{selectedOrderXmlFile?.name}}</a>
+                <input nz-input type="text" formControlName="xmlFile" style="display: none;">
+                <input nz-input type="file" #fileInputOrderXml
+                  (change)="onOrderXmlFileSelected($event)" style="display: none;"
+                  accept=":not(.exe)">
+              </div>
+              <div *ngIf="orderForm.value.xmlFile" nz-icon nzType="close" nzTheme="outline" class="customise-close-icon"
+                (click)="deleteOrderXmlFile()"></div>
+            </div>
+            <button nz-button nzType="primary" (click)="showDialogSelectOrderXmlFile()">
+              Tải lên
+            </button>
+          </div>
+        </nz-form-control>
+      </nz-form-item>
+      <!-- <input nz-input placeholder="Nhập mã phê 2" formControlName="orderXml" type="text" /> -->
+    </form>
+  </ng-container>
+  <div *nzModalFooter>
+    <button nz-button nzType="default" (click)="closeViewInVoice()">Đóng</button>
+    <button nz-button nzType="primary" (click)="uploadOrderFile()">
+      <div style="display: flex; align-items: center;">
+        <span nz-icon nzType="save"></span>
+        <span style="margin-left: 6px; line-height: normal;" (click)="uploadOrderFile()">Lưu</span>
+      </div>
+    </button>
+  </div>
+</nz-modal>
+<!-- Thêm thông tin mã dặt phòng  -->
+<nz-modal [(nzVisible)]="isShowAddCodeBookingRoom" nzOkDanger="true" nzCancelText="Đóng"
+  (nzOnCancel)="cancelAddCodeBookingRoom()">
+  <div *nzModalTitle style="display: flex; align-items: baseline;">
+    <div>Thêm thông tin mã đặt phòng</div>
+  </div>
+  <ng-container *nzModalContent>
+    <form [formGroup]="bookingRoomCodeForm">
+      <div class="d-flex">
+        <div style="width: 130px">
+          <label>Mã đặt phòng<span style="color: tomato; margin-left: 4px;">*</span></label>
+        </div>
+        <input nz-input placeholder="Nhập mã đặt phòng" formControlName="reservationCode" type="text" />
+      </div>
+    </form>
+  </ng-container>
+  <div *nzModalFooter>
+    <button nz-button nzType="default" (click)="cancelAddCodeBookingRoom()">
+      <div style="display: flex; align-items: center;">
+        <span nz-icon nzType="close"></span>
+        <span style="margin-left: 4px; line-height: normal;">Huỷ</span>
+      </div>
+    </button>
+
+    <button nz-button nzType="primary" (click)="addBookingRoomCode()">
+      <div style="display: flex; align-items: center;">
+        <span nz-icon nzType="save"></span>
+        <span style="margin-left: 6px; line-height: normal;">Lưu</span>
+      </div>
+    </button>
+  </div>
+</nz-modal>
+<!-- thông tin lưu trú -->
+<nz-modal [(nzVisible)]="isShowEditBookingHotel" nzOkDanger="true" nzOkText="Đồng ý" nzCancelText="Không"
+  nzWidth="1200px" [nzStyle]="{ top: '40px' }" (nzOnCancel)="cancelEditBookingHotel()">
+  <div *nzModalTitle style="display: flex; align-items: baseline;">
+    <div>{{editBookingHotelHeader}}</div>
+  </div>
+  <ng-container *nzModalContent>
+    <form *ngIf="this.modeViewEditStatus === 0" [formGroup]="detailContactUserForm">
+      <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
+        <div nz-col class="gutter-row" nzSpan="24">
+          <div class="pb-3" nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
+            <div nz-col class="gutter-row" nzSpan="24">
+              <div style="width: fit-content;">
+                <span style="font-weight: 600; font-size: larger;">Thông tin người đặt</span>
+                <div style="background-color: #188D47; height: 1px; width: 100%;"></div>
+              </div>
+            </div>
+          </div>
+          <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
+            <div class="pb-3" nz-col class="gutter-row" nzSpan="8">
+              <div class="inner-box">
+                <label for="" style="font-weight: 600;">Mã người dùng</label>
+                <div>
+                  <span>{{ detailContactUserForm.value.userCode }}</span>
+                </div>
+              </div>
+            </div>
+            <div class="pb-3" nz-col class="gutter-row" nzSpan="8">
+              <div class="inner-box">
+                <label for="" style="font-weight: 600;">Tên người dùng</label>
+                <div>
+                  <span>{{ detailContactUserForm.value.userFullName }}</span>
+                </div>
+              </div>
+            </div>
+            <div class="pb-3" nz-col class="gutter-row" nzSpan="8">
+              <div class="inner-box">
+                <label for="" style="font-weight: 600;">Công ty</label>
+                <div>
+                  <span>{{ detailContactUserForm.value.companyName }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+    <form [formGroup]="detailBookingRoomForm">
+      <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
+        <div nz-col class="gutter-row" nzSpan="24">
+          <div class="pb-3" nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
+            <div nz-col class="gutter-row" nzSpan="24">
+              <div style="width: fit-content;">
+                <span style="font-weight: 600; font-size: larger;">Thông tin đặt phòng</span>
+                <div style="background-color: #188D47; height: 1px; width: 100%;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="pb-3" nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
+            <div nz-col class="gutter-row" nzSpan="8">
+              <div class="inner-box">
+                <label>Ngày nhận phòng <span style="color: tomato; margin-left: 4px;">(*)</span></label>
+                <div>
+                  <span *ngIf="this.modeViewEditStatus === 0">{{ detailBookingRoomForm.value.checkinDate | date:
+                    'dd/MM/yyyy' }}</span>
+                  <nz-date-picker *ngIf="this.modeViewEditStatus === 1" formControlName="checkinDate"></nz-date-picker>
+                  <!-- <input nz-input placeholder="Nhập ngày nhận phòng" formControlName="checkinDate" type="text" /> -->
+                </div>
+              </div>
+            </div>
+            <div nz-col class="gutter-row" nzSpan="8">
+              <div class="inner-box">
+                <label>Ngày trả phòng <span style="color: tomato;v margin-left: 4px;">(*)</span></label>
+                <div>
+                  <span *ngIf="this.modeViewEditStatus === 0">{{ detailBookingRoomForm.value.checkoutDate | date:
+                    'dd/MM/yyyy'}} </span>
+                  <nz-date-picker *ngIf="this.modeViewEditStatus === 1" formControlName="checkoutDate"></nz-date-picker>
+                </div>
+              </div>
+            </div>
+            <div nz-col class="gutter-row" nzSpan="8">
+              <div class="inner-box">
+                <label>Số đêm
+                </label>
+                <div>
+                  <span *ngIf="this.modeViewEditStatus === 0">{{ detailBookingRoomForm.value.numberOfNights }}</span>
+                  <nz-input-number *ngIf="this.modeViewEditStatus === 1" [nzMin]="0" [nzStep]="1"
+                    formControlName="numberOfNights"></nz-input-number>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="pb-3" nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
+            <div nz-col class="gutter-row" nzSpan="8">
+              <div class="inner-box">
+                <label>Loại phòng <span style="color: tomato; margin-left: 4px;">(*)</span></label>
+                <div>
+                  <span *ngIf="this.modeViewEditStatus === 0">{{ detailBookingRoomForm.value.room.name }}</span>
+                  <nz-select *ngIf="this.modeViewEditStatus === 1" nzShowSearch nzAllowClear
+                    nzPlaceHolder="Chọn loại phòng" ngModel="{{detailBookingRoomForm.value.room?.id}}"
+                    (ngModelChange)="changeRoomType($event)" [ngModelOptions]="{standalone: true}">
+                    <nz-option *ngFor="let item of listRoomType" nzLabel="{{item.name}}"
+                      nzValue="{{item.id}}"></nz-option>
+                  </nz-select>
+                </div>
+              </div>
+            </div>
+            <div nz-col class="gutter-row" nzSpan="8">
+              <div class="inner-box">
+                <label>Số lượng phòng đăng ký <span style="color: tomato; margin-left: 4px;">(*)</span></label>
+                <div>
+                  <span *ngIf="this.modeViewEditStatus === 0">{{ detailBookingRoomForm.value.amount }}</span>
+                  <nz-input-number *ngIf="this.modeViewEditStatus === 1" [nzMin]="1" [nzStep]="1"
+                    formControlName="amount"></nz-input-number>
+                </div>
+              </div>
+            </div>
+            <div nz-col class="gutter-row" nzSpan="8">
+              <div class="inner-box">
+                <label>Số lượng người lớn >= 12 tuổi <span style="color: tomato; margin-left: 4px;">(*)</span></label>
+                <div>
+                  <span *ngIf="this.modeViewEditStatus === 0">{{ detailBookingRoomForm.value.adt }}</span>
+                  <nz-input-number *ngIf="this.modeViewEditStatus === 1" [nzMin]="1" [nzStep]="1"
+                    (ngModelChange)="changePassengerAmount('adt')" formControlName="adt"></nz-input-number>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="pb-3" nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
+            <div nz-col class="gutter-row" nzSpan="8">
+              <div class="inner-box">
+                <label>Số lượng trẻ em 0-11 tuổi</label>
+                <div>
+                  <span *ngIf="this.modeViewEditStatus === 0">{{ detailBookingRoomForm.value.chd }}</span>
+                  <nz-input-number *ngIf="this.modeViewEditStatus === 1" [nzMin]="0" [nzStep]="1"
+                    (ngModelChange)="changePassengerAmount('chd')" formControlName="chd"></nz-input-number>
+                </div>
+              </div>
+            </div>
+            <div nz-col class="gutter-row" nzSpan="8">
+              <div class="inner-box">
+                <label>Số lượng giường phụ</label>
+                <div>
+                  <span *ngIf="this.modeViewEditStatus === 0">{{ detailBookingRoomForm.value.extraBed }}</span>
+                  <nz-input-number *ngIf="this.modeViewEditStatus === 1" [nzMin]="0" [nzStep]="1"
+                    formControlName="extraBed"></nz-input-number>
+                </div>
+              </div>
+            </div>
+            <div nz-col class="gutter-row" nzSpan="8">
+              <div class="inner-box">
+                <label>Mã phê duyệt </label>
+                <div>
+                  <span *ngIf="this.modeViewEditStatus === 0">{{ detailBookingRoomForm.value.approvalCode }}</span>
+                  <input *ngIf="this.modeViewEditStatus === 1" nz-input placeholder="Nhập mã phê duyệt"
+                    formControlName="approvalCode" type="text" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </form>
+
+    <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
+      <div nz-col class="gutter-row" nzSpan="24">
+        <div class="pb-3" nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
+          <div nz-col class="gutter-row">
+            <div style="width: fit-content;">
+              <span style="font-weight: 600; font-size: larger;">Thông tin người lưu trú</span>
+              <div style="background-color: #188D47; height: 1px; width: 100%;"></div>
+            </div>
+          </div>
+        </div>
+        <ng-container *ngFor="let passengerForm of detailHotelPassengerAdtForm;let i = index;">
+          <ng-container *ngIf="passengerForm.value.passengerType === 0" [ngTemplateOutlet]="passengersAdult"
+            [ngTemplateOutletContext]="{ passengerForm: passengerForm, idx: i }"></ng-container>
+        </ng-container>
+        <ng-container *ngFor="let passengerForm of detailHotelPassengerChdForm;let i = index;">
+          <ng-container *ngIf="passengerForm.value.passengerType === 1" [ngTemplateOutlet]="passengersChild"
+            [ngTemplateOutletContext]="{ passengerForm: passengerForm, idx: i + detailHotelPassengerAdtForm.length}"></ng-container>
+        </ng-container>
+      </div>
+    </div>
+    <form [formGroup]="detailBookingGeneralForm">
+      <label *ngIf="this.modeViewEditStatus === 0" [nzDisabled]="true" class="pb-3" nz-checkbox
+        formControlName="isUrgent">Khẩn cấp</label>
+      <label *ngIf="this.modeViewEditStatus === 1" class="pb-3" nz-checkbox formControlName="isUrgent">Khẩn cấp</label>
+      <div class="pb-3">Ghi chú</div>
+      <p *ngIf="this.modeViewEditStatus === 0">{{detailBookingGeneralForm.value.otherRequirements}}</p>
+      <textarea *ngIf="this.modeViewEditStatus === 1" rows="4" nz-input formControlName="otherRequirements"></textarea>
+    </form>
+
+  </ng-container>
+  <div *nzModalFooter>
+    <button nz-button nzType="default"
+      (click)="isShowEditBookingHotel = false; isFirstLoadDetailBookingHotel = true">Đóng</button>
+    <button *ngIf="modeViewEditStatus === 1" nz-button nzType="primary" (click)="updateBookingHotel()">
+      <div style="display: flex; align-items: center;">
+        <span nz-icon nzType="save"></span>
+        <span style="margin-left: 6px; line-height: normal;">Lưu</span>
+      </div>
+    </button>
+  </div>
+</nz-modal>
+<!-- thông tin lưu trú của người lớn  -->
+<ng-template #passengersAdult let-passengerForm="passengerForm" let-i="idx">
+  <form [formGroup]="passengerForm">
+    <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }" class="pb-3">
+      <div nz-col class="gutter-row" nzSpan="6">
+        <div class="inner-box">
+          <label>{{i + 1}}. Họ và tên
+            <span style="color: tomato; margin-left: 4px;">(*)</span>
+          </label>
+          <div>
+            <span *ngIf="this.modeViewEditStatus === 0">{{ passengerForm.value.fullName }}</span>
+            <input *ngIf="this.modeViewEditStatus === 1" nz-input placeholder="Nhập họ tên" formControlName="fullName"
+              type="text" />
+          </div>
+        </div>
+      </div>
+      <div nz-col class="gutter-row" nzSpan="6">
+        <div class="inner-box">
+          <label>Số điện thoại
+            <span style="color: tomato; margin-left: 4px;">(*)</span>
+          </label>
+          <div>
+            <span *ngIf="this.modeViewEditStatus === 0">{{ passengerForm.value.phone }}</span>
+            <input *ngIf="this.modeViewEditStatus === 1" nz-input placeholder="Nhập số điện thoại"
+              formControlName="phone" type="text" />
+          </div>
+        </div>
+      </div>
+      <div nz-col class="gutter-row" nzSpan="6">
+        <div class="inner-box">
+          <label>Email<span style="color: tomato; margin-left: 4px;">(*)</span>
+          </label>
+          <div>
+            <span *ngIf="this.modeViewEditStatus === 0">{{ passengerForm.value.email }}</span>
+            <input *ngIf="this.modeViewEditStatus === 1" nz-input placeholder="Nhập email" formControlName="email"
+              type="text" />
+          </div>
+        </div>
+      </div>
+      <div nz-col class="gutter-row" nzSpan="6">
+        <div class="inner-box">
+          <label>Chức danh
+          </label>
+          <div>
+            <span *ngIf="this.modeViewEditStatus === 0">{{ passengerForm.value.jobTitle }}</span>
+            <input *ngIf="this.modeViewEditStatus === 1" nz-input placeholder="Nhập chức danh"
+              formControlName="jobTitle" type="text" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</ng-template>
+<!-- thông tin lưu trú của trẻ em  -->
+<ng-template #passengersChild let-passengerForm="passengerForm" let-i="idx">
+  <form [formGroup]="passengerForm">
+    <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }" class="pb-3">
+      <div nz-col class="gutter-row" nzSpan="6">
+        <div class="inner-box">
+          <label>{{i + 1}}. Họ và tên trẻ em
+            <span style="color: tomato; margin-left: 4px;">(*)</span>
+          </label>
+          <div>
+            <span *ngIf="this.modeViewEditStatus === 0">{{ passengerForm.value.fullName }}</span>
+            <input *ngIf="this.modeViewEditStatus === 1" nz-input placeholder="Nhập họ tên trẻ em"
+              formControlName="fullName" type="text" />
+          </div>
+        </div>
+      </div>
+      <div nz-col class="gutter-row" nzSpan="6">
+        <div class="inner-box">
+          <label>Ngày sinh
+            <span style="color: tomato; margin-left: 4px;">(*)</span>
+          </label>
+          <div>
+            <span *ngIf="this.modeViewEditStatus === 0">{{ passengerForm.value.dateOfBirth | date: 'dd/MM/yyyy'}}</span>
+            <nz-date-picker *ngIf="this.modeViewEditStatus === 1" formControlName="dateOfBirth"></nz-date-picker>
+          </div>
+        </div>
+      </div>
+      <div nz-col class="gutter-row" nzSpan="6">
+        <div class="inner-box">
+          <label>Chiều cao</label>
+          <div>
+            <span *ngIf="this.modeViewEditStatus === 0">{{ passengerForm.value.height }}</span>
+            <nz-input-number *ngIf="this.modeViewEditStatus === 1" [nzMin]="0" [nzStep]="1"
+              formControlName="height"></nz-input-number> cm
+          </div>
+        </div>
+      </div>
+      <div nz-col class="gutter-row" nzSpan="6"></div>
+    </div>
+  </form>
+</ng-template>
+
+<!-- lịch sử  -->
+<nz-modal [(nzVisible)]="isVisibleRequestBookingHistory" nzTitle="Lịch sử thay đổi trạng thái đặt phòng"
+  [nzContent]="contentRequestBookingHistory" [nzFooter]="footer" nzWidth="750px" [nzStyle]="{ top: '20px' }"
+  (nzOnCancel)="handleCancelPopupRequestBookingHistory()">
+  <ng-template #contentRequestBookingHistory>
+
+    <dx-data-grid id="gridRequestBookingHistory" [dataSource]="listRequestBookingHistories"
+      #TagGridRequestBookingHistory [showColumnLines]="true" [showRowLines]="true" [height]="dxGridHeight"
+      [rowAlternationEnabled]="true" [showBorders]="true" [allowColumnResizing]="true" columnResizingMode="widget"
+      [columnMinWidth]="50" [columnAutoWidth]="true" (onExporting)="onExporting($event)">
+
+
+      <dxo-load-panel [enabled]="true"></dxo-load-panel>`
+      <dxo-sorting mode="multiple"></dxo-sorting>
+      <dxo-header-filter [visible]="true"></dxo-header-filter>
+      <dxo-filter-row [visible]="true" [applyFilter]="currentFilter"></dxo-filter-row>
+
+      <dxi-column caption="STT" [width]="55" dataField="stt" [fixed]="true" [allowFiltering]="false"
+        [allowSorting]="false" cssClass="text-center vertical-align-middle"></dxi-column>
+      <!-- <dxi-column caption="Trạng thái cũ" [fixed]="true" [width]="150" dataField="oldStatus"
+      [format]="getLabelRequestBookingStatus" cssClass="vertical-align-middle"></dxi-column> -->
+      <dxi-column caption="Trạng thái" [fixed]="true" cssClass="vertical-align-middle" [width]="150"
+        [calculateCellValue]="calcStatusHistory"></dxi-column>
+      <dxi-column caption="Người thực hiện" cssClass="vertical-align-middle"
+        [calculateCellValue]="calcImplementerHistory"></dxi-column>
+      <dxi-column caption="Thời gian" dataField="dateLog" [width]="150" dataType="date" format="dd/MM/yy HH:mm"
+        cssClass="vertical-align-middle"></dxi-column>
+      <dxo-summary>
+      </dxo-summary>
+    </dx-data-grid>
+  </ng-template>
+  <ng-template #footer> </ng-template>
 </nz-modal>

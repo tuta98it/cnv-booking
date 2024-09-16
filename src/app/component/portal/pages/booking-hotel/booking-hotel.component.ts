@@ -1,11 +1,10 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { ActionsSubject, select, Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { GeneralService } from 'src/app/service/general-service';
 import { TableSelectionAbstract } from 'src/app/shared/component/table/table-selection.abstract';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Constant } from 'src/app/shared/constants/constant.class';
 import { PhoneUtils } from 'src/app/shared/utils/phone-utils.class';
 import { AppConfigService } from 'src/app-config.service';
@@ -20,12 +19,8 @@ import { removeAccents } from 'src/app/shared/utils/filters/remove-accents';
 
 import {
   DxDataGridComponent,
-  DxTemplateDirective,
-  DxTooltipComponent,
-  DxTooltipModule,
 } from "devextreme-angular";
-import { IsEmptyPipe } from 'src/app/shared/pipe/is-empty.pipe';
-import { filter } from 'rxjs/operators';
+
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzUploadChangeParam } from 'ng-zorro-antd/upload';
 import { NzUploadFile } from 'ng-zorro-antd/upload';
@@ -35,15 +30,19 @@ import { AngularEditorConfig } from '@kolkov/angular-editor';
 import { DataService } from 'src/app/service/data.service';
 import { Router } from '@angular/router';
 import { BookingHotelStatusPipe } from 'src/app/shared/pipe/booking-hotel-status.pipe';
-import { BOOKING_HOTEL_STATUS_TEXT, BookingHotelStatus } from 'src/app/enums/booking-hotel-status.enum';
+import { HotelBookingStatusEnum, HOTEL_BOOKING_STATUS_LIST } from 'src/app/enums/hotel-booking-status.enum';
+import { UploadService } from 'src/app/service/upload-service';
+import { ObjectValidator } from 'src/app/shared/custom-validator/objectValidator';
+import { MinNumberValidator } from 'src/app/shared/custom-validator/minValueValidator';
+import { WhiteSpaceValidator } from 'src/app/shared/custom-validator/whiteSpaceValidator';
+import { CheckValidatorForm } from 'src/app/shared/custom-validator/checkValidatorForm';
+import { Attachment } from 'src/app/model/attachment';
 @Component({
   selector: 'app-hotel',
   templateUrl: './booking-hotel.component.html',
   styleUrls: ['./booking-hotel.component.scss']
 })
 export class BookingHotelComponent extends TableSelectionAbstract implements OnInit, OnDestroy {
-  BOOKING_HOTEL_STATUS_TEXT = BOOKING_HOTEL_STATUS_TEXT;
-  BookingHotelStatus = BookingHotelStatus;
   @ViewChild("ListBookingHotels") dataGridDetail: DxDataGridComponent;
   datas: any[] = [];
   data: any;
@@ -145,6 +144,17 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   imageLogoVHL = '';
 
   valueTrue = true;
+  STATUS_LIST = [...HOTEL_BOOKING_STATUS_LIST];
+  isVisibleViewInVoice = false;
+  dataDetailBookingHotel: any = null;
+
+  detailContactUserForm: FormGroup;
+  detailBookingGeneralForm: FormGroup;
+  detailBookingRoomForm: FormGroup;
+  detailHotelPassengerAdtForm: FormGroup[];
+  detailHotelPassengerChdForm: FormGroup[];
+
+  orderForm: FormGroup;
   constructor(
     private router: Router,
     private modalService: NzModalService,
@@ -159,6 +169,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
     private dataService: DataService,
     private datePipe: DatePipe,
     public phoneUtils: PhoneUtils,
+    private uploadService: UploadService,
   ) {
     super('id');
     this.formAddHotel = this.fb.group({
@@ -194,6 +205,44 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
       roomFileIds: [[]],
       utilitieIds: [null],
     });
+    this.detailBookingRoomForm = this.fb.group({
+      /// Thông tin đặt phòng
+      id: [null], // ngày nhận phòng *
+      hotelId: [null],
+      inf: [null],
+      price: [null],
+      adultSurcharge: [null],
+      childSurcharge: [null],
+      extraBedPrice: [null],
+      totalPrice: [null],
+
+      checkinDate: [null, [Validators.required]], // ngày nhận phòng *
+      checkoutDate: [null, [Validators.required]], // ngày trả phòng *
+      numberOfNights: [null],// số đêm
+      room: [null, [ObjectValidator()]], // loại phòng* // id name
+      amount: [null, [MinNumberValidator(1)]],// số lượng phòng đăng ký*
+      adt: [0, [MinNumberValidator(1)]],// số lượng người lớn >= 12 tuổi*
+      chd: [0],// số lượng trẻ em 0-11 tuổi
+      extraBed: [0],// số lượng giường phụ
+      approvalCode: [null, [Validators.required, WhiteSpaceValidator()]]// mã phê duyệth
+    });
+    this.detailContactUserForm = this.fb.group({
+      companyName: [null],
+      userCode: [null],
+      userFullName: [null],
+    });
+    this.detailBookingGeneralForm = this.fb.group({
+      id: [null],
+      isUrgent: [false],
+      otherRequirements: [null]
+    });
+    this.detailHotelPassengerAdtForm = [];
+    this.detailHotelPassengerChdForm = [];
+
+    this.orderForm = fb.group({
+      pdfFile: [null, Validators.required],
+      xmlFile: [null, Validators.required]
+    });
 
     this.uploadHeader = {
       Authorization: 'Bearer ' + localStorage.getItem(Constant.TOKEN),
@@ -202,13 +251,12 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
     this.uploadUrl = `${this.configService.getConfig().api.baseUrl}/Upload/UploadHotelImage?hotelId=0`;
 
 
-    this.contentFileConfirmBookingRoonHotel = ``
+    this.contentFileConfirmBookingRoonHotel = ``;
   }
   payload = {
     page: 1,
     pageSize: 1000
   };
-
   ngOnInit(): void {
     this.getUserInfo();
     this.getListUtilityHotels();
@@ -233,8 +281,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
           let stt = 0;
           this.datas.forEach((en: any) => {
             en.stt = ++stt;
-            // en.bookingStatusText = (new BookingHotelStatusPipe()).transform(en.bookingStatus);
-            en.bookingStatusText = BOOKING_HOTEL_STATUS_TEXT[en.bookingStatus];
+            en.bookingStatusText = (new BookingHotelStatusPipe()).transform(en.bookingStatus);
             let sttx = 0;
             en.bookingHotelDetails.forEach(element => {
               en.isOnSendEmailLoading = false;
@@ -393,14 +440,14 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
     this.router.navigate(['hotel/edit-hotel']);
   }
 
-  onConfirmBookingHotel(booking: any) {
-    this.item = booking;
-    this.isVisibleConfirmBooking = true;
-    this.confirmBookingHotel.reservationCodeCodeConfirm = booking.reservationCode;
-    this.confirmBookingHotel.textValueNoteConfirm = booking.bookingNote;
-    this.submitted = false;
-    // this.resetConfirmBookingHotel();
-  }
+  // onConfirmBookingHotel(booking: any) {
+  //   this.item = booking;
+  //   this.isVisibleConfirmBooking = true;
+  //   this.confirmBookingHotel.reservationCodeCodeConfirm = booking.reservationCode;
+  //   this.confirmBookingHotel.textValueNoteConfirm = booking.bookingNote;
+  //   this.submitted = false;
+  //   // this.resetConfirmBookingHotel();
+  // }
 
 
   onConfirmSendEmailBookingHotel(booking: any) {
@@ -844,8 +891,6 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
     )
   }
 
-
-
   saveHotel() {
     this.submitted = true;
     let formValue = this.formAddHotel.value;
@@ -896,9 +941,6 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
       })
     }
   }
-
-
-
   onDeleteClick(id: any): void {
     // alert(id)
     const c = confirm('Bạn có chắc muốn xóa khách sạn này?');
@@ -926,12 +968,9 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
     } else {
     }
   }
-
   exportData() {
     this.dataGridDetail.instance.exportToExcel(false);
   }
-
-
   onExporting(e) {
     const workbook = new Workbook();
     const worksheet = workbook.addWorksheet('Sheet1');
@@ -963,8 +1002,6 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
       removeAccents(en.ratingStar?.trim()).toLowerCase().includes(keyword)
     );
   }
-
-
   previewDetailBookingHotelPassengers(bookingHotelPassengers: any) {
     this.isVisibleDetailBookingHotelPassengers = true;
     this.listBookingHotelPassengers = bookingHotelPassengers;
@@ -973,7 +1010,6 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
       en.stt = ++stt;
     });
   }
-
   showModalAddRoom(idHotel: any) {
     this.isVisibleAddRoom = true;
     this.submitted = false;
@@ -1000,7 +1036,6 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
     this.listURLFiles = [];
     this.uploadUrl = `${this.configService.getConfig().api.baseUrl}/Upload/UploadRoomImage?roomId=0`;
   }
-
   showModalUpdateRoom(idHotel: any, data: any) {
     this.isVisibleAddRoom = true;
     this.submitted = false;
@@ -1036,7 +1071,6 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
     }
     this.uploadUrl = `${this.configService.getConfig().api.baseUrl}/Upload/UploadRoomImage?roomId=${this.item.id}`;
   }
-
   saveRoom() {
     this.submitted = true;
     let formValue = this.formAddRoom.value;
@@ -1082,7 +1116,6 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
       })
     }
   }
-
   previewImages(images: any) {
     let arrImage: any[] = [];
     if (typeof images === 'string') {
@@ -1106,7 +1139,6 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
     }
     this.nzImageService.preview(arrImage, { nzZoom: 1.5, nzRotate: 0 });
   }
-
   handleChangeImages({ file, fileList }: NzUploadChangeParam, form: any): void {
     const status = file.status;
     if (status === 'done') {
@@ -1143,7 +1175,6 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
       this.msg.error(`file ${file.name} tải lên không thành công. ${file.error.error.text}`);
     }
   }
-
   // switchValueIsAvaliable = false;
   clickSwitchIsAvaliable(isAvaliableUpdate: boolean, roomID: any): void {
     this.generalService.SetAvailableRoom({ roomId: roomID, isAvailable: isAvaliableUpdate }).subscribe(
@@ -1169,7 +1200,6 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
       }
     );
   }
-
   getIDUtilityRooms(utilityRooms: any) {
     const ids = [];
     for (var i = 0; i < utilityRooms.length; i++) {
@@ -1177,7 +1207,6 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
     }
     return ids;
   }
-
   handleOkConfirmBookingHotel() {
     return new Promise((resolve, reject) => {
       this.isConfirmLoading = true;
@@ -1240,8 +1269,6 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
         this.getListData();
       });
   }
-
-
   handleOkConfirmSendEmailBookingHotel() {
     this.isConfirmSendEmailLoading = true;
     let emailContact = this.item.contactEmail;
@@ -1317,11 +1344,11 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
 
   changeSystemStatusBookingHotelExport(idBookingTicketFlightExp: any, noteSystemCancelled: any) {
     this.submitted = true;
-    if(!noteSystemCancelled){
+    if (!noteSystemCancelled) {
       this.notificationService.showNotification(Constant.ERROR, 'Nội dung ghi chú không được để trống');
       return;
     }
-    let payload = {noteSystemCancelled: noteSystemCancelled};
+    let payload = { noteSystemCancelled: noteSystemCancelled };
     this.generalService.markCanceledSystemBookingHotelExport(idBookingTicketFlightExp, payload).subscribe({
       next: (res) => {
         if (res.ret && res.ret[0].code !== 0) {
@@ -1339,5 +1366,593 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
       }
     });
   }
+  //#region Room
+  listRoomType: any[] = [];
+  getRoomsByIdHotel(idHotel: number) {
+    this.generalService.getRooms().subscribe({
+      next: (res) => {
+        this.listRoomType = res.rooms.filter(ele => ele.hotelId === idHotel).map((ele: any) => {
+          return {
+            id: ele.id,
+            name: ele.name
+          }
+        });
+      },
+      error: (error) => {
+        this.notificationService.showNotification(Constant.ERROR, 'Có lỗi xảy ra');
+      },
+      complete: () => {
+        // this.getListData();
+      }
+    })
+  }
+  //#endregion
 
+
+
+
+
+  //#region hóa đơn
+  @ViewChild('fileInputOrderPdf', { static: false }) orderPdfFileInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('fileInputOrderXml', { static: false }) orderXmlFileInput!: ElementRef<HTMLInputElement>;
+  selectedOrderPdfFile: Attachment = { name: '', path: '', file: null };
+  selectedOrderXmlFile: Attachment = { name: '', path: '', file: null };
+
+  closeViewInVoice(){
+    let valid = CheckValidatorForm(this.orderForm);
+    if (!valid) {
+      this.notificationService.showNotification(Constant.ERROR, "Vui lòng nhập đầy đủ thông tin");
+      return;
+    }
+    this.isVisibleViewInVoice = false;
+  }
+  showDialogSelectOrderPdfFile() {
+    this.orderPdfFileInput.nativeElement.click();
+  }
+  showDialogSelectOrderXmlFile() {
+    this.orderXmlFileInput.nativeElement.click();
+  }
+  onOrderPdfFileSelected(event: any): void { // đã chọn file đính kèm
+    const input = event.target as HTMLInputElement; // trỏ đến thẻ input chứa file
+    if (input.files && input.files.length > 0) { // input có chứa file
+      let file = input.files[0]; // lấy ra file
+      const fileExtension = file.name.split('.').pop()?.toLowerCase(); // lấy ra đuôi của file
+      if (fileExtension === 'pdf') {
+        this.orderForm.controls['pdfFile'].setValue(file.name);
+        this.selectedOrderPdfFile.file = file;
+        this.selectedOrderPdfFile.name = file.name;
+        this.selectedOrderPdfFile.path = null;
+      } else {
+        // this.orderForm.controls['pdfFile'].reset();
+        this.selectedOrderPdfFile = { name: '', path: '', file: null };
+        this.notificationService.showNotification(Constant.ERROR, 'Chỉ nhận file pdf');
+      }
+    }
+  }
+  onOrderXmlFileSelected(event: any): void { // đã chọn file đính kèm
+    const input = event.target as HTMLInputElement; // trỏ đến thẻ input chứa file
+    if (input.files && input.files.length > 0) { // input có chứa file
+      let file = input.files[0]; // lấy ra file
+      const fileExtension = file.name.split('.').pop()?.toLowerCase(); // lấy ra đuôi của file
+      if (fileExtension === 'xml') {
+        this.orderForm.controls['xmlFile'].setValue(file.name);
+        this.selectedOrderXmlFile.file = file;
+        this.selectedOrderXmlFile.name = file.name;
+        this.selectedOrderXmlFile.path = null;
+      } else {
+        // this.orderForm.controls['xmlFile'].reset();
+        this.selectedOrderXmlFile = { name: '', path: '', file: null };
+        this.notificationService.showNotification(Constant.ERROR, 'Chỉ nhận file xml');
+      }
+    }
+  }
+  viewOrderFilePdf() {
+    window.open(this.uploadService.getFile(this.item.pdfFile), '_blank');
+  }
+  viewOrderFileXml() {
+    window.open(this.uploadService.getFile(this.item.xmlFile), '_blank');
+  }
+  async uploadOrderFile() {
+    let valid = CheckValidatorForm(this.orderForm);
+    if (!valid) {
+      this.notificationService.showNotification(Constant.ERROR, "Vui lòng nhập đầy đủ thông tin");
+      return;
+    }
+    let formDataPdf = new FormData();
+    formDataPdf.append("postedFile", this.selectedOrderPdfFile.file);
+    formDataPdf.append("BookingHotelId", this.item.id);
+    this.uploadOrderPdf(formDataPdf).then((res) => {
+      let formDataXml = new FormData();
+      formDataXml.append("postedFile", this.selectedOrderXmlFile.file);
+      formDataXml.append("BookingHotelId", this.item.id);
+      this.uploadOrderXml(formDataXml).then((ressub) => {
+        this.getListData();
+        this.isVisibleViewInVoice = false;
+      })
+    })
+  }
+  uploadOrderPdf(formDataPdf): Promise<any> {
+    return new Promise((rev, rej) => {
+      this.uploadService.uploadOrderBookingHotelPdfFile(formDataPdf).subscribe({
+        next: (res) => {
+          this.notificationService.showNotification(Constant.SUCCESS, 'Tải hóa đơn thành công');
+          rev(res.path);
+        },
+        error: (error) => {
+          this.notificationService.showNotification(Constant.ERROR, 'Tải hóa đơn không thành công');
+          rej({});
+        }
+      });
+    })
+  }
+  uploadOrderXml(formDataXml): Promise<any> {
+    return new Promise((rev, rej) => {
+      this.uploadService.uploadOrderBookingHotelXmlFile(formDataXml).subscribe({
+        next: (res) => {
+          this.notificationService.showNotification(Constant.SUCCESS, 'Tải hóa đơn thành công');
+          rev(res.path);
+        },
+        error: (error) => {
+          this.notificationService.showNotification(Constant.ERROR, 'Tải hóa đơn không thành công');
+          rej({});
+        }
+      });
+    })
+  }
+  deleteOrderPdfFile() {
+    this.uploadService.removeOrderBookingHotelPdfFile(this.item.id).subscribe({
+      next: (res) => {
+        this.notificationService.showNotification(Constant.SUCCESS, 'Xóa hóa đơn thành công');
+        this.orderForm.clearValidators();
+        this.orderPdfFileInput.nativeElement.value = null;
+        this.orderForm.controls['pdfFile'].setValue(null);
+        this.selectedOrderPdfFile = { name: '', path: '', file: null };
+      },
+      error: (error) => {
+        this.notificationService.showNotification(Constant.ERROR, 'Xóa hóa đơn không thành công');
+      },
+      complete: () => {
+        this.getListData();
+      }
+    });
+  }
+  deleteOrderXmlFile() {
+    this.uploadService.removeOrderBookingHotelXmlFile(this.item.id).subscribe({
+      next: (res) => {
+        this.notificationService.showNotification(Constant.SUCCESS, 'Xóa hóa đơn thành công');
+        this.orderXmlFileInput.nativeElement.value = null;
+        this.orderForm.controls['xmlFile'].setValue(null);
+        this.selectedOrderXmlFile = { name: '', path: '', file: null };
+      },
+      error: (error) => {
+        this.notificationService.showNotification(Constant.ERROR, 'Xóa hóa đơn không thành công');
+      },
+      complete: () => {
+        this.getListData();
+      }
+    });
+  }
+  onOpenViewInVoice(data: any) {
+    this.item = data;
+    console.log(this.item);
+
+    this.isVisibleViewInVoice = true;
+    this.orderForm.reset();
+    if (this.item.pdfFile) {
+      this.selectedOrderPdfFile = { name: this.item.pdfFile.split('/').pop(), path: this.item.pdfFile, file: null };
+      this.orderForm.controls["pdfFile"].setValue(this.item.pdfFile.split('/').pop());
+    }
+    else {
+      this.orderForm.controls["pdfFile"].setValue(null);
+    }
+    if (this.item.xmlFile) {
+      this.selectedOrderXmlFile = { name: this.item.xmlFile.split('/').pop(), path: this.item.xmlFile, file: null };
+      this.orderForm.controls["xmlFile"].setValue(this.item.xmlFile.split('/').pop());
+    }
+    else {
+      this.orderForm.controls["xmlFile"].setValue(null);
+    }
+  }
+  //#endregion
+
+
+
+
+
+  //#region trạng thái
+  statusOld = null;
+  statusNew = null;
+  handleChangeStatusByItem(oldValue: number, newValue: number, dataFocus: any) {
+    if (newValue === HotelBookingStatusEnum.Failure) {
+      this.updateBookingHotelStatus(dataFocus.data.id, HotelBookingStatusEnum.Failure);
+      return;
+    }
+    if (newValue === HotelBookingStatusEnum.SendRequest && oldValue === HotelBookingStatusEnum.Holding) {
+      this.updateBookingHotelStatus(dataFocus.data.id, HotelBookingStatusEnum.SendRequest);
+      return;
+    }
+    this.statusOld = oldValue;
+    this.statusNew = newValue;
+    this.item = dataFocus;
+    if (this.checkCallShowEditBookingHotel(oldValue, newValue)) {
+      this.showDetailBookingHotel(this.item.data.id, 'edit');
+      this.isShowEditBookingHotel = true;
+      this.modeViewEditStatus = 1;
+      this.editBookingHotelHeader = "Cập nhật thông tin lưu trú";
+
+    }
+    else if (this.checkCallShowAddCodeBookingRoom(oldValue, newValue)) {
+      this.bookingRoomCodeForm = this.fb.group({
+        reservationCode: [null, Validators.required]
+      })
+      this.isShowAddCodeBookingRoom = true;
+    }
+  }
+  updateBookingHotelStatus(bookingHotelId: number, status: number) {
+    this.generalService.updateBookingHotelStatus(
+      {
+        bookingHotelId: bookingHotelId,
+        status: status,
+      }
+    ).subscribe({
+      next: (res) => {
+        this.notificationService.showNotification(Constant.SUCCESS, 'Cập nhật trạng thái thành công');
+      },
+      error: (error) => {
+        this.notificationService.showNotification(Constant.ERROR, 'Cập nhật trạng thái không thành công');
+      },
+      complete: () => {
+        this.getListData();
+      }
+    })
+  }
+  checkCallShowEditBookingHotel(oldValue: number, newValue: number) {
+    if (oldValue === HotelBookingStatusEnum.SendRequest && newValue === HotelBookingStatusEnum.Holding) {
+      return true;
+    }
+    return false;
+  }
+  checkCallShowAddCodeBookingRoom(oldValue: number, newValue: number) {
+    if (oldValue === HotelBookingStatusEnum.Holding && newValue === HotelBookingStatusEnum.Confirmed) {
+      return true;
+    }
+    return false;
+  }
+  //#endregion
+
+
+
+
+
+  //#region chi tiết lưu trú
+  editBookingHotelHeader = "Cập nhật thông tin lưu trú";
+  isShowEditBookingHotel = false;
+  cancelEditBookingHotel() {
+    if (this.modeViewEditStatus === 1) {
+      this.item.data.bookingStatus = this.statusOld;
+    }
+    this.isShowEditBookingHotel = false;
+    this.isFirstLoadDetailBookingHotel = true;
+  }
+  resetDetailBookingForms() {
+    this.detailContactUserForm.reset();
+    this.detailBookingGeneralForm.reset();
+    this.detailBookingRoomForm.reset();
+    this.detailHotelPassengerAdtForm = [];
+    this.detailHotelPassengerChdForm = [];
+    this.dataDetailBookingHotel = null;
+  }
+  modeViewEditStatus = 0; // view 0 , edit 1
+  // @type: [ edit , view ]
+  // @idBookingHotel: id của yêu cầu đặt khách sạn
+  // & điều hướng hiển thị view/edit chi tiết
+  showDetailBookingHotel(idBookingHotel: any, type: string) {
+    this.resetDetailBookingForms();
+    this.generalService.getBookingHotelById(idBookingHotel).subscribe({
+      next: (res) => {
+        this.dataDetailBookingHotel = res;
+        if (type === 'add') {
+          this.showViewBookingHotel(res);
+        } else {
+          this.showEditBookingHotel(res);
+          this.getRoomsByIdHotel(res.bookingHotelDetails[0].hotelId);
+        }
+      },
+      error: (error) => {
+        this.notificationService.showNotification(Constant.ERROR, 'Có lỗi xảy ra');
+      }
+    })
+  }
+  // @data: res trả về api chi tiết
+  // & set hoàn cảnh view chi tiết
+  showViewBookingHotel(data: any) {
+    this.setFormDetailBookingHotel(data);
+    this.isShowEditBookingHotel = true;
+    this.editBookingHotelHeader = "Xem yêu cầu lưu trú";
+    this.modeViewEditStatus = 0;
+  }
+  // @data: res trả về api chi tiết
+  // & set data vào form group
+  setFormDetailBookingHotel(data: any) {
+    // set thông tin chung
+    this.detailBookingGeneralForm.controls['id'].setValue(data.id);
+    this.detailBookingGeneralForm.controls['otherRequirements'].setValue(data.otherRequirements);
+    this.detailBookingGeneralForm.controls['isUrgent'].setValue(data.isUrgent);
+
+    // set thông tin người dặt vé
+    this.detailContactUserForm.controls['companyName'].setValue(data.companyName);
+    this.detailContactUserForm.controls['userCode'].setValue(data.userCode);
+    this.detailContactUserForm.controls['userFullName'].setValue(data.userFullName);
+
+    // set thông tin đặt phòng
+    this.detailBookingRoomForm.controls['id'].setValue(data.bookingHotelDetails[0].id);
+    this.detailBookingRoomForm.controls['hotelId'].setValue(data.bookingHotelDetails[0].hotelId);
+    this.detailBookingRoomForm.controls['inf'].setValue(data.bookingHotelDetails[0].inf);
+    this.detailBookingRoomForm.controls['price'].setValue(data.bookingHotelDetails[0].price);
+    this.detailBookingRoomForm.controls['adultSurcharge'].setValue(data.bookingHotelDetails[0].adultSurcharge);
+    this.detailBookingRoomForm.controls['childSurcharge'].setValue(data.bookingHotelDetails[0].childSurcharge);
+    this.detailBookingRoomForm.controls['extraBedPrice'].setValue(data.bookingHotelDetails[0].extraBedPrice);
+    this.detailBookingRoomForm.controls['totalPrice'].setValue(data.bookingHotelDetails[0].totalPrice);
+
+    this.detailBookingRoomForm.controls['checkinDate'].setValue(new Date(data.bookingHotelDetails[0].checkinDate));
+    this.detailBookingRoomForm.controls['checkoutDate'].setValue(new Date(data.bookingHotelDetails[0].checkoutDate));
+    this.detailBookingRoomForm.controls['numberOfNights'].setValue(data.bookingHotelDetails[0].numberOfNights);
+    this.detailBookingRoomForm.controls['room'].setValue({
+      id: data.bookingHotelDetails[0].roomId,
+      name: data.bookingHotelDetails[0].roomName
+    });
+    this.detailBookingRoomForm.controls['amount'].setValue(data.bookingHotelDetails[0].amount);
+    this.detailBookingRoomForm.controls['adt'].setValue(data.bookingHotelDetails[0].adt);
+    this.detailBookingRoomForm.controls['chd'].setValue(data.bookingHotelDetails[0].chd);
+    this.detailBookingRoomForm.controls['extraBed'].setValue(data.bookingHotelDetails[0].extraBed);
+    this.detailBookingRoomForm.controls['approvalCode'].setValue(data.approvalCode);
+    // set giá trị thông tin người lưu trú (người lớn)
+    let index = 0
+    for (; index < this.detailBookingRoomForm.value.adt; index++) {
+      let form = this.createBookingHotelPassengerForm(0);
+      form.controls['id'].setValue(data.bookingHotelDetails[0].bookingHotelPassengers[index].id);
+      form.controls['fullName'].setValue(data.bookingHotelDetails[0].bookingHotelPassengers[index].fullName);
+      form.controls['phone'].setValue(data.bookingHotelDetails[0].bookingHotelPassengers[index].phone);
+      form.controls['email'].setValue(data.bookingHotelDetails[0].bookingHotelPassengers[index].email);
+      form.controls['passengerType'].setValue(data.bookingHotelDetails[0].bookingHotelPassengers[index].passengerType);
+      form.controls['jobTitle'].setValue(data.bookingHotelDetails[0].bookingHotelPassengers[index].jobTitle);
+      this.detailHotelPassengerAdtForm.push(form);
+    }
+    // set giá trị thông tin người lưu trú (trẻ em)
+    for (; index < this.detailBookingRoomForm.value.chd + this.detailBookingRoomForm.value.adt; index++) {
+      let form = this.createBookingHotelPassengerForm(1);
+      form.controls['id'].setValue(data.bookingHotelDetails[0].bookingHotelPassengers[index].id);
+      form.controls['fullName'].setValue(data.bookingHotelDetails[0].bookingHotelPassengers[index].fullName);
+      form.controls['dateOfBirth'].setValue(new Date(data.bookingHotelDetails[0].bookingHotelPassengers[index].dateOfBirth));
+      form.controls['height'].setValue(data.bookingHotelDetails[0].bookingHotelPassengers[index].height);
+      form.controls['passengerType'].setValue(data.bookingHotelDetails[0].bookingHotelPassengers[index].passengerType);
+      this.detailHotelPassengerChdForm.push(form);
+    }
+  }
+  // @data: res trả về api chi tiết
+  // & set hoàn cảnh edit chi tiết
+  showEditBookingHotel(data: any) {
+    this.setFormDetailBookingHotel(data);
+    this.editBookingHotelHeader = "Cập nhật thông tin lưu trú";
+    this.modeViewEditStatus = 1;
+    this.isShowEditBookingHotel = true;
+  }
+
+  // @passengerType: 0 người lớn, 1 trẻ em
+  // & tạo một item form thuộc detailHotelPassengerForm
+  createBookingHotelPassengerForm(passengerType: number): FormGroup {
+    let passengerFormGroup: FormGroup;
+    if (passengerType === 0) {
+      passengerFormGroup = this.fb.group({
+        id: [0], //id
+        fullName: [null, [Validators.required]], //họ tên
+        phone: [null, [Validators.required, Validators.pattern('^[+0-9]*$')]], //  SĐT
+        email: [null, [Validators.required, Validators.email]], // Email
+        passengerType: [passengerType], // loại ( trẻ em hay người lớn )
+        jobTitle: [null],  // Chức danh
+      });
+    }
+    else if (passengerType === 1) {
+      passengerFormGroup = this.fb.group({
+        id: [0], //id
+        fullName: [null, [Validators.required]], //họ tên
+        passengerType: [passengerType], // loại ( trẻ em hay người lớn )
+        dateOfBirth: [null, [Validators.required]],  // ngày sinh của trẻ em
+        height: [null],  // chiều cao của trẻ em
+      });
+    }
+    else throw new Error('PassengerType nằm ngoài giá trị cho phép [0-1]');
+    return passengerFormGroup;
+  }
+  isFirstLoadDetailBookingHotel = true;
+  changePassengerAmount(type: string) {
+    if (this.isFirstLoadDetailBookingHotel) {
+      this.isFirstLoadDetailBookingHotel = false;
+      return;
+    }
+    if (type === 'adt') {
+      let adtAmount = this.detailBookingRoomForm.value.adt;
+      while (this.detailHotelPassengerAdtForm.length < adtAmount) { // cần thêm
+        this.detailHotelPassengerAdtForm.push(this.createBookingHotelPassengerForm(0));
+      }
+      while (this.detailHotelPassengerAdtForm.length > adtAmount) { // cần xoas
+        this.detailHotelPassengerAdtForm.pop();
+      }
+    }
+    else {
+      let chdAmount = this.detailBookingRoomForm.value.chd;
+      while (this.detailHotelPassengerChdForm.length < chdAmount) { // cần thêm
+        this.detailHotelPassengerChdForm.push(this.createBookingHotelPassengerForm(1));
+      }
+      while (this.detailHotelPassengerChdForm.length > chdAmount) { // cần xoas
+        this.detailHotelPassengerChdForm.pop();
+      }
+    }
+  }
+  checkValidateDetailBookingHotelForm() {
+    for (let form of this.detailHotelPassengerAdtForm) {
+      if (!CheckValidatorForm(form)) return false;
+    }
+    for (let form of this.detailHotelPassengerChdForm) {
+      if (!CheckValidatorForm(form)) return false;
+    }
+    if (!CheckValidatorForm(this.detailBookingGeneralForm)) return false;
+    if (!CheckValidatorForm(this.detailContactUserForm)) return false;
+    if (!CheckValidatorForm(this.detailBookingRoomForm)) return false;
+    return true;
+  }
+  setPayloadBookingHotelPassengers() {
+    let arrAdt = this.detailHotelPassengerAdtForm.map((form: FormGroup) => {
+      return {
+        id: form.value.id,
+        fullName: form.value.fullName,
+        phone: form.value.phone,
+        email: form.value.email,
+        passengerType: form.value.passengerType, // 0 for adult, 1 for child, etc.
+        jobTitle: form.value.jobTitle,
+      }
+    });
+    let arrChd = this.detailHotelPassengerChdForm.map((form: FormGroup) => {
+      return {
+        id: form.value.id,
+        fullName: form.value.fullName,
+        passengerType: form.value.passengerType, // 0 for adult, 1 for child, etc.
+        dateOfBirth: new Date(form.value.dateOfBirth),
+        height: form.value.height
+      }
+    });
+    return [...arrAdt, ...arrChd];
+  }
+  // update
+  updateBookingHotel() {
+    if (!this.checkValidateDetailBookingHotelForm()) {
+      this.notificationService.showNotification(Constant.ERROR, "Vui lòng nhập đầy đủ thông tin");
+      return;
+    }
+    let payload = {
+      id: this.detailBookingGeneralForm.value.id,
+      otherRequirements: this.detailBookingGeneralForm.value.otherRequirements,
+      isUrgent: this.detailBookingGeneralForm.value.isUrgent,
+      contactName: this.dataDetailBookingHotel.userFullName,
+      contactPhone: this.dataDetailBookingHotel.userEmail,
+      contactEmail: this.dataDetailBookingHotel.userPhoneNo,
+      roomDetails: [
+        {
+          id: this.detailBookingRoomForm.value.id,
+          hotelId: this.detailBookingRoomForm.value.hotelId,
+          roomHotelId: this.detailBookingRoomForm.value.room.id,
+          checkinDate: new Date(this.detailBookingRoomForm.value.checkinDate),
+          checkoutDate: new Date(this.detailBookingRoomForm.value.checkoutDate),
+          numberOfNights: this.detailBookingRoomForm.value.numberOfNights,
+          amount: this.detailBookingRoomForm.value.amount,
+          extraBed: this.detailBookingRoomForm.value.extraBed,
+          adt: this.detailBookingRoomForm.value.adt, // số lượng người lớn (adult)
+          chd: this.detailBookingRoomForm.value.chd, // số lượng trẻ em (child)
+          inf: this.detailBookingRoomForm.value.inf, // số lượng trẻ sơ sinh (infant)
+          price: this.detailBookingRoomForm.value.price,
+          adultSurcharge: this.detailBookingRoomForm.value.adultSurcharge, // phụ phí người lớn
+          childSurcharge: this.detailBookingRoomForm.value.childSurcharge, // phụ phí trẻ em
+          extraBedPrice: this.detailBookingRoomForm.value.extraBedPrice, // giá giường phụ
+          totalPrice: this.detailBookingRoomForm.value.totalPrice, // tổng giá
+          passengers: this.setPayloadBookingHotelPassengers()
+        }
+      ],
+      approvalCode: this.detailBookingRoomForm.value.approvalCode
+    }
+    this.generalService.updateBookingHotel(payload).subscribe({
+      next: (res) => {
+        this.notificationService.showNotification(Constant.SUCCESS, 'Cập nhật thông tin đặt phòng thành công');
+        this.updateBookingHotelStatus(this.detailBookingGeneralForm.value.id, HotelBookingStatusEnum.Holding);
+      },
+      error: (error) => {
+        this.notificationService.showNotification(Constant.ERROR, 'Có lỗi xảy ra');
+      },
+      complete: () => {
+        this.isShowEditBookingHotel = false;
+      }
+    })
+
+  }
+  changeRoomType(event: any) {
+    if (event) {
+      this.detailBookingRoomForm.controls['room'].setValue({
+        id: event,
+        name: ''
+      });
+    } else {
+      this.detailBookingRoomForm.controls['room'].setValue(null);
+    }
+  }
+  //#endregion chi tiết lưu trú
+
+
+
+
+
+  //#region thêm mã đặt phòng
+  isShowAddCodeBookingRoom = false;
+  cancelAddCodeBookingRoom() {
+    this.item.data.bookingStatus = this.statusOld;
+    this.isShowAddCodeBookingRoom = false;
+  }
+  bookingRoomCodeForm: FormGroup;
+  addBookingRoomCode() {
+    let valid = CheckValidatorForm(this.bookingRoomCodeForm);
+    if (!valid) {
+      this.notificationService.showNotification(Constant.ERROR, "Vui lòng nhập đầy đủ thông tin");
+      return;
+    }
+    this.generalService.confirmBooking({ id: this.item.data.id, reservationCode: this.bookingRoomCodeForm.value.reservationCode }).subscribe({
+      next: (res) => {
+        this.notificationService.showNotification(Constant.SUCCESS, 'Xác nhận đặt phòng thành công');
+        this.updateBookingHotelStatus(this.item.data.id, HotelBookingStatusEnum.Successful);
+
+      },
+      error: (error) => {
+        this.notificationService.showNotification(Constant.ERROR, 'Xác nhận không thành công');
+      },
+      complete: () => {
+        this.isShowAddCodeBookingRoom = false;
+        this.getListData();
+      }
+    })
+  }
+  //#endregion thêm mã đặt phòng
+
+
+
+
+
+  //#region lịch sử
+  isVisibleRequestBookingHistory = false;
+  listRequestBookingHistories: any[] = [];
+  handleCancelPopupRequestBookingHistory() {
+    this.isVisibleRequestBookingHistory = false;
+  }
+  getHistoryBookingHotel(id: number) {
+    this.generalService.getGetChangeStatusHistory(id).subscribe({
+      next: (res) => {
+        let stt = 0;
+        this.listRequestBookingHistories = res.map((ele: any) => {
+          return {
+            stt: ++stt,
+            status: this.STATUS_LIST[ele.newStatus],
+            userIdModified: ele.userIdModified,
+            fullName: ele.fullName,
+            dateLog: new Date(ele.dateLog)
+          }
+        })
+        this.isVisibleRequestBookingHistory = true;
+      },
+      error: (error) => {
+        this.notificationService.showNotification(Constant.ERROR, 'Có lỗi xảy ra');
+      }
+    })
+  }
+  calcStatusHistory(rowData: any) {
+    return rowData.status.name;
+  }
+  calcImplementerHistory(rowData: any) {
+    return 'ID: ' + rowData.userIdModified + ' ,Name: ' + rowData.fullName;
+  }
 }
