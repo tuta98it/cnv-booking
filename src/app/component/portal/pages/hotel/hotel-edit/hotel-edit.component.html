@@ -326,24 +326,97 @@
         </dx-data-grid>
       </nz-tab>
       <nz-tab nzTitle="Lịch sử thanh toán" [nzDisabled]="!isEdit">
-        <div class="toolbar">
+        <div class="row">
+          <div class="col-md-3" *ngIf="transactionItem">
+            <strong>Số tiền dịch vụ phát sinh</strong>
+            <span style="color: red" *ngIf="transactionItem.totalMoney">
+              ({{-transactionItem.totalMoney | currencyFormat}}) đ
+            </span>
+          </div>
+          <div class="col-md-3">
+            <strong>Số tiền dịch vụ đã thanh toán</strong>
+            <span>
+              ({{transactionItem.paidMoney | currencyFormat}}) đ
+            </span>
+          </div>
+          <div class="col-md-3">
+            <strong>Số tiền dư hiện tại</strong>
+            <span>
+              ({{transactionItem.balance | currencyFormat}}) đ
+            </span>
+          </div>
+          <div class="col-md-3">
+            <strong>Số tiền cần thanh toán</strong>
+            <span>
+              ({{transactionItem.needPayment | currencyFormat}}) đ
+            </span>
+          </div>
+        </div>
+        <div class="toolbar" style="padding: 12px 0">
           <div class="before">
-            <h2 class="toolbar-title">Lịch sử thanh toán</h2>
+            <h2 class="toolbar-title">Thông tin giao dịch</h2>
           </div>
           <div class="after">
             <div class="buttons">
-              <!-- <button (click)="addNewRoom()" nz-button nzType="primary" class="" type="submitted">
-                 <em class="fas fa-save fa-fw" style="margin-right: 4px;"></em> Thêm mới phòng
+               <button (click)="showPopupPayment()" nz-button nzType="primary" class="" type="submitted">
+                 <em class="fas fa-save fa-fw" style="margin-right: 4px;"></em> Ghi nhận thanh toán
                </button>
-               <button nz-button nzType="default" class="ant-btn-primary" type="button">
-                 <em class="fas fa-times fa-fw" style="margin-right: 4px;"></em> Hủy bỏ
-               </button>-->
             </div>
           </div>
         </div>
-        <div class="row">
-        </div>
+        <dx-data-grid
+          class="grid theme-dependent"
+          columnResizingMode="widget"
+          [allowColumnReordering]="true"
+          [showBorders]="true"
+          [showColumnLines]="true"
+          [showRowLines]="true"
+          [columnMinWidth]="50"
+          [columnAutoWidth]="true"
+          [columnResizingMode]="'nextColumn'"
+          [allowColumnResizing]="true"
+          [dataSource]="transactionItem.data">
+          <dxi-column cssClass="text-center" caption="STT" [width]="60" dataField="stt"
+                      [allowFiltering]="false" [allowSorting]="false"></dxi-column>
+          <dxi-column caption="Thời gian giao dịch" format="HH:mm dd/MM/yyyy" [width]="200" dataField="transactionTime" dataType="date"></dxi-column>
+          <dxi-column caption="Số tiền phát sinh" dataType="number" format="#,##0 đ" [width]="200" dataField="amount"></dxi-column>
+          <dxi-column cssClass="text-center" caption="Nội dung giao dịch" dataField="transactionContent"></dxi-column>
+        </dx-data-grid>
       </nz-tab>
     </nz-tabset>
   </div>
 </div>
+
+<nz-modal [(nzVisible)]="isShowPopupPayment" nzClosable="false" [nzTitle]="title" nzMaskClosable="false">
+  <ng-template #title>
+    Thanh toán dịch vụ
+    <div class="pull-right icon-close">
+      <em (click)="handleCancel()" nz-icon nzType="close" nzTheme="outline"></em>
+    </div>
+  </ng-template>
+  <div>
+    <div class="input-wrap" nz-row>
+      <label class="title-detail" nz-col [nzSpan]="8">Số tiền<em class="fas fa-asterisk required"></em></label>
+      <div nz-col [nzSpan]="16">
+        <dx-number-box [(ngModel)]="paymentItem.amount" format="#,##0 VNĐ"></dx-number-box>
+      </div>
+    </div>
+    <div class="input-wrap" nz-row>
+      <label class="title-detail" nz-col [nzSpan]="8">Họ tên<em class="fas fa-asterisk required"></em></label>
+      <div nz-col [nzSpan]="16">
+        <input disabled nz-input [(ngModel)]="userInfo.fullname" />
+      </div>
+    </div>
+    <div class="input-wrap" nz-row>
+      <label class="title-detail" nz-col [nzSpan]="8">Nội dung<em class="fas fa-asterisk required"></em></label>
+      <div nz-col [nzSpan]="16">
+        <input nz-input [(ngModel)]="paymentItem.content" />
+      </div>
+    </div>
+  </div>
+  <!-- Footer -->
+  <div *nzModalFooter>
+    <button nz-button (click)="handleCancel()">{{'cancel' | translate }}</button>
+    <button nz-button nzType="primary" (click)="doPayment()" class="button-submit">Cập nhật</button>
+  </div>
+</nz-modal>
