@@ -725,9 +725,16 @@ export class GeneralService extends BaseService {
     return this.delete(`/api${UrlConstant.HOTEL}/DeleteHotelFile/${idImage}`, idImage);
   }
 
+  getHotelTransactionHistory(payload): Observable<any> {
+    return this.post(`/api/Hotel/GetHotelTransactionHistory`, payload);
+  }
   // setActiveHotel/{id}
   setActiveHotel(idHotel: number, isActive: boolean): Observable<any> {
     return this.put(`/api${UrlConstant.HOTEL}/SetActiveHotel/${idHotel}?isActive=${isActive}`, '');
+  }
+
+  doPayMoneyForHotel(payload): Observable<any> {
+    return this.post(`/api/Hotel/PayMoneyForHotel`, payload);
   }
 
   // BookingHotel

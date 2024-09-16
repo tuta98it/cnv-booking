@@ -33,6 +33,7 @@ export class HotelEditComponent implements OnInit {
   valueNumberPhone = '';
   utilityGroupOptions: any[];
   isEdit = false;
+  transactionItem: any;
   @ViewChild('inputElementNumberPhone', {static: false}) inputElementNumberPhone?: ElementRef;
   @ViewChild('myForm') myForm!: NgForm;
   @ViewChild('contractForm') contractForm!: NgForm;
@@ -43,6 +44,7 @@ export class HotelEditComponent implements OnInit {
   fileList: NzUploadFile[] = [];
   fileContractList: NzUploadFile[] = [];
   uploadContractFileUrl: any;
+  isShowPopupPayment: boolean;
   configDescriptionHotel: AngularEditorConfig = {
     editable: true,
     spellcheck: true,
@@ -85,6 +87,8 @@ export class HotelEditComponent implements OnInit {
     toolbarHiddenButtons: [],
   };
   roomHotels: any[];
+  paymentItem: any;
+  userInfo: any;
   constructor(private fb: FormBuilder,
               private router: Router,
               private route: ActivatedRoute,
@@ -140,6 +144,8 @@ export class HotelEditComponent implements OnInit {
     this.fileList = [];
     this.hotelFileIds = [];
     this.fileContractList = [];
+    this.transactionItem = {};
+    this.paymentItem = {};
   }
 
   ngOnInit(): void {
@@ -155,6 +161,7 @@ export class HotelEditComponent implements OnInit {
       if (this.hotelId) {
         this.isEdit = true;
         this.binHotelDetail();
+        this.getHotelTransactionHistory();
       } else {
         this.formAddHotel.patchValue({
           amenities: this.utilityGroupOptions
@@ -163,6 +170,10 @@ export class HotelEditComponent implements OnInit {
     });
 
     this.getProvinces();
+    this.getUserInfo();
+  }
+  getUserInfo() {
+    this.userInfo = JSON.parse(localStorage.getItem(Constant.USER_INFO));
   }
   /*getRoomList() {
     this.generalService.getRoomHotels(this.hotelId).subscribe(res => {
@@ -174,6 +185,7 @@ export class HotelEditComponent implements OnInit {
     });
   }*/
   binHotelDetail() {
+
     this.generalService.getHotelById(this.hotelId).subscribe(res => {
       this.hotelItem = res;
       let index = 1;
@@ -259,12 +271,16 @@ export class HotelEditComponent implements OnInit {
 
 
   }
-  getFileName(path: string){
+
+  getFileName(path: string) {
     if (path) {
       const parts = path.split('/');
       return parts.pop() || '';
-    } else return '';
+    } else {
+      return '';
+    }
   }
+
   get formControlHotel() {
     return this.formAddHotel.controls;
   }
@@ -432,14 +448,14 @@ export class HotelEditComponent implements OnInit {
         }
       );
     }
-  }
+  };
   handleRemoveContractFile = async (file: NzUploadFile): Promise<void> => {
     const fileId = file.uid;
     if (fileId) {
       alert(fileId);
       console.log('this.fileContractList', this.fileContractList);
     }
-  }
+  };
 
   saveContract() {
     const formValue = this.contractForm.value;
@@ -481,7 +497,7 @@ export class HotelEditComponent implements OnInit {
   }
 
   clickSwitchIsAvaliable(isAvaliableUpdate: boolean, roomID: any): void {
-    this.generalService.SetAvailableRoom({ roomId: roomID, isAvailable: isAvaliableUpdate }).subscribe(
+    this.generalService.SetAvailableRoom({roomId: roomID, isAvailable: isAvaliableUpdate}).subscribe(
       {
         next: (res) => {
           if (res.ret && res.ret[0].code !== 0) {
@@ -523,7 +539,7 @@ export class HotelEditComponent implements OnInit {
         arrImage.push(objImageView);
       });
     }
-    this.nzImageService.preview(arrImage, { nzZoom: 1.5, nzRotate: 0 });
+    this.nzImageService.preview(arrImage, {nzZoom: 1.5, nzRotate: 0});
   }
 
   showConfirmDeleteRoom(id: any): void {
@@ -536,6 +552,7 @@ export class HotelEditComponent implements OnInit {
       nzOnOk: () => this.deleteItemRoomByID(id).then(() => this.binHotelDetail()),
     });
   }
+
   deleteItemRoomByID(id: any) {
     // Delete workspace here
     return new Promise((resolve, reject) => {
@@ -560,7 +577,7 @@ export class HotelEditComponent implements OnInit {
 
   setActive(data: any) {
     data.isActive = !data.isActive;
-    this.generalService.setActiveRoom({ roomId: data.id, isActive: data.isActive }).subscribe(
+    this.generalService.setActiveRoom({roomId: data.id, isActive: data.isActive}).subscribe(
       {
         next: (res) => {
           if (res.ret && res.ret[0].code !== 0) {
@@ -576,7 +593,66 @@ export class HotelEditComponent implements OnInit {
         complete: () => {
 
         }
+      }
+    );
+  }
 
+  getHotelTransactionHistory() {
+    const payload = {
+      hotelId: this.hotelId,
+      page: 1,
+      pageSize: 1000
+    };
+    this.generalService.getHotelTransactionHistory(payload).subscribe(
+      {
+        next: (res) => {
+          this.transactionItem = res;
+          let index = 1;
+          this.transactionItem.data.forEach(en => {
+            en.stt = index;
+            index++;
+          });
+        },
+        error: (error) => {
+          this.notificationService.showNotification(Constant.ERROR, 'Cập nhật trạng thái phòng thất bại');
+        },
+        complete: () => {
+        }
+      }
+    );
+  }
+
+  showPopupPayment() {
+    this.isShowPopupPayment = true;
+  }
+
+  handleCancel() {
+    this.isShowPopupPayment = false;
+  }
+
+  doPayment() {
+    const payload = {
+      hotelId: this.hotelId,
+      amount: this.paymentItem.amount,
+      content: this.paymentItem.content
+    };
+
+    this.generalService.doPayMoneyForHotel(payload).subscribe(
+      {
+        next: (res) => {
+          if (res.isValid) {
+            this.getHotelTransactionHistory();
+            this.isShowPopupPayment = false;
+            this.notificationService.showNotification(Constant.SUCCESS, 'Cập nhật thành công');
+          } else {
+            this.notificationService.showNotification(Constant.ERROR, 'Cập nhật thất bại');
+          }
+        },
+        error: (error) => {
+          this.notificationService.showNotification(Constant.ERROR, 'Cập nhật thất bại');
+        },
+        complete: () => {
+        }
       }
     );
   }
