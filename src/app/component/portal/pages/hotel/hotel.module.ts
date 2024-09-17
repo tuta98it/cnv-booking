@@ -17,6 +17,7 @@ import { RoomEditComponent } from './room-edit/room-edit.component';
     HotelRoutingModule,
     SharedModule,
     DevExtremeModule,
+    NzTabsModule,
   ],
   providers: [GeneralService],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
