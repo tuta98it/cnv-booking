@@ -75,15 +75,23 @@ export class ActionPartnerComponent implements OnInit {
   actionPartnerVHL: any;
   settingTableListEmployeesForm: FormGroup;
   settingTableListBalanceFluctuationForm: FormGroup;
+  settingTableBusinessUsageHistoriesForm: FormGroup;
   allCheckedEmployee = false;
   indeterminateEmployee = false;
   allUnCheckedEmployee = false;
+
   fixedColumnEmployee = false;
+  fixedColumnBalanceFluctuation = false;
+  fixedColumnBusinessUsageHistory = false;
+
   scrollXEmployeesValue: string | null = null;
   scrollYEmployeesValue: string | null = null;
   settingTableEmployeesValue: NZTableSettingCustoms;
 
-  fixedColumnBalanceFluctuation = false;
+  scrollXBusinessUsageHistoriesValue: string | null = null;
+  scrollYBusinessUsageHistoriesValue: string | null = null;
+  settingTableBusinessUsageHistoriesValue: NZTableSettingCustoms;
+
   scrollXBalanceFluctuationValue: string | null = null;
   scrollYBalanceFluctuationValue: string | null = null;
   settingTableBalanceFluctuationValue: NZTableSettingCustoms;
@@ -134,6 +142,7 @@ export class ActionPartnerComponent implements OnInit {
   isEditBaseBusinessContract: Boolean = false;
   isLockPage: FormControl = new FormControl(false);
   isVisibleChangePassword: boolean = false;
+  listOfBusinessUsageHistories: any[];
 
   constructor(
     private msg: NzMessageService,
@@ -230,11 +239,35 @@ export class ActionPartnerComponent implements OnInit {
       tableLayout: 'auto' as NzTableLayout,
       position: 'bottom' as NzTablePaginationPosition
     });
+
+    this.settingTableBusinessUsageHistoriesForm = this.formBuilder.group({
+      bordered: [false],
+      loading: [false],
+      pagination: [true],
+      sizeChanger: [false],
+      title: [false],
+      header: [true],
+      footer: [false],
+      expandable: [true],
+      checkbox: [true],
+      fixHeader: [true],
+      noResult: [false],
+      noResultText: 'Danh sách lịch sử sử dụng đang trống',
+      ellipsis: [false],
+      simple: [false],
+      size: 'small' as NzTableSize,
+      paginationType: 'default' as NzTablePaginationType,
+      tableScroll: 'scroll' as TableScroll,
+      tableLayout: 'auto' as NzTableLayout,
+      position: 'bottom' as NzTablePaginationPosition
+    });
+
   }
 
   ngAfterViewInit() {
     this.settingTableEmployeesValue = this.settingTableListEmployeesForm.value as NZTableSettingCustoms;
     this.settingTableBalanceFluctuationValue = this.settingTableListBalanceFluctuationForm.value as NZTableSettingCustoms;
+    this.settingTableBusinessUsageHistoriesValue = this.settingTableBusinessUsageHistoriesForm.value as NZTableSettingCustoms;
 
     this.actionPartnerVHL = this.activatedRoute.snapshot.data['type'];
     // this.setIsActiveEditBaseInfo(true);
@@ -389,6 +422,11 @@ export class ActionPartnerComponent implements OnInit {
             en.stt = stt;
           });
         });
+
+        this.getListBusinessServiceUsageHistoryByPartner(this.itemPartner?.id).then((result: any) => {
+          this.listOfBusinessUsageHistories = result;
+        });
+
       });
     }
   }
@@ -458,6 +496,32 @@ export class ActionPartnerComponent implements OnInit {
       }
     });
 
+
+
+    // Lấy giá trị status từ route data
+    this.settingTableBusinessUsageHistoriesForm.valueChanges.subscribe(value => {
+      this.settingTableEmployeesValue = value as NZTableSettingCustoms;
+    });
+    this.settingTableBusinessUsageHistoriesForm.controls.tableScroll.valueChanges.subscribe(scroll => {
+      this.fixedColumnBusinessUsageHistory = scroll === 'fixed';
+      this.scrollXBusinessUsageHistoriesValue = scroll === 'scroll' || scroll === 'fixed' ? '100vw' : null;
+    });
+    let tableBusinessUsageHistoryScrollValue = this.settingTableBusinessUsageHistoriesForm.controls['tableScroll'].value;
+    this.fixedColumnBusinessUsageHistory = tableBusinessUsageHistoryScrollValue === 'fixed';
+    this.scrollXBusinessUsageHistoriesValue = tableBusinessUsageHistoryScrollValue === 'scroll' || tableBusinessUsageHistoryScrollValue === 'fixed' ? '100vw' : null;
+    this.settingTableBusinessUsageHistoriesForm.controls.fixHeader.valueChanges.subscribe(fixed => {
+      this.scrollYBusinessUsageHistoriesValue = fixed ? '240px' : null;
+    });
+    this.scrollYBusinessUsageHistoriesValue = this.settingTableBusinessUsageHistoriesForm.controls['fixHeader'].value ? '240px' : null;
+    this.settingTableBusinessUsageHistoriesForm.controls.noResult.valueChanges.subscribe(async empty => {
+      if (empty) {
+        this.listOfBusinessUsageHistories = [];
+      } else {
+        this.getListBusinessServiceUsageHistoryByPartner(this.itemPartner?.id).then((result: any) => {
+          this.listOfBusinessUsageHistories = result;
+        });
+      }
+    });
 
 
     this.isActiveEditBaseInfo.valueChanges.subscribe((value: any) => {
@@ -731,6 +795,42 @@ export class ActionPartnerComponent implements OnInit {
         }
       }, error => {
         this.notificationService.showNotification(Constant.ERROR, 'Lấy ra biến động số dư của doanh nghiệp thất bại do lỗi hệ thống');
+        reject(error);
+      });
+    });
+
+  }
+
+  private getListBusinessServiceUsageHistoryByPartner(idPartner: number): Promise<any> {
+    this.settingTableBusinessUsageHistoriesValue.loading = true;
+    return new Promise((resolve, reject) => {
+      this.generalService.getListBusinessServiceUsageHistory({
+        partnerId: idPartner,
+        startTime: null,
+        endTime: null,
+        pageNumber: 1,
+        pageSize: 1000
+      }).subscribe((res: any) => {
+        if (res.isValid) {
+          let stt = 0;
+          res.data.forEach(en => {
+            stt++;
+            en.stt = stt;
+          });
+          resolve(res.data);
+          this.settingTableBusinessUsageHistoriesValue.loading = false;
+        } else {
+          if (res.errors && res.errors.length > 0) {
+            res.errors.forEach((el: any) => {
+              this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+            });
+          } else {
+            this.notificationService.showNotification(Constant.ERROR, 'Lấy ra lịch sử sử dụng doanh nghiệp không thành công');
+          }
+          reject(res.errors);
+        }
+      }, error => {
+        this.notificationService.showNotification(Constant.ERROR, 'Lấy ra lịch sử sử dụng doanh nghiệp thất bại do lỗi hệ thống');
         reject(error);
       });
     });

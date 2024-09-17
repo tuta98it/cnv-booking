@@ -830,9 +830,7 @@
                   [nzShowInfo]="false" [ngModelOptions]="{standalone: true}"></nz-progress>
 
 
-                <nz-progress *ngIf="!debtBearingSales?.debtMax"
-                  [nzStatus]="'exception'"
-                  [nzPercent]="100"
+                <nz-progress *ngIf="!debtBearingSales?.debtMax" [nzStatus]="'exception'" [nzPercent]="100"
                   [nzShowInfo]="false" [ngModelOptions]="{standalone: true}"></nz-progress>
               </div>
             </div>
@@ -954,6 +952,74 @@
                     <td [nzDisabled]="data.disabled">{{ data.implementPersonInfo }}</td>
                     <td [nzDisabled]="data.disabled">{{ data.amount | currencyFormat }} đ</td>
                     <td [nzDisabled]="data.disabled">{{ data.transactionContent}}</td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </nz-table>
+          </div>
+        </div>
+
+        <div *ngIf="selectedMenu == MenuCreatePartner.BusinessUsageHistory">
+          <!-- Header list emloyees -->
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-weight: 500; font-size: 16px;">Lịch sử sử dụng</span>
+            <div style="display: flex; align-items: center;">
+              <div>
+                <!-- <button [disabled]="!itemPartner?.id" nz-button nzType="primary"
+                  style="margin-right: 0.5rem;">
+                  <div style="display: flex; align-items: center;">
+                    <span style="margin: 0 6px; line-height: normal;">Xem chi tiết</span>
+                  </div>
+                </button> -->
+              </div>
+            </div>
+          </div>
+          <div style="margin: 16px 0;"></div>
+          <!-- Content lisst employees -->
+          <div>
+            <nz-table #tagBusinessUsageHistory [nzScroll]="{ x: scrollXBusinessUsageHistoriesValue, y: scrollYBusinessUsageHistoriesValue }"
+              [nzData]="listOfBusinessUsageHistories" [nzTableLayout]="settingTableBusinessUsageHistoriesValue.tableLayout"
+              [nzBordered]="settingTableBusinessUsageHistoriesValue.bordered" [nzSimple]="settingTableBusinessUsageHistoriesValue.simple"
+              [nzLoading]="settingTableBusinessUsageHistoriesValue.loading"
+              [nzPaginationType]="settingTableBusinessUsageHistoriesValue.paginationType"
+              [nzPaginationPosition]="settingTableBusinessUsageHistoriesValue.position"
+              [nzShowSizeChanger]="settingTableBusinessUsageHistoriesValue.sizeChanger"
+              [nzFrontPagination]="settingTableBusinessUsageHistoriesValue.pagination"
+              [nzShowPagination]="settingTableBusinessUsageHistoriesValue.pagination"
+              [nzFooter]="settingTableBusinessUsageHistoriesValue.footer ? 'Here is Footer' : null"
+              [nzTitle]="settingTableBusinessUsageHistoriesValue.title ? 'Here is Title' : null"
+              [nzNoResult]="settingTableBusinessUsageHistoriesValue.noResultText ? settingTableBusinessUsageHistoriesValue.noResultText : ''"
+              [nzSize]="settingTableBusinessUsageHistoriesValue.size"
+              (nzCurrentPageDataChange)="currentPageDataChangeEmployee($event)">
+              <thead>
+                <tr *ngIf="settingTableEmployeesValue.header">
+                  <th nzWidth="40px" [nzLeft]="fixedColumnBusinessUsageHistory">STT</th>
+                  <th [nzLeft]="fixedColumnBusinessUsageHistory">Ngày</th>
+                  <th [nzLeft]="fixedColumnBusinessUsageHistory">Mã phê duyệt</th>
+                  <th>Mã người dùng</th>
+                  <th>Tên người đặt</th>
+                  <th>Tên người sử dụng</th>
+                  <th>Dịch vụ người dụng</th>
+                  <th>Nội dung sử dụng</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngFor="let data of tagBusinessUsageHistory.data">
+                  <tr>
+                    <td [nzLeft]="fixedColumnBusinessUsageHistory">
+                      {{data.stt}}
+                    </td>
+                    <td [nzLeft]="fixedColumnBusinessUsageHistory">{{ data.successfullBookingDate | dateFormat }}
+                    </td>
+                    <td>{{ data.approvalCode }}</td>
+                    <td>{{ data.userCode }}</td>
+                    <td>{{ data.fulnameNameUserBooking }}</td>
+                    <td>{{ data.fullnamePassengers}}</td>
+                    <td>{{ data.serviceUsedName}}</td>
+                    <td>{{ data.usageContent }}</td>
+                  </tr>
+                  <tr *ngIf="settingTableEmployeesValue.expandable" [nzExpand]="data.expand">
+                    <span>{{ data.description }}</span>
                   </tr>
                 </ng-container>
               </tbody>
