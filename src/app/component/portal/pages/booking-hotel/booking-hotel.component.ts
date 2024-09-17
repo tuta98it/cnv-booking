@@ -1398,7 +1398,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   selectedOrderPdfFile: Attachment = { name: '', path: '', file: null };
   selectedOrderXmlFile: Attachment = { name: '', path: '', file: null };
 
-  closeViewInVoice(){
+  closeViewInVoice() {
     this.isVisibleViewInVoice = false;
   }
   showDialogSelectOrderPdfFile() {
@@ -1455,19 +1455,19 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
     }
 
     let waitUpload = [];
-    if(this.selectedOrderPdfFile.file){
+    if (this.selectedOrderPdfFile.file) {
       let formDataPdf = new FormData();
       formDataPdf.append("postedFile", this.selectedOrderPdfFile.file);
       formDataPdf.append("BookingHotelId", this.item.id);
       waitUpload.push(this.uploadOrderPdf(formDataPdf));
     }
-    if(this.selectedOrderXmlFile.file){
+    if (this.selectedOrderXmlFile.file) {
       let formDataXml = new FormData();
       formDataXml.append("postedFile", this.selectedOrderXmlFile.file);
       formDataXml.append("BookingHotelId", this.item.id);
       waitUpload.push(this.uploadOrderXml(formDataXml));
     }
-    await Promise.all(waitUpload).then((rev)=>{
+    await Promise.all(waitUpload).then((rev) => {
       this.getListData();
       this.isVisibleViewInVoice = false;
     })
@@ -1799,6 +1799,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
     if (!CheckValidatorForm(this.detailBookingGeneralForm)) return false;
     if (!CheckValidatorForm(this.detailContactUserForm)) return false;
     if (!CheckValidatorForm(this.detailBookingRoomForm)) return false;
+    if (!this.detailBookingRoomForm.value.room?.id) return false;
     return true;
   }
   setPayloadBookingHotelPassengers() {

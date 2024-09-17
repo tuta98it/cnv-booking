@@ -550,7 +550,7 @@
         </div>
       </div>
     </form>
-    <form [formGroup]="detailBookingRoomForm">
+    <form nz-form [formGroup]="detailBookingRoomForm">
       <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
         <div nz-col class="gutter-row" nzSpan="24">
           <div class="pb-3" nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
@@ -564,42 +564,38 @@
           <div class="pb-3" nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
             <div nz-col class="gutter-row" nzSpan="8">
               <div class="inner-box">
-                <label>Ngày nhận phòng <span style="color: tomato; margin-left: 4px;">(*)</span></label>
-                <div>
-                  <span *ngIf="this.modeViewEditStatus === 0">{{ detailBookingRoomForm.value.checkinDate | date:
-                    'dd/MM/yyyy' }}</span>
+                <nz-form-label>Ngày nhận phòng <span style="color: tomato; margin-left: 4px;">(*)</span></nz-form-label>
+                <nz-form-control nzErrorTip="Không được để trống">
+                  <span *ngIf="this.modeViewEditStatus === 0">{{ detailBookingRoomForm.value.checkinDate | date: 'dd/MM/yyyy' }}</span>
                   <nz-date-picker *ngIf="this.modeViewEditStatus === 1" formControlName="checkinDate"></nz-date-picker>
+                </nz-form-control>
                   <!-- <input nz-input placeholder="Nhập ngày nhận phòng" formControlName="checkinDate" type="text" /> -->
-                </div>
               </div>
             </div>
             <div nz-col class="gutter-row" nzSpan="8">
               <div class="inner-box">
-                <label>Ngày trả phòng <span style="color: tomato;v margin-left: 4px;">(*)</span></label>
-                <div>
-                  <span *ngIf="this.modeViewEditStatus === 0">{{ detailBookingRoomForm.value.checkoutDate | date:
-                    'dd/MM/yyyy'}} </span>
+                <nz-form-label>Ngày trả phòng <span style="color: tomato;v margin-left: 4px;">(*)</span></nz-form-label>
+                <nz-form-control nzErrorTip="Không được để trống">
+                  <span *ngIf="this.modeViewEditStatus === 0">{{ detailBookingRoomForm.value.checkoutDate | date: 'dd/MM/yyyy'}} </span>
                   <nz-date-picker *ngIf="this.modeViewEditStatus === 1" formControlName="checkoutDate"></nz-date-picker>
-                </div>
+                </nz-form-control>
               </div>
             </div>
             <div nz-col class="gutter-row" nzSpan="8">
               <div class="inner-box">
-                <label>Số đêm
-                </label>
-                <div>
+                <nz-form-label>Số đêm</nz-form-label>
+                <nz-form-control nzErrorTip="Không được để trống">
                   <span *ngIf="this.modeViewEditStatus === 0">{{ detailBookingRoomForm.value.numberOfNights }}</span>
-                  <nz-input-number *ngIf="this.modeViewEditStatus === 1" [nzMin]="0" [nzStep]="1"
-                    formControlName="numberOfNights"></nz-input-number>
-                </div>
+                  <nz-input-number *ngIf="this.modeViewEditStatus === 1" [nzMin]="0" [nzStep]="1" formControlName="numberOfNights"></nz-input-number>
+                </nz-form-control>
               </div>
             </div>
           </div>
           <div class="pb-3" nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
             <div nz-col class="gutter-row" nzSpan="8">
               <div class="inner-box">
-                <label>Loại phòng <span style="color: tomato; margin-left: 4px;">(*)</span></label>
-                <div>
+                <nz-form-label>Loại phòng <span style="color: tomato; margin-left: 4px;">(*)</span></nz-form-label>
+                <nz-form-control nzErrorTip="Không được để trống">
                   <span *ngIf="this.modeViewEditStatus === 0">{{ detailBookingRoomForm.value.room.name }}</span>
                   <nz-select *ngIf="this.modeViewEditStatus === 1" nzShowSearch nzAllowClear
                     nzPlaceHolder="Chọn loại phòng" ngModel="{{detailBookingRoomForm.value.room?.id}}"
@@ -607,59 +603,59 @@
                     <nz-option *ngFor="let item of listRoomType" nzLabel="{{item.name}}"
                       nzValue="{{item.id}}"></nz-option>
                   </nz-select>
-                </div>
+                </nz-form-control>
               </div>
             </div>
             <div nz-col class="gutter-row" nzSpan="8">
               <div class="inner-box">
-                <label>Số lượng phòng đăng ký <span style="color: tomato; margin-left: 4px;">(*)</span></label>
-                <div>
+                <nz-form-label>Số lượng phòng đăng ký <span style="color: tomato; margin-left: 4px;">(*)</span></nz-form-label>
+                <nz-form-control nzErrorTip="Không được để trống">
                   <span *ngIf="this.modeViewEditStatus === 0">{{ detailBookingRoomForm.value.amount }}</span>
                   <nz-input-number *ngIf="this.modeViewEditStatus === 1" [nzMin]="1" [nzStep]="1"
                     formControlName="amount"></nz-input-number>
-                </div>
+                </nz-form-control>
               </div>
             </div>
             <div nz-col class="gutter-row" nzSpan="8">
               <div class="inner-box">
-                <label>Số lượng người lớn >= 12 tuổi <span style="color: tomato; margin-left: 4px;">(*)</span></label>
-                <div>
+                <nz-form-label>Số lượng người lớn >= 12 tuổi <span style="color: tomato; margin-left: 4px;">(*)</span></nz-form-label>
+                <nz-form-control nzErrorTip="Không được để trống">
                   <span *ngIf="this.modeViewEditStatus === 0">{{ detailBookingRoomForm.value.adt }}</span>
                   <nz-input-number *ngIf="this.modeViewEditStatus === 1" [nzMin]="1" [nzStep]="1"
                     (ngModelChange)="changePassengerAmount('adt')" formControlName="adt"></nz-input-number>
-                </div>
+                </nz-form-control>
               </div>
             </div>
           </div>
           <div class="pb-3" nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
             <div nz-col class="gutter-row" nzSpan="8">
               <div class="inner-box">
-                <label>Số lượng trẻ em 0-11 tuổi</label>
-                <div>
+                <nz-form-label>Số lượng trẻ em 0-11 tuổi</nz-form-label>
+                <nz-form-control nzErrorTip="Không được để trống">
                   <span *ngIf="this.modeViewEditStatus === 0">{{ detailBookingRoomForm.value.chd }}</span>
                   <nz-input-number *ngIf="this.modeViewEditStatus === 1" [nzMin]="0" [nzStep]="1"
                     (ngModelChange)="changePassengerAmount('chd')" formControlName="chd"></nz-input-number>
-                </div>
+                </nz-form-control>
               </div>
             </div>
             <div nz-col class="gutter-row" nzSpan="8">
               <div class="inner-box">
-                <label>Số lượng giường phụ</label>
-                <div>
+                <nz-form-label>Số lượng giường phụ</nz-form-label>
+                <nz-form-control nzErrorTip="Không được để trống">
                   <span *ngIf="this.modeViewEditStatus === 0">{{ detailBookingRoomForm.value.extraBed }}</span>
                   <nz-input-number *ngIf="this.modeViewEditStatus === 1" [nzMin]="0" [nzStep]="1"
                     formControlName="extraBed"></nz-input-number>
-                </div>
+                </nz-form-control>
               </div>
             </div>
             <div nz-col class="gutter-row" nzSpan="8">
               <div class="inner-box">
-                <label>Mã phê duyệt </label>
-                <div>
+                <nz-form-label>Mã phê duyệt </nz-form-label>
+                <nz-form-control nzErrorTip="Không được để trống">
                   <span *ngIf="this.modeViewEditStatus === 0">{{ detailBookingRoomForm.value.approvalCode }}</span>
                   <input *ngIf="this.modeViewEditStatus === 1" nz-input placeholder="Nhập mã phê duyệt"
                     formControlName="approvalCode" type="text" />
-                </div>
+                </nz-form-control>
               </div>
             </div>
           </div>
@@ -715,48 +711,48 @@
     <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }" class="pb-3">
       <div nz-col class="gutter-row" nzSpan="6">
         <div class="inner-box">
-          <label>{{i + 1}}. Họ và tên
+          <nz-form-label>{{i + 1}}. Họ và tên
             <span style="color: tomato; margin-left: 4px;">(*)</span>
-          </label>
-          <div>
+          </nz-form-label>
+          <nz-form-control nzErrorTip="Không được để trống">
             <span *ngIf="this.modeViewEditStatus === 0">{{ passengerForm.value.fullName }}</span>
             <input *ngIf="this.modeViewEditStatus === 1" nz-input placeholder="Nhập họ tên" formControlName="fullName"
               type="text" />
-          </div>
+          </nz-form-control>
         </div>
       </div>
       <div nz-col class="gutter-row" nzSpan="6">
         <div class="inner-box">
-          <label>Số điện thoại
+          <nz-form-label>Số điện thoại
             <span style="color: tomato; margin-left: 4px;">(*)</span>
-          </label>
-          <div>
+          </nz-form-label>
+          <nz-form-control nzErrorTip="Nhập dữ liệu hợp lệ">
             <span *ngIf="this.modeViewEditStatus === 0">{{ passengerForm.value.phone }}</span>
             <input *ngIf="this.modeViewEditStatus === 1" nz-input placeholder="Nhập số điện thoại"
               formControlName="phone" type="text" />
-          </div>
+          </nz-form-control>
         </div>
       </div>
       <div nz-col class="gutter-row" nzSpan="6">
         <div class="inner-box">
-          <label>Email<span style="color: tomato; margin-left: 4px;">(*)</span>
-          </label>
-          <div>
+          <nz-form-label>Email<span style="color: tomato; margin-left: 4px;">(*)</span>
+          </nz-form-label>
+          <nz-form-control nzErrorTip="Nhập dữ liệu hợp lệ">
             <span *ngIf="this.modeViewEditStatus === 0">{{ passengerForm.value.email }}</span>
             <input *ngIf="this.modeViewEditStatus === 1" nz-input placeholder="Nhập email" formControlName="email"
               type="text" />
-          </div>
+          </nz-form-control>
         </div>
       </div>
       <div nz-col class="gutter-row" nzSpan="6">
         <div class="inner-box">
-          <label>Chức danh
-          </label>
-          <div>
+          <nz-form-label>Chức danh
+          </nz-form-label>
+          <nz-form-control nzErrorTip="Không được để trống">
             <span *ngIf="this.modeViewEditStatus === 0">{{ passengerForm.value.jobTitle }}</span>
             <input *ngIf="this.modeViewEditStatus === 1" nz-input placeholder="Nhập chức danh"
               formControlName="jobTitle" type="text" />
-          </div>
+          </nz-form-control>
         </div>
       </div>
     </div>
@@ -768,35 +764,35 @@
     <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }" class="pb-3">
       <div nz-col class="gutter-row" nzSpan="6">
         <div class="inner-box">
-          <label>{{i + 1}}. Họ và tên trẻ em
+          <nz-form-label>{{i + 1}}. Họ và tên trẻ em
             <span style="color: tomato; margin-left: 4px;">(*)</span>
-          </label>
-          <div>
+          </nz-form-label>
+          <nz-form-control nzErrorTip="Nhập dữ liệu hợp lệ">
             <span *ngIf="this.modeViewEditStatus === 0">{{ passengerForm.value.fullName }}</span>
             <input *ngIf="this.modeViewEditStatus === 1" nz-input placeholder="Nhập họ tên trẻ em"
               formControlName="fullName" type="text" />
-          </div>
+          </nz-form-control>
         </div>
       </div>
       <div nz-col class="gutter-row" nzSpan="6">
         <div class="inner-box">
-          <label>Ngày sinh
+          <nz-form-label>Ngày sinh
             <span style="color: tomato; margin-left: 4px;">(*)</span>
-          </label>
-          <div>
+          </nz-form-label>
+          <nz-form-control nzErrorTip="Nhập dữ liệu hợp lệ">
             <span *ngIf="this.modeViewEditStatus === 0">{{ passengerForm.value.dateOfBirth | date: 'dd/MM/yyyy'}}</span>
             <nz-date-picker *ngIf="this.modeViewEditStatus === 1" formControlName="dateOfBirth"></nz-date-picker>
-          </div>
+          </nz-form-control>
         </div>
       </div>
       <div nz-col class="gutter-row" nzSpan="6">
         <div class="inner-box">
-          <label>Chiều cao</label>
-          <div>
+          <nz-form-label>Chiều cao</nz-form-label>
+          <nz-form-control nzErrorTip="Không được để trống">
             <span *ngIf="this.modeViewEditStatus === 0">{{ passengerForm.value.height }}</span>
             <nz-input-number *ngIf="this.modeViewEditStatus === 1" [nzMin]="0" [nzStep]="1"
               formControlName="height"></nz-input-number> cm
-          </div>
+          </nz-form-control>
         </div>
       </div>
       <div nz-col class="gutter-row" nzSpan="6"></div>
