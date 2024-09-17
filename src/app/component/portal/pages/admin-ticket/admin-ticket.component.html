@@ -109,8 +109,7 @@
               <label for="">Mã base: <strong>{{ticket.approvalCode}}</strong></label>
             </div>
             <div class="ticket-status">
-              <label for="">Tình trạng: <strong>{{ticket.status === 'OK'? 'Đã xuất vé' : 'Lỗi xuất
-                  vé'}}</strong></label>
+              <label for="">Tình trạng: <strong>{{ticket.status === 'OK'? 'Đã xuất vé' : 'Lỗi xuất vé'}}</strong></label>
             </div>
           </div>
         </div>
@@ -130,8 +129,7 @@
                     <strong>{{bookingPassenger.lastName}} {{bookingPassenger.firstName}}</strong></label>
                   <label *ngIf="bookingPassenger.typeCode === 'CHD'">Hành khách: {{bookingPassenger.gender? 'Bé trai' :
                     'Bé gái'}} <strong>{{bookingPassenger.lastName}} {{bookingPassenger.firstName}}</strong></label>
-                  <label *ngIf="bookingPassenger.typeCode === 'INF'">Hành khách: {{bookingPassenger.gender? 'Trẻ sơ sinh
-                    trai' : 'Trẻ sơ sinh gái'}} <strong>{{bookingPassenger.lastName}}
+                  <label *ngIf="bookingPassenger.typeCode === 'INF'">Hành khách: {{bookingPassenger.gender? 'Trẻ sơ sinh trai' : 'Trẻ sơ sinh gái'}} <strong>{{bookingPassenger.lastName}}
                       {{bookingPassenger.firstName}}</strong></label>
                 </div>
                 <div class="passenger-departmember-ship" style="margin-left: 2rem;">
@@ -213,8 +211,7 @@
                     </label>
                   </div>
                   <div>
-                    <label for="">Ngày bay: <strong>{{bookingFlight.startTime | date:"HH:MM
-                        dd-MM-yyyy"}}</strong></label>
+                    <label for="">Ngày bay: <strong>{{bookingFlight.startTime | date:"HH:MM dd-MM-yyyy"}}</strong></label>
                   </div>
                   <div>
                     <label for="">Ngày đến:</label> <strong>{{bookingFlight.endTime | date:"HH:MM dd-MM-yyyy"}}</strong>
@@ -269,8 +266,7 @@
   (nzOnCancel)="handleCancelConfirmCancelSystem()"
   (nzOnOk)="changeSystemStatusTicketExport(item.bookingId, systemCancelBookingFligh.nodeSystemCancelled)">
   <div *nzModalTitle style="display: flex; align-items: baseline;">
-    <span nz-icon nzType="question-circle" nzTheme="outline" style="color: #faad14; float: left;
-      margin-right: 16px; font-size: 22px;"></span>
+    <span nz-icon nzType="question-circle" nzTheme="outline" style="color: #faad14; float: left; margin-right: 16px; font-size: 22px;"></span>
     <div>
       KHÔNG tính chi phí vé máy bay
     </div>
@@ -306,7 +302,7 @@
   </ng-container>
 </nz-modal>
 
-<nz-modal [(nzVisible)]="isVisibleViewInVoice" nzOkDanger="true" nzCancelText="Đóng"
+<!-- <nz-modal [(nzVisible)]="isVisibleViewInVoice" nzOkDanger="true" nzCancelText="Đóng"
   (nzOnCancel)="isVisibleViewInVoice = false">
   <div *nzModalTitle style="display: flex; align-items: baseline;">
     <div>Hóa đơn</div>
@@ -329,5 +325,74 @@
   </ng-container>
   <div *nzModalFooter>
     <button nz-button nzType="default" (click)="isVisibleViewInVoice = false">Đóng</button>
+  </div>
+</nz-modal> -->
+
+
+<!-- HÓa đơn  -->
+<nz-modal [(nzVisible)]="isVisibleViewInVoice" nzOkDanger="true" nzCancelText="Đóng"
+  (nzOnCancel)="closeViewInVoice()">
+  <div *nzModalTitle style="display: flex; align-items: baseline;">
+    <div>Hóa đơn</div>
+  </div>
+  <ng-container *nzModalContent>
+    <form nz-form [formGroup]="orderForm">
+      <nz-form-item style="padding: 0 !important;">
+        <nz-form-label [nzSpan]="5" nzFor="pdfFile">Hóa đơn pdf <span style="color: #dc3545;">*</span></nz-form-label>
+        <nz-form-control id="pdfFile" nzErrorTip="Không được để trống">
+          <div class="d-flex">
+            <div class="position-relative mr-3 flex-grow-1">
+              <div class="border p-1">
+                <span *ngIf="!orderForm.value.pdfFile">{{'Chưa tải lên hóa đơn'}}</span>
+                <a *ngIf="orderForm.value.pdfFile" (click)="viewOrderFilePdf()">{{selectedOrderPdfFile?.name}}</a>
+                <input nz-input type="text" formControlName="pdfFile" style="display: none;">
+                <input nz-input type="file" #fileInputOrderPdf
+                  (change)="onOrderPdfFileSelected($event)" style="display: none;"
+                  accept=":not(.exe)">
+              </div>
+              <!-- vì chưa có nghiệp vụ xóa nên ẩn đi -->
+              <!-- <div *ngIf="orderForm.value.pdfFile" nz-icon nzType="close" nzTheme="outline" class="customise-close-icon"
+                (click)="deleteOrderPdfFile()"></div> -->
+            </div>
+            <button nz-button nzType="primary" (click)="showDialogSelectOrderPdfFile()">
+              Tải lên
+            </button>
+          </div>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item style="padding: 0 !important;">
+        <nz-form-label [nzSpan]="5" nzFor="xmlFile">Hóa đơn xml <span style="color: #dc3545;">*</span></nz-form-label>
+        <nz-form-control id="xmlFile" nzErrorTip="Không được để trống">
+          <div class="d-flex">
+            <div class="position-relative mr-3 flex-grow-1">
+              <div class="border p-1">
+                <span *ngIf="!orderForm.value.xmlFile">{{'Chưa tải lên hóa đơn'}}</span>
+                <a *ngIf="orderForm.value.xmlFile" (click)="viewOrderFileXml()">{{selectedOrderXmlFile?.name}}</a>
+                <input nz-input type="text" formControlName="xmlFile" style="display: none;">
+                <input nz-input type="file" #fileInputOrderXml
+                  (change)="onOrderXmlFileSelected($event)" style="display: none;"
+                  accept=":not(.exe)">
+              </div>
+              <!-- vì chưa có nghiệp vụ xóa nên ẩn đi -->
+              <!-- <div *ngIf="orderForm.value.xmlFile" nz-icon nzType="close" nzTheme="outline" class="customise-close-icon"
+                (click)="deleteOrderXmlFile()"></div> -->
+            </div>
+            <button nz-button nzType="primary" (click)="showDialogSelectOrderXmlFile()">
+              Tải lên
+            </button>
+          </div>
+        </nz-form-control>
+      </nz-form-item>
+      <!-- <input nz-input placeholder="Nhập mã phê 2" formControlName="orderXml" type="text" /> -->
+    </form>
+  </ng-container>
+  <div *nzModalFooter>
+    <button nz-button nzType="default" (click)="closeViewInVoice()">Đóng</button>
+    <button nz-button nzType="primary" (click)="uploadOrderFile()">
+      <div style="display: flex; align-items: center;">
+        <span nz-icon nzType="save"></span>
+        <span style="margin-left: 6px; line-height: normal;">Lưu</span>
+      </div>
+    </button>
   </div>
 </nz-modal>

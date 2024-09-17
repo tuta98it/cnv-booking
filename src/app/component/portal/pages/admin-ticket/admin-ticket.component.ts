@@ -14,6 +14,9 @@ import {
   DxDataGridComponent,
 } from "devextreme-angular";
 import { UploadService } from 'src/app/service/upload-service';
+import { CheckValidatorForm } from 'src/app/shared/custom-validator/checkValidatorForm';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Attachment } from 'src/app/model/attachment';
 @Component({
   selector: 'app-admin-ticket',
   templateUrl: './admin-ticket.component.html',
@@ -43,6 +46,7 @@ export class AdminTicketComponent extends TableSelectionAbstract implements OnIn
   showInfo = true;
   showNavButtons = true;
 
+  orderForm: FormGroup;
 
   constructor(
     public translate: TranslateService,
@@ -50,9 +54,14 @@ export class AdminTicketComponent extends TableSelectionAbstract implements OnIn
     private generalService: GeneralService,
     private dateFormatPipe: DateFormatPipe,
     private modalService: NzModalService,
-    private uploadService: UploadService
+    private uploadService: UploadService,
+    private fb: FormBuilder
   ) {
     super('id');
+    this.orderForm = fb.group({
+      pdfFile: [null, Validators.required],
+      xmlFile: [null, Validators.required]
+    });
   }
 
   ngOnInit(): void {
@@ -167,74 +176,6 @@ export class AdminTicketComponent extends TableSelectionAbstract implements OnIn
       }
     })
   }
-  onOpenViewInVoice(data: any) {
-    this.item = data;
-    this.isVisibleViewInVoice = true;
-    if(this.item.pdfFile){
-      this.nameOfOrderFile = this.item.pdfFile.split('/').pop();
-    }
-    else{
-      this.nameOfOrderFile = '';
-    }
-  }
-  @ViewChild('fileInput', { static: false }) fileInput!: ElementRef<HTMLInputElement>;
-  selectedFile: File | null = null;
-  nameOfOrderFile: string = '';
-  showDialogSelectFile() {
-    this.fileInput.nativeElement.click()
-  }
-  onFileSelected(event: any): void { // đã chọn file đính kèm
-    const input = event.target as HTMLInputElement; // trỏ đến thẻ input chứa file
-    if (input.files && input.files.length > 0) { // input có chứa file
-      let file = input.files[0]; // lấy ra file
-      const fileExtension = file.name.split('.').pop()?.toLowerCase(); // lấy ra đuôi của file
-      if (fileExtension === 'pdf') {
-        this.selectedFile = file; // nếu không phải file .exe thì cho phép thêm
-        this.nameOfOrderFile = file.name;
-        this.uploadOrderFile();
-      } else {
-        this.fileInput.nativeElement.value = '';
-        this.notificationService.showNotification(Constant.ERROR, 'Chỉ nhận file pdf');
-      }
-    }
-  }
-  viewOrderFile() {
-    window.open(this.uploadService.getFile(this.item.pdfFile), '_blank');
-      // w;
-  }
-  uploadOrderFile() {
-    let formData = new FormData();
-    formData.append("postedFile", this.selectedFile);
-    formData.append("orderTicketId", this.item.id);
-    this.uploadService.uploadOrderTicketPdfFile(formData).subscribe({
-      next: (res) => {
-        this.notificationService.showNotification(Constant.SUCCESS, 'Tải hóa đơn thành công');
-        this.item.pdfFile = res.path;
-        this.nameOfOrderFile = res.fileName;
-      },
-      error: (error) => {
-        this.notificationService.showNotification(Constant.ERROR, 'Tải hóa đơn không thành công');
-      },
-      complete: () => {
-        this.getListData();
-      }
-    });
-  }
-  deleteOrderFile(){
-    this.uploadService.removeOrderTicketPdfFile(this.item.id).subscribe({
-      next: (res) => {
-        this.notificationService.showNotification(Constant.SUCCESS, 'Xóa hóa đơn thành công');
-        this.fileInput.nativeElement.value = '';
-        this.nameOfOrderFile = '';
-      },
-      error: (error) => {
-        this.notificationService.showNotification(Constant.ERROR, 'Xóa hóa đơn không thành công');
-      },
-      complete: () => {
-        this.getListData();
-      }
-    });
-  }
   private convertRotueBookingReservations(route: string): any {
     // Tách chuỗi theo dấu "|"
     const parts = route.trim().split("|");
@@ -336,6 +277,173 @@ export class AdminTicketComponent extends TableSelectionAbstract implements OnIn
         return "";
     }
   }
+  //#region hóa đơn
+  @ViewChild('fileInputOrderPdf', { static: false }) orderPdfFileInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('fileInputOrderXml', { static: false }) orderXmlFileInput!: ElementRef<HTMLInputElement>;
+  selectedOrderPdfFile: Attachment = { name: '', path: '', file: null };
+  selectedOrderXmlFile: Attachment = { name: '', path: '', file: null };
+
+  closeViewInVoice(){
+    // let valid = CheckValidatorForm(this.orderForm);
+    // if (!valid) {
+    //   this.notificationService.showNotification(Constant.ERROR, "Vui lòng nhập đầy đủ thông tin");
+    //   return;
+    // }
+    this.isVisibleViewInVoice = false;
+  }
+  showDialogSelectOrderPdfFile() {
+    this.orderPdfFileInput.nativeElement.click();
+  }
+  showDialogSelectOrderXmlFile() {
+    this.orderXmlFileInput.nativeElement.click();
+  }
+  onOrderPdfFileSelected(event: any): void { // đã chọn file đính kèm
+    const input = event.target as HTMLInputElement; // trỏ đến thẻ input chứa file
+    if (input.files && input.files.length > 0) { // input có chứa file
+      let file = input.files[0]; // lấy ra file
+      const fileExtension = file.name.split('.').pop()?.toLowerCase(); // lấy ra đuôi của file
+      if (fileExtension === 'pdf') {
+        this.orderForm.controls['pdfFile'].setValue(file.name);
+        this.selectedOrderPdfFile.file = file;
+        this.selectedOrderPdfFile.name = file.name;
+        this.selectedOrderPdfFile.path = null;
+      } else {
+        // this.orderForm.controls['pdfFile'].reset();
+        this.selectedOrderPdfFile = { name: '', path: '', file: null };
+        this.notificationService.showNotification(Constant.ERROR, 'Chỉ nhận file pdf');
+      }
+    }
+  }
+  onOrderXmlFileSelected(event: any): void { // đã chọn file đính kèm
+    const input = event.target as HTMLInputElement; // trỏ đến thẻ input chứa file
+    if (input.files && input.files.length > 0) { // input có chứa file
+      let file = input.files[0]; // lấy ra file
+      const fileExtension = file.name.split('.').pop()?.toLowerCase(); // lấy ra đuôi của file
+      if (fileExtension === 'xml') {
+        this.orderForm.controls['xmlFile'].setValue(file.name);
+        this.selectedOrderXmlFile.file = file;
+        this.selectedOrderXmlFile.name = file.name;
+        this.selectedOrderXmlFile.path = null;
+      } else {
+        // this.orderForm.controls['xmlFile'].reset();
+        this.selectedOrderXmlFile = { name: '', path: '', file: null };
+        this.notificationService.showNotification(Constant.ERROR, 'Chỉ nhận file xml');
+      }
+    }
+  }
+  viewOrderFilePdf() {
+    window.open(this.uploadService.getFile(this.item.pdfFile), '_blank');
+  }
+  viewOrderFileXml() {
+    window.open(this.uploadService.getFile(this.item.xmlFile), '_blank');
+  }
+  async uploadOrderFile() {
+    let valid = CheckValidatorForm(this.orderForm);
+    if (!valid) {
+      this.notificationService.showNotification(Constant.ERROR, "Vui lòng nhập đầy đủ thông tin");
+      return;
+    }
+
+    let waitUpload = [];
+    if(this.selectedOrderPdfFile.file){
+      let formDataPdf = new FormData();
+      formDataPdf.append("postedFile", this.selectedOrderPdfFile.file);
+      formDataPdf.append("OrderTicketId", this.item.id);
+      waitUpload.push(this.uploadOrderPdf(formDataPdf));
+    }
+    if(this.selectedOrderXmlFile.file){
+      let formDataXml = new FormData();
+      formDataXml.append("postedFile", this.selectedOrderXmlFile.file);
+      formDataXml.append("OrderTicketId", this.item.id);
+      waitUpload.push(this.uploadOrderXml(formDataXml));
+    }
+    await Promise.all(waitUpload).then((rev)=>{
+      this.getListData();
+      this.isVisibleViewInVoice = false;
+    })
+
+  }
+  uploadOrderPdf(formDataPdf): Promise<any> {
+    return new Promise((rev, rej) => {
+      this.uploadService.uploadOrderTicketPdfFile(formDataPdf).subscribe({
+        next: (res) => {
+          this.notificationService.showNotification(Constant.SUCCESS, 'Tải hóa đơn thành công');
+          rev(res.path);
+        },
+        error: (error) => {
+          this.notificationService.showNotification(Constant.ERROR, 'Tải hóa đơn không thành công');
+          rej({});
+        }
+      });
+    })
+  }
+  uploadOrderXml(formDataXml): Promise<any> {
+    return new Promise((rev, rej) => {
+      this.uploadService.uploadOrderTicketXmlFile(formDataXml).subscribe({
+        next: (res) => {
+          this.notificationService.showNotification(Constant.SUCCESS, 'Tải hóa đơn thành công');
+          rev(res.path);
+        },
+        error: (error) => {
+          this.notificationService.showNotification(Constant.ERROR, 'Tải hóa đơn không thành công');
+          rej({});
+        }
+      });
+    })
+  }
+  deleteOrderPdfFile() {
+    this.uploadService.removeOrderTicketPdfFile(this.item.id).subscribe({
+      next: (res) => {
+        this.notificationService.showNotification(Constant.SUCCESS, 'Xóa hóa đơn thành công');
+        this.orderForm.clearValidators();
+        this.orderPdfFileInput.nativeElement.value = null;
+        this.orderForm.controls['pdfFile'].setValue(null);
+        this.selectedOrderPdfFile = { name: '', path: '', file: null };
+      },
+      error: (error) => {
+        this.notificationService.showNotification(Constant.ERROR, 'Xóa hóa đơn không thành công');
+      },
+      complete: () => {
+        this.getListData();
+      }
+    });
+  }
+  deleteOrderXmlFile() {
+    this.uploadService.removeOrderTicketXmlFile(this.item.id).subscribe({
+      next: (res) => {
+        this.notificationService.showNotification(Constant.SUCCESS, 'Xóa hóa đơn thành công');
+        this.orderXmlFileInput.nativeElement.value = null;
+        this.orderForm.controls['xmlFile'].setValue(null);
+        this.selectedOrderXmlFile = { name: '', path: '', file: null };
+      },
+      error: (error) => {
+        this.notificationService.showNotification(Constant.ERROR, 'Xóa hóa đơn không thành công');
+      },
+      complete: () => {
+        this.getListData();
+      }
+    });
+  }
+  onOpenViewInVoice(data: any) {
+    this.item = data;
+    this.isVisibleViewInVoice = true;
+    this.orderForm.reset();
+    if (this.item.pdfFile) {
+      this.selectedOrderPdfFile = { name: this.item.pdfFile.split('/').pop(), path: this.item.pdfFile, file: null };
+      this.orderForm.controls["pdfFile"].setValue(this.item.pdfFile.split('/').pop());
+    }
+    else {
+      this.orderForm.controls["pdfFile"].setValue(null);
+    }
+    if (this.item.xmlFile) {
+      this.selectedOrderXmlFile = { name: this.item.xmlFile.split('/').pop(), path: this.item.xmlFile, file: null };
+      this.orderForm.controls["xmlFile"].setValue(this.item.xmlFile.split('/').pop());
+    }
+    else {
+      this.orderForm.controls["xmlFile"].setValue(null);
+    }
+  }
+  //#endregion
 }
 
 
