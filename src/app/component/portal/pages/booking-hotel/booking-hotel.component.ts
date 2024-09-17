@@ -1399,11 +1399,6 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   selectedOrderXmlFile: Attachment = { name: '', path: '', file: null };
 
   closeViewInVoice(){
-    let valid = CheckValidatorForm(this.orderForm);
-    if (!valid) {
-      this.notificationService.showNotification(Constant.ERROR, "Vui lòng nhập đầy đủ thông tin");
-      return;
-    }
     this.isVisibleViewInVoice = false;
   }
   showDialogSelectOrderPdfFile() {
@@ -1458,18 +1453,25 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
       this.notificationService.showNotification(Constant.ERROR, "Vui lòng nhập đầy đủ thông tin");
       return;
     }
-    let formDataPdf = new FormData();
-    formDataPdf.append("postedFile", this.selectedOrderPdfFile.file);
-    formDataPdf.append("BookingHotelId", this.item.id);
-    this.uploadOrderPdf(formDataPdf).then((res) => {
+
+    let waitUpload = [];
+    if(this.selectedOrderPdfFile.file){
+      let formDataPdf = new FormData();
+      formDataPdf.append("postedFile", this.selectedOrderPdfFile.file);
+      formDataPdf.append("BookingHotelId", this.item.id);
+      waitUpload.push(this.uploadOrderPdf(formDataPdf));
+    }
+    if(this.selectedOrderXmlFile.file){
       let formDataXml = new FormData();
       formDataXml.append("postedFile", this.selectedOrderXmlFile.file);
       formDataXml.append("BookingHotelId", this.item.id);
-      this.uploadOrderXml(formDataXml).then((ressub) => {
-        this.getListData();
-        this.isVisibleViewInVoice = false;
-      })
+      waitUpload.push(this.uploadOrderXml(formDataXml));
+    }
+    await Promise.all(waitUpload).then((rev)=>{
+      this.getListData();
+      this.isVisibleViewInVoice = false;
     })
+
   }
   uploadOrderPdf(formDataPdf): Promise<any> {
     return new Promise((rev, rej) => {
@@ -1534,8 +1536,6 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   }
   onOpenViewInVoice(data: any) {
     this.item = data;
-    console.log(this.item);
-
     this.isVisibleViewInVoice = true;
     this.orderForm.reset();
     if (this.item.pdfFile) {

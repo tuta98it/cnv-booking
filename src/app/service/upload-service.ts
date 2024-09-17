@@ -13,6 +13,13 @@ export class UploadService extends BaseService {
   removeOrderTicketPdfFile(id: number): Observable<any> {
     return this.delete(UrlConstant.UPLOAD + '/RemoveOrderTicketPdfFile/' + id, null);
   }
+  uploadOrderTicketXmlFile(param: any): Observable<any> {
+    return this.post(UrlConstant.UPLOAD + '/UploadOrderTicketXmlFile', param);
+  }
+  removeOrderTicketXmlFile(id: number): Observable<any> {
+    return this.delete(UrlConstant.UPLOAD + '/RemoveOrderTicketXmlFile/' + id, null);
+  }
+
   // hóa đơn đặt khách sạn
   uploadOrderBookingHotelPdfFile(param: any): Observable<any> {
     return this.post(UrlConstant.UPLOAD + '/UploadBookingHotelPdfFile', param);

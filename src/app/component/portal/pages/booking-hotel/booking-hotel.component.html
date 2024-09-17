@@ -425,8 +425,9 @@
                   (change)="onOrderPdfFileSelected($event)" style="display: none;"
                   accept=":not(.exe)">
               </div>
-              <div *ngIf="orderForm.value.pdfFile" nz-icon nzType="close" nzTheme="outline" class="customise-close-icon"
-                (click)="deleteOrderPdfFile()"></div>
+              <!-- vì chưa có nghiệp vụ xóa nên ẩn đi -->
+              <!-- <div *ngIf="orderForm.value.pdfFile" nz-icon nzType="close" nzTheme="outline" class="customise-close-icon"
+                (click)="deleteOrderPdfFile()"></div> -->
             </div>
             <button nz-button nzType="primary" (click)="showDialogSelectOrderPdfFile()">
               Tải lên
@@ -447,8 +448,9 @@
                   (change)="onOrderXmlFileSelected($event)" style="display: none;"
                   accept=":not(.exe)">
               </div>
-              <div *ngIf="orderForm.value.xmlFile" nz-icon nzType="close" nzTheme="outline" class="customise-close-icon"
-                (click)="deleteOrderXmlFile()"></div>
+              <!-- vì chưa có nghiệp vụ xóa nên ẩn đi -->
+              <!-- <div *ngIf="orderForm.value.xmlFile" nz-icon nzType="close" nzTheme="outline" class="customise-close-icon"
+                (click)="deleteOrderXmlFile()"></div> -->
             </div>
             <button nz-button nzType="primary" (click)="showDialogSelectOrderXmlFile()">
               Tải lên
@@ -464,7 +466,7 @@
     <button nz-button nzType="primary" (click)="uploadOrderFile()">
       <div style="display: flex; align-items: center;">
         <span nz-icon nzType="save"></span>
-        <span style="margin-left: 6px; line-height: normal;" (click)="uploadOrderFile()">Lưu</span>
+        <span style="margin-left: 6px; line-height: normal;">Lưu</span>
       </div>
     </button>
   </div>
