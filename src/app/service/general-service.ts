@@ -625,7 +625,7 @@ export class GeneralService extends BaseService {
 
 
   getListBusinessServiceUsageHistory(payload: any): Observable<any> {
-    return this.post(UrlConstant.BOOKINGV2 + `/GetListBusinessServiceUsageHistory`, payload);
+    return this.post(`/api${UrlConstant.BOOKINGV2}/GetListBusinessServiceUsageHistory`, payload);
   }
 
   // RequestBooking
