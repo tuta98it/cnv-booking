@@ -500,7 +500,7 @@ export class ActionPartnerComponent implements OnInit {
 
     // Lấy giá trị status từ route data
     this.settingTableBusinessUsageHistoriesForm.valueChanges.subscribe(value => {
-      this.settingTableEmployeesValue = value as NZTableSettingCustoms;
+      this.settingTableBusinessUsageHistoriesValue = value as NZTableSettingCustoms;
     });
     this.settingTableBusinessUsageHistoriesForm.controls.tableScroll.valueChanges.subscribe(scroll => {
       this.fixedColumnBusinessUsageHistory = scroll === 'fixed';

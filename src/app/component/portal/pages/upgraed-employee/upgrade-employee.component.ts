@@ -79,6 +79,22 @@ export class UpgradeEmployeeComponent implements OnInit {
   searchEmployee: string = '';
   idPartner: number = null;
 
+
+
+
+  settingTableBusinessUsageHistoriesForm: FormGroup;
+  fixedColumnEmployeeUsageHistory = false;
+  scrollXEmployeeUsageHistoriesValue: string | null = null;
+  scrollYEmployeeUsageHistoriesValue: string | null = null;
+  settingTableEmployeeUsageHistoriesValue: NZTableSettingCustoms;
+  listOfEmployeeUsageHistories: any[];
+  amountOfMoneyUsed: any;
+  numberOfSuccessfulHotels: any;
+  numberOfSuccessfulFlights: any;
+
+
+
+
   constructor(
     private msg: NzMessageService,
     private activatedRoute: ActivatedRoute,
@@ -109,6 +125,28 @@ export class UpgradeEmployeeComponent implements OnInit {
       department: new FormControl({ value: null, disabled: false }),
     });
 
+
+    this.settingTableBusinessUsageHistoriesForm = this.formBuilder.group({
+      bordered: [false],
+      loading: [false],
+      pagination: [true],
+      sizeChanger: [false],
+      title: [false],
+      header: [true],
+      footer: [false],
+      expandable: [true],
+      checkbox: [true],
+      fixHeader: [true],
+      noResult: [false],
+      noResultText: 'Danh sách lịch sử sử dụng đang trống',
+      ellipsis: [false],
+      simple: [false],
+      size: 'small' as NzTableSize,
+      paginationType: 'default' as NzTablePaginationType,
+      tableScroll: 'scroll' as TableScroll,
+      tableLayout: 'auto' as NzTableLayout,
+      position: 'bottom' as NzTablePaginationPosition
+    });
 
   }
 
@@ -141,11 +179,67 @@ export class UpgradeEmployeeComponent implements OnInit {
           this.location.back();
         });
         this.resetFormBaseInfoCreateEmployee(this.itemEmployee);
+
+        this.getListEmployeeServiceUsageHistoryAdmin(idEmployee).then((result: any) => {
+          this.listOfEmployeeUsageHistories = result.tableEmployeeServiceUsageHistories;
+          this.numberOfSuccessfulFlights = result.numberOfSuccessfulFlights;
+          this.numberOfSuccessfulHotels = result.numberOfSuccessfulHotels;
+          this.amountOfMoneyUsed = result.amountOfMoneyUsed;
+          this.listOfEmployeeUsageHistories = result.tableEmployeeServiceUsageHistories;
+          let stt = 0;
+          this.listOfEmployeeUsageHistories.forEach(en => {
+            stt++;
+            en.stt = stt;
+          });
+
+        })
       });
     }
+
+    this.settingTableEmployeeUsageHistoriesValue = this.settingTableBusinessUsageHistoriesForm.value as NZTableSettingCustoms;
+
+
+
   }
 
   ngOnInit(): void {
+
+    // Lấy giá trị status từ route data
+    this.settingTableBusinessUsageHistoriesForm.valueChanges.subscribe(value => {
+      this.settingTableEmployeeUsageHistoriesValue = value as NZTableSettingCustoms;
+    });
+    this.settingTableBusinessUsageHistoriesForm.controls.tableScroll.valueChanges.subscribe(scroll => {
+      this.fixedColumnEmployeeUsageHistory = scroll === 'fixed';
+      this.scrollXEmployeeUsageHistoriesValue = scroll === 'scroll' || scroll === 'fixed' ? '100vw' : null;
+    });
+    let tableBusinessUsageHistoryScrollValue = this.settingTableBusinessUsageHistoriesForm.controls['tableScroll'].value;
+    this.fixedColumnEmployeeUsageHistory = tableBusinessUsageHistoryScrollValue === 'fixed';
+    this.scrollXEmployeeUsageHistoriesValue = tableBusinessUsageHistoryScrollValue === 'scroll' || tableBusinessUsageHistoryScrollValue === 'fixed' ? '100vw' : null;
+    this.settingTableBusinessUsageHistoriesForm.controls.fixHeader.valueChanges.subscribe(fixed => {
+      this.scrollYEmployeeUsageHistoriesValue = fixed ? '240px' : null;
+    });
+    this.scrollYEmployeeUsageHistoriesValue = this.settingTableBusinessUsageHistoriesForm.controls['fixHeader'].value ? '240px' : null;
+    this.settingTableBusinessUsageHistoriesForm.controls.noResult.valueChanges.subscribe(async empty => {
+      if (empty) {
+        this.listOfEmployeeUsageHistories = [];
+      } else {
+        this.getListEmployeeServiceUsageHistoryAdmin(this.itemEmployee?.id).then((result: any) => {
+          this.listOfEmployeeUsageHistories = result.tableEmployeeServiceUsageHistories;
+          this.numberOfSuccessfulFlights = result.numberOfSuccessfulFlights;
+          this.numberOfSuccessfulHotels = result.numberOfSuccessfulHotels;
+          this.amountOfMoneyUsed = result.amountOfMoneyUsed;
+          this.listOfEmployeeUsageHistories = result.tableEmployeeServiceUsageHistories;
+          let stt = 0;
+          this.listOfEmployeeUsageHistories.forEach(en => {
+            stt++;
+            en.stt = stt;
+          });
+
+        });
+      }
+    });
+
+
   }
 
   private async resetFormBaseInfoCreateEmployee(itemEmployee: any) {
@@ -170,6 +264,39 @@ export class UpgradeEmployeeComponent implements OnInit {
     if (!this.idPartner) {
       this.formBaseInfoEmployee.controls['directManagementUserId'].disable();
     }
+  }
+
+  private getListEmployeeServiceUsageHistoryAdmin(idEmployee: number): Promise<any> {
+    this.settingTableEmployeeUsageHistoriesValue.loading = true;
+    return new Promise((resolve, reject) => {
+      this.generalService.getListEmployeeServiceUsageHistoryAdmin({
+        employeeId: idEmployee,
+        startTime: null,
+        endTime: null,
+        pageNumber: 1,
+        pageSize: 1000
+      }).subscribe((res: any) => {
+        if (res.isValid) {
+
+          resolve(res.data);
+          this.settingTableEmployeeUsageHistoriesValue.loading = false;
+        } else {
+          if (res.errors && res.errors.length > 0) {
+            res.errors.forEach((el: any) => {
+              this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+            });
+          } else {
+            this.notificationService.showNotification(Constant.ERROR, 'Lấy ra lịch sử sử dụng doanh nghiệp không thành công');
+          }
+          // reject(res.errors);
+        }
+      }, error => {
+        this.notificationService.showNotification(Constant.ERROR, 'Lấy ra lịch sử sử dụng doanh nghiệp thất bại do lỗi hệ thống');
+        reject(error);
+      }).add(() => {
+      });
+    });
+
   }
 
   private getPartnerById(partnerId: number): Promise<any> {

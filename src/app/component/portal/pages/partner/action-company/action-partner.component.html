@@ -992,7 +992,7 @@
               [nzSize]="settingTableBusinessUsageHistoriesValue.size"
               (nzCurrentPageDataChange)="currentPageDataChangeEmployee($event)">
               <thead>
-                <tr *ngIf="settingTableEmployeesValue.header">
+                <tr *ngIf="settingTableBusinessUsageHistoriesValue.header">
                   <th nzWidth="40px" [nzLeft]="fixedColumnBusinessUsageHistory">STT</th>
                   <th [nzLeft]="fixedColumnBusinessUsageHistory">Ngày</th>
                   <th [nzLeft]="fixedColumnBusinessUsageHistory">Mã phê duyệt</th>
@@ -1018,7 +1018,7 @@
                     <td>{{ data.serviceUsedName}}</td>
                     <td>{{ data.usageContent }}</td>
                   </tr>
-                  <tr *ngIf="settingTableEmployeesValue.expandable" [nzExpand]="data.expand">
+                  <tr *ngIf="settingTableBusinessUsageHistoriesValue.expandable" [nzExpand]="data.expand">
                     <span>{{ data.description }}</span>
                   </tr>
                 </ng-container>

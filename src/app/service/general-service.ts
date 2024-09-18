@@ -628,6 +628,11 @@ export class GeneralService extends BaseService {
     return this.post(`/api${UrlConstant.BOOKINGV2}/GetListBusinessServiceUsageHistory`, payload);
   }
 
+  getListEmployeeServiceUsageHistoryAdmin(payload: any): Observable<any> {
+    return this.post(`/api${UrlConstant.BOOKINGV2}/GetListEmployeeServiceUsageHistoryAdmin`, payload);
+  }
+
+
   // RequestBooking
   getRequestBookingByID(id: number): Observable<any> {
     return this.get(`/api${UrlConstant.REQUEST_BOOKING}/GetRequestBookingByID/${id}`);
