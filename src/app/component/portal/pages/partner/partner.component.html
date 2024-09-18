@@ -49,8 +49,10 @@
       {{allowDebt.value ? "Có" : "Không"}}
     </ng-container>
   </div>
-  <dxi-column caption="Trạng thái" dataField="status" [format]="formatSatusPartner"></dxi-column>
-
+  <dxi-column caption="Trạng thái" dataField="status" cssClass="text-center" cellTemplate="cellStatus"></dxi-column>
+  <div *dxTemplate="let cellInfo of 'cellStatus'">
+    <span [style.color]="COLOR_PARTNER_STATUS[cellInfo.value]">{{ TEXT_PARTNER_STATUS[cellInfo.value] }}</span>
+  </div>
   <!-- <dxi-column caption="Tên chủ doanh nghiệp" [fixed]="true" dataField="name" [width]="200"></dxi-column>
   <dxi-column caption="Mã số thuế" [width]="120" dataField="taxCode"></dxi-column>
   <dxi-column caption="Số điện thoại" [width]="150" dataField="phone"></dxi-column>

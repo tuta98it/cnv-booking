@@ -254,38 +254,38 @@
               <div nz-col class="gutter-row" [nzSpan]="6">
                 <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
                   style="display: flex; align-items: center; padding: 8px 0;">
-                  <div nz-col class="gutter-row" [nzSpan]="24" style="display: flex; align-items: center;">
+                  <div nz-col class="gutter-row box-center" [nzSpan]="24">
                     Số chuyến bay thành công
                   </div>
                 </div>
                 <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
                   style="display: flex; align-items: center; padding: 8px 0;">
-                  <div nz-col class="gutter-row fs-xl" [nzSpan]="24" style="display: flex; align-items: center;">
+                  <div nz-col class="gutter-row fs-xl box-center" [nzSpan]="24">
                     {{ numberOfSuccessfulFlights }}
                   </div>
                 </div>
                 <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
                   style="display: flex; align-items: center; padding: 8px 0;">
-                  <div nz-col class="gutter-row" [nzSpan]="24" style="display: flex; align-items: center;">
+                  <div nz-col class="gutter-row box-center" [nzSpan]="24">
                     Số lần lưu trú thành công
                   </div>
                 </div>
                 <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
                   style="display: flex; align-items: center; padding: 8px 0;">
-                  <div nz-col class="gutter-row fs-xl" [nzSpan]="24" style="display: flex; align-items: center;">
+                  <div nz-col class="gutter-row fs-xl box-center" [nzSpan]="24">
                     {{numberOfSuccessfulHotels}}
                   </div>
                 </div>
                 <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
                   style="display: flex; align-items: center; padding: 8px 0;">
-                  <div nz-col class="gutter-row" [nzSpan]="24" style="display: flex; align-items: center;">
+                  <div nz-col class="gutter-row box-center" [nzSpan]="24">
                     Số tiền đã sử dụng
                   </div>
                 </div>
                 <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
                   style="display: flex; align-items: center; padding: 8px 0;">
-                  <div nz-col class="gutter-row fs-xl" [nzSpan]="24" style="display: flex; align-items: center;">
-                    {{amountOfMoneyUsed}}
+                  <div nz-col class="gutter-row fs-xl box-center" [nzSpan]="24">
+                    {{amountOfMoneyUsed ? amountOfMoneyUsed : "-"}} đ
                   </div>
                 </div>
               </div>

@@ -18,3 +18,11 @@ export const TEXT_PARTNER_STATUS = {
   [PartnerStatus.PendingApproval]: 'Chờ phê duyệt',
   [PartnerStatus.Active]: 'Đang hoạt động',
 };
+
+
+export const COLOR_PARTNER_STATUS = {
+  [PartnerStatus.Locked]: '#AA2121',
+  [PartnerStatus.CreatingProfile]: '#3F464D',
+  [PartnerStatus.PendingApproval]: '#BF6A02',
+  [PartnerStatus.Active]: '#188242',
+};
