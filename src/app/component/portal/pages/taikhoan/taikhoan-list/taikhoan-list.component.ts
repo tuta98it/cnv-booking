@@ -24,6 +24,8 @@ import { IsEmptyPipe } from 'src/app/shared/pipe/is-empty.pipe';
 import { UserType } from 'src/app/enums/user-type.enum';
 import { ActionTypePageVHL } from 'src/app/enums/action-type-page-vhl.enum';
 import { Router } from '@angular/router';
+import { TEXT_USER_STATUS } from 'src/app/enums/user-status.enum';
+import { EmployeePipePipe } from 'src/app/shared/pipe/employeePipe.pipe';
 @Component({
   selector: 'app-taikhoan-list',
   templateUrl: './taikhoan-list.component.html',
@@ -165,6 +167,8 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
               stt++;
               en.stt = stt;
               en.isLoadingActiveUser = false;
+              en.directManagementUserName = en?.directManagementUser?.fullname;
+              en.statusText = TEXT_USER_STATUS[en.status];
               en.roleStr = this.getQuyen(en.userroles);
             });
             this.filteredDatas = this.datas;
