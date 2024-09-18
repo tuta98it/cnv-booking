@@ -1366,6 +1366,12 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
       }
     });
   }
+  formatCurrencyVND(value: any) {
+    if (!value) {
+      return '0 đ';
+    }
+    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' đ';
+  }
   //#region Room
   listRoomType: any[] = [];
   getRoomsByIdHotel(idHotel: number) {
