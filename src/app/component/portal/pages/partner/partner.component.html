@@ -41,9 +41,9 @@
   <dxi-column cssClass="text-center" caption="STT" [width]="55" dataField="stt" [fixed]="true" [allowFiltering]="false"
     [allowSorting]="false"></dxi-column>
   <dxi-column caption="Mã doanh nghiệp" dataField="code" [fixed]="true" fixedPosition="left"></dxi-column>
-  <dxi-column caption="Tên doanh nghiệp" dataField="companyName" [fixed]="true"
-    fixedPosition="left"></dxi-column>
-  <dxi-column caption="Cho phép công nợ" dataField="allowDebt" [format]="formatAllowDebt" cellTemplate="cellAllowDebt"></dxi-column>
+  <dxi-column caption="Tên doanh nghiệp" dataField="companyName" [fixed]="true" fixedPosition="left"></dxi-column>
+  <dxi-column caption="Cho phép công nợ" dataField="allowDebt" [format]="formatAllowDebt"
+    cellTemplate="cellAllowDebt"></dxi-column>
   <div *dxTemplate="let allowDebt of 'cellAllowDebt'">
     <ng-container>
       {{allowDebt.value ? "Có" : "Không"}}
@@ -99,29 +99,30 @@
 
   <dxi-column cssClass="text-center" caption="Thao tác" [fixed]="true" [width]="170" fixedPosition="right"
     cellTemplate="cellBtnTemplate"></dxi-column>
-  <div *dxTemplate="let item of 'cellBtnTemplate'">
-    <button title="Xóa tài khoản" nz-button nzSize="small" nzType="default" class="btn-right button-update ant-btn-red"
-      (click)="showDeleteConfirm(item.data)" *ngIf="checkUpdate">
-      <span class="fa fa-times fa-fw"></span>
-    </button>
-    <button title="Thiết lập lại công nợ" nz-button nzSize="small" nzType="default" class="btn-right button-update"
-      (click)="onResetDebtForPartnerByID(item.data)">
-      <span class='fas fa-undo'></span>
-    </button>
+  <div *dxTemplate="let item of 'cellBtnTemplate'" style="display: flex; justify-content: center;">
+
     <button title="Sửa thông tin tài khoản" nz-button nzSize="small" nzType="default" class="btn-right button-update"
       (click)="navigatePageUpdatePartner(item.data.id)" *ngIf="checkUpdate">
       <span class="fa fa-edit fa-fw"></span>
     </button>
-    <button *ngIf="!item.data.userId" title="Tạo tài khoản" nz-button nzSize="small" nzType="default"
+
+    <button title="Xóa tài khoản" nz-button nzSize="small" nzType="default" class="btn-right button-update ant-btn-red"
+      (click)="showDeleteConfirm(item.data)" *ngIf="checkUpdate">
+      <span class="fa fa-times fa-fw"></span>
+    </button>
+    <!-- <button title="Thiết lập lại công nợ" nz-button nzSize="small" nzType="default" class="btn-right button-update"
+      (click)="onResetDebtForPartnerByID(item.data)">
+      <span class='fas fa-undo'></span>
+    </button> -->
+
+    <!-- <button *ngIf="!item.data.userId" title="Tạo tài khoản" nz-button nzSize="small" nzType="default"
       class="btn-right button-update" (click)="showModalAccount(item.data)">
       <span class="fa fa-user fa-fw"></span>
-    </button>
-    <button *ngIf="item.data.userId" title="Đổi mật khẩu" nz-button nzSize="small" nzType="default"
+    </button> -->
+    <!-- <button *ngIf="item.data.userId" title="Đổi mật khẩu" nz-button nzSize="small" nzType="default"
       class="btn-right button-update" (click)="showModalAccount(item.data)">
-      <!-- <button *ngIf="item.data.userId" title="Đổi mật khẩu" nz-button nzSize="small" nzType="default" class="btn-right button-update"
-      (click)="showModalPassword(item.data)"> -->
       <span class="fa fa-key fa-fw"></span>
-    </button>
+    </button> -->
 
   </div>
 
