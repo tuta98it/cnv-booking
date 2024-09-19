@@ -24,7 +24,7 @@ import { IsEmptyPipe } from 'src/app/shared/pipe/is-empty.pipe';
 import { UserType } from 'src/app/enums/user-type.enum';
 import { ActionTypePageVHL } from 'src/app/enums/action-type-page-vhl.enum';
 import { Router } from '@angular/router';
-import { TEXT_USER_STATUS, UserStatus } from 'src/app/enums/user-status.enum';
+import { TEXT_USER_STATUS, UserStatus, COLOR_USER_STATUS } from 'src/app/enums/user-status.enum';
 import { EmployeePipePipe } from 'src/app/shared/pipe/employeePipe.pipe';
 @Component({
   selector: 'app-taikhoan-list',
@@ -34,6 +34,7 @@ import { EmployeePipePipe } from 'src/app/shared/pipe/employeePipe.pipe';
 export class TaikhoanListComponent extends TableSelectionAbstract implements OnInit, OnDestroy {
   @ViewChild("ListAccount") dataGridDetail: DxDataGridComponent;
   // @ViewChild(DxDataGridComponent, { static: false }) dataGrid: DxDataGridComponent;
+  COLOR_USER_STATUS = COLOR_USER_STATUS;
   valueNumberPhone = '';
   @ViewChild('inputElementNumberPhone', { static: false }) inputElementNumberPhone?: ElementRef
   ActionTypePageVHL = ActionTypePageVHL;

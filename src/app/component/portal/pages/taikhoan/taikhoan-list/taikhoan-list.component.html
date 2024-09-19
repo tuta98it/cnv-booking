@@ -95,7 +95,11 @@
   <dxi-column caption="Quản lý trực tiếp" dataField="directManagementUserName">
   </dxi-column>
   <dxi-column caption="Phòng ban" dataField="department"></dxi-column>
-  <dxi-column caption="Trạng thái" dataField="statusText"></dxi-column>
+  <dxi-column caption="Trạng thái" dataField="statusText" cellTemplate="status"></dxi-column>
+  <div *dxTemplate="let item of 'status'">
+    <span [style.color]="COLOR_USER_STATUS[item.data.status]">{{item.value}}</span>
+  </div>
+
   <div *dxTemplate="let item of 'cellBtnTemplate'" style="display: flex; justify-content: space-evenly;">
 
     <button title="Chỉnh sửa thông tin tài khoản" nz-button nzSize="small" nzType="default"
