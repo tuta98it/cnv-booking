@@ -175,6 +175,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
               stt++;
               en.stt = stt;
               en.isLoadingActiveUser = false;
+              en.isLoadingResetPassword = false;
               en.directManagementUserName = en?.directManagementUser?.fullname;
               en.statusText = TEXT_USER_STATUS[en.status];
               en.roleStr = this.getQuyen(en.userroles);
@@ -244,9 +245,56 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
     });
   }
 
+  showResetPassword(user: any): void {
+    this.get();
+    user.isLoadingResetPassword = true;
+    this.modalService.confirm({
+      nzTitle: `<b>Bạn có chắc muốn thiết lập lại mật khẩu mặc định cho tài khoản ${user.username}?</b>`,
+      nzContent: 'Ấn đồng ý để tiếp tục',
+      nzOkDanger: true,
+      nzOkText: 'Đồng ý',
+      nzCancelText: 'Không',
+      nzOnOk: () => this.resetPassword(user),
+      nzOnCancel: () => this.cancelResetPassword(user)
+    });
+  }
+
+  resetPassword(user: any) {
+    this.generalService.resetPasswordUser(user.id).subscribe({
+      next: (res) => {
+        if (res.isValid) {
+          this.notificationService.showNotification(Constant.SUCCESS, `Thiết lập mật khẩu mặc định tài khoản ${user.username} không thành công`);
+        } else {
+          if (res.errors && res.errors.length > 0) {
+            res.errors.forEach((el: any) => {
+              this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+            });
+          } else {
+            this.notificationService.showNotification(Constant.ERROR, `Thiết lập mật khẩu mặc định tài khoản ${user.username} không thành công`);
+          }
+        }
+      },
+
+      error: (error) => {
+        this.notificationService.showNotification(Constant.ERROR, `Thiết lập mật khẩu mặc định tài khoản ${user.username} không thành công do lỗi hệ thống`);
+      },
+
+      complete: () => {
+        this.getListData().then(() => {
+        });
+      }
+
+    }).add(() => { user.isLoadingActiveUser = false; });
+  }
+
+  private cancelResetPassword(user: any) {
+    user.isLoadingResetPassword = false;
+  }
+
   private cancelActiveUserConfirm(user: any) {
     user.isLoadingActiveUser = false;
   }
+
   setStatusUser(user: any, changeIsActiveUser: boolean) {
     // Delete workspace here
     this.generalService.setStatusUser(user.id, changeIsActiveUser).subscribe({

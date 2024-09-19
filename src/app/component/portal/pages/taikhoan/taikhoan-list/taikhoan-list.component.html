@@ -107,8 +107,13 @@
       <span class="fa fa-edit fa-fw"></span>
     </button>
 
-    <button title="Đổi mật khẩu" nz-button nzSize="small" nzType="default" (click)="showModalPassword(item.data)"
+    <!-- <button title="Đổi mật khẩu" nz-button nzSize="small" nzType="default" (click)="showModalPassword(item.data)"
       [disabled]="!item.data.status">
+      <span class="fa fa-key fa-fw"></span>
+    </button> -->
+
+    <button title="Thiết lập lại mật khẩu mặc định" nz-button nzSize="small" nzType="default" (click)="showResetPassword(item.data)"
+      [disabled]="!item.data.status" [nzLoading]="item.data.isLoadingResetPassword">
       <span class="fa fa-key fa-fw"></span>
     </button>
 
