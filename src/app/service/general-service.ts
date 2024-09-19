@@ -3,6 +3,7 @@ import { BaseService } from '../shared/base-service/base-service.service';
 import { Observable } from 'rxjs';
 import { UrlConstant } from '../shared/constants/url.class';
 import { Role } from '../model/role.class';
+import { PartnerStatus } from '../enums/partner-status.enum';
 
 @Injectable({ providedIn: 'root' })
 export class GeneralService extends BaseService {
@@ -573,6 +574,12 @@ export class GeneralService extends BaseService {
   submitRequestForApprovalConfirmation(partnerId: number): Observable<any> {
     return this.post(UrlConstant.LIST_PARTNERS + `/SubmitRequestForApprovalConfirmation`, { partnerId: partnerId });
   }
+
+  changeStatusPartnerById(partnerId: number, newStatus: PartnerStatus): Observable<any> {
+    return this.put(UrlConstant.LIST_PARTNERS + `/ChangeStatus/${partnerId}?newStatus=${newStatus}`, newStatus);
+  }
+
+
   // Booking
 
   // Xuất vé

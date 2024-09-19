@@ -21,7 +21,7 @@ import {
 } from "devextreme-angular";
 import { TypeOfDocument } from 'src/app/enums/type-of-document.enum';
 import { Router } from '@angular/router';
-import { COLOR_PARTNER_STATUS, PARTNER_STATUS_OPTIONS, TEXT_PARTNER_STATUS } from 'src/app/enums/partner-status.enum';
+import { COLOR_PARTNER_STATUS, PARTNER_STATUS_OPTIONS, PartnerStatus, TEXT_PARTNER_STATUS } from 'src/app/enums/partner-status.enum';
 import { UserRegisterComponent } from './../user-register/user-register.component';
 @Component({
   selector: 'app-partner',
@@ -31,6 +31,7 @@ import { UserRegisterComponent } from './../user-register/user-register.componen
 export class PartnerComponent extends TableSelectionAbstract implements OnInit, OnDestroy {
   TEXT_PARTNER_STATUS = TEXT_PARTNER_STATUS;
   COLOR_PARTNER_STATUS = COLOR_PARTNER_STATUS;
+  PartnerStatus = PartnerStatus;
   readonly allowedPageSizes = [10, 20, 50, 100, 200, 'all'];
   displayMode = 'full';
   showPageSizeSelector = true;
@@ -685,4 +686,55 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
   }
 
 
+  handleLockCompany(itemPartner: any) {
+    this.generalService.changeStatusPartnerById(itemPartner?.id, PartnerStatus.Locked).subscribe({
+      next: (res) => {
+        if (res.isValid) {
+          this.notificationService.showNotification(Constant.SUCCESS, `Đã khoá doanh nghiệp ${itemPartner.companyName}`);
+          this.getListData();
+        } else {
+          if (res.errors && res.errors.length > 0) {
+            res.errors.forEach((el: any) => {
+              this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+            });
+          } else {
+            this.notificationService.showNotification(Constant.ERROR, 'Đã có lỗi xảy ra');
+          }
+        }
+      },
+      error: (error: any) => {
+        this.notificationService.showNotification(Constant.ERROR, 'Không thể khoá doanh nghiệp do lỗi hệ thống');
+      },
+
+      complete: () => {
+      }
+    }).add(() => {
+    });
+  }
+
+  handleUnLockCompany(itemPartner: any) {
+    this.generalService.changeStatusPartnerById(itemPartner?.id, PartnerStatus.CreatingProfile).subscribe({
+      next: (res) => {
+        if (res.isValid) {
+          this.notificationService.showNotification(Constant.SUCCESS, `Doanh nghiệp ${itemPartner.companyName} đã được mở khoá`);
+          this.getListData();
+        } else {
+          if (res.errors && res.errors.length > 0) {
+            res.errors.forEach((el: any) => {
+              this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+            });
+          } else {
+            this.notificationService.showNotification(Constant.ERROR, 'Đã có lỗi xảy ra');
+          }
+        }
+      },
+      error: (error: any) => {
+        this.notificationService.showNotification(Constant.ERROR, 'Không thể mở doanh nghiệp do lỗi hệ thống');
+      },
+
+      complete: () => {
+      }
+    }).add(() => {
+    });
+  }
 }

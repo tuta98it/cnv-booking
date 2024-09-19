@@ -106,6 +106,16 @@
       <span class="fa fa-edit fa-fw"></span>
     </button>
 
+    <button *ngIf="item?.data?.status != PartnerStatus.Locked" title="Khoá doanh nghiệp" nz-button nzSize="small" nzType="default"
+      class="btn-right button-update ant-btn-red" (click)="handleLockCompany(item.data)">
+      <span class="fa fa-lock fa-fw"></span>
+    </button>
+
+    <button *ngIf="item?.data?.status == PartnerStatus.Locked" title="Mở khoá doanh nghiệp" nz-button nzSize="small" nzType="default"
+      class="btn-right button-update" (click)="handleUnLockCompany(item.data)">
+      <span class="fa fa-unlock fa-fw"></span>
+    </button>
+
     <button title="Xóa tài khoản" nz-button nzSize="small" nzType="default" class="btn-right button-update ant-btn-red"
       (click)="showDeleteConfirm(item.data)" *ngIf="checkUpdate">
       <span class="fa fa-times fa-fw"></span>
