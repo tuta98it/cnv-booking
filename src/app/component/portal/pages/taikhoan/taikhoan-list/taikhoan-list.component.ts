@@ -24,7 +24,7 @@ import { IsEmptyPipe } from 'src/app/shared/pipe/is-empty.pipe';
 import { UserType } from 'src/app/enums/user-type.enum';
 import { ActionTypePageVHL } from 'src/app/enums/action-type-page-vhl.enum';
 import { Router } from '@angular/router';
-import { TEXT_USER_STATUS } from 'src/app/enums/user-status.enum';
+import { TEXT_USER_STATUS, UserStatus } from 'src/app/enums/user-status.enum';
 import { EmployeePipePipe } from 'src/app/shared/pipe/employeePipe.pipe';
 @Component({
   selector: 'app-taikhoan-list',
@@ -37,10 +37,17 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
   valueNumberPhone = '';
   @ViewChild('inputElementNumberPhone', { static: false }) inputElementNumberPhone?: ElementRef
   ActionTypePageVHL = ActionTypePageVHL;
+  UserStatus = UserStatus;
   datas: any[] = [];
   userTypeEnum = UserType;
-  userType : UserType = this.userTypeEnum.All;
+  userType: UserType = this.userTypeEnum.All;
   data: any;
+  readonly allowedPageSizes = [10, 20, 50, 100, 200, 'all'];
+  displayMode = 'full';
+  showPageSizeSelector = true;
+  showInfo = true;
+  showNavButtons = true;
+
   passwordVisible: boolean;
   repeatpasswordVisible: boolean;
   isVisibleAdd: boolean;
@@ -588,22 +595,67 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
 
     return false;
   }
-  // getTinhThanh() {
-  //   this.generalService.getTinhThanh(null).subscribe(res => {
-  //     if (res !== null) {
-  //       this.tinhThanhs = res;
-  //     }
-  //   }, error => {
 
-  //   });
-  // }
-  // getQuanHuyen(tinhthanhId) {
-  //   this.generalService.getTinhThanh(tinhthanhId).subscribe(res => {
-  //     if (res !== null) {
-  //       this.quanHuyens = res;
-  //     }
-  //   }, error => {
+  handleLockEmployee(employee: any) {
+    this.generalService.setStatusUser(employee?.id, false).subscribe({
+      next: (res) => {
+        if (res) {
+          if (res.ret && res.ret.length > 0) {
+            res.ret.forEach((el: any) => {
+              if (el.code === 0) {
+                this.notificationService.showNotification(Constant.SUCCESS, `Đã khoá nhân viên ${employee.fullname}`);
+                this.getListData();
+              } else {
+                this.notificationService.showNotification(Constant.ERROR, 'Đã có lỗi xảy ra');
+              }
+            });
+          }
+        } else {
+          this.notificationService.showNotification(Constant.ERROR, `Hệ thống gặp lỗi, khoá nhân viên thất bại`);
+        }
+      },
+      error: (error: any) => {
+        this.notificationService.showNotification(Constant.ERROR, 'Không thể khoá nhân viên do lỗi hệ thống');
+      },
 
-  //   });
-  // }
+      complete: () => {
+      }
+    }).add(() => {
+    });
+  }
+
+  handleUnLockEmployee(employee: any) {
+    this.generalService.setStatusUser(employee?.id, true).subscribe({
+      next: (res) => {
+
+        if (res) {
+          if (res.ret && res.ret.length > 0) {
+            res.ret.forEach((el: any) => {
+              if (el.code === 0) {
+                this.notificationService.showNotification(Constant.SUCCESS, `Nhân viên ${employee.fullname} đã được mở khoá`);
+                this.getListData();
+              } else {
+                this.notificationService.showNotification(Constant.ERROR, 'Đã có lỗi xảy ra');
+              }
+            });
+          }
+        } else {
+          if (res.errors && res.errors.length > 0) {
+            res.errors.forEach((el: any) => {
+              this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+            });
+          } else {
+            this.notificationService.showNotification(Constant.ERROR, 'Đã có lỗi xảy ra');
+          }
+        }
+      },
+      error: (error: any) => {
+        this.notificationService.showNotification(Constant.ERROR, 'Không thể mở khoá nhân viên do lỗi hệ thống');
+      },
+
+      complete: () => {
+      }
+    }).add(() => {
+    });
+  }
 }

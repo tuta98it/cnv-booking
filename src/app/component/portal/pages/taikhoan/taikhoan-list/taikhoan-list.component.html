@@ -22,8 +22,8 @@
     <!-- <button nz-button nzType="primary" class="ant-btn-primary" type="button" (click)="navigatePage('companies/employee-action/create', ActionTypePageVHL.Create)" *ngIf="checkAdd">
       <em class="fas fa-plus fa-fw" ></em> Thêm</button> -->
     <div>
-      <button nz-button nz-dropdown nzType="primary"
-        style="margin-right: 0.5rem;" [nzDropdownMenu]="menuListEmployeesVHL">
+      <button nz-button nz-dropdown nzType="primary" style="margin-right: 0.5rem;"
+        [nzDropdownMenu]="menuListEmployeesVHL">
         <div style="display: flex; align-items: center;">
           <span nz-icon nzType="plus"></span>
           <span style="margin: 0 6px; line-height: normal;">Thêm mới</span>
@@ -35,8 +35,7 @@
           <li nz-menu-item style="padding: 0.5rem 0;">
             <div style="display: flex; align-items: center;">
               <span nz-icon nzType="plus"></span>
-              <span style="margin-left: 6px; line-height: normal;"
-                (click)="showModalAdd()">Thêm nhân
+              <span style="margin-left: 6px; line-height: normal;" (click)="showModalAdd()">Thêm nhân
                 viên</span>
             </div>
           </li>
@@ -75,6 +74,13 @@
   <dxo-scrolling mode="virtual"></dxo-scrolling>
   <dxo-sorting mode="multiple"></dxo-sorting>
 
+  <dxo-paging [pageSize]="10"> </dxo-paging>
+  <dxo-scrolling rowRenderingMode="virtual"> </dxo-scrolling>
+  <dxo-pager [visible]="true" [allowedPageSizes]="allowedPageSizes" [displayMode]="displayMode"
+    [showPageSizeSelector]="showPageSizeSelector" [showInfo]="showInfo"
+    [showNavigationButtons]="showNavButtons"></dxo-pager>
+
+
   <dxo-header-filter [visible]="true"></dxo-header-filter>
   <dxo-filter-row [visible]="true" [applyFilter]="currentFilter"></dxo-filter-row>
   <dxi-column cssClass="text-center" caption="Thao tác" [fixed]="true" [width]="170" fixedPosition="right"
@@ -93,8 +99,7 @@
   <div *dxTemplate="let item of 'cellBtnTemplate'" style="display: flex; justify-content: space-evenly;">
 
     <button title="Chỉnh sửa thông tin tài khoản" nz-button nzSize="small" nzType="default"
-      (click)="showModalUpdate(item.data)"
-      [disabled]="!item.data.status">
+      (click)="showModalUpdate(item.data)" [disabled]="!item.data.status">
       <span class="fa fa-edit fa-fw"></span>
     </button>
 
@@ -103,11 +108,21 @@
       <span class="fa fa-key fa-fw"></span>
     </button>
 
-    <nz-switch [ngModel]="item.data.status" [nzControl]="true" [nzCheckedChildren]="checkedTemplateUser"
+    <button *ngIf="item?.data?.status != UserStatus.LOCKED" title="Khoá nhân viên" nz-button nzSize="small"
+      nzType="default" class="btn-right button-update ant-btn-red" (click)="handleLockEmployee(item.data)">
+      <span class="fa fa-lock fa-fw"></span>
+    </button>
+
+    <button *ngIf="item?.data?.status == UserStatus.LOCKED" title="Mở khoá nhân viên" nz-button nzSize="small"
+      nzType="default" class="btn-right button-update" (click)="handleUnLockEmployee(item.data)">
+      <span class="fa fa-unlock fa-fw"></span>
+    </button>
+
+    <!-- <nz-switch [ngModel]="item.data.status" [nzControl]="true" [nzCheckedChildren]="checkedTemplateUser"
       [nzUnCheckedChildren]="unCheckedTemplateUser" [nzLoading]="item.data.isLoadingActiveUser"
       (click)="showIsActiveUserConfirm(item.data)"></nz-switch>
     <ng-template #checkedTemplateUser><span nz-icon nzType="user"></span></ng-template>
-    <ng-template #unCheckedTemplateUser><span nz-icon nzType="user-delete"></span></ng-template>
+    <ng-template #unCheckedTemplateUser><span nz-icon nzType="user-delete"></span></ng-template> -->
   </div>
   <dxo-summary>
     <dxi-total-item column="userCode" displayFormat="Số bản ghi: {0}" summaryType="count">

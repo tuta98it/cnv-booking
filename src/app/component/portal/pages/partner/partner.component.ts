@@ -729,7 +729,7 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
         }
       },
       error: (error: any) => {
-        this.notificationService.showNotification(Constant.ERROR, 'Không thể mở doanh nghiệp do lỗi hệ thống');
+        this.notificationService.showNotification(Constant.ERROR, 'Không thể mở khoá doanh nghiệp do lỗi hệ thống');
       },
 
       complete: () => {

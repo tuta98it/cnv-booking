@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { UrlConstant } from '../shared/constants/url.class';
 import { Role } from '../model/role.class';
 import { PartnerStatus } from '../enums/partner-status.enum';
+import { UserStatus } from 'src/app/enums/user-status.enum';
 
 @Injectable({ providedIn: 'root' })
 export class GeneralService extends BaseService {
@@ -488,6 +489,9 @@ export class GeneralService extends BaseService {
     return this.post(UrlConstant.LIST_USER + `/DownloadExcelEmployeeForPartner`, { "partnerId": partnerId }, {}, "blob");
   }
 
+  changeStatusUserById(partnerId: number, newStatus: UserStatus): Observable<any> {
+    return this.put(UrlConstant.LIST_USER + `/ChangeStatus/${partnerId}?newStatus=${newStatus}`, newStatus);
+  }
 
   //Partners
   getListPartner(): Observable<any[]> {
@@ -584,6 +588,7 @@ export class GeneralService extends BaseService {
   changeStatusPartnerById(partnerId: number, newStatus: PartnerStatus): Observable<any> {
     return this.put(UrlConstant.LIST_PARTNERS + `/ChangeStatus/${partnerId}?newStatus=${newStatus}`, newStatus);
   }
+
 
 
   // Booking

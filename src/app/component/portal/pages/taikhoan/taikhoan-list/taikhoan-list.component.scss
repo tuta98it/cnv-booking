@@ -1,3 +1,11 @@
+
+::ng-deep dx-data-grid {
+  &#gridContainer {
+    // height: 100%;
+    height: calc(100% - 50px) !important;
+  }
+}
+
 .action-button button{
   margin-left: 8px;
 }
