@@ -37,6 +37,23 @@
             </div>
           </button>
 
+
+          <button *ngIf="itemPartner?.status == PartnerStatus.Locked" nz-button nzType="default"
+            style="margin-right: 8px;" (click)="handleUnLockCompany()">
+            <div style="display: flex; align-items: center;">
+              <span nz-icon nzType="unlock"></span>
+              <span style="margin-left: 6px; line-height: normal;">Mở khoá</span>
+            </div>
+          </button>
+
+          <button *ngIf="itemPartner?.status != PartnerStatus.Locked" nz-button nzDanger nzType="default"
+            (click)="handleLockCompany()" style="margin-left: 8px;">
+            <div style="display: flex; align-items: center;">
+              <span nz-icon nzType="lock"></span>
+              <span style="margin-left: 4px; line-height: normal;">Khoá lại</span>
+            </div>
+          </button>
+
           <button *ngIf="itemPartner?.status != PartnerStatus.Active" nz-button nzDanger nzType="text"
             (click)="cancelPageActionPartner()" style="margin-left: 8px;">
             <div style="display: flex; align-items: center;">
@@ -384,9 +401,8 @@
                   <span style="margin-left: 6px; line-height: normal;">Lưu lại</span>
                 </div>
               </button>
-              <button nz-button nzType="primary" style="margin-right: 8px;"
-                [disabled]="!itemPartner?.id" *ngIf="!isEditBaseBusinessContract"
-                (click)="changeValueBaseBusinessContractReversal()">
+              <button nz-button nzType="primary" style="margin-right: 8px;" [disabled]="!itemPartner?.id"
+                *ngIf="!isEditBaseBusinessContract" (click)="changeValueBaseBusinessContractReversal()">
                 <div style="display: flex; align-items: center;">
                   <span nz-icon nzType="edit"></span>
                   <span style="margin-left: 6px; line-height: normal;">Chỉnh sửa</span>
@@ -633,9 +649,9 @@
           <div style="display: flex; justify-content: space-between; align-items: center;">
             <span style="font-weight: 500; font-size: 16px;">Danh sách nhân viên</span>
             <div style="display: flex; align-items: center;">
-              <input
-                style="width: 200px; border-radius: 4px; height: 32px; margin-right: 4rem;" nzSize="default" nz-input
-                type="text" placeholder="Tìm kiếm nhân viên" [(ngModel)]="searchEmployee" (keyup)="onSearchEmployee()">
+              <input style="width: 200px; border-radius: 4px; height: 32px; margin-right: 4rem;" nzSize="default"
+                nz-input type="text" placeholder="Tìm kiếm nhân viên" [(ngModel)]="searchEmployee"
+                (keyup)="onSearchEmployee()">
               <div>
                 <button [disabled]="!itemPartner?.id " nz-button nz-dropdown nzType="primary"
                   style="margin-right: 0.5rem;" [nzDropdownMenu]="menuListEmployeesVHL">
@@ -645,8 +661,7 @@
                     <span nz-icon nzType="down"></span>
                   </div>
                 </button>
-                <nz-dropdown-menu [disabled]="!itemPartner?.id "
-                  #menuListEmployeesVHL="nzDropdownMenu">
+                <nz-dropdown-menu [disabled]="!itemPartner?.id " #menuListEmployeesVHL="nzDropdownMenu">
                   <ul nz-menu>
                     <li nz-menu-item style="padding: 0.5rem 0;" [nzDisabled]="!itemPartner?.id ">
                       <div style="display: flex; align-items: center;">
@@ -953,7 +968,8 @@
                     <td [nzDisabled]="data.disabled">{{ data.implementPersonInfo }}</td>
 
                     <td [nzDisabled]="data.disabled" *ngIf="data.amount > 0">{{ (data.amount) | currencyFormat }} đ</td>
-                    <td [nzDisabled]="data.disabled" *ngIf="data.amount <= 0" style="color: #FF3B30;">({{ (0 - data.amount) | currencyFormat }}) đ</td>
+                    <td [nzDisabled]="data.disabled" *ngIf="data.amount <= 0" style="color: #FF3B30;">({{ (0 -
+                      data.amount) | currencyFormat }}) đ</td>
 
                     <td [nzDisabled]="data.disabled">{{ data.transactionContent}}</td>
                   </tr>

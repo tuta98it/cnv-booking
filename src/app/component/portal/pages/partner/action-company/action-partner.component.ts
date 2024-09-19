@@ -568,6 +568,8 @@ export class ActionPartnerComponent implements OnInit {
       this.isLockPage.setValue(true);
     } else if (status == PartnerStatus.Active) {
       this.isLockPage.setValue(true);
+    } else if (status == PartnerStatus.Locked) {
+      this.isLockPage.setValue(true);
     } else {
       this.isActiveEditBaseInfo.setValue(false);
       this.changeValueBaseBusinessContractReversal(false)
@@ -1661,5 +1663,58 @@ export class ActionPartnerComponent implements OnInit {
 
   handleCancelChangePassword() {
     this.isVisibleChangePassword = false;
+  }
+
+
+  handleLockCompany() {
+    this.generalService.changeStatusPartnerById(this.itemPartner?.id, PartnerStatus.Locked).subscribe({
+      next: (res) => {
+        if (res.isValid) {
+          this.notificationService.showNotification(Constant.SUCCESS, `Đã khoá doanh nghiệp ${this.itemPartner.companyName}`);
+          this.setActionValuPage(res.data);
+        } else {
+          if (res.errors && res.errors.length > 0) {
+            res.errors.forEach((el: any) => {
+              this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+            });
+          } else {
+            this.notificationService.showNotification(Constant.ERROR, 'Đã có lỗi xảy ra');
+          }
+        }
+      },
+      error: (error: any) => {
+        this.notificationService.showNotification(Constant.ERROR, 'Không thể khoá doanh nghiệp do lỗi hệ thống');
+      },
+
+      complete: () => {
+      }
+    }).add(() => {
+    });
+  }
+
+  handleUnLockCompany() {
+    this.generalService.changeStatusPartnerById(this.itemPartner?.id, PartnerStatus.CreatingProfile).subscribe({
+      next: (res) => {
+        if (res.isValid) {
+          this.notificationService.showNotification(Constant.SUCCESS, `Doanh nghiệp ${this.itemPartner.companyName} đã được mở khoá`);
+          this.setActionValuPage(res.data);
+        } else {
+          if (res.errors && res.errors.length > 0) {
+            res.errors.forEach((el: any) => {
+              this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+            });
+          } else {
+            this.notificationService.showNotification(Constant.ERROR, 'Đã có lỗi xảy ra');
+          }
+        }
+      },
+      error: (error: any) => {
+        this.notificationService.showNotification(Constant.ERROR, 'Không thể mở doanh nghiệp do lỗi hệ thống');
+      },
+
+      complete: () => {
+      }
+    }).add(() => {
+    });
   }
 }
