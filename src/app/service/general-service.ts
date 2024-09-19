@@ -440,6 +440,12 @@ export class GeneralService extends BaseService {
     return this.post(UrlConstant.LIST_USER + `/QueryByUserType`, userTypeRequest);
   }
 
+
+  getListAdminEmployees(): Observable<any> {
+    return this.get(UrlConstant.LIST_USER + `/GetListAdminEmployees`);
+  }
+
+
   getUserForSysAdmin(): Observable<any> {
     return this.get(UrlConstant.LIST_USER + '/GetUserForSysAdmin/');
   }

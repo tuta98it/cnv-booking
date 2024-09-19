@@ -159,7 +159,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
       let service: any;
       if (this.userInfor.userType === 0) {
         // this.userInfor.userType
-        this.generalService.queryByUserType({userType : this.userType}).subscribe((res: any) => {
+        this.generalService.getListAdminEmployees().subscribe((res: any) => {
           if (res !== null) {
             this.datas = res;
             let stt = 0;
