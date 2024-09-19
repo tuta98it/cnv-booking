@@ -493,7 +493,7 @@ export class GeneralService extends BaseService {
     return this.put(UrlConstant.LIST_USER + `/ChangeStatus/${partnerId}?newStatus=${newStatus}`, newStatus);
   }
 
-  resetPasswordUser(userId): Observable<any> {
+  resetPasswordUser(userId: number): Observable<any> {
     return this.put(UrlConstant.LIST_USER + `/ResetPassword/${userId}`, userId);
   }
 
