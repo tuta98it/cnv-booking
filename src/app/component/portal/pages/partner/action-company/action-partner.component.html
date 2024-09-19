@@ -385,7 +385,7 @@
                 </div>
               </button>
               <button nz-button nzType="primary" style="margin-right: 8px;"
-                [disabled]="!itemPartner?.id || isLockPage.value" *ngIf="!isEditBaseBusinessContract"
+                [disabled]="!itemPartner?.id" *ngIf="!isEditBaseBusinessContract"
                 (click)="changeValueBaseBusinessContractReversal()">
                 <div style="display: flex; align-items: center;">
                   <span nz-icon nzType="edit"></span>
@@ -633,11 +633,11 @@
           <div style="display: flex; justify-content: space-between; align-items: center;">
             <span style="font-weight: 500; font-size: 16px;">Danh sách nhân viên</span>
             <div style="display: flex; align-items: center;">
-              <input [disabled]="isLockPage.value"
+              <input
                 style="width: 200px; border-radius: 4px; height: 32px; margin-right: 4rem;" nzSize="default" nz-input
                 type="text" placeholder="Tìm kiếm nhân viên" [(ngModel)]="searchEmployee" (keyup)="onSearchEmployee()">
               <div>
-                <button [disabled]="!itemPartner?.id || isLockPage.value" nz-button nz-dropdown nzType="primary"
+                <button [disabled]="!itemPartner?.id " nz-button nz-dropdown nzType="primary"
                   style="margin-right: 0.5rem;" [nzDropdownMenu]="menuListEmployeesVHL">
                   <div style="display: flex; align-items: center;">
                     <span nz-icon nzType="plus"></span>
@@ -645,10 +645,10 @@
                     <span nz-icon nzType="down"></span>
                   </div>
                 </button>
-                <nz-dropdown-menu [disabled]="!itemPartner?.id || isLockPage.value"
+                <nz-dropdown-menu [disabled]="!itemPartner?.id "
                   #menuListEmployeesVHL="nzDropdownMenu">
                   <ul nz-menu>
-                    <li nz-menu-item style="padding: 0.5rem 0;" [nzDisabled]="!itemPartner?.id || isLockPage.value">
+                    <li nz-menu-item style="padding: 0.5rem 0;" [nzDisabled]="!itemPartner?.id ">
                       <div style="display: flex; align-items: center;">
                         <span nz-icon nzType="plus"></span>
                         <span style="margin-left: 6px; line-height: normal;"
@@ -656,8 +656,8 @@
                           viên</span>
                       </div>
                     </li>
-                    <li nz-menu-item style="padding: 0.5rem 0;" [nzDisabled]="!itemPartner?.id || isLockPage.value">
-                      <nz-upload [nzDisabled]="!itemPartner?.id || isLockPage.value"
+                    <li nz-menu-item style="padding: 0.5rem 0;" [nzDisabled]="!itemPartner?.id ">
+                      <nz-upload [nzDisabled]="!itemPartner?.id "
                         *ngIf="settingUploadEmployeeForPartnerFile && settingUploadEmployeeForPartnerFile?.action"
                         [nzMultiple]="settingUploadEmployeeForPartnerFile?.isMultiple"
                         [nzAction]="settingUploadEmployeeForPartnerFile?.action"
@@ -694,7 +694,7 @@
                         <span style="margin-left: 6px; line-height: normal;">Xuất file mẫu</span>
                       </div>
                     </li>
-                    <li nz-menu-item style="padding: 0.5rem 0;" [nzDisabled]="!itemPartner?.id || isLockPage.value"
+                    <li nz-menu-item style="padding: 0.5rem 0;" [nzDisabled]="!itemPartner?.id"
                       (click)="downloadExcelEmployeeForPartner(itemPartner?.id)">
                       <div style="display: flex; align-items: center;">
                         <span nz-icon nzType="download"></span>
@@ -896,7 +896,7 @@
                 </div>
               </button> -->
 
-              <button [disabled]="!itemPartner?.id || isLockPage.value" nz-button nzType="primary"
+              <button [disabled]="!itemPartner?.id " nz-button nzType="primary"
                 style="margin-right: 0.5rem; background-color: #3B82F6;" (click)="showModalDepositAccount()">
                 <div style="display: flex; align-items: center;">
                   <span style="margin: 0 6px; line-height: normal;">Nạp tiền tài khoản</span>

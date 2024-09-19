@@ -1626,7 +1626,7 @@ export class ActionPartnerComponent implements OnInit {
           if (res.isValid) {
             this.notificationService.showNotification(Constant.SUCCESS, `${this.itemPartner?.companyName ? this.itemPartner?.companyName : "doanh nghiệp"} đã được duyệt thành công`);
             resolve(res.data);
-            this.itemPartner = res.data;
+            this.setActionValuPage(res.data);
           } else {
             if (res.errors && res.errors.length > 0) {
               res.errors.forEach((el: any) => {
@@ -1649,6 +1649,12 @@ export class ActionPartnerComponent implements OnInit {
     });
   }
 
+  setActionValuPage(value: any): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.itemPartner = value;
+      this.setActionPageByStatus(this.itemPartner?.status);
+      resolve(value);
+    })}
   showPopupChangePassword() {
     this.isVisibleChangePassword = true;
   }
