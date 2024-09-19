@@ -645,7 +645,7 @@ export class ActionPartnerComponent implements OnInit {
       address: this.itemPartner?.address || null,
       // businessOwnerId: this.itemPartner?.businessOwnerId || null,
       name: this.itemPartner?.name || null,
-      allowDebt: this.itemPartner?.allowDebt || AllowDebtPartner.ALLOW
+      allowDebt: this.itemPartner?.allowDebt != null ? this.itemPartner?.allowDebt : AllowDebtPartner.NOT_ALLOW
     });
 
     this.listUploadAuthorizationFile = [];
