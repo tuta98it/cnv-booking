@@ -4,8 +4,17 @@
       <div class="inner-box" style="display: flex; justify-content: space-between; align-items: center;">
         <span style="font-weight: 500; font-size: 18px;">{{titleActionCompanyPage}}</span>
         <div>
+
+          <button *ngIf="itemPartner?.status == PartnerStatus.Active" nz-button nzType="text"
+            (click)="handleReturnToDraft()" style="margin-right: 8px;">
+            <div style=" display: flex; align-items: center;">
+              <span nz-icon nzType="edit"></span>
+              <span style="margin-left: 4px; line-height: normal;">Chuyển về bản nháp</span>
+            </div>
+          </button>
+          
           <button *ngIf="itemPartner?.status == PartnerStatus.CreatingProfile" nz-button nzType="default"
-            style="margin-right: 8px;" (click)="handlerSendApprovalRequest()">
+            style="margin-right: 8px;" (click)="handleSendApprovalRequest()">
             <div style="display: flex; align-items: center;">
               <span nz-icon nzType="send"></span>
               <span style="margin-left: 6px; line-height: normal;">Gửi duyệt</span>
@@ -21,13 +30,6 @@
             </div>
           </button>
 
-          <button *ngIf="itemPartner?.status == PartnerStatus.Active" nz-button nzType="default"
-            (click)="cancelPageActionPartner()" style="margin-right: 8px;">
-            <div style=" display: flex; align-items: center;">
-              <span nz-icon nzType="arrow-left"></span>
-              <span style="margin-left: 4px; line-height: normal;">Quay lại</span>
-            </div>
-          </button>
 
           <button *ngIf="itemPartner?.status == PartnerStatus.Active" nz-button nzType="text"
             style="text-decoration: none; color: #40a9ff; border-color: #40a9ff; cursor: default;">

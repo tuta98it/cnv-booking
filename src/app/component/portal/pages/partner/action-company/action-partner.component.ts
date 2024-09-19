@@ -1582,13 +1582,47 @@ export class ActionPartnerComponent implements OnInit {
   }
 
 
-  handlerSendApprovalRequest() {
+  handleSendApprovalRequest() {
     this.saveBaseInfoPartner().then((result) => {
       this.saveUpdateContractInfoForPartner().then((result) => {
         this.sendApprovalRequest().then((data) => {
-          this.itemPartner = data;
+          this.setActionValuPage(data);
         })
       })
+    })
+  }
+
+  handleReturnToDraft() {
+    this.returnToDraft().then((data) => {
+      this.setActionValuPage(data);
+    })
+  }
+
+  returnToDraft() {
+    return new Promise((resolve, reject) => {
+      this.generalService.changeStatusPartnerById(this.itemPartner?.id, PartnerStatus.CreatingProfile).subscribe({
+        next: (res) => {
+          if (res.isValid) {
+            this.notificationService.showNotification(Constant.SUCCESS, `Đã chuyển về bản nháp`);
+            resolve(res.data);
+          } else {
+            if (res.errors && res.errors.length > 0) {
+              res.errors.forEach((el: any) => {
+                this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+              });
+            } else {
+              this.notificationService.showNotification(Constant.ERROR, 'Đã có lỗi xảy ra');
+            }
+          }
+        },
+        error: (error: any) => {
+          this.notificationService.showNotification(Constant.ERROR, 'Chuyển về bản nháp thất bại do lỗi hệ thống');
+        },
+
+        complete: () => {
+        }
+      }).add(() => {
+      });
     })
   }
 
@@ -1656,7 +1690,8 @@ export class ActionPartnerComponent implements OnInit {
       this.itemPartner = value;
       this.setActionPageByStatus(this.itemPartner?.status);
       resolve(value);
-    })}
+    })
+  }
   showPopupChangePassword() {
     this.isVisibleChangePassword = true;
   }
