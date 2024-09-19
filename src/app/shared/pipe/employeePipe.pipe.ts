@@ -11,10 +11,10 @@ export class EmployeePipePipe implements PipeTransform {
       if (findEmployee) {
         return `${findEmployee.fullname ?? ''}${findEmployee.email ?  ` - ${findEmployee.email}` : ''}`;
       }else{
-        return 'Unknown';
+        return '';
       }
     } else {
-      return 'Error';
+      return '';
     }
   }
 

@@ -12,3 +12,8 @@ export const TEXT_USER_STATUS = {
   [UserStatus.ACTIVE]: 'Đang hoạt động',
   [UserStatus.LOCKED]: 'Khoá',
 };
+
+export const COLOR_USER_STATUS = {
+  [UserStatus.ACTIVE]: '#188242',
+  [UserStatus.LOCKED]: '#AA2121',
+};

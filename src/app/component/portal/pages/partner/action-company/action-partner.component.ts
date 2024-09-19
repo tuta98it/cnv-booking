@@ -23,7 +23,7 @@ import { MONTHS_OPTIONS, MonthsOfTheYear } from 'src/app/enums/months-of-the-yea
 import { UserType } from 'src/app/enums/user-type.enum';
 import { removeAccents } from 'src/app/shared/utils/filters/remove-accents';
 import { DatePipe } from '@angular/common';
-import { TEXT_USER_STATUS, USER_STATUS_OPTIONS, UserStatus } from 'src/app/enums/user-status.enum';
+import { COLOR_USER_STATUS, TEXT_USER_STATUS, USER_STATUS_OPTIONS, UserStatus } from 'src/app/enums/user-status.enum';
 import { LockType } from 'src/app/enums/lock-type.enum';
 import { NzModalService } from 'ng-zorro-antd/modal';
 
@@ -63,10 +63,10 @@ export class ActionPartnerComponent implements OnInit {
   MonthsOfTheYear = MonthsOfTheYear;
   MONTHS_OPTIONS = MONTHS_OPTIONS;
 
-
   UserStatus = UserStatus;
   USER_STATUS_OPTIONS = USER_STATUS_OPTIONS;
   TEXT_USER_STATUS = TEXT_USER_STATUS;
+  COLOR_USER_STATUS = COLOR_USER_STATUS;
 
   LockType = LockType;
 

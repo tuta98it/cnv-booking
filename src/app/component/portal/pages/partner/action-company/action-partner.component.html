@@ -762,7 +762,8 @@
                     </td>
                     <td [nzDisabled]="data.disabled">{{ data.userCode }}</td>
                     <td [nzDisabled]="data.disabled">{{ data.fullname }}</td>
-                    <td [nzDisabled]="data.disabled">{{ data.status | partnerStatusPipe}}</td>
+                    <td [nzDisabled]="data.disabled" [style.color]="COLOR_USER_STATUS[data.status]">{{
+                      TEXT_USER_STATUS[data.status] }}</td>
                     <td [nzEllipsis]="settingTableEmployeesValue.ellipsis">{{ data.email }}</td>
                     <td [nzDisabled]="data.disabled">{{ data.phoneNo }}</td>
                     <td [nzDisabled]="data.disabled">{{ data.gender | genderPipe }}</td>
@@ -950,7 +951,10 @@
                     <td [nzLeft]="fixedColumnBalanceFluctuation" [nzDisabled]="data.disabled">{{ data.transactionTime |
                       dateFormat }}</td>
                     <td [nzDisabled]="data.disabled">{{ data.implementPersonInfo }}</td>
-                    <td [nzDisabled]="data.disabled">{{ data.amount | currencyFormat }} đ</td>
+
+                    <td [nzDisabled]="data.disabled" *ngIf="data.amount > 0">{{ (data.amount) | currencyFormat }} đ</td>
+                    <td [nzDisabled]="data.disabled" *ngIf="data.amount <= 0" style="color: #FF3B30;">({{ (0 - data.amount) | currencyFormat }}) đ</td>
+
                     <td [nzDisabled]="data.disabled">{{ data.transactionContent}}</td>
                   </tr>
                 </ng-container>
@@ -977,9 +981,12 @@
           <div style="margin: 16px 0;"></div>
           <!-- Content lisst employees -->
           <div>
-            <nz-table #tagBusinessUsageHistory [nzScroll]="{ x: scrollXBusinessUsageHistoriesValue, y: scrollYBusinessUsageHistoriesValue }"
-              [nzData]="listOfBusinessUsageHistories" [nzTableLayout]="settingTableBusinessUsageHistoriesValue.tableLayout"
-              [nzBordered]="settingTableBusinessUsageHistoriesValue.bordered" [nzSimple]="settingTableBusinessUsageHistoriesValue.simple"
+            <nz-table #tagBusinessUsageHistory
+              [nzScroll]="{ x: scrollXBusinessUsageHistoriesValue, y: scrollYBusinessUsageHistoriesValue }"
+              [nzData]="listOfBusinessUsageHistories"
+              [nzTableLayout]="settingTableBusinessUsageHistoriesValue.tableLayout"
+              [nzBordered]="settingTableBusinessUsageHistoriesValue.bordered"
+              [nzSimple]="settingTableBusinessUsageHistoriesValue.simple"
               [nzLoading]="settingTableBusinessUsageHistoriesValue.loading"
               [nzPaginationType]="settingTableBusinessUsageHistoriesValue.paginationType"
               [nzPaginationPosition]="settingTableBusinessUsageHistoriesValue.position"
