@@ -1,7 +1,7 @@
 <form [formGroup]="formAdd" (ngSubmit)="handleOk()">
-  <nz-modal [(nzVisible)]="isVisible" nzTitle="Danh sách nhóm" nzClosable="false" [nzTitle]="title" nzMaskClosable="false">
+  <nz-modal [(nzVisible)]="isVisible" nzTitle="Danh mục chức danh" nzClosable="false" [nzTitle]="title" nzMaskClosable="false">
     <ng-template #title>
-      Danh sách nhóm
+      Danh mục chức danh
       <div class="pull-right icon-close">
         <em (click)="handleCancel()" nz-icon nzType="close" nzTheme="outline"></em>
       </div>

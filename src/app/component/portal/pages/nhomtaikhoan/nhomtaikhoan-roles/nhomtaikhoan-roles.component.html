@@ -1,8 +1,8 @@
 <div style="display: flex; justify-content: space-between;">
-  <h1>Phân quyền nhóm</h1>
+  <h1>Phân quyền theo chức vụ</h1>
   <div class="form-filter ant-form ant-form-inline">
     <input style="width: 300px; margin-right: 10px;"  nzSize="small" nz-input [(ngModel)]="searchText"
-      (keyup.enter)="onSearch()" type="text" placeholder="Tìm kiếm theo tên nhóm">
+      (keyup.enter)="onSearch()" type="text" placeholder="Tìm kiếm theo Chức vụ">
   </div>
 </div>
 
@@ -14,7 +14,7 @@
       <tr>
         <th rowspan="2" nzLeft nzWidth="50px" class="text-nowrap text-center">STT</th>
         <th rowspan="2" nzLeft nzWidth="50px" class="text-nowrap"></th>
-        <th rowspan="2" nzLeft nzWidth="150px" class="text-nowrap">Tên nhóm</th>
+        <th rowspan="2" nzLeft nzWidth="150px" class="text-nowrap">Chức vụ</th>
         <th rowspan="2" nzLeft nzWidth="150px" class="text-nowrap">Ghi chú</th>
         <th [colspan]="group.roles.length" [ngStyle]="{'width': group.thWidth + 'px'}"
           *ngFor="let group of this.groupRoles; let i = index">

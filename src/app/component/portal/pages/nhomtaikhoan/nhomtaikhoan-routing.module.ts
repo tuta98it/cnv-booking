@@ -8,12 +8,12 @@ const routes: Routes = [
   { path: '', component: NhomtaikhoanListComponent , canActivate: [AuthGuard]},
   { path: 'account-group-list', component: NhomtaikhoanListComponent , canActivate: [AuthGuard], data: {
       pagename: 'Nhóm tài khoản',
-      breadcrumb: 'Danh sách nhóm tài khoản'
+      breadcrumb: 'Danh mục chức danh tài khoản'
     }
   },
   { path: 'account-group-permissions', component: NhomtaikhoanRolesComponent , canActivate: [AuthGuard], data: {
     pagename: 'Nhóm tài khoản',
-    breadcrumb: 'Phân quyền nhóm tài khoản'
+    breadcrumb: 'Phân quyền theo chức vụ tài khoản'
   }
 }
 ]

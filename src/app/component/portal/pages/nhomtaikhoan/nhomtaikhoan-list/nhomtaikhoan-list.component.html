@@ -1,5 +1,5 @@
 <div style="display: flex; justify-content: space-between;">
-  <h1>Danh sách nhóm</h1>
+  <h1>Danh mục chức danh</h1>
   <div class="form-filter ant-form ant-form-inline">
     <input style="width: 200px; margin-right: 10px;" st nzSize="small" nz-input [(ngModel)]="searchText" (keyup.enter)="onSearch()" type="text" placeholder="Tìm kiếm theo tên">
     <button nz-button nzType="primary" class="btn-add-asset" type="button" (click)="showModalAdd()" *ngIf="checkAdd">
@@ -18,7 +18,7 @@
         <!-- <th nzShowCheckbox nzLeft="0px" nzWidth="50px" [(nzChecked)]="isAllDisplayDataChecked"
             [nzIndeterminate]="isIndeterminate" (nzCheckedChange)="checkAllRow($event)"></th> -->
         <th class="text-nowrap" width="50px">STT</th>
-        <th class="text-nowrap">Tên nhóm</th>
+        <th class="text-nowrap">Chức vụ</th>
         <th class="text-nowrap">Ghi chú</th>
         <th nzWidth="120px" class="text-nowrap text-center">Action</th>
       </tr>
@@ -55,13 +55,13 @@
 <form [formGroup]="formAdd" (ngSubmit)="handleOk()">
   <nz-modal [(nzVisible)]="isVisibleAdd" nzTitle="Add User" nzClosable="false" [nzTitle]="title" nzMaskClosable="false">
     <ng-template #title>
-      Thông tin nhóm
+      Thông tin chức vụ
       <div class="pull-right icon-close">
         <em (click)="handleCancel()" nz-icon nzType="close" nzTheme="outline"></em>
       </div>
     </ng-template>
     <div class="input-wrap nz-row">
-      <label class="title-detail" nz-col [nzSpan]="8">Tên nhóm<em class="fa fa-asterisk required"></em></label>
+      <label class="title-detail" nz-col [nzSpan]="8">Chức vụ<em class="fa fa-asterisk required"></em></label>
       <div nz-col [nzSpan]="16">
         <input nz-input formControlName="name" />
       </div>

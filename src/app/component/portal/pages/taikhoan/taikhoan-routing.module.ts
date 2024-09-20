@@ -15,7 +15,7 @@ const routes: Routes = [
   {
     path: 'account-permissions', component: TaikhoanRolesComponent, canActivate: [AuthGuard], data: {
       pagename: 'Tài khoản',
-      breadcrumb: 'Xem quyền tài khoản'
+      breadcrumb: 'Xem chi tiết phân quyền'
     }
   }
 ];
