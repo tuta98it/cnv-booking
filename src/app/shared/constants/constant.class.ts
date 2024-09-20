@@ -1,4 +1,5 @@
 export class Constant {
+  public static readonly DEFAULT_PAGE = '/dashboard';
   public static readonly DATE_FMT = 'dd/MM/yyyy';
   public static readonly DATE_FMT_HOUR = 'dd/MM/yyyy HH:mm';
   public static readonly DATE_FMT_FULL = 'dd/MM/yyyy h:mm a';
