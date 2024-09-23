@@ -345,7 +345,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
     this.isVisibleAdd = true;
     this.submitted = false;
     this.item = data;
-    this.titleFormUser = 'Sủa thông tin tài khoản';
+    this.titleFormUser = 'sửa thông tin tài khoản';
     this.updated = true;
 
     this.formAdd.patchValue({

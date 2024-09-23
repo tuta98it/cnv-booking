@@ -69,7 +69,7 @@ export class TaikhoanRolesComponent extends TableSelectionAbstract implements On
   }
   getListData() {
     this.loading = true;
-    this.generalService.getTaikhoan().subscribe(res => {
+    this.generalService.getListAdminEmployees().subscribe(res => {
       if (res !== null) {
         this.datas = res;
         this.filteredDatas = res;
