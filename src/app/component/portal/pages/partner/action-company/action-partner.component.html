@@ -12,7 +12,7 @@
               <span style="margin-left: 4px; line-height: normal;">Chuyển về bản nháp</span>
             </div>
           </button>
-          
+
           <button *ngIf="itemPartner?.status == PartnerStatus.CreatingProfile" nz-button nzType="default"
             style="margin-right: 8px;" (click)="handleSendApprovalRequest()">
             <div style="display: flex; align-items: center;">
@@ -919,7 +919,7 @@
                   <span style="margin: 0 6px; line-height: normal;">Nạp tiền tài khoản</span>
                 </div>
               </button>
-              <app-deposit-account [isVisibleDepositAccount]="isVisibleDepositAccount" [employees]="employees"
+              <app-deposit-account [isVisibleDepositAccount]="isVisibleDepositAccount" [employees]="listOfEmployees"
                 [partnerId]="itemPartner?.id" (cancel)="handleDepositAccountCancel()">
               </app-deposit-account>
 
