@@ -980,7 +980,7 @@ export class ActionPartnerComponent implements OnInit {
         if (info.file.response.isValid) {
           this.msg.success(`${info.file.name} file tải lên thành công có thề tồn tại một vài nhân viên không đặt yê cầu.`);
         } else {
-          this.msg.error(`${info.file.name} file tải đã gặp lỗi hoặc tất các nhân viên không đặt yêu cầu.`);
+          this.msg.error(`${info.file.name} file tải đã gặp lỗi hoặc tất các nhân viên không đạt yêu cầu.`);
         }
 
         // if (this.listUploadEmployeeForPartnerFile.length > 0) {
