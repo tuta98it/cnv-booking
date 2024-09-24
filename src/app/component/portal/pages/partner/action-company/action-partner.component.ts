@@ -113,7 +113,7 @@ export class ActionPartnerComponent implements OnInit {
   listOfSelectedValue = ['a10', 'c12'];
 
   checkOptionsBusinessServiceVHL = [
-    { label: 'Dịch vụ vé máy bay', value: BusinessServiceType.AirlineTicketBookingService, disabled: false, checked: true },
+    { label: 'Dịch vụ vé máy bay', value: BusinessServiceType.AirlineTicketBookingService, disabled: false, checked: false },
     { label: 'Dich vụ đặt khách sạn', value: BusinessServiceType.HotelBookingService, disabled: false, checked: false },
   ];
   itemPartner: any = null;
