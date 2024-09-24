@@ -100,7 +100,7 @@ export class NhomtaikhoanRolesComponent extends TableSelectionAbstract implement
             }
           }
         })
-        console.log("groupRoles", this.groupRoles);
+
       }
     }, error => {
 

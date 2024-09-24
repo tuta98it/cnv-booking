@@ -560,7 +560,7 @@ export class ActionPartnerComponent implements OnInit {
     }
   }
 
-  getEmployeesByPartnerId(){
+  getEmployeesByPartnerId() {
     this.getUsersByPartnerId(this.itemPartner?.id).then((result: any) => {
       this.listOfEmployees = result;
       this.listOfEmployees.forEach(e => {
@@ -1224,6 +1224,9 @@ export class ActionPartnerComponent implements OnInit {
         this.PAYMENT_PERIOD_DAYS_OPTIONS = [];
         break;
     }
+
+    var dayOfPeriodType = this.formBaseBusinessContractUpdate.controls['dayOfPeriodType'].value;
+    this.formBaseBusinessContractUpdate.controls['dayOfPeriodType'].setValue(this.PAYMENT_PERIOD_DAYS_OPTIONS[0]?.value ?? 1);
   }
 
 
