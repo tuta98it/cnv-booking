@@ -408,9 +408,8 @@ export class ActionPartnerComponent implements OnInit {
         this.resetFormBaseInfoCreatePartner(this.itemPartner);
         this.resetFormContractUpdatePartner(this.itemPartner);
 
-        this.getUsersByPartnerId(this.itemPartner?.id).then((result: any) => {
-          this.listOfEmployees = result;
-        });
+        this.getEmployeesByPartnerId();
+
 
         this.getBalanceFluctuationsByPartnerId(this.itemPartner?.id).then((result: any) => {
           this.debtBearingSales = result.debtBearingSales
@@ -451,11 +450,11 @@ export class ActionPartnerComponent implements OnInit {
       if (empty) {
         this.listOfEmployees = [];
       } else {
-        this.getUsersByPartnerId(this.itemPartner?.id).then((result: any) => {
-          this.listOfEmployees = result;
-        });
+        this.getEmployeesByPartnerId();
       }
     });
+
+
 
 
     // Lấy giá trị status từ route data
@@ -559,6 +558,15 @@ export class ActionPartnerComponent implements OnInit {
         this.setActionPageByStatus(status);
       });
     }
+  }
+
+  getEmployeesByPartnerId(){
+    this.getUsersByPartnerId(this.itemPartner?.id).then((result: any) => {
+      this.listOfEmployees = result;
+      this.listOfEmployees.forEach(e => {
+        e.isLoadingResetPassword = false;
+      });
+    });
   }
 
   private setActionPageByStatus(status: any) {
@@ -900,9 +908,7 @@ export class ActionPartnerComponent implements OnInit {
         removeAccents(en.email?.trim()).toLowerCase().includes(keyword)
       );
     } else {
-      this.getUsersByPartnerId(this.itemPartner?.id).then((result: any) => {
-        this.listOfEmployees = result;
-      });
+      this.getEmployeesByPartnerId();
     }
   }
 
@@ -1437,9 +1443,7 @@ export class ActionPartnerComponent implements OnInit {
     if (employee) {
       employee.isLoadingActiveUser = false;
     }
-    this.getUsersByPartnerId(this.itemPartner?.id).then((result: any) => {
-      this.listOfEmployees = result;
-    });
+    this.getEmployeesByPartnerId();
   }
 
   private multiLockEmployeeAccount() {
@@ -1694,6 +1698,50 @@ export class ActionPartnerComponent implements OnInit {
   }
   showPopupChangePassword() {
     this.isVisibleChangePassword = true;
+  }
+
+  showResetPassword(user: any): void {
+    user.isLoadingResetPassword = true;
+    this.modalService.confirm({
+      nzTitle: `<b>Bạn có chắc muốn thiết lập lại mật khẩu mặc định cho tài khoản ${user.username}?</b>`,
+      nzContent: 'Ấn đồng ý để tiếp tục',
+      nzOkDanger: true,
+      nzOkText: 'Đồng ý',
+      nzCancelText: 'Không',
+      nzOnOk: () => this.resetPassword(user),
+      nzOnCancel: () => this.cancelResetPassword(user)
+    });
+  }
+
+  private cancelResetPassword(user: any) {
+    user.isLoadingResetPassword = false;
+  }
+
+
+  resetPassword(user: any) {
+    this.generalService.resetPasswordUser(user.id).subscribe({
+      next: (res) => {
+        if (res.isValid) {
+          this.notificationService.showNotification(Constant.SUCCESS, `Thiết lập mật khẩu mặc định tài khoản ${user.username} thành công`);
+        } else {
+          if (res.errors && res.errors.length > 0) {
+            res.errors.forEach((el: any) => {
+              this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+            });
+          } else {
+            this.notificationService.showNotification(Constant.ERROR, `Thiết lập mật khẩu mặc định tài khoản ${user.username} không thành công`);
+          }
+        }
+      },
+      error: (error) => {
+        this.notificationService.showNotification(Constant.ERROR, `Thiết lập mật khẩu mặc định tài khoản ${user.username} không thành công do lỗi hệ thống`);
+      },
+      complete: () => {
+        // this.getListData().then(() => {
+        // });
+        this.getEmployeesByPartnerId();
+      }
+    }).add(() => { user.isLoadingActiveUser = false; });
   }
 
   handleCancelChangePassword() {

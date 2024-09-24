@@ -796,8 +796,8 @@
                       </button>
 
 
-                      <button title="Thiết lập lại mật khẩu" nz-button nzSize="small" nzType="default"
-                        class="button-update" [disabled]="data.disabled" (click)="showPopupChangePassword()">
+                      <button title="Thiết lập lại mật khẩu mặc định" nz-button nzSize="small" nzType="default"
+                        class="button-update" [disabled]="data.disabled" (click)="showResetPassword(data)">
                         <span class="fa fa-key fa-fw"></span>
                       </button>
                       <app-change-password [isVisible]="isVisibleChangePassword" [idEmployee]="data?.id"
