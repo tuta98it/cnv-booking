@@ -711,7 +711,7 @@
                         <span style="margin-left: 6px; line-height: normal;">Xuất file mẫu</span>
                       </div>
                     </li>
-                    <li nz-menu-item style="padding: 0.5rem 0;" [nzDisabled]="!itemPartner?.id"
+                    <li nz-menu-item style="padding: 0.5rem 0;" [nzDisabled]="!itemPartner?.id" [style.opacity]=" listOfEmployees?.length ? '100%' : '50%'"
                       (click)="downloadExcelEmployeeForPartner(itemPartner?.id)">
                       <div style="display: flex; align-items: center;">
                         <span nz-icon nzType="download"></span>
