@@ -41,7 +41,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
   UserStatus = UserStatus;
   datas: any[] = [];
   userTypeEnum = UserType;
-  userType: UserType = this.userTypeEnum.All;
+  userType_ALL: UserType = this.userTypeEnum.All;
   data: any;
   readonly allowedPageSizes = [20, 50, 100, 200, 500 ,'all']
   displayMode = 'full';
@@ -165,7 +165,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
     return new Promise((resolve, reject) => {
       this.loading = true;
       let service: any;
-      if (this.userInfor.userType === 0) {
+      if (this.userInfor.userType == UserType.SysAdmin || this.userInfor.userType == UserType.StaffVhl) {
         // this.userInfor.userType
         this.generalService.getListAdminEmployees().subscribe((res: any) => {
           if (res !== null) {
@@ -187,7 +187,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
           }
         }, error => {
         });
-      } else if (this.userInfor.userType === 1) {
+      } else if (this.userInfor.userType === UserType.Partner) {
         this.generalService.getUsersByPartnerId(this.userInfor.partnerId).subscribe((res: any) => {
           if (res !== null) {
             this.datas = res.data;
