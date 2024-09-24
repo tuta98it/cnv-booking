@@ -58,7 +58,7 @@ export class DataHotelsComponent extends TableSelectionAbstract implements OnIni
     page: 1,
     pageSize: 1000
   };
-  readonly allowedPageSizes = [5, 10, 20, 'all'];
+  readonly allowedPageSizes = [20, 50, 100, 200, 500 ,'all'];
   readonly displayModes = [{ text: "Display Mode 'full'", value: 'full' }, { text: "Display Mode 'compact'", value: 'compact' }];
   displayMode = 'full';
   showPageSizeSelector = true;

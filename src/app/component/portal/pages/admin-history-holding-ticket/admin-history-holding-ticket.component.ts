@@ -34,7 +34,7 @@ export class AdminHistoryHoldingTicketComponent extends TableSelectionAbstract i
   titleFormPartner = '';
   isVisibleDetailTransactionHistoryTickets: boolean = false;
   listDetailTicket: any[];
-  readonly allowedPageSizes = [5, 10, 15, 20, 'all'];
+  readonly allowedPageSizes = [20, 50, 100, 200, 500 ,'all'];
   displayMode = 'full';
   showPageSizeSelector = true;
   showInfo = true;

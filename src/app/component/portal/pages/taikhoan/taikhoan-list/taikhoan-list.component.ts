@@ -43,7 +43,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
   userTypeEnum = UserType;
   userType: UserType = this.userTypeEnum.All;
   data: any;
-  readonly allowedPageSizes = [10, 20, 50, 100, 200, 'all'];
+  readonly allowedPageSizes = [20, 50, 100, 200, 500 ,'all']
   displayMode = 'full';
   showPageSizeSelector = true;
   showInfo = true;

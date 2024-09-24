@@ -32,7 +32,7 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
   TEXT_PARTNER_STATUS = TEXT_PARTNER_STATUS;
   COLOR_PARTNER_STATUS = COLOR_PARTNER_STATUS;
   PartnerStatus = PartnerStatus;
-  readonly allowedPageSizes = [10, 20, 50, 100, 200, 'all'];
+  readonly allowedPageSizes = [20, 50, 100, 200, 500 ,'all']
   displayMode = 'full';
   showPageSizeSelector = true;
   showInfo = true;
