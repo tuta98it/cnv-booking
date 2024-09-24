@@ -281,6 +281,7 @@ export class ActionPartnerComponent implements OnInit {
     if (this.actionPartnerVHL == ActionTypePageVHL.Create) {
       //this.isActiveEditBaseInfo.setValue(true);
       this.titleActionCompanyPage = "Thêm mới doanh nghiệp";
+      this.isActiveEditBaseInfo.setValue(true);
       this.settingUploadAuthorizationFile = {
         isMultiple: true,
         action: `${this.configService.getConfig().api.baseUrl}/Upload/UploadPartnerFile?partnerId=null&type=${TypeOfDocument.AuthorizationFile}`,
