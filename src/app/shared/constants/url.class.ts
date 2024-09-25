@@ -3,12 +3,16 @@ export class UrlConstant {
   public static readonly LOGOUT = '/login/logout';
   public static readonly VALIDATE = '/login/validate';
   public static readonly LIST_USER = '/User';
+  public static readonly LIST_ADMIN_EMPLOYEE = '/user/GetListAdminEmployees';
   public static readonly DELETE_USER = '/users/delete/';
   public static readonly ADD_USER = '/users';
+  public static readonly ADD_USER_STAFF_VHL = '/user/CreateUserAccountStaffVHL';
   public static readonly DETAIL_USER = '/users';
   public static readonly UPDATE_USER = '/users/update';
+  public static readonly UPDATE_USER_STAFF_VHL = '/user/UpdateUserAccountStaffVHL/';
   public static readonly LIST_ROLE = '/role';
   public static readonly LIST_GROUP = '/group';
+  public static readonly LIST_GROUP_ALL_TITLE = '/group/getlistalltitle/';
   public static readonly LIST_ACTION = '/action';
   public static readonly LIST_MENU = '/menu';
   public static readonly LIST_STAFF = '/staff';
