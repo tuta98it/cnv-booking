@@ -35,3 +35,31 @@ h1{
   background: #4c8dff;
   border-color: #4c8dff;
 }
+.form-control-disabled{
+  border: none;
+  background: white;
+  pointer-events: none; 
+  cursor: not-allowed;  
+}
+.button-submit{
+  width: 110px;
+  height: 40px;
+  background-color: #3B82F6;
+  color: white;
+  border-radius: 10px;
+}
+.button-cancel{
+  height: 40px;
+  border-color:  #3B82F6;
+  color:  #3B82F6;
+  border-radius: 10px;
+}
+.button-cancel span,
+.button-submit span {
+  vertical-align: middle;
+  margin-bottom: 3px;
+}
+.modal-update input{
+  padding-top: 20px;
+  padding-bottom: 20px;
+}

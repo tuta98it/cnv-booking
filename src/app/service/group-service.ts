@@ -18,4 +18,7 @@ export class GroupService  extends  BaseService {
   updateGroup(group: Group): Observable<Group> {
     return this.put(UrlConstant.LIST_GROUP, group);
   }
+  getListAllTitle():Observable<any>{
+    return this.get(UrlConstant.LIST_GROUP_ALL_TITLE);
+  }
 }

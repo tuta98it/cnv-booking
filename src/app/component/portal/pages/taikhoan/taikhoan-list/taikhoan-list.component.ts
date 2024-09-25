@@ -26,6 +26,8 @@ import { ActionTypePageVHL } from 'src/app/enums/action-type-page-vhl.enum';
 import { Router } from '@angular/router';
 import { TEXT_USER_STATUS, UserStatus, COLOR_USER_STATUS } from 'src/app/enums/user-status.enum';
 import { EmployeePipePipe } from 'src/app/shared/pipe/employeePipe.pipe';
+import { GroupService } from 'src/app/service/group-service';
+import { UserService } from 'src/app/service/user-service';
 @Component({
   selector: 'app-taikhoan-list',
   templateUrl: './taikhoan-list.component.html',
@@ -79,6 +81,10 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
   searchText = '';
   userInfor: any;
   titleFormUser = '';
+  userCode:any;
+  listPosition:any;
+  listDirectiveManagement:any;
+  isAddForm: boolean;
   constructor(
     public translate: TranslateService,
     private modalService: NzModalService,
@@ -89,22 +95,28 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
     private fb: FormBuilder,
     private dateFormatPipe: DateFormatPipe,
     private router: Router,
+    private groupService:GroupService,
+    private userService:UserService
   ) {
     super('id');
     this.formAdd = this.fb.group({
       id: [null],
       fullname: [null, [Validators.required]],
-      roles: [null],
+      // roles: [null],
       phoneNo: [null, [Validators.required]],
       email: [null, [Validators.required]],
-      status: [null],
+      // status: [null],
       department: [null],
-      staffCode: [null, [Validators.required]],
-      username: [null, [Validators.required]],
-      password: [null],
-      repeatPassword: [null],
-      position: [null, [Validators.required]],
-      partnerId: [null],
+      // staffCode: [null],
+      // username: [null],
+      // password: [null],
+      // repeatPassword: [null],
+      position: [null],
+      titleId: [null],
+      // partnerId: [null],
+      userCode: [null],
+      directManagementUserId : [null],
+      directiveManagementUser :[null],
       // signatureImageUrl: [null, [Validators.required]],
       // province: [null],
       // district: [null],
@@ -319,49 +331,81 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
   }
 
   showModalAdd() {
-
+    this.formAdd.reset();
+    this.isAddForm = true;
     this.isVisibleAdd = true;
     this.submitted = false;
     this.titleFormUser = 'Thêm mới tài khoản';
-    this.formAdd.reset();
     this.formAdd.patchValue({
       id: 0,
       fullname: '',
-      roles: [],
-      status: 0,
+      // roles: [],
+      // status: 0,
       phoneNo: '',
       email: '',
       department: '',
-      staffCode: '',
-      username: '',
-      password: '',
-      repeatPassword: '',
+      // staffCode: '',
+      // username: '',
+      // password: '',
+      // repeatPassword: '',
       position: '',
-      partnerId: this.userInfor.id == 0 ? null : this.userInfor.partnerId
+      titleId: '',
+      directManagementUserId:'',
+      directiveManagementUser:''
+      
+      // partnerId: this.userInfor.id == 0 ? null : this.userInfor.partnerId
     });
+    this.loadPositionTitles();
+    this.loadDirectiveManagement();
+  }
+    loadPositionTitles() {
+      this.groupService.getListAllTitle().subscribe(
+          res => {
+              this.listPosition = res;
+          },
+          err => {
+              console.error('Error loading position titles:', err);
+          }
+      );
+  }
+
+  loadDirectiveManagement() {
+      this.userService.getListAdminEmployee().subscribe(
+          res => {
+              this.listDirectiveManagement = res;
+          },
+          err => {
+              console.error('Error loading directive management:', err);
+          }
+      );
   }
 
   showModalUpdate(data) {
+    this.isAddForm = false;
     this.isVisibleAdd = true;
     this.submitted = false;
     this.item = data;
-    this.titleFormUser = 'Sủa thông tin tài khoản';
+    this.titleFormUser = 'Sửa thông tin tài khoản';
     this.updated = true;
-
     this.formAdd.patchValue({
       id: this.item.id,
       fullname: this.item.fullname,
-      roles: this.item.roles,
-      status: this.item.status,
+      // roles: this.item.roles,
+      // status: this.item.status,
       phoneNo: this.item.phoneNo,
       email: this.item.email,
-      staffCode: this.item.staffCode,
+      // staffCode: this.item.staffCode,
       department: this.item.department,
-      username: this.item.username,
+      // username: this.item.username,
       position: this.item.position,
-      partnerId: this.item.partnerId
+      titleId: this.item.titleId,
+      // partnerId: this.item.partnerId,
+      // userCode: this.item.userCode,
+      directiveManagementUser: this.item.directManagementUserName,
+      directManagementUserId: this.item.directManagementUserId,
+    
     });
-
+    this.formAdd.get('userCode').disable();
   }
 
 
@@ -429,10 +473,9 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
     let formValue = this.formAdd.value;
     const checkEmail = this.validateEmail(formValue.email);
     this.submitted = true;
-
-    let userType: any;
+    // let userType: any;
     if (formValue.id === 0) {
-      if (this.formAdd.invalid || this.isEmpty(this.formAdd.controls['password'].value) || this.isEmpty(this.formAdd.controls['repeatPassword'].value)) {
+      if (this.formAdd.invalid) {
         return;
       }
 
@@ -441,11 +484,12 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
         return;
       }
       delete formValue.id;
-      formValue.status = 1;
-      userType = this.userInfor.userType == 0 ? 2 : this.userInfor.userType == 1 ? 3 : null;
-      const payload = { ...formValue, 'userType': userType };
-      this.generalService.addTaikhoan(payload).subscribe((res: any) => {
+      // formValue.status = 1;
+      // userType = this.userInfor.userType == 0 ? 2 : this.userInfor.userType == 1 ? 3 : null;
+      const payload = { ...formValue};
+      this.userService.addUserStaffVHL(payload).subscribe((res: any) => {
         if (res.ret && res.ret[0].code !== 0) {
+          
           this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
           formValue.id = 0;
         } else {
@@ -467,10 +511,8 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
         // this.notificationService.showNotification(Constant.ERROR, 'Email không đúng định dạng!');
         return;
       }
-
-      delete formValue.password;
-      delete formValue.repeatPassword;
-      this.generalService.updateTaikhoan(formValue).subscribe(res => {
+      
+      this.userService.updateUserStaffVHL(formValue.id, formValue).subscribe(res => {
         if (res.ret && res.ret[0].code !== 0) {
           this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
         } else {
@@ -601,9 +643,6 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
     });
     e.cancel = true;
   }
-
-
-
 
   // String.prototype.removeAccents = function() {
   //   return this

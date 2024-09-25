@@ -72,7 +72,7 @@ export class MasterPageComponent implements OnInit, OnDestroy {
   isDisbled: boolean;
   isDisbledUser: boolean;
   isDisbledPermission: boolean;
-  modalTitle = 'Thông tin tài khoản';
+  modalTitle = 'Thông tin của tôi';
   switchValue = false;
   dateFormat = 'yyyy/MM/dd';
   users: any[];
@@ -219,12 +219,12 @@ export class MasterPageComponent implements OnInit, OnDestroy {
   getUserById() {
     this.generalService.getTaikhoanById(this.loginUserID).subscribe(res => {
       if (res !== null) {
-        this.isDisbledUser = false;
+                this.isDisbledUser = false;
         this.isVisibleUser = true;
         this.selectionUserId = null;
         this.selectionData = res;
         this.selectionData.password = null;
-        this.selectionData.roles = res.userroles.map(en => en.roleId);
+        this.selectionData.roles = res.userRoles.map(en => en.roleId);
       }
     }, error => {
 
