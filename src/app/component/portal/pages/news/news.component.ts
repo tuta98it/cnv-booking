@@ -166,7 +166,7 @@ export class NewsComponent extends TableSelectionAbstract implements OnInit, OnD
     this.isVisibleAdd = true;
     this.submitted = false;
     this.item = data;
-    this.titleFormUser = 'Sủa thông tin bài đăng';
+    this.titleFormUser = 'Sửa thông tin bài đăng';
     this.updated = true;
 
     this.formAdd.patchValue({

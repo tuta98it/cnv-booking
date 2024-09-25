@@ -11,7 +11,7 @@
           <nz-select style="width: 100%"
                      nzShowSearch
                      formControlName="userId"
-                     nzPlaceHolder="Tài khoản.." class="input-search"
+                     nzPlaceHolder="Tài khoản..." class="input-search"
                      [nzShowArrow]="true">
             <nz-option  nzCustomContent *ngFor="let user of users" nzLabel="{{user.fullname}} - {{user.username}}" [nzValue]="user.id">
               {{user.fullname}} - {{user.username}}

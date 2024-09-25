@@ -254,42 +254,42 @@
 
       <!-- Menu trả về từ backend theoo quyền user -->
       <ul nz-menu nzTheme="" [nzMode]="modeMenu ? 'vertical' : 'inline'">
-      <div *ngFor="let menu of menus;let i = index;">
-        <li *ngIf="menu.children.length == 0" nz-menu-item [nzSelected]="url == '{{menu.path}}'">
-          <i nz-icon nzType="{{menu.iconType}}"></i>
-          <span>
-            <a routerLink="{{menu.path}}">{{menu.name}}</a>
-          </span>
-        </li>
+        <div *ngFor="let menu of menus;let i = index;">
+          <li *ngIf="menu.children.length == 0" nz-menu-item [nzSelected]="url == '{{menu.path}}'">
+            <i nz-icon nzType="{{menu.iconType}}"></i>
+            <span>
+              <a routerLink="{{menu.path}}">{{menu.name}}</a>
+            </span>
+          </li>
 
-        <li *ngIf="menu.children.length > 0" nz-submenu nzTitle="{{menu.name}}" nzIcon="{{menu.iconType}}">
-          <ul>
-            <div *ngFor="let child of menu.children">
+          <li *ngIf="menu.children.length > 0" nz-submenu nzTitle="{{menu.name}}" nzIcon="{{menu.iconType}}">
+            <ul>
+              <div *ngFor="let child of menu.children">
 
-              <li *ngIf="child.children.length == 0" nz-menu-item [nzSelected]="url == '{{child.path}}'">
-                <i nz-icon nzType="{{child.iconType}}"></i>
-                <span>
-                  <a routerLink="{{child.path}}">{{child.name}}</a>
-                </span>
-              </li>
+                <li *ngIf="child.children.length == 0" nz-menu-item [nzSelected]="url == '{{child.path}}'">
+                  <i nz-icon nzType="{{child.iconType}}"></i>
+                  <span>
+                    <a routerLink="{{child.path}}">{{child.name}}</a>
+                  </span>
+                </li>
 
-              <li *ngIf="child.children.length > 0" nz-submenu nzTitle="{{child.name}}" nzIcon="{{child.iconType}}">
-                <ul>
-                  <div *ngFor="let grandchildren of child.children">
-                    <li nz-menu-item [nzSelected]="url == '{{grandchildren.path}}'">
-                      <i nz-icon nzType="{{grandchildren.iconType}}"></i>
-                      <span>
-                        <a routerLink="{{grandchildren.path}}">{{grandchildren.name}}</a>
-                      </span>
-                    </li>
-                  </div>
-                </ul>
-              </li>
-            </div>
-          </ul>
-        </li>
-      </div>
-    </ul>
+                <li *ngIf="child.children.length > 0" nz-submenu nzTitle="{{child.name}}" nzIcon="{{child.iconType}}">
+                  <ul>
+                    <div *ngFor="let grandchildren of child.children">
+                      <li nz-menu-item [nzSelected]="url == '{{grandchildren.path}}'">
+                        <i nz-icon nzType="{{grandchildren.iconType}}"></i>
+                        <span>
+                          <a routerLink="{{grandchildren.path}}">{{grandchildren.name}}</a>
+                        </span>
+                      </li>
+                    </div>
+                  </ul>
+                </li>
+              </div>
+            </ul>
+          </li>
+        </div>
+      </ul>
     </nz-sider>
     <nz-content>
       <div class="content-vhl">

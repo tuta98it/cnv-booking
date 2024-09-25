@@ -1040,7 +1040,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
     this.isVisibleAddRoom = true;
     this.submitted = false;
     this.item = data;
-    this.titleFormRoom = 'Sủa thông tin phòng';
+    this.titleFormRoom = 'Sửa thông tin phòng';
     this.updated = true;
 
     this.formAddRoom.patchValue({

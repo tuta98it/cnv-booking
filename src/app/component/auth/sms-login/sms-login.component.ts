@@ -67,7 +67,7 @@ export class SmsLoginComponent implements OnInit {
         this.notificationService.showNotification(Constant.ERROR, res.message);
       }
     }, error => {
-      this.messageError = Constant.LOGIN_FAIL;
+      this.messageError = error.error.message;
       this.notificationService.showNotification(Constant.ERROR, this.messageError);
     });
   }

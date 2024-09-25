@@ -15,7 +15,7 @@ export class Constant {
   public static readonly TOKEN = 'token';
   public static readonly ACTION = 'action';
   public static readonly USER_INFO = 'user';
-  public static readonly LOGIN_FAIL = 'Sai tên đăng nhập hoặc mật khẩu';
+  public static readonly LOGIN_FAIL = 'Tài khoản hoặc mật khẩu không chính xác. Hoặc tài khoản đã bị khoá, không có quyền truy cập';
   public static readonly DELETE = 'Xóa';
   public static readonly CREATE = 'Thêm';
   public static readonly UPDATE = 'Sửa';
@@ -118,4 +118,9 @@ export class UserRegisterConfig {
 
 export class RequestBookingConfig {
   public static readonly TIME_UPDATE_DATAS = 20000;
+}
+
+
+export class DepositConstant {
+  public static DEPOSIT_CONTENT_DEFAULT  = "Nạp tiền vào tài khoản";
 }

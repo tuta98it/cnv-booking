@@ -71,7 +71,7 @@ export class LoginComponent implements OnInit , OnDestroy {
       }
       // tslint:disable-next-line:no-shadowed-variable
     }, error => {
-        this.messageError = Constant.LOGIN_FAIL;
+        this.messageError = error.error.message;
     });
   }
 }

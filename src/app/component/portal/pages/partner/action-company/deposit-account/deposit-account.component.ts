@@ -7,7 +7,7 @@ import { NzModalService } from 'ng-zorro-antd/modal';
 import { AppConfigService } from 'src/app-config.service';
 import { GeneralService } from 'src/app/service/general-service';
 import { NotificationService } from 'src/app/service/notification.service';
-import { Constant } from 'src/app/shared/constants/constant.class';
+import { Constant, DepositConstant } from 'src/app/shared/constants/constant.class';
 @Component({
   selector: 'app-deposit-account',
   templateUrl: './deposit-account.component.html',
@@ -26,6 +26,7 @@ export class DepositAccountComponent implements OnInit {
   valueInputNumberAmount = '';
   tooltipTitleAmount = 'Nhập số tiền';
   formDepositAccount: FormGroup;
+  userInfor: any;
   constructor(private msg: NzMessageService,
     private activatedRoute: ActivatedRoute,
     private formBuilder: FormBuilder,
@@ -44,12 +45,20 @@ export class DepositAccountComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.getUserInfo();
+    this.formDepositAccount.reset({
+      id: null,
+      implementPersonId: this.userInfor.id,
+      depositContent: DepositConstant.DEPOSIT_CONTENT_DEFAULT,
+    })
+  }
+  getUserInfo() {
+    this.userInfor = JSON.parse(localStorage.getItem(Constant.USER_INFO));
   }
 
 
   onChangeInputAmount(value: string, controlName?: string): void {
     this.updateValueInputAmount(value);
-
   }
 
 

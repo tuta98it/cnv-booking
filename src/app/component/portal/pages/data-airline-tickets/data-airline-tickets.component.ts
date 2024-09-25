@@ -132,7 +132,7 @@ export class DataAirlineTicketsComponent extends TableSelectionAbstract implemen
     page: 1,
     pageSize: 1000
   };
-  readonly allowedPageSizes = [5, 10, 15, 20, 'all'];
+  readonly allowedPageSizes = [20, 50, 100, 200, 500 ,'all'];
   readonly displayModes = [{ text: "Display Mode 'full'", value: 'full' }, { text: "Display Mode 'compact'", value: 'compact' }];
   displayMode = 'full';
   showPageSizeSelector = true;
@@ -758,7 +758,7 @@ export class DataAirlineTicketsComponent extends TableSelectionAbstract implemen
     this.isVisibleAddRoom = true;
     this.submitted = false;
     this.item = data;
-    this.titleFormRoom = 'Sủa thông tin phòng';
+    this.titleFormRoom = 'Sửa thông tin phòng';
     this.updated = true;
 
     this.formAddRoom.patchValue({
