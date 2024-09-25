@@ -352,7 +352,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
       titleId: '',
       directManagementUserId:'',
       directiveManagementUser:''
-      
+
       // partnerId: this.userInfor.id == 0 ? null : this.userInfor.partnerId
     });
     this.loadPositionTitles();
@@ -400,10 +400,10 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
       position: this.item.position,
       titleId: this.item.titleId,
       // partnerId: this.item.partnerId,
-      // userCode: this.item.userCode,
+      userCode: this.item.userCode,
       directiveManagementUser: this.item.directManagementUserName,
       directManagementUserId: this.item.directManagementUserId,
-    
+
     });
     this.formAdd.get('userCode').disable();
   }
@@ -489,7 +489,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
       const payload = { ...formValue};
       this.userService.addUserStaffVHL(payload).subscribe((res: any) => {
         if (res.ret && res.ret[0].code !== 0) {
-          
+
           this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
           formValue.id = 0;
         } else {
@@ -511,7 +511,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
         // this.notificationService.showNotification(Constant.ERROR, 'Email không đúng định dạng!');
         return;
       }
-      
+
       this.userService.updateUserStaffVHL(formValue.id, formValue).subscribe(res => {
         if (res.ret && res.ret[0].code !== 0) {
           this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
