@@ -6,7 +6,7 @@ import { MENU_UPGRADE_EMPLOYEE_OPTION, MenuUpgradeEmployee } from 'src/app/enums
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NzTableLayout, NzTablePaginationPosition, NzTablePaginationType, NzTableSize } from 'ng-zorro-antd/table';
 import { NZTableSettingCustoms } from 'src/app/Interfaces/nz-table-seting.interface';
-import { ActionTypePageVHL } from 'src/app/enums/action-type-page-vhl.enum';
+import { ActionTypePageText, ActionTypePageVHL } from 'src/app/enums/action-type-page-vhl.enum';
 import { AllowDebtPartner } from 'src/app/shared/constants/allow-debt-partner.class';
 import { UploadFileSetting } from 'src/app/Interfaces/upload-file-setting.interface';
 import { AppConfigService } from 'src/app-config.service';
@@ -63,6 +63,7 @@ export class UpgradeEmployeeComponent implements OnInit {
   MONTHS_OPTIONS = MONTHS_OPTIONS;
   PAYMENT_PERIOD_DAYS_OPTIONS = [];
   actionEmployeeVHL: any;
+  ActionTypePageText = ActionTypePageText;
   indeterminateEmployee = false;
   fixedColumn = false;
   listOfEmployees: readonly any[] = [];
@@ -170,8 +171,13 @@ export class UpgradeEmployeeComponent implements OnInit {
     if (this.actionEmployeeVHL == ActionTypePageVHL.Create) {
       this.listOfEmployees = [];
       this.resetFormBaseInfoCreateEmployee(null);
-    } else if (this.actionEmployeeVHL == ActionTypePageVHL.Update) {
-      this.setIsActiveEditBaseInfo(true);
+    } else if (this.actionEmployeeVHL == ActionTypePageVHL.Update
+      || this.actionEmployeeVHL == ActionTypePageVHL.View) {
+      if (this.actionEmployeeVHL == ActionTypePageVHL.Update) {
+        this.setIsActiveEditBaseInfo(true);
+      } else if (this.actionEmployeeVHL == ActionTypePageVHL.View) {
+        this.setIsActiveEditBaseInfo(false);
+      }
       this.activatedRoute.queryParams.subscribe(async params => {
         let idEmployee = +params['employeeId']; // Lấy id từ query parameter
         this.itemEmployee = await this.getEmployeeById(idEmployee).catch((reject) => {
@@ -413,18 +419,20 @@ export class UpgradeEmployeeComponent implements OnInit {
     this.isActiveEditBaseInfo = value;
     if (this.isActiveEditBaseInfo) {
       this.formBaseInfoEmployee.enable();
-      if (this.actionEmployeeVHL == ActionTypePageVHL.Create) {
-        this.formBaseInfoEmployee.controls['status'].disable();
-      }
       setTimeout(() => {
         if (!this.idPartner) {
           this.formBaseInfoEmployee.controls['directManagementUserId'].disable();
         }
       }, 200);
-
     } else {
       this.formBaseInfoEmployee.disable();
+      setTimeout(() => {
+        this.formBaseInfoEmployee.controls['directManagementUserId'].disable();
+      }, 200);
     }
+    setTimeout(() => {
+      this.formBaseInfoEmployee.controls['status'].disable();
+    }, 200);
   }
 
   cancelBaseInfoPartner() {

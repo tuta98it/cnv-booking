@@ -777,7 +777,7 @@
                     </td>
                     <td [nzLeft]="fixedColumnEmployee" [nzDisabled]="data.disabled">{{ data.userType | userTypePipe }}
                     </td>
-                    <td [nzDisabled]="data.disabled"><a style="text-decoration: underline; color: #3B82F6">{{ data.userCode }}</a></td>
+                    <td [nzDisabled]="data.disabled"><a style="text-decoration: underline; color: #3B82F6" (click)="navigatePage('companies/employee-action/view', ActionTypePageVHL.View, data.id)">{{ data.userCode }}</a></td>
                     <td [nzDisabled]="data.disabled">{{ data.fullname }}</td>
                     <td [nzDisabled]="data.disabled" [style.color]="COLOR_USER_STATUS[data.status]">{{
                       TEXT_USER_STATUS[data.status] }}</td>

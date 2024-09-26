@@ -1336,6 +1336,9 @@ export class ActionPartnerComponent implements OnInit {
       case ActionTypePageVHL.Update:
         this.router.navigate([`${url}`], { queryParams: { employeeId: idEmployee, partnerId: this.itemPartner.id } })
         break;
+        case ActionTypePageVHL.View:
+          this.router.navigate([`${url}`], { queryParams: { employeeId: idEmployee, partnerId: this.itemPartner.id } })
+          break;
       default:
         break;
     }
