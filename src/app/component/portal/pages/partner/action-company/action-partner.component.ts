@@ -45,6 +45,7 @@ type TableScroll = 'unset' | 'scroll' | 'fixed';
   styleUrls: ['./action-partner.component.scss']
 })
 export class ActionPartnerComponent implements OnInit {
+  Constant = Constant;
   titleActionCompanyPage: string = "Thêm mới doanh nghiệp"
   ActionTypePageVHL = ActionTypePageVHL;
   MenuCreatePartner = MenuUpgradePartner;

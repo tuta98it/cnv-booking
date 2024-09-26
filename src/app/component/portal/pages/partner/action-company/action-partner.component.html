@@ -966,7 +966,7 @@
                       {{ data.stt }}
                     </td>
                     <td [nzLeft]="fixedColumnBalanceFluctuation" [nzDisabled]="data.disabled">{{ data.transactionTime |
-                      dateFormat }}</td>
+                      dateFormat : Constant.DATE_FMT_HOUR }}</td>
                     <td [nzDisabled]="data.disabled">{{ data.implementPersonInfo }}</td>
 
                     <td [nzDisabled]="data.disabled" *ngIf="data.amount > 0">{{ (data.amount) | currencyFormat }} đ</td>
