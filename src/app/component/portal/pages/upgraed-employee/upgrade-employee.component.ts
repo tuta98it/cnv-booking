@@ -572,4 +572,46 @@ export class UpgradeEmployeeComponent implements OnInit {
     }
 
   }
+
+  showResetPassword(): void {
+    this.itemEmployee.isLoadingResetPassword = true;
+    this.modalService.confirm({
+      nzTitle: `<b>Bạn có chắc muốn thiết lập lại mật khẩu mặc định cho tài khoản ${this.itemEmployee.username}?</b>`,
+      nzContent: 'Ấn đồng ý để tiếp tục',
+      nzOkDanger: true,
+      nzOkText: 'Đồng ý',
+      nzCancelText: 'Không',
+      nzOnOk: () => this.resetPassword(),
+      nzOnCancel: () => this.cancelResetPassword()
+    });
+  }
+
+  private cancelResetPassword() {
+    this.itemEmployee.isLoadingResetPassword = false;
+  }
+
+
+  resetPassword() {
+    this.generalService.resetPasswordUser(this.itemEmployee.id).subscribe({
+      next: (res) => {
+        if (res.isValid) {
+          this.notificationService.showNotification(Constant.SUCCESS, `Thiết lập mật khẩu mặc định tài khoản ${this.itemEmployee.username} thành công`);
+        } else {
+          if (res.errors && res.errors.length > 0) {
+            res.errors.forEach((el: any) => {
+              this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+            });
+          } else {
+            this.notificationService.showNotification(Constant.ERROR, `Thiết lập mật khẩu mặc định tài khoản ${this.itemEmployee.username} không thành công`);
+          }
+        }
+      },
+      error: (error) => {
+        this.notificationService.showNotification(Constant.ERROR, `Thiết lập mật khẩu mặc định tài khoản ${this.itemEmployee.username} không thành công do lỗi hệ thống`);
+      },
+      complete: () => {
+      }
+    }).add(() => { this.itemEmployee.isLoadingActiveUser = false; });
+  }
+
 }

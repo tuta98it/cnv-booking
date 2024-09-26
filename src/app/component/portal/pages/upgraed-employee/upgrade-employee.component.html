@@ -41,7 +41,7 @@
           <!-- (click)="cancelPageActionPartner()" *ngIf="itemPartner?.status != PartnerStatus.Active" -->
 
           <button *ngIf="actionEmployeeVHL == ActionTypePageVHL.Update && itemEmployee?.status == EmployeeStatus.ACTIVE"
-            nz-button nzType="default" style="margin-right: 8px;">
+            nz-button nzType="default" style="margin-right: 8px;" (click)="showResetPassword()">
             <div style="display: flex; align-items: center; ">
               <span nz-icon nzType="key"></span>
               <span style="margin-left: 4px; line-height: normal;">Reset lại mật khẩu</span>
