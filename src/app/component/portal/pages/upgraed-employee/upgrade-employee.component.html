@@ -18,21 +18,56 @@
           </button>
         </div> -->
         <div>
-          <button *ngIf="isActiveEditBaseInfo && actionEmployeeVHL != ActionTypePageVHL.View" nz-button nzType="primary" style="margin-right: 8px;"
-            (click)="saveBaseInfoEmployee()">
+          <!-- (click)="handleUnLockCompany()" *ngIf="itemPartner?.status == PartnerStatus.Locked"-->
+          <button *ngIf="actionEmployeeVHL == ActionTypePageVHL.Update
+                        && itemEmployee?.status == EmployeeStatus.LOCKED" nz-button nzType="default"
+            style="margin-right: 8px; " (click)="showUnlockAccountConfirm()">
+            <div style="display: flex; align-items: center;">
+              <span nz-icon nzType="unlock"></span>
+              <span style="margin-left: 6px; line-height: normal;">Mở khoá</span>
+            </div>
+          </button>
+
+          <!-- (click)="handleLockCompany()" *ngIf="itemPartner?.status != PartnerStatus.Locked" -->
+          <button
+            *ngIf="actionEmployeeVHL == ActionTypePageVHL.Update  && itemEmployee?.status == EmployeeStatus.ACTIVE"
+            nz-button nzDanger nzType="default" style="margin-right: 8px;" (click)="showLockAccountConfirm()">
+            <div style="display: flex; align-items: center;">
+              <span nz-icon nzType="lock"></span>
+              <span style="margin-left: 4px; line-height: normal;">Khoá lại</span>
+            </div>
+          </button>
+
+          <!-- (click)="cancelPageActionPartner()" *ngIf="itemPartner?.status != PartnerStatus.Active" -->
+
+          <button *ngIf="actionEmployeeVHL == ActionTypePageVHL.Update && itemEmployee?.status == EmployeeStatus.ACTIVE"
+            nz-button nzType="default" style="margin-right: 8px;">
+            <div style="display: flex; align-items: center; ">
+              <span nz-icon nzType="key"></span>
+              <span style="margin-left: 4px; line-height: normal;">Reset lại mật khẩu</span>
+            </div>
+          </button>
+
+          <button
+            *ngIf="isActiveEditBaseInfo && actionEmployeeVHL != ActionTypePageVHL.View && itemEmployee?.status == EmployeeStatus.ACTIVE"
+            nz-button nzType="primary" style="margin-right: 8px;" (click)="saveBaseInfoEmployee()">
             <div style="display: flex; align-items: center;">
               <span nz-icon nzType="save"></span>
               <span style="margin-left: 6px; line-height: normal;">Lưu lại</span>
             </div>
           </button>
-          <button *ngIf="!isActiveEditBaseInfo && actionEmployeeVHL != ActionTypePageVHL.View" nz-button nzType="primary" style="margin-right: 8px;"
-            (click)="editBaseInfoEmployee()">
+
+          <button
+            *ngIf="!isActiveEditBaseInfo && actionEmployeeVHL != ActionTypePageVHL.View && itemEmployee?.status == EmployeeStatus.ACTIVE"
+            nz-button nzType="primary" style="margin-right: 8px;" (click)="editBaseInfoEmployee()">
             <div style="display: flex; align-items: center;">
               <span nz-icon nzType="edit"></span>
               <span style="margin-left: 6px; line-height: normal;">Chỉnh sửa</span>
             </div>
           </button>
-          <button *ngIf="isActiveEditBaseInfo && actionEmployeeVHL != ActionTypePageVHL.View" nz-button nzType="default" (click)="cancelPageActionEmployee()">
+          <button
+            *ngIf="isActiveEditBaseInfo && actionEmployeeVHL != ActionTypePageVHL.View && itemEmployee?.status == EmployeeStatus.ACTIVE"
+            nz-button nzType="default" (click)="cancelPageActionEmployee()">
             <div style="display: flex; align-items: center;">
               <span nz-icon nzType="close"></span>
               <span style="margin-left: 4px; line-height: normal;">Huỷ bỏ</span>

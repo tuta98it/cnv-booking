@@ -25,6 +25,7 @@ import { USER_STATUS_OPTIONS, UserStatus } from 'src/app/enums/user-status.enum'
 import { TEXT_PARTNER_STATUS } from 'src/app/enums/partner-status.enum';
 import { Gender, GENDER_OPTIONS, TEXT_GENDER } from 'src/app/enums/gender.enum';
 import { Location } from '@angular/common';
+import { NzModalService } from 'ng-zorro-antd/modal';
 type TableScroll = 'unset' | 'scroll' | 'fixed';
 
 @Component({
@@ -104,7 +105,8 @@ export class UpgradeEmployeeComponent implements OnInit {
     private generalService: GeneralService,
     private notificationService: NotificationService,
     private router: Router,
-    private location: Location
+    private location: Location,
+    private modalService: NzModalService,
   ) {
 
     this.formBaseInfoEmployee = this.formBuilder.group({
@@ -173,17 +175,22 @@ export class UpgradeEmployeeComponent implements OnInit {
       this.resetFormBaseInfoCreateEmployee(null);
     } else if (this.actionEmployeeVHL == ActionTypePageVHL.Update
       || this.actionEmployeeVHL == ActionTypePageVHL.View) {
-      if (this.actionEmployeeVHL == ActionTypePageVHL.Update) {
-        this.setIsActiveEditBaseInfo(true);
-      } else if (this.actionEmployeeVHL == ActionTypePageVHL.View) {
-        this.setIsActiveEditBaseInfo(false);
-      }
+
       this.activatedRoute.queryParams.subscribe(async params => {
         let idEmployee = +params['employeeId']; // Lấy id từ query parameter
         this.itemEmployee = await this.getEmployeeById(idEmployee).catch((reject) => {
           this.notificationService.showNotification(Constant.ERROR, `Lỗi truy vấn dữ liệu nhân viên`);
           this.location.back();
         });
+        if (this.actionEmployeeVHL == ActionTypePageVHL.Update) {
+          if (this.itemEmployee.status == this.EmployeeStatus.ACTIVE) {
+            this.setIsActiveEditBaseInfo(true);
+          } else if (this.itemEmployee.status == this.EmployeeStatus.LOCKED) {
+            this.setIsActiveEditBaseInfo(false);
+          }
+        } else if (this.actionEmployeeVHL == ActionTypePageVHL.View) {
+          this.setIsActiveEditBaseInfo(false);
+        }
         this.resetFormBaseInfoCreateEmployee(this.itemEmployee);
 
         this.getListEmployeeServiceUsageHistoryAdmin(idEmployee).then((result: any) => {
@@ -459,5 +466,110 @@ export class UpgradeEmployeeComponent implements OnInit {
         this.PAYMENT_PERIOD_DAYS_OPTIONS = [];
         break;
     }
+  }
+
+  showLockAccountConfirm(): void {
+    this.modalService.confirm({
+      nzTitle: `<b>Bạn có chắc muốn khoá tài khoản ${this.itemEmployee.username}?</b>`,
+      nzContent: 'Ấn đồng ý để tiếp tục',
+      nzOkDanger: true,
+      nzOkText: 'Đồng ý',
+      nzCancelText: 'Không',
+      nzOnOk: () => this.lockEmployeeAccount().then(r => this.cancelActiveUserConfirm()),
+      nzOnCancel: () => this.cancelActiveUserConfirm()
+    });
+  }
+
+  showUnlockAccountConfirm(): void {
+    this.modalService.confirm({
+      nzTitle: `<b>Bạn có chắc muốn mở khoá tài khoản ${this.itemEmployee.username}?</b>`,
+      nzContent: 'Ấn đồng ý để tiếp tục',
+      nzOkDanger: false,
+      nzOkText: 'Đồng ý',
+      nzCancelText: 'Không',
+      nzOnOk: () => this.unlockEmployeeAccount().then(r => this.cancelActiveUserConfirm()),
+      nzOnCancel: () => this.cancelActiveUserConfirm(),
+    });
+  }
+
+  private lockEmployeeAccount() {
+    return new Promise((resolve, reject) => {
+      let isActive = false;
+      this.generalService.setStatusUser(this.itemEmployee.id, isActive).subscribe({
+        next: (res) => {
+          if (res.isValid) {
+            this.notificationService.showNotification(Constant.SUCCESS, 'Khoá tài khoản không thành công');
+            this.itemEmployee = res.data;
+            this.saveBaseInfoEmployee();
+            resolve(res.data);
+          } else {
+            if (res.errors && res.errors.length > 0) {
+              res.errors.forEach((el: any) => {
+                this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+              });
+            } else {
+              this.notificationService.showNotification(Constant.ERROR, `Khoá tài khoản ${this.itemEmployee.username} thành công`);
+            }
+            reject(res.error);
+          }
+        },
+
+        error: (error) => {
+          this.notificationService.showNotification(Constant.ERROR, 'Khoá tài khoản đã gặp lỗi');
+        },
+
+        complete: () => {
+
+        }
+
+      }).add(() => {
+      });
+    });
+
+  }
+
+  private unlockEmployeeAccount() {
+    return new Promise((resolve, reject) => {
+      let isActive = true;
+      this.generalService.setStatusUser(this.itemEmployee.id, isActive).subscribe({
+        next: (res) => {
+          if (res.isValid) {
+            this.notificationService.showNotification(Constant.SUCCESS, 'Mở khoá tài khoản không thành công');
+            this.itemEmployee = res.data;
+            this.setIsActiveEditBaseInfo(true);
+            resolve(res.data);
+          } else {
+            if (res.errors && res.errors.length > 0) {
+              res.errors.forEach((el: any) => {
+                this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+              });
+            } else {
+              this.notificationService.showNotification(Constant.ERROR, `Mở khoá tài khoản ${this.itemEmployee.username} thành công`);
+            }
+            reject(res.error);
+          }
+        },
+
+
+        error: (error) => {
+          this.notificationService.showNotification(Constant.ERROR, 'Mở khoá tài khoản đã gặp lỗi');
+          reject(error);
+        },
+
+        complete: () => {
+
+        }
+
+      }).add(() => {
+      });
+    })
+
+  }
+
+  private cancelActiveUserConfirm() {
+    if (this.itemEmployee) {
+      this.itemEmployee.isLoadingActiveUser = false;
+    }
+
   }
 }
