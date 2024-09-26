@@ -777,7 +777,7 @@
                     </td>
                     <td [nzLeft]="fixedColumnEmployee" [nzDisabled]="data.disabled">{{ data.userType | userTypePipe }}
                     </td>
-                    <td [nzDisabled]="data.disabled">{{ data.userCode }}</td>
+                    <td [nzDisabled]="data.disabled"><a style="text-decoration: underline; color: #3B82F6">{{ data.userCode }}</a></td>
                     <td [nzDisabled]="data.disabled">{{ data.fullname }}</td>
                     <td [nzDisabled]="data.disabled" [style.color]="COLOR_USER_STATUS[data.status]">{{
                       TEXT_USER_STATUS[data.status] }}</td>
@@ -1037,7 +1037,7 @@
                     <td [nzLeft]="fixedColumnBusinessUsageHistory">{{ data.successfullBookingDate | dateFormat }}
                     </td>
                     <td>{{ data.approvalCode }}</td>
-                    <td>{{ data.userCode }}</td>
+                    <td><a style="text-decoration: underline;" href="">{{ data.userCode }}</a></td>
                     <td>{{ data.fulnameNameUserBooking }}</td>
                     <td>{{ data.fullnamePassengers}}</td>
                     <td>{{ data.serviceUsedName}}</td>

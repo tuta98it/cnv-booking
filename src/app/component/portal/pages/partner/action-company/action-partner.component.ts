@@ -528,15 +528,18 @@ export class ActionPartnerComponent implements OnInit {
     this.isActiveEditBaseInfo.valueChanges.subscribe((value: any) => {
       if (value == true) {
         this.formBaseInfoCreatePartner.enable();
-        if (this.actionPartnerVHL == ActionTypePageVHL.Create) {
-          this.formBaseInfoCreatePartner.controls['status'].disable();
-        }
+        // if (this.actionPartnerVHL == ActionTypePageVHL.Create) {
+        //   setTimeout(() => {
+        //     this.formBaseInfoCreatePartner.controls['status'].disable();
+        //   }, 200);
+        // }
       } else {
         this.formBaseInfoCreatePartner.disable();
-        setTimeout(() => {
-          this.formBaseInfoCreatePartner.controls['status'].disable();
-        }, 200);
+
       }
+      setTimeout(() => {
+        this.formBaseInfoCreatePartner.controls['status'].disable();
+      }, 200);
     });
 
 

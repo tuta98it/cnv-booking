@@ -6,6 +6,13 @@ import { UpgradeEmployeeComponent } from './upgrade-employee.component';
 
 const routes: Routes = [
   {
+    path: 'view', component: UpgradeEmployeeComponent, canActivate: [AuthGuard], data: {
+      type: ActionTypePageVHL.View,
+      pagename: 'Xem thông tin nhân viên',
+      breadcrumb: 'Xem thông tin',
+    }
+  },
+  {
     path: 'create', component: UpgradeEmployeeComponent, canActivate: [AuthGuard], data: {
       type: ActionTypePageVHL.Create,
       pagename: 'Danh sách nhân viên',
