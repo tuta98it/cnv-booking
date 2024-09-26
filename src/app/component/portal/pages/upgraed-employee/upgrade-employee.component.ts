@@ -498,7 +498,7 @@ export class UpgradeEmployeeComponent implements OnInit {
       this.generalService.setStatusUser(this.itemEmployee.id, isActive).subscribe({
         next: (res) => {
           if (res.isValid) {
-            this.notificationService.showNotification(Constant.SUCCESS, 'Khoá tài khoản không thành công');
+            this.notificationService.showNotification(Constant.SUCCESS, `Khoá tài khoản ${this.itemEmployee.username} thành công`);
             this.itemEmployee = res.data;
             this.saveBaseInfoEmployee();
             resolve(res.data);
@@ -534,7 +534,7 @@ export class UpgradeEmployeeComponent implements OnInit {
       this.generalService.setStatusUser(this.itemEmployee.id, isActive).subscribe({
         next: (res) => {
           if (res.isValid) {
-            this.notificationService.showNotification(Constant.SUCCESS, 'Mở khoá tài khoản không thành công');
+            this.notificationService.showNotification(Constant.SUCCESS, `Mở khoá tài khoản ${this.itemEmployee.username}thành công`);
             this.itemEmployee = res.data;
             this.setIsActiveEditBaseInfo(true);
             resolve(res.data);
