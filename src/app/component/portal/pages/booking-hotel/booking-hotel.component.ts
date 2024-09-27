@@ -37,6 +37,7 @@ import { MinNumberValidator } from 'src/app/shared/custom-validator/minValueVali
 import { WhiteSpaceValidator } from 'src/app/shared/custom-validator/whiteSpaceValidator';
 import { CheckValidatorForm } from 'src/app/shared/custom-validator/checkValidatorForm';
 import { Attachment } from 'src/app/model/attachment';
+import { promise } from 'protractor';
 @Component({
   selector: 'app-hotel',
   templateUrl: './booking-hotel.component.html',
@@ -1594,23 +1595,28 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
       this.isShowAddCodeBookingRoom = true;
     }
   }
-  updateBookingHotelStatus(bookingHotelId: number, status: number) {
-    this.generalService.updateBookingHotelStatus(
-      {
-        bookingHotelId: bookingHotelId,
-        status: status,
-      }
-    ).subscribe({
-      next: (res) => {
-        this.notificationService.showNotification(Constant.SUCCESS, 'Cập nhật trạng thái thành công');
-      },
-      error: (error) => {
-        this.notificationService.showNotification(Constant.ERROR, 'Cập nhật trạng thái không thành công');
-      },
-      complete: () => {
-        this.getListData();
-      }
-    })
+  updateBookingHotelStatus(bookingHotelId: number, status: number): Promise<any> {
+    return new Promise((resolve, rejects) => {
+      this.generalService.updateBookingHotelStatus(
+        {
+          bookingHotelId: bookingHotelId,
+          status: status,
+        }
+      ).subscribe({
+        next: (res) => {
+          this.notificationService.showNotification(Constant.SUCCESS, 'Cập nhật trạng thái thành công');
+          resolve(true);
+        },
+        error: (error) => {
+          this.notificationService.showNotification(Constant.ERROR, 'Cập nhật trạng thái không thành công');
+          rejects(error);
+        },
+        complete: () => {
+          this.getListData();
+        }
+      });
+    });
+
   }
   checkCallShowEditBookingHotel(oldValue: number, newValue: number) {
     if (oldValue === HotelBookingStatusEnum.SendRequest && newValue === HotelBookingStatusEnum.Holding) {
@@ -1830,56 +1836,104 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
     });
     return [...arrAdt, ...arrChd];
   }
-  // update
-  updateBookingHotel() {
-    if (!this.checkValidateDetailBookingHotelForm()) {
-      this.notificationService.showNotification(Constant.ERROR, "Vui lòng nhập đầy đủ thông tin");
-      return;
-    }
-    let payload = {
-      id: this.detailBookingGeneralForm.value.id,
-      otherRequirements: this.detailBookingGeneralForm.value.otherRequirements,
-      isUrgent: this.detailBookingGeneralForm.value.isUrgent,
-      contactName: this.dataDetailBookingHotel.userFullName,
-      contactPhone: this.dataDetailBookingHotel.userEmail,
-      contactEmail: this.dataDetailBookingHotel.userPhoneNo,
-      roomDetails: [
+
+
+  handleUpdateBookingHotel() {
+    this.updateBookingHotel().then((result: any) => {
+      this.updateBookingHotelStatus(this.detailBookingGeneralForm.value.id, HotelBookingStatusEnum.Holding).then((result: any) => {
+        //gửi email xác nhận giữ chỗ đặt phòng khách sạn
+        this.sendEmailConfirmationOfHotelReservation(this.detailBookingGeneralForm.value.id);
+      });
+
+    }).catch((error: any) => {
+
+    });
+  }
+
+  sendEmailConfirmationOfHotelReservation(bookingHotelId: any) {
+    return new Promise((resolve, reject) => {
+      this.generalService.sendEmailConfirmationOfHotelReservation(bookingHotelId).subscribe(
         {
-          id: this.detailBookingRoomForm.value.id,
-          hotelId: this.detailBookingRoomForm.value.hotelId,
-          roomHotelId: this.detailBookingRoomForm.value.room.id,
-          checkinDate: new Date(this.detailBookingRoomForm.value.checkinDate),
-          checkoutDate: new Date(this.detailBookingRoomForm.value.checkoutDate),
-          numberOfNights: this.detailBookingRoomForm.value.numberOfNights,
-          amount: this.detailBookingRoomForm.value.amount,
-          extraBed: this.detailBookingRoomForm.value.extraBed,
-          adt: this.detailBookingRoomForm.value.adt, // số lượng người lớn (adult)
-          chd: this.detailBookingRoomForm.value.chd, // số lượng trẻ em (child)
-          inf: this.detailBookingRoomForm.value.inf, // số lượng trẻ sơ sinh (infant)
-          price: this.detailBookingRoomForm.value.price,
-          adultSurcharge: this.detailBookingRoomForm.value.adultSurcharge, // phụ phí người lớn
-          childSurcharge: this.detailBookingRoomForm.value.childSurcharge, // phụ phí trẻ em
-          extraBedPrice: this.detailBookingRoomForm.value.extraBedPrice, // giá giường phụ
-          totalPrice: this.detailBookingRoomForm.value.totalPrice, // tổng giá
-          passengers: this.setPayloadBookingHotelPassengers()
+          next: (res: any) => {
+            if (res.isValid) {
+              resolve(true);
+              this.notificationService.showNotification(Constant.SUCCESS, 'Đã gửi email thông báo giữ phòng khách sạn tới khách hàng');
+            } else {
+              if (res.errors && res.errors.length > 0) {
+                res.errors.forEach((el: any) => {
+                  this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+                });
+              } else {
+                this.notificationService.showNotification(Constant.ERROR, 'Gửi email thông báo giữ phòng khách sạn tới khách hàng không thành công');
+              }
+            }
+          },
+          error: (err: any) => {
+            this.notificationService.showNotification(Constant.ERROR, 'Gửi email thông báo giữ phòng khách sạn tới khách hàng thất bại do lỗi hệ thống');
+          },
+          complete: () => {
+          }
         }
-      ],
-      approvalCode: this.detailBookingRoomForm.value.approvalCode
-    }
-    this.generalService.updateBookingHotel(payload).subscribe({
-      next: (res) => {
-        this.notificationService.showNotification(Constant.SUCCESS, 'Cập nhật thông tin đặt phòng thành công');
-        this.updateBookingHotelStatus(this.detailBookingGeneralForm.value.id, HotelBookingStatusEnum.Holding);
-      },
-      error: (error) => {
-        this.notificationService.showNotification(Constant.ERROR, 'Có lỗi xảy ra');
-      },
-      complete: () => {
-        this.isShowEditBookingHotel = false;
-      }
+      ).add(() => {
+      });
     })
 
   }
+
+  // update
+  updateBookingHotel(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      if (!this.checkValidateDetailBookingHotelForm()) {
+        this.notificationService.showNotification(Constant.ERROR, "Vui lòng nhập đầy đủ thông tin");
+        return;
+      }
+      let payload = {
+        id: this.detailBookingGeneralForm.value.id,
+        otherRequirements: this.detailBookingGeneralForm.value.otherRequirements,
+        isUrgent: this.detailBookingGeneralForm.value.isUrgent,
+        contactName: this.dataDetailBookingHotel.userFullName,
+        contactPhone: this.dataDetailBookingHotel.userEmail,
+        contactEmail: this.dataDetailBookingHotel.userPhoneNo,
+        roomDetails: [
+          {
+            id: this.detailBookingRoomForm.value.id,
+            hotelId: this.detailBookingRoomForm.value.hotelId,
+            roomHotelId: this.detailBookingRoomForm.value.room.id,
+            checkinDate: new Date(this.detailBookingRoomForm.value.checkinDate),
+            checkoutDate: new Date(this.detailBookingRoomForm.value.checkoutDate),
+            numberOfNights: this.detailBookingRoomForm.value.numberOfNights,
+            amount: this.detailBookingRoomForm.value.amount,
+            extraBed: this.detailBookingRoomForm.value.extraBed,
+            adt: this.detailBookingRoomForm.value.adt, // số lượng người lớn (adult)
+            chd: this.detailBookingRoomForm.value.chd, // số lượng trẻ em (child)
+            inf: this.detailBookingRoomForm.value.inf, // số lượng trẻ sơ sinh (infant)
+            price: this.detailBookingRoomForm.value.price,
+            adultSurcharge: this.detailBookingRoomForm.value.adultSurcharge, // phụ phí người lớn
+            childSurcharge: this.detailBookingRoomForm.value.childSurcharge, // phụ phí trẻ em
+            extraBedPrice: this.detailBookingRoomForm.value.extraBedPrice, // giá giường phụ
+            totalPrice: this.detailBookingRoomForm.value.totalPrice, // tổng giá
+            passengers: this.setPayloadBookingHotelPassengers()
+          }
+        ],
+        approvalCode: this.detailBookingRoomForm.value.approvalCode
+      }
+      this.generalService.updateBookingHotel(payload).subscribe({
+        next: (res) => {
+          this.notificationService.showNotification(Constant.SUCCESS, 'Cập nhật thông tin đặt phòng thành công');
+          resolve(true);
+        },
+        error: (error) => {
+          this.notificationService.showNotification(Constant.ERROR, 'Có lỗi xảy ra');
+          reject(error);
+        },
+        complete: () => {
+          this.isShowEditBookingHotel = false;
+        }
+      });
+    });
+
+  }
+
   changeRoomType(event: any) {
     if (event) {
       this.detailBookingRoomForm.controls['room'].setValue({

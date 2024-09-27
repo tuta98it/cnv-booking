@@ -823,6 +823,10 @@ export class GeneralService extends BaseService {
     return this.post(`/api${UrlConstant.EMAIL}/SendEmailToPassengerToConfirmSuccessIssuedTicket`, { requestBookingId: requestBookingId });
   }
 
+
+  sendEmailConfirmationOfHotelReservation(bookingHotelId: number): Observable<any> {
+    return this.post(`/api${UrlConstant.EMAIL}/SendEmailConfirmationOfHotelReservation`, { bookingHotelId: bookingHotelId });
+  }
   // News
   getNews(): Observable<any> {
     return this.get(`/api${UrlConstant.NEWS}`);
