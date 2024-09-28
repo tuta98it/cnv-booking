@@ -12,7 +12,7 @@ export class GeneralService extends BaseService {
   // LOGIN
   // Forgot passowrd
   forgotPassword(email: any): any {
-    return this.post('/identify', email);
+    return this.post(`/identify?email=${email}`, email);
   }
 
   //phong
