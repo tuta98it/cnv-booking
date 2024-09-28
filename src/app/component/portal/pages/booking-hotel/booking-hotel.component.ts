@@ -38,6 +38,7 @@ import { WhiteSpaceValidator } from 'src/app/shared/custom-validator/whiteSpaceV
 import { CheckValidatorForm } from 'src/app/shared/custom-validator/checkValidatorForm';
 import { Attachment } from 'src/app/model/attachment';
 import { promise } from 'protractor';
+import { log } from 'console';
 @Component({
   selector: 'app-hotel',
   templateUrl: './booking-hotel.component.html',
@@ -76,6 +77,10 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   isVisibleConfirmBooking: boolean = false;
   isVisibleConfirmSendEmaiBooking: boolean = false;
   isConfirmLoading: boolean = false;
+
+  bookingCode: any;
+  checkBookingId:any;
+  dataEmail:any;
   // isOnSendEmailLoading: boolean = false;
   isConfirmSendEmailLoading: boolean = false;
   confirmBookingHotel = {
@@ -99,6 +104,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   fileList: NzUploadFile[] = [];
   listURLFiles: any[] = [];
   htmlContent = '';
+  isVisibleConfirmRoomId: boolean = false;
 
   configDescriptionHotel: AngularEditorConfig = {
     editable: true,
@@ -450,6 +456,18 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   //   // this.resetConfirmBookingHotel();
   // }
 
+  confirmBookingRoomId() {
+    console.log(this.bookingCode);
+    
+    if (this.bookingCode != this.checkBookingId) {
+      this.notificationService.showNotification(Constant.ERROR, 'Mã không đúng');
+      return;
+    }else{
+      this.isVisibleConfirmRoomId = false;
+      this.findDataBookingHotelInFormEditor(this.dataEmail)
+      this.isVisibleConfirmSendEmaiBooking = true;
+    }
+  }
 
   onConfirmSendEmailBookingHotel(booking: any) {
     this.item = booking;
@@ -811,6 +829,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
     this.isVisibleConfirmSendEmaiBooking = false;
     this.isConfirmSendEmailLoading = false;
     this.nzVisibleCancelSystem = false;
+    this.isVisibleConfirmRoomId = false;
     this.formAddHotel.reset();
     this.formAddRoom.reset();
   }
@@ -1578,6 +1597,14 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
       this.updateBookingHotelStatus(dataFocus.data.id, HotelBookingStatusEnum.SendRequest);
       return;
     }
+    if(newValue === HotelBookingStatusEnum.Successful && oldValue === HotelBookingStatusEnum.Confirmed){
+      console.log(dataFocus.data);
+      
+      this.checkBookingId = dataFocus.data.bookingCode;
+      console.log(dataFocus.data.bookingCode);
+      this.dataEmail = dataFocus.data;
+      this.isVisibleConfirmRoomId = true;
+    }
     this.statusOld = oldValue;
     this.statusNew = newValue;
     this.item = dataFocus;
@@ -1593,7 +1620,8 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
         reservationCode: [null, Validators.required]
       })
       this.isShowAddCodeBookingRoom = true;
-    }
+      }
+    // else if(this)
   }
   updateBookingHotelStatus(bookingHotelId: number, status: number): Promise<any> {
     return new Promise((resolve, rejects) => {
@@ -1626,6 +1654,12 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   }
   checkCallShowAddCodeBookingRoom(oldValue: number, newValue: number) {
     if (oldValue === HotelBookingStatusEnum.Holding && newValue === HotelBookingStatusEnum.Confirmed) {
+      return true;
+    }
+    return false;
+  }
+  checkConfirmBookingRoomSuccess(oldValue: number, newValue: number) {
+    if (oldValue === HotelBookingStatusEnum.Confirmed && newValue === HotelBookingStatusEnum.Successful) {
       return true;
     }
     return false;
@@ -2016,4 +2050,5 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   calcImplementerHistory(rowData: any) {
     return 'ID: ' + rowData.userIdModified + ' ,Name: ' + rowData.fullName;
   }
+
 }
