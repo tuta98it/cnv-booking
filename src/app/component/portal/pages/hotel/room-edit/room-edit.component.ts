@@ -74,7 +74,8 @@ export class RoomEditComponent implements OnInit {
       roomFiles: [[]],
       roomFileIds: [[]],
       prices: [[]],
-      amenities: [[]]
+      amenities: [[]],
+      priceByTime: [false]
     });
     this.uploadHeader = {
       Authorization: 'Bearer ' + localStorage.getItem(Constant.TOKEN),
@@ -147,7 +148,8 @@ export class RoomEditComponent implements OnInit {
         childSurcharge: item.childSurcharge,
         roomFiles: item.roomFiles,
         roomFileIds: [],
-        prices: item.prices
+        prices: item.prices,
+        priceByTime: item.priceByTime
       });
 
       this.fileList = [];
