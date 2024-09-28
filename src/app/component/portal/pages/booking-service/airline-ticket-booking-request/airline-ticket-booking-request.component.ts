@@ -165,11 +165,22 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   }
 
 
+  onRowPrepared(e) {
+    if (e.rowType === "data") {
+        if (e.data.status == AirlineTicketBookingRequestStatus.SubmitRequest) {
+            e.cellElement.style.cssText = "color: black; background-color: #ffffaa";
+            // or
+            e.rowElement.classList.add("my-class");
+            // To override alternation color
+            e.rowElement.className = e.rowElement.className.replace("dx-row-alt", "");
+        }
+    }
+}
+
   onChangeInputAmount(value: string, controlName?: string): void {
     this.updateValueInputAmount(value);
 
   }
-
 
   onClickInputAmount(event: any, controlName?: string): void {
     const inputElement = event.target as HTMLInputElement;
