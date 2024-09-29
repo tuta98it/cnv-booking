@@ -37,8 +37,6 @@ import { MinNumberValidator } from 'src/app/shared/custom-validator/minValueVali
 import { WhiteSpaceValidator } from 'src/app/shared/custom-validator/whiteSpaceValidator';
 import { CheckValidatorForm } from 'src/app/shared/custom-validator/checkValidatorForm';
 import { Attachment } from 'src/app/model/attachment';
-import { promise } from 'protractor';
-import { log } from 'console';
 @Component({
   selector: 'app-hotel',
   templateUrl: './booking-hotel.component.html',
@@ -456,16 +454,13 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   //   // this.resetConfirmBookingHotel();
   // }
 
-  confirmBookingRoomId() {
-    console.log(this.bookingCode);
-    
+  confirmBookingRoomId() {    
     if (this.bookingCode != this.checkBookingId) {
       this.notificationService.showNotification(Constant.ERROR, 'Mã không đúng');
       return;
     }else{
       this.isVisibleConfirmRoomId = false;
-      this.findDataBookingHotelInFormEditor(this.dataEmail)
-      this.isVisibleConfirmSendEmaiBooking = true;
+      this.onConfirmSendEmailBookingHotel(this.dataEmail);
     }
   }
 
@@ -1292,10 +1287,10 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   handleOkConfirmSendEmailBookingHotel() {
     this.isConfirmSendEmailLoading = true;
     let emailContact = this.item.contactEmail;
-    if (!StringUtils.validateEmail(emailContact)) {
-      this.notificationService.showNotification(Constant.ERROR, 'Email người gửi chưa đúng định dạng');
-      return;
-    }
+     if (!StringUtils.validateEmail(emailContact)) {
+       this.notificationService.showNotification(Constant.ERROR, 'Email người gửi chưa đúng định dạng');
+       return;
+     }
     let bookingHotelId = this.item.id;
     let tempDiv = document.createElement('div');
     tempDiv.innerHTML = this.contentFileConfirmBookingRoonHotel;
@@ -1311,6 +1306,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
       content: tempDivString,
       bookingHotelId: bookingHotelId
     }
+
     this.generalService
       .sendEmailConfirmedBookingHotel(payloadSendEmailConfirmedBookingHotel)
       .subscribe({
@@ -1319,7 +1315,11 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
             this.notificationService.showNotification(Constant.SUCCESS, 'Xác nhận gửi Email đặt phòng thành công');
             this.isVisibleConfirmSendEmaiBooking = false;
             this.isConfirmSendEmailLoading = false;
-            // this.getListData();
+            if (this.checkBookingId != null) {      
+              this.updateBookingHotelStatus(this.dataEmail.id, HotelBookingStatusEnum.Successful);
+              this.checkBookingId == null;
+              this.getListData();
+            }
           } else {
             if (res.errors && res.errors.length > 0) {
               res.errors.forEach((el: any) => {
@@ -1331,6 +1331,8 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
           }
         },
         error: (error) => {
+          console.log(error);
+          
           this.notificationService.showNotification(Constant.ERROR, 'Gửi Email đặt phòng gặp lỗi');
         },
 
@@ -1340,6 +1342,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
       .add(() => {
 
       });
+      payloadSendEmailConfirmedBookingHotel == null;
   }
 
   handleConfirmAndSendBookingHotel() {
@@ -1598,12 +1601,10 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
       return;
     }
     if(newValue === HotelBookingStatusEnum.Successful && oldValue === HotelBookingStatusEnum.Confirmed){
-      console.log(dataFocus.data);
-      
       this.checkBookingId = dataFocus.data.bookingCode;
-      console.log(dataFocus.data.bookingCode);
       this.dataEmail = dataFocus.data;
       this.isVisibleConfirmRoomId = true;
+      return;
     }
     this.statusOld = oldValue;
     this.statusNew = newValue;
@@ -1615,7 +1616,8 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
       this.editBookingHotelHeader = "Cập nhật thông tin lưu trú";
 
     }
-    else if (this.checkCallShowAddCodeBookingRoom(oldValue, newValue)) {
+    else
+    if (this.checkCallShowAddCodeBookingRoom(oldValue, newValue)) {
       this.bookingRoomCodeForm = this.fb.group({
         reservationCode: [null, Validators.required]
       })
