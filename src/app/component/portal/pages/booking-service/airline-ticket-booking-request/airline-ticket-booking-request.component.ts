@@ -170,9 +170,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
       if (e.data.status == AirlineTicketBookingRequestStatus.SubmitRequest) {
         e.cellElement.style.cssText = "color: black; background-color: #ffffaa";
         // or
-        e.rowElement?.classList.add("my-class");
-        // To override alternation color
-        e.rowElement.className = e.rowElement.className.replace("dx-row-alt", "");
+
       }
     }
   }

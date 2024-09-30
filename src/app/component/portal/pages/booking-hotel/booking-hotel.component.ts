@@ -271,9 +271,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
       if (e.data.bookingStatus == HotelBookingStatusEnum.SendRequest) {
         e.cellElement.style.cssText = "color: black; background-color: #ffffaa";
         // or
-        e.rowElement?.classList.add("my-class");
-        // To override alternation color
-        e.rowElement.className = e.rowElement.className.replace("dx-row-alt", "");
+
       }
     }
   }
