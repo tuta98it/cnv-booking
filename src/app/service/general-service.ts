@@ -819,10 +819,13 @@ export class GeneralService extends BaseService {
     return this.post(`/api${UrlConstant.EMAIL}/SendEmailToAdminVHLNotifyFlightTicketConfirmed`, { requestBookingId: requestBookingId });
   }
 
-  sendEmailToPassengerToConfirmSuccessIssuedTicket(requestBookingId: number): Observable<any> {
-    return this.post(`/api${UrlConstant.EMAIL}/SendEmailToPassengerToConfirmSuccessIssuedTicket`, { requestBookingId: requestBookingId });
+  sendEmailToAdminVHLNotifyHotelBookingConfirmed(hotelBookingId: number): Observable<any> {
+    return this.post(`/api${UrlConstant.EMAIL}/SendEmailToAdminVHLNotifyHotelTicketConfirmed`, { hotelBookingId: hotelBookingId });
   }
 
+  sendEmailToPassengerToConfirmSuccessIssuedTicket(hotelBookingID: number): Observable<any> {
+    return this.post(`/api${UrlConstant.EMAIL}/SendEmailToAdminVHLNotifyHotelBookingConfirmed`, { hotelBookingID: hotelBookingID });
+  }
 
   sendEmailConfirmationOfHotelReservation(bookingHotelId: number): Observable<any> {
     return this.post(`/api${UrlConstant.EMAIL}/SendEmailConfirmationOfHotelReservation`, { bookingHotelId: bookingHotelId });
