@@ -834,7 +834,7 @@
   <ng-template #footer> </ng-template>
 </nz-modal>
 <!-- Xác nhận mã đặt phòng -->
-<nz-modal [(nzVisible)]="isVisibleConfirmRoomId" nzTitle="Thêm thông tin mã đặt phòng" >
+<nz-modal [(nzVisible)]="isVisibleConfirmRoomId" nzTitle="Thêm thông tin mã đặt phòng" (nzOnCancel)="handleCancel()" >
   <div *nzModalContent>
     <div class="input-wrap">
       <label class="title-detail" style="width: 40%;">Mã đặt phòng<em class="fa fa-asterisk required"></em></label>

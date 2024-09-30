@@ -827,6 +827,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
     this.isVisibleConfirmRoomId = false;
     this.formAddHotel.reset();
     this.formAddRoom.reset();
+    this.getListData();
   }
 
   handleCancelConfirmBooking() {
