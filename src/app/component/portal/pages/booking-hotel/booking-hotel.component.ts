@@ -265,6 +265,19 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
     this.getListData();
   }
 
+
+  onRowPrepared(e) {
+    if (e.rowType === "data") {
+      if (e.data.bookingStatus == HotelBookingStatusEnum.SendRequest) {
+        e.cellElement.style.cssText = "color: black; background-color: #ffffaa";
+        // or
+        e.rowElement?.classList.add("my-class");
+        // To override alternation color
+        e.rowElement.className = e.rowElement.className.replace("dx-row-alt", "");
+      }
+    }
+  }
+
   ngOnDestroy(): void {
 
   }
@@ -1605,6 +1618,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
       this.isShowAddCodeBookingRoom = true;
     }
   }
+
   updateBookingHotelStatus(bookingHotelId: number, status: number): Promise<any> {
     return new Promise((resolve, rejects) => {
       this.generalService.updateBookingHotelStatus(
@@ -1676,12 +1690,12 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
       next: (res: any) => {
         if (res.isValid) {
           this.dataDetailBookingHotel = res.data;
-        if (type === 'add') {
-          this.showViewBookingHotel(res.data);
-        } else {
-          this.showEditBookingHotel(res.data);
-          this.getRoomsByIdHotel(res.data.bookingHotelDetails[0].hotelId);
-        }
+          if (type === 'add') {
+            this.showViewBookingHotel(res.data);
+          } else {
+            this.showEditBookingHotel(res.data);
+            this.getRoomsByIdHotel(res.data.bookingHotelDetails[0].hotelId);
+          }
 
         } else {
           if (res.errors && res.errors.length > 0) {

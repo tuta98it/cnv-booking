@@ -83,7 +83,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   userInfor: any;
   titleFormPartner = '';
   // listDetailTicket: any[];
-  readonly allowedPageSizes = [20, 50, 100, 200, 500 ,'all']
+  readonly allowedPageSizes = [20, 50, 100, 200, 500, 'all']
   displayMode = 'full';
   showPageSizeSelector = true;
   showInfo = true;
@@ -167,15 +167,15 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
 
   onRowPrepared(e) {
     if (e.rowType === "data") {
-        if (e.data.status == AirlineTicketBookingRequestStatus.SubmitRequest) {
-            e.cellElement.style.cssText = "color: black; background-color: #ffffaa";
-            // or
-            e.rowElement.classList.add("my-class");
-            // To override alternation color
-            e.rowElement.className = e.rowElement.className.replace("dx-row-alt", "");
-        }
+      if (e.data.status == AirlineTicketBookingRequestStatus.SubmitRequest) {
+        e.cellElement.style.cssText = "color: black; background-color: #ffffaa";
+        // or
+        e.rowElement?.classList.add("my-class");
+        // To override alternation color
+        e.rowElement.className = e.rowElement.className.replace("dx-row-alt", "");
+      }
     }
-}
+  }
 
   onChangeInputAmount(value: string, controlName?: string): void {
     this.updateValueInputAmount(value);
