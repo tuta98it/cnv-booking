@@ -1928,8 +1928,8 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
         otherRequirements: this.detailBookingGeneralForm.value.otherRequirements,
         isUrgent: this.detailBookingGeneralForm.value.isUrgent,
         contactName: this.dataDetailBookingHotel.userFullName,
-        contactPhone: this.dataDetailBookingHotel.userEmail,
-        contactEmail: this.dataDetailBookingHotel.userPhoneNo,
+        contactPhone: this.dataDetailBookingHotel.userPhoneNo,
+        contactEmail: this.dataDetailBookingHotel.userEmail,
         roomDetails: [
           {
             id: this.detailBookingRoomForm.value.id,
