@@ -1221,7 +1221,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
         {
           next: (res: any) => {
             if (res.isValid) {
-              this.notificationService.showNotification(Constant.SUCCESS, 'Đã gửi email thống báo xuất vé đến khách hàng');
+              this.notificationService.showNotification(Constant.SUCCESS, 'Đã gửi email thông báo xuất vé đến khách hàng');
               resolve(true);
             } else {
               if (res.errors && res.errors.length > 0) {
@@ -1229,13 +1229,13 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
                   this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
                 });
               } else {
-                this.notificationService.showNotification(Constant.ERROR, 'Gửi email thống báo xuất vé đến khách hàng không thành công');
+                this.notificationService.showNotification(Constant.ERROR, 'Gửi email thông báo xuất vé đến khách hàng không thành công');
               }
               resolve(false);
             }
           },
           error: (err: any) => {
-            this.notificationService.showNotification(Constant.ERROR, 'Gửi email thống báo xuất vé đến khách hàng thất bại do lỗi hệ thống');
+            this.notificationService.showNotification(Constant.ERROR, 'Gửi email thông báo xuất vé đến khách hàng thất bại do lỗi hệ thống');
             reject(err);
           },
           complete: () => {
