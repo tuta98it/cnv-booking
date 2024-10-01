@@ -17,7 +17,7 @@ export class ConfirmReserveSeatHotelComponent implements OnInit {
 
   hotelBookingId: number = null;
   hotelBookingCurrent: any;
-  isReservedSuccess: boolean = false;
+  isReservedSuccess: boolean = null;
   BookingHotelStatusEnum = HotelBookingStatusEnum
   errorMessenger: any;
   successMessenger: any;
