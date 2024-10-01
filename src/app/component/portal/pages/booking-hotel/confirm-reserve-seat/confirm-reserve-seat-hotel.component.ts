@@ -83,8 +83,6 @@ export class ConfirmReserveSeatHotelComponent implements OnInit {
 
   reserveSeateHotelBookingById(id: number) {
     return new Promise((resolve, reject) => {
-      console.log(this.hotelBookingCurrent);
-
       if (this.hotelBookingCurrent.bookingStatus == this.BookingHotelStatusEnum.Holding) {
         this.generalService.updateBookingHotelStatus({
           "bookingHotelId": id,
