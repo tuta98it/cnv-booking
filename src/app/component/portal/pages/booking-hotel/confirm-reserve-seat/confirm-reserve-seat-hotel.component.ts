@@ -122,7 +122,7 @@ export class ConfirmReserveSeatHotelComponent implements OnInit {
         ).add(() => {
         });
       } else if (this.hotelBookingCurrent.bookingStatus == this.BookingHotelStatusEnum.Confirmed) {
-        this.notificationService.showNotification(Constant.SUCCESS, `phòng khách sạn ${this.hotelBookingCurrent.bookingCode} đã được xác nhận trước đó.`);
+        this.notificationService.showNotification(Constant.SUCCESS, `Phòng khách sạn ${this.hotelBookingCurrent.bookingCode} đã được xác nhận trước đó.`);
         this.successMessenger = `Phòng khách sạn ${this.hotelBookingCurrent.bookingCode} đã được xác nhận trước đó!`;
         this.isReservedSuccess = true;
       } else {
