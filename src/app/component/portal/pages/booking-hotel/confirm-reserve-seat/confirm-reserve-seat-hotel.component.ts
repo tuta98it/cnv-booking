@@ -40,7 +40,7 @@ export class ConfirmReserveSeatHotelComponent implements OnInit {
 
     this.getHotelBookingByID().then((r) => {
       this.reserveSeateHotelBookingById(this.hotelBookingId).then((r) => {
-        this.sendEmailToPassengerToConfirmSuccessIssuedTicket();
+        this.sendEmailToAdminVHLNotifyBookingHotelConfirmed();
       });
     });
 
@@ -134,8 +134,9 @@ export class ConfirmReserveSeatHotelComponent implements OnInit {
 
   }
 
-  sendEmailToPassengerToConfirmSuccessIssuedTicket() {
-    this.generalService.sendEmailToPassengerToConfirmSuccessIssuedTicket(this.hotelBookingId).subscribe(
+
+  sendEmailToAdminVHLNotifyBookingHotelConfirmed() {
+    this.generalService.sendEmailToAdminVHLNotifyHotelBookingConfirmed(this.hotelBookingId).subscribe(
       {
         next: (res: any) => {
           if (res.isValid) {
@@ -146,12 +147,12 @@ export class ConfirmReserveSeatHotelComponent implements OnInit {
                 this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
               });
             } else {
-              this.notificationService.showNotification(Constant.ERROR, 'Gửi mail thông báo người dùng đã xác nhận giữ vé cho admin Cao Nguyên Viên không thành công');
+              this.notificationService.showNotification(Constant.ERROR, 'Gửi mail thông báo người dùng đã xác nhận đặt phòng cho admin Cao Nguyên Viên không thành công');
             }
           }
         },
         error: (err: any) => {
-          this.notificationService.showNotification(Constant.ERROR, 'Gửi mail thông báo người dùng đã xác nhận giữ vé cho admin Cao Nguyên Viên thất bại do lỗi hệ thống');
+          this.notificationService.showNotification(Constant.ERROR, 'Gửi mail thông báo người dùng đã xác nhận đặt phòng cho admin Cao Nguyên Viên thất bại do lỗi hệ thống');
         },
         complete: () => {
         }
