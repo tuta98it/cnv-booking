@@ -1320,8 +1320,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
             this.isConfirmSendEmailLoading = false;
             if (this.checkBookingId != null) {      
               this.updateBookingHotelStatus(this.dataEmail.id, HotelBookingStatusEnum.Successful);
-              this.checkBookingId == null;
-              this.getListData();
+              this.checkBookingId = null;
             }
           } else {
             if (res.errors && res.errors.length > 0) {
