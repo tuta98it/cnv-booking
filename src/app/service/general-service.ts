@@ -12,7 +12,7 @@ export class GeneralService extends BaseService {
   // LOGIN
   // Forgot passowrd
   forgotPassword(email: any): any {
-    return this.post('/identify', email);
+    return this.post(`/identify?email=${email}`, email);
   }
 
   //phong
@@ -823,9 +823,12 @@ export class GeneralService extends BaseService {
     return this.post(`/api${UrlConstant.EMAIL}/SendEmailToPassengerToConfirmSuccessIssuedTicket`, { requestBookingId: requestBookingId });
   }
 
-
   sendEmailConfirmationOfHotelReservation(bookingHotelId: number): Observable<any> {
     return this.post(`/api${UrlConstant.EMAIL}/SendEmailConfirmationOfHotelReservation`, { bookingHotelId: bookingHotelId });
+  }
+
+  sendEmailToAdminVHLNotifyHotelBookingConfirmed(hotelBookingID: number): Observable<any> {
+    return this.post(`/api${UrlConstant.EMAIL}/SendEmailToAdminVHLNotifyHotelBookingConfirmed`, { hotelBookingID:hotelBookingID });
   }
   // News
   getNews(): Observable<any> {

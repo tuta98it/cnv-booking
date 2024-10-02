@@ -17,7 +17,7 @@ export class ConfirmReserveSeatComponent implements OnInit {
   requestBookingId: number = null;
   requestBookingCurrent: any;
   airports: any;
-  isReservedSuccess: boolean = false;
+  isReservedSuccess: boolean = null;
   BookingRequestStatusEnum = AirlineTicketBookingRequestStatus
   errorMessenger: any;
   successMessenger: any;

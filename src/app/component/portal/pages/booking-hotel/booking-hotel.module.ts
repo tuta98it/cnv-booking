@@ -5,9 +5,10 @@ import { AuthGuard } from 'src/app/shared/guards/guards.class';
 import { GeneralService } from 'src/app/service/general-service';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { PhoneUtils } from 'src/app/shared/utils/phone-utils.class';
+import { ConfirmReserveSeatHotelComponent } from './confirm-reserve-seat/confirm-reserve-seat-hotel.component';
 
 @NgModule({
-  declarations: [],
+  declarations: [ConfirmReserveSeatHotelComponent],
   imports: [
     BookingHotelRoutingModule,
     SharedModule,

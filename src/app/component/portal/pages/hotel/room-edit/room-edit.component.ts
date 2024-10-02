@@ -67,14 +67,15 @@ export class RoomEditComponent implements OnInit {
       floorNumber: [0],
       costPrice: [null, [Validators.required]],
       price: [null],
-      extraBed: [0, [Validators.required]],
-      extraBedPrice: [null, [Validators.required]],
+      extraBed: [0],
+      extraBedPrice: [null],
       adultSurcharge: [null],
       childSurcharge: [null],
       roomFiles: [[]],
       roomFileIds: [[]],
       prices: [[]],
-      amenities: [[]]
+      amenities: [[]],
+      priceByTime: [false]
     });
     this.uploadHeader = {
       Authorization: 'Bearer ' + localStorage.getItem(Constant.TOKEN),
@@ -147,7 +148,8 @@ export class RoomEditComponent implements OnInit {
         childSurcharge: item.childSurcharge,
         roomFiles: item.roomFiles,
         roomFileIds: [],
-        prices: item.prices
+        prices: item.prices,
+        priceByTime: item.priceByTime
       });
 
       this.fileList = [];

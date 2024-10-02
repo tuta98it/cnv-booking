@@ -270,6 +270,17 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
     this.getListData();
   }
 
+
+  onRowPrepared(e) {
+    if (e.rowType === "data") {
+      if (e.data.bookingStatus == HotelBookingStatusEnum.SendRequest) {
+        e.cellElement.style.cssText = "color: black; background-color: #ffffaa";
+        // or
+
+      }
+    }
+  }
+
   ngOnDestroy(): void {
 
   }
@@ -468,24 +479,34 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   onConfirmSendEmailBookingHotel(booking: any) {
     this.item = booking;
     booking.isOnSendEmailLoading = true;
+
     this.generalService.getBookingHotelById(booking.id)
       .subscribe({
         next: (res) => {
-          if (res) {
-            if (res.id === 0) {
+
+          if (res.isValid) {
+            if (res.data.id === 0) {
               this.notificationService.showNotification(Constant.ERROR, 'Dữ liệu đặt phòng không tồn tại');
             } else {
-              this.item = res;
+              this.item = res.data;
               this.findDataBookingHotelInFormEditor(this.item).then((r) => {
                 booking.isOnSendEmailLoading = false;
                 this.isVisibleConfirmSendEmaiBooking = true;
               });
-
-
             }
           } else {
-            this.notificationService.showNotification(Constant.ERROR, 'Không tồn tại dữ liệu');
+            if (res.errors && res.errors.length > 0) {
+              res.errors.forEach((el: any) => {
+                this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+              });
+            } else {
+              this.notificationService.showNotification(Constant.ERROR, 'Không tồn tại dữ liệu');
+            }
           }
+
+
+
+
         },
         error: (error) => {
           this.notificationService.showNotification(Constant.ERROR, 'Hệ thống gặp lỗi');
@@ -1626,6 +1647,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
       }
     // else if(this)
   }
+
   updateBookingHotelStatus(bookingHotelId: number, status: number): Promise<any> {
     return new Promise((resolve, rejects) => {
       this.generalService.updateBookingHotelStatus(
@@ -1698,15 +1720,27 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   showDetailBookingHotel(idBookingHotel: any, type: string) {
     this.resetDetailBookingForms();
     this.generalService.getBookingHotelById(idBookingHotel).subscribe({
-      next: (res) => {
-        this.dataDetailBookingHotel = res.data;
-        if (type === 'add') {
-          this.showViewBookingHotel(res.data);
+      next: (res: any) => {
+        if (res.isValid) {
+          this.dataDetailBookingHotel = res.data;
+          if (type === 'add') {
+            this.showViewBookingHotel(res.data);
+          } else {
+            this.showEditBookingHotel(res.data);
+            this.getRoomsByIdHotel(res.data.bookingHotelDetails[0].hotelId);
+          }
+
         } else {
-          this.showEditBookingHotel(res.data);
-          this.getRoomsByIdHotel(res.data.bookingHotelDetails[0].hotelId);
+          if (res.errors && res.errors.length > 0) {
+            res.errors.forEach((el: any) => {
+              this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+            });
+          } else {
+            this.notificationService.showNotification(Constant.ERROR, 'Không tồn tại dữ liệu');
+          }
         }
       },
+
       error: (error) => {
         this.notificationService.showNotification(Constant.ERROR, 'Có lỗi xảy ra');
       }

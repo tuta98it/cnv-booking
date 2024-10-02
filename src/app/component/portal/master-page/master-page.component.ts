@@ -147,7 +147,8 @@ export class MasterPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    if (this.router.url.includes('/booking-service/airline-ticket-booking-request/confirm-reserve-seat')) {
+
+    if (Constant.PAGE_NOTIFY_CONFIG.some(path => this.router.url.includes(path))) {
       this.menuState.dispatch(false);
     } else {
       this.menuState.dispatch(true);

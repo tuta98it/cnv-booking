@@ -13,7 +13,7 @@
 <dx-data-grid id="gridContainer" [dataSource]="filteredDatas" #ListBookingHotels [showColumnLines]="true"
   [showRowLines]="true" [height]="dxGridHeight" [rowAlternationEnabled]="true" [showBorders]="true"
   [allowColumnResizing]="true" columnResizingMode="widget" [columnMinWidth]="50" [columnAutoWidth]="true"
-  (onExporting)="onExporting($event)">
+  (onExporting)="onExporting($event)" (onCellPrepared)="onRowPrepared($event)">
   <dxo-scrolling rowRenderingMode="virtual"></dxo-scrolling>
   <dxo-sorting mode="multiple"></dxo-sorting>
   <dxo-header-filter [visible]="true"></dxo-header-filter>
@@ -803,7 +803,7 @@
 <!-- lịch sử  -->
 <nz-modal [(nzVisible)]="isVisibleRequestBookingHistory" nzTitle="Lịch sử thay đổi trạng thái đặt phòng"
   [nzContent]="contentRequestBookingHistory" [nzFooter]="footer" nzWidth="750px" [nzStyle]="{ top: '20px' }"
-  (nzOnCancel)="handleCancelPopupRequestBookingHistory()">
+  (nzOnCancel)="handleCancelPopupRequestBookingHistory()" >
   <ng-template #contentRequestBookingHistory>
 
     <dx-data-grid id="gridRequestBookingHistory" [dataSource]="listRequestBookingHistories"

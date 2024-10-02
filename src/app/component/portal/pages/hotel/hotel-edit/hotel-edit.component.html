@@ -117,7 +117,7 @@
               <textarea class="form-control" [(ngModel)]="hotelItem.shortDescription"></textarea>
             </div>
             <div class="form-inline-custom align-items-baseline">
-              <label>Mô tả đầy đủ <span class="required">*</span></label>
+              <label>Mô tả đầy đủ </label>
               <angular-editor [(ngModel)]="hotelItem.description" [placeholder]="'Mô tả khách sạn ...'"
                               [config]="configDescriptionHotel"></angular-editor>
             </div>
@@ -271,8 +271,8 @@
           <dxi-column cssClass="text-center" caption="Trẻ em" [width]="100" dataField="childNumber"></dxi-column>
           <!-- <dxi-column cssClass="text-center" caption="Diện tích phòng" [width]="150" dataField="roomArea"
                        [format]="areaUtils.areaNumberFormat"></dxi-column>-->
-          <dxi-column caption="Số lượng phòng" [width]="400" dataField="roomNumber" dataType="string"
-                      [visible]="false"></dxi-column>
+          <dxi-column caption="Số lượng phòng" [width]="120" dataField="roomNumber" dataType="string"
+                      ></dxi-column>
           <dxi-column caption="Giá phòng" cssClass="text-left" [width]="150" dataField="price"
                       cellTemplate="cellPrice"></dxi-column>
           <dxi-column caption="Hình ảnh phòng" cssClass="text-center" [width]="200" dataField="roomFiles"

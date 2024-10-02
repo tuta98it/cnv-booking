@@ -351,7 +351,11 @@ export class HotelEditComponent implements OnInit {
     formValue.hotelFileIds = this.hotelFileIds;
     formValue.shortDescription = this.hotelItem.shortDescription;
     formValue.description = this.hotelItem.description;
-    console.log(this.formAddHotel.value);
+
+    if (!this.hotelItem.shortDescription) {
+      this.notificationService.showNotification(Constant.ERROR, 'Chưa nhập thông tin mô tả!');
+      return;
+    }
     if (formValue.id === 0 || formValue.id === undefined || formValue.id === null) {
       delete formValue.id;
       delete formValue.hotelFile;
@@ -370,9 +374,9 @@ export class HotelEditComponent implements OnInit {
       });
     } else {
       // / update
-      delete formValue.hotelFile;
+      /*delete formValue.hotelFile;
       delete formValue.hotelFileIds;
-      delete formValue.amenities;
+      delete formValue.amenities;*/
       this.generalService.updateHotelByID(formValue.id, formValue).subscribe((res: any) => {
         if (res.ret && res.ret[0].code !== 0) {
           this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);

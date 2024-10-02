@@ -21,7 +21,7 @@
         <div>
           <!-- (click)="handleUnLockCompany()" *ngIf="itemPartner?.status == PartnerStatus.Locked"-->
           <button *ngIf="actionEmployeeVHL == ActionTypePageVHL.Update
-                        && itemEmployee?.status == EmployeeStatus.LOCKED" nz-button nzType="default"
+                        && (itemEmployee == null ? actionEmployeeVHL  == ActionTypePageVHL.Create : itemEmployee?.status == EmployeeStatus.LOCKED)" nz-button nzType="default"
             style="margin-right: 8px; " (click)="showUnlockAccountConfirm()">
             <div style="display: flex; align-items: center;">
               <span nz-icon nzType="unlock"></span>
@@ -31,7 +31,7 @@
 
           <!-- (click)="handleLockCompany()" *ngIf="itemPartner?.status != PartnerStatus.Locked" -->
           <button
-            *ngIf="actionEmployeeVHL == ActionTypePageVHL.Update  && itemEmployee?.status == EmployeeStatus.ACTIVE"
+            *ngIf="actionEmployeeVHL == ActionTypePageVHL.Update  && (itemEmployee == null ? actionEmployeeVHL  == ActionTypePageVHL.Create : itemEmployee?.status == EmployeeStatus.ACTIVE)"
             nz-button nzDanger nzType="default" style="margin-right: 8px;" (click)="showLockAccountConfirm()">
             <div style="display: flex; align-items: center;">
               <span nz-icon nzType="lock"></span>
@@ -41,7 +41,7 @@
 
           <!-- (click)="cancelPageActionPartner()" *ngIf="itemPartner?.status != PartnerStatus.Active" -->
 
-          <button *ngIf="actionEmployeeVHL == ActionTypePageVHL.Update && itemEmployee?.status == EmployeeStatus.ACTIVE"
+          <button *ngIf="actionEmployeeVHL == ActionTypePageVHL.Update && (itemEmployee == null ? actionEmployeeVHL  == ActionTypePageVHL.Create : itemEmployee?.status == EmployeeStatus.ACTIVE)"
             nz-button nzType="default" style="margin-right: 8px;" (click)="showResetPassword()">
             <div style="display: flex; align-items: center; ">
               <span nz-icon nzType="key"></span>
@@ -50,7 +50,7 @@
           </button>
 
           <button
-            *ngIf="isActiveEditBaseInfo && actionEmployeeVHL != ActionTypePageVHL.View && itemEmployee?.status == EmployeeStatus.ACTIVE"
+            *ngIf="isActiveEditBaseInfo && actionEmployeeVHL != ActionTypePageVHL.View && (itemEmployee == null ? actionEmployeeVHL  == ActionTypePageVHL.Create : itemEmployee?.status == EmployeeStatus.ACTIVE)"
             nz-button nzType="primary" style="margin-right: 8px;" (click)="saveBaseInfoEmployee()">
             <div style="display: flex; align-items: center;">
               <span nz-icon nzType="save"></span>
@@ -59,7 +59,7 @@
           </button>
 
           <button
-            *ngIf="!isActiveEditBaseInfo && actionEmployeeVHL != ActionTypePageVHL.View && itemEmployee?.status == EmployeeStatus.ACTIVE"
+            *ngIf="!isActiveEditBaseInfo && actionEmployeeVHL != ActionTypePageVHL.View && (itemEmployee == null ? actionEmployeeVHL  == ActionTypePageVHL.Create : itemEmployee?.status == EmployeeStatus.ACTIVE)"
             nz-button nzType="primary" style="margin-right: 8px;" (click)="editBaseInfoEmployee()">
             <div style="display: flex; align-items: center;">
               <span nz-icon nzType="edit"></span>
@@ -67,7 +67,7 @@
             </div>
           </button>
           <button
-            *ngIf="isActiveEditBaseInfo && actionEmployeeVHL != ActionTypePageVHL.View && itemEmployee?.status == EmployeeStatus.ACTIVE"
+            *ngIf="isActiveEditBaseInfo && actionEmployeeVHL != ActionTypePageVHL.View && (itemEmployee == null ? actionEmployeeVHL  == ActionTypePageVHL.Create : itemEmployee?.status == EmployeeStatus.ACTIVE)"
             nz-button nzType="default" (click)="cancelPageActionEmployee()">
             <div style="display: flex; align-items: center;">
               <span nz-icon nzType="close"></span>

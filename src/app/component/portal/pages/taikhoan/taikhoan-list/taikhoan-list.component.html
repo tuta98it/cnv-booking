@@ -74,7 +74,7 @@
   <dxo-scrolling mode="virtual"></dxo-scrolling>
   <dxo-sorting mode="multiple"></dxo-sorting>
 
-  <dxo-paging [pageSize]="10"> </dxo-paging>
+  <dxo-paging [pageSize]="20"> </dxo-paging>
   <dxo-scrolling rowRenderingMode="virtual"> </dxo-scrolling>
   <dxo-pager [visible]="true" [allowedPageSizes]="allowedPageSizes" [displayMode]="displayMode"
     [showPageSizeSelector]="showPageSizeSelector" [showInfo]="showInfo"
@@ -174,7 +174,7 @@
                >
                 <option value="" disabled selected hidden>Chọn chức danh</option>
                 <option *ngFor="let pos of listPosition" [value]="pos.id">{{ pos.name }}</option>
-              </select>       
+              </select>
           </ng-template>
         </div>
       </div>
@@ -223,7 +223,7 @@
           </ng-template>
         </div>
       </div>
-      
+
     </div>
     <!-- Footer -->
     <div *nzModalFooter>
