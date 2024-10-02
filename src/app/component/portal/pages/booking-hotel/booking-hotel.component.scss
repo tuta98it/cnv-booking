@@ -73,3 +73,23 @@ h1{
   transform: translateY(-50%); /* Điều chỉnh để biểu tượng căn giữa theo chiều dọc */
   cursor: pointer; /* Thêm con trỏ để chỉ ra rằng biểu tượng có thể nhấp được */
 }
+.nz-status-select{
+  .select-container {
+    width: 200px; 
+    display: inline-block;
+  }
+  .fixed-text {
+    width: 200px;
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden; 
+    text-overflow: ellipsis;
+  }
+}
+.cell-content-urgent {
+  display: flex;
+  justify-content: center; 
+  align-items: center;     
+  height: 100%;
+  text-align: center;
+}
