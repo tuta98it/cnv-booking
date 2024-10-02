@@ -66,36 +66,37 @@
     {{place.data.bookingHotelDetails[0].province.name}}
   </div>
   <!-- trạng thái -->
-  <div *dxTemplate="let status of 'cellStatus'" style="display: flex;">
+  <div *dxTemplate="let status of 'cellStatus'" class="nz-status-select" style="display: flex;">
     <ng-container [ngSwitch]="status.data.bookingStatus">
-      <div *ngSwitchCase="STATUS_LIST[0].value">
+      <div *ngSwitchCase="STATUS_LIST[0].value" class="select-container">
         <nz-select nzShowSearch nzMode="default" [(ngModel)]="status.data.bookingStatus"
           (ngModelChange)="handleChangeStatusByItem(STATUS_LIST[0].value, $event, status)">
           <nz-option *ngFor="let item of (status.data.bookingStatus | hotelBookingPipe)" [nzLabel]="item.name"
             [nzValue]="item.value"></nz-option>
         </nz-select>
       </div>
-      <div *ngSwitchCase="STATUS_LIST[1].value">
+      <div *ngSwitchCase="STATUS_LIST[1].value" class="select-container">
         <nz-select nzShowSearch nzMode="default" [(ngModel)]="status.data.bookingStatus"
           (ngModelChange)="handleChangeStatusByItem(STATUS_LIST[1].value, $event, status)">
           <nz-option *ngFor="let item of (status.data.bookingStatus | hotelBookingPipe)" [nzLabel]="item.name"
             [nzValue]="item.value"></nz-option>
         </nz-select>
       </div>
-      <div *ngSwitchCase="STATUS_LIST[2].value">
+      <div *ngSwitchCase="STATUS_LIST[2].value" class="select-container">
         <nz-select nzShowSearch nzMode="default" [(ngModel)]="status.data.bookingStatus"
           (ngModelChange)="handleChangeStatusByItem(STATUS_LIST[2].value, $event, status)">
           <nz-option *ngFor="let item of (status.data.bookingStatus | hotelBookingPipe)" [nzLabel]="item.name"
             [nzValue]="item.value"></nz-option>
         </nz-select>
       </div>
-      <div *ngSwitchCase="STATUS_LIST[3].value">
+      <div *ngSwitchCase="STATUS_LIST[3].value" class="fixed-text">
         {{(status.data.bookingStatus | hotelBookingPipe)[0].name}}
       </div>
-      <div *ngSwitchCase="STATUS_LIST[4].value">
+      <div *ngSwitchCase="STATUS_LIST[4].value" class="fixed-text">
         {{(status.data.bookingStatus | hotelBookingPipe)[0].name}}
       </div>
     </ng-container>
+    
   </div>
 
 
@@ -220,9 +221,11 @@
       </dxo-summary>
     </dx-data-grid>
   </div>
-  <div *dxTemplate="let urgent of 'cellIsUrgent'">
-    <span [style.color]="urgent.value? '#dc3545': '#000'">{{ urgent.value ? 'Có' : 'Không' }}</span>
-  </div>
+  <div *dxTemplate="let urgent of 'cellIsUrgent'" class="cell-content-urgent">
+    <span [style.color]="urgent.value ? '#dc3545' : '#000'">
+      {{ urgent.value ? 'Có' : 'Không' }}
+    </span>
+  </div>  
   <div *dxTemplate="let hotelFlightExport of 'cellSystemCancelled'">
     <nz-switch [ngModel]="!hotelFlightExport.data.systemCancelled" [nzControl]="true" nzCheckedChildren="Tính công nợ"
       nzUnCheckedChildren="Không tính công nợ" [nzLoading]="loadingSystemStatus"
