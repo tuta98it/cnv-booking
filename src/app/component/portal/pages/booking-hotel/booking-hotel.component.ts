@@ -1699,12 +1699,12 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
     this.resetDetailBookingForms();
     this.generalService.getBookingHotelById(idBookingHotel).subscribe({
       next: (res) => {
-        this.dataDetailBookingHotel = res;
+        this.dataDetailBookingHotel = res.data;
         if (type === 'add') {
-          this.showViewBookingHotel(res);
+          this.showViewBookingHotel(res.data);
         } else {
-          this.showEditBookingHotel(res);
-          this.getRoomsByIdHotel(res.bookingHotelDetails[0].hotelId);
+          this.showEditBookingHotel(res.data);
+          this.getRoomsByIdHotel(res.data.bookingHotelDetails[0].hotelId);
         }
       },
       error: (error) => {
@@ -1723,6 +1723,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   // @data: res trả về api chi tiết
   // & set data vào form group
   setFormDetailBookingHotel(data: any) {
+
     // set thông tin chung
     this.detailBookingGeneralForm.controls['id'].setValue(data.id);
     this.detailBookingGeneralForm.controls['otherRequirements'].setValue(data.otherRequirements);
@@ -1734,7 +1735,9 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
     this.detailContactUserForm.controls['userFullName'].setValue(data.userFullName);
 
     // set thông tin đặt phòng
-    this.detailBookingRoomForm.controls['id'].setValue(data.bookingHotelDetails[0].id);
+    console.log(data);
+    
+    this.detailBookingRoomForm.controls['id'].setValue(data?.bookingHotelDetails[0]?.id);
     this.detailBookingRoomForm.controls['hotelId'].setValue(data.bookingHotelDetails[0].hotelId);
     this.detailBookingRoomForm.controls['inf'].setValue(data.bookingHotelDetails[0].inf);
     this.detailBookingRoomForm.controls['price'].setValue(data.bookingHotelDetails[0].price);
