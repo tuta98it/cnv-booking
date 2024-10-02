@@ -37,7 +37,7 @@ import { MinNumberValidator } from 'src/app/shared/custom-validator/minValueVali
 import { WhiteSpaceValidator } from 'src/app/shared/custom-validator/whiteSpaceValidator';
 import { CheckValidatorForm } from 'src/app/shared/custom-validator/checkValidatorForm';
 import { Attachment } from 'src/app/model/attachment';
-import { promise } from 'protractor';
+
 @Component({
   selector: 'app-hotel',
   templateUrl: './booking-hotel.component.html',
@@ -76,6 +76,10 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   isVisibleConfirmBooking: boolean = false;
   isVisibleConfirmSendEmaiBooking: boolean = false;
   isConfirmLoading: boolean = false;
+
+  bookingCode: any;
+  checkBookingId:any;
+  dataEmail:any;
   // isOnSendEmailLoading: boolean = false;
   isConfirmSendEmailLoading: boolean = false;
   confirmBookingHotel = {
@@ -99,6 +103,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   fileList: NzUploadFile[] = [];
   listURLFiles: any[] = [];
   htmlContent = '';
+  isVisibleConfirmRoomId: boolean = false;
 
   configDescriptionHotel: AngularEditorConfig = {
     editable: true,
@@ -461,6 +466,15 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   //   // this.resetConfirmBookingHotel();
   // }
 
+  confirmBookingRoomId() {    
+    if (this.bookingCode != this.checkBookingId) {
+      this.notificationService.showNotification(Constant.ERROR, 'Mã không đúng');
+      return;
+    }else{
+      this.isVisibleConfirmRoomId = false;
+      this.onConfirmSendEmailBookingHotel(this.dataEmail);
+    }
+  }
 
   onConfirmSendEmailBookingHotel(booking: any) {
     this.item = booking;
@@ -505,6 +519,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
       });
   }
   private findDataBookingHotelInFormEditor(dataBookingHotel: any) {
+    let patchDataBookingHotel = dataBookingHotel.data;
     this.imageLogoVHL = Constant.LOGO_VHL;
     return new Promise((resolve, reject) => {
       this.contentFileConfirmBookingRoonHotel = `<html lang="vi">
@@ -534,7 +549,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
                           <em>Ngày ${this.datePipe.transform(new Date(), 'dd/MM/yyyy')}</em>
                       </p>
                       <p style="margin-bottom: 8.0p; font-size: 15px; font-family: Arial, sans-serif; line-height: 175%;"> Kính gửi:
-                          <strong>Anh/Chị ${dataBookingHotel.contactName}
+                          <strong>Anh/Chị ${patchDataBookingHotel.contactName}
                           </strong>
                       </p>
                       <p style=" margin-bottom: 8.0p; font-size: 14px; font-family: Arial, sans-serif; line-height: 175%;">
@@ -547,7 +562,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
                                       <span style="font-size: 14px; line-height: 175%;">Tên khách sạn :</span>
                                   </td>
                                   <td colspan="6" style="width: 54.48%; padding: 0in 5.4pt;">
-                                      <span style="font-size: 14px; line-height: 175%;"><strong>${dataBookingHotel.bookingHotelDetails[0].hotelName}</strong></span>
+                                      <span style="font-size: 14px; line-height: 175%;"><strong>${patchDataBookingHotel.bookingHotelDetails[0].hotelName}</strong></span>
                                   </td>
                                   <td colspan="3" style="width: 28.04%; padding: 0in 5.4pt;">
                                       <span style="font-size: 14px; line-height: 175%;" style="text-align: left;">
@@ -559,7 +574,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
                                       <span style="font-size: 14px; line-height: 175%;">Địa chỉ :</span>
                                   </td>
                                   <td colspan="6" style="width: 54.48%; padding: 0in 5.4pt;">
-                                      <span style="font-size: 14px; line-height: 175%;">${dataBookingHotel.bookingHotelDetails[0].hotelAddress}</span>
+                                      <span style="font-size: 14px; line-height: 175%;">${patchDataBookingHotel.bookingHotelDetails[0].hotelAddress}</span>
                                   </td>
                                   <td colspan="3" style="width: 28.04%; padding: 0in 5.4pt;">
                                       <span style="font-size: 14px; line-height: 175%;" style="text-align: left;">
@@ -572,7 +587,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
                                       <span style="font-size: 14px; line-height: 175%;">Số điện thoại :</span>
                                   </td>
                                   <td colspan="6" style="width: 54.48%; padding: 0in 5.4pt;">
-                                      <span style="font-size: 14px; line-height: 175%;">${dataBookingHotel.bookingHotelDetails[0].hotelPhone}</span>
+                                      <span style="font-size: 14px; line-height: 175%;">${patchDataBookingHotel.bookingHotelDetails[0].hotelPhone}</span>
                                   </td>
                                   <td colspan="3" style="width: 28.04%; padding: 0in 5.4pt;">
 
@@ -586,7 +601,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
                                       <span style="font-size: 14px; line-height: 175%;">Mã xác nhận :</span>
                                   </td>
                                   <td colspan="6" style="width: 54.48%; padding: 0in 5.4pt;">
-                                      <span style="font-size: 14px; line-height: 175%;"><span style="color:red;"><strong>${dataBookingHotel.approvalCode ? dataBookingHotel.approvalCode : ''}</strong></span></span>
+                                      <span style="font-size: 14px; line-height: 175%;"><span style="color:red;"><strong>${patchDataBookingHotel.approvalCode ? patchDataBookingHotel.approvalCode : ''}</strong></span></span>
                                   </td>
                                   <td colspan="3" style="width: 28.04%; padding: 0in 5.4pt;">
                                       <span style="font-size: 14px; line-height: 175%; text-align: left;">
@@ -662,45 +677,45 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
                                       </p>
                                   </td>
                                   <td colspan="2" style="border: 1pt solid #000; padding: 0in 5.4pt;">
-                                      ${this.getListInerHTMLCustomerInfoContentName(dataBookingHotel.bookingHotelDetails[0].bookingHotelPassengers)}
+                                      ${this.getListInerHTMLCustomerInfoContentName(patchDataBookingHotel.bookingHotelDetails[0].bookingHotelPassengers)}
                                   </td>
                                   <td style="width:11.84%; border: 1pt solid #000; padding: 0in 5.4pt;">
                                       <p style="text-align: center; line-height: 150%;">
-                                          <span>${dataBookingHotel.bookingHotelDetails[0].roomName}</span>
+                                          <span>${patchDataBookingHotel.bookingHotelDetails[0].roomName}</span>
                                       </p>
                                   </td>
                                   <td style="width:9.88%; border: 1pt solid #000; padding: 0in 5.4pt;">
                                       <p style="text-align: center; line-height: 150%;">
-                                          <span>${dataBookingHotel.bookingHotelDetails[0].amount}</span>
+                                          <span>${patchDataBookingHotel.bookingHotelDetails[0].amount}</span>
                                       </p>
                                   </td>
                                   <td style="width:10.42%; border: 1pt solid #000; padding: 0in 5.4pt;">
                                       <p style="text-align: center; line-height: 150%;">
-                                          <span>${dataBookingHotel.bookingHotelDetails[0].checkinDate ?
-          this.datePipe.transform(dataBookingHotel.bookingHotelDetails[0].checkinDate,
+                                          <span>${patchDataBookingHotel.bookingHotelDetails[0].checkinDate ?
+          this.datePipe.transform(patchDataBookingHotel.bookingHotelDetails[0].checkinDate,
             'dd/MM/yyyy') : ''}</span>
                                       </p>
                                   </td>
                                   <td style="width:10.42%; border: 1pt solid #000; padding: 0in 5.4pt;">
                                       <p style="text-align: center; line-height: 150%;">
-                                          <span>${dataBookingHotel.bookingHotelDetails[0].checkoutDate ?
-          this.datePipe.transform(dataBookingHotel.bookingHotelDetails[0].checkoutDate,
+                                          <span>${patchDataBookingHotel.bookingHotelDetails[0].checkoutDate ?
+          this.datePipe.transform(patchDataBookingHotel.bookingHotelDetails[0].checkoutDate,
             'dd/MM/yyyy') : ''}</span>
                                       </p>
                                   </td>
                                   <td colspan="2" style="width:8.1%; border: 1pt solid #000; padding: 0in 5.4pt;">
                                       <p style="text-align: center; line-height: 150%;">
-                                          <span>${dataBookingHotel.bookingHotelDetails[0].numberOfNights}</span>
+                                          <span>${patchDataBookingHotel.bookingHotelDetails[0].numberOfNights}</span>
                                       </p>
                                   </td>
                                   <td style="width:10.34%; border: 1pt solid #000; padding: 0in 5.4pt;">
                                       <p style="text-align: center; line-height: 150%;">
-                                          <span>${MoneyUtils.formatCurrencyVND(dataBookingHotel.bookingHotelDetails[0].price)}</span>
+                                          <span>${MoneyUtils.formatCurrencyVND(patchDataBookingHotel.bookingHotelDetails[0].price)}</span>
                                       </p>
                                   </td>
                                   <td style="width:10.58%; border: 1pt solid #000; padding: 0in 5.4pt;">
                                       <p style="text-align: center; line-height: 150%;">
-                                          <span>${MoneyUtils.formatCurrencyVND(dataBookingHotel.bookingHotelDetails[0].totalPrice)}</span>
+                                          <span>${MoneyUtils.formatCurrencyVND(patchDataBookingHotel.bookingHotelDetails[0].totalPrice)}</span>
                                       </p>
                                   </td>
                               </tr>
@@ -716,13 +731,13 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
                                   </td>
                                   <td style="width: 10.58%; border: 1pt solid #000; padding: 0in 5.4pt;">
                                       <p style="text-align: center; line-height: 150%;">
-                                          <strong><span>${MoneyUtils.formatCurrencyVND(dataBookingHotel.totalPrice)}</span></strong>
+                                          <strong><span>${MoneyUtils.formatCurrencyVND(patchDataBookingHotel.totalPrice)}</span></strong>
                                       </p>
                                   </td>
                               </tr>
                               <tr>
                                   <td colspan="11" style="padding: 0in 5.4pt;">
-                                      <p style="text-align: left; line-height: 150%;"> Bằng chữ: <em>${MoneyUtils.convertMoneyText(dataBookingHotel.totalPrice)}</em></p>
+                                      <p style="text-align: left; line-height: 150%;"> Bằng chữ: <em>${MoneyUtils.convertMoneyText(patchDataBookingHotel.totalPrice)}</em></p>
                                   </td>
                               </tr>
                           </tbody>
@@ -832,8 +847,10 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
     this.isVisibleConfirmSendEmaiBooking = false;
     this.isConfirmSendEmailLoading = false;
     this.nzVisibleCancelSystem = false;
+    this.isVisibleConfirmRoomId = false;
     this.formAddHotel.reset();
     this.formAddRoom.reset();
+    this.getListData();
   }
 
   handleCancelConfirmBooking() {
@@ -1293,12 +1310,12 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   }
   handleOkConfirmSendEmailBookingHotel() {
     this.isConfirmSendEmailLoading = true;
-    let emailContact = this.item.contactEmail;
-    if (!StringUtils.validateEmail(emailContact)) {
-      this.notificationService.showNotification(Constant.ERROR, 'Email người gửi chưa đúng định dạng');
-      return;
-    }
-    let bookingHotelId = this.item.id;
+    let emailContact = this.item.data.contactEmail;
+     if (!StringUtils.validateEmail(emailContact)) {
+       this.notificationService.showNotification(Constant.ERROR, 'Email người gửi chưa đúng định dạng');
+       return;
+     }
+    let bookingHotelId = this.item.data.id;
     let tempDiv = document.createElement('div');
     tempDiv.innerHTML = this.contentFileConfirmBookingRoonHotel;
     let logoVHL = tempDiv.querySelector<HTMLElement>('#logo-vhl');
@@ -1313,6 +1330,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
       content: tempDivString,
       bookingHotelId: bookingHotelId
     }
+    
     this.generalService
       .sendEmailConfirmedBookingHotel(payloadSendEmailConfirmedBookingHotel)
       .subscribe({
@@ -1321,7 +1339,10 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
             this.notificationService.showNotification(Constant.SUCCESS, 'Xác nhận gửi Email đặt phòng thành công');
             this.isVisibleConfirmSendEmaiBooking = false;
             this.isConfirmSendEmailLoading = false;
-            // this.getListData();
+            if (this.checkBookingId != null) {      
+              this.updateBookingHotelStatus(this.dataEmail.id, HotelBookingStatusEnum.Successful);
+              this.checkBookingId = null;
+            }
           } else {
             if (res.errors && res.errors.length > 0) {
               res.errors.forEach((el: any) => {
@@ -1333,6 +1354,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
           }
         },
         error: (error) => {
+          
           this.notificationService.showNotification(Constant.ERROR, 'Gửi Email đặt phòng gặp lỗi');
         },
 
@@ -1342,6 +1364,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
       .add(() => {
 
       });
+      payloadSendEmailConfirmedBookingHotel == null;
   }
 
   handleConfirmAndSendBookingHotel() {
@@ -1599,6 +1622,12 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
       this.updateBookingHotelStatus(dataFocus.data.id, HotelBookingStatusEnum.SendRequest);
       return;
     }
+    if(newValue === HotelBookingStatusEnum.Successful && oldValue === HotelBookingStatusEnum.Confirmed){
+      this.checkBookingId = dataFocus.data.bookingCode;
+      this.dataEmail = dataFocus.data;
+      this.isVisibleConfirmRoomId = true;
+      return;
+    }
     this.statusOld = oldValue;
     this.statusNew = newValue;
     this.item = dataFocus;
@@ -1609,12 +1638,14 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
       this.editBookingHotelHeader = "Cập nhật thông tin lưu trú";
 
     }
-    else if (this.checkCallShowAddCodeBookingRoom(oldValue, newValue)) {
+    else
+    if (this.checkCallShowAddCodeBookingRoom(oldValue, newValue)) {
       this.bookingRoomCodeForm = this.fb.group({
         reservationCode: [null, Validators.required]
       })
       this.isShowAddCodeBookingRoom = true;
-    }
+      }
+    // else if(this)
   }
 
   updateBookingHotelStatus(bookingHotelId: number, status: number): Promise<any> {
@@ -1652,6 +1683,12 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
     }
     return false;
   }
+  checkConfirmBookingRoomSuccess(oldValue: number, newValue: number) {
+    if (oldValue === HotelBookingStatusEnum.Confirmed && newValue === HotelBookingStatusEnum.Successful) {
+      return true;
+    }
+    return false;
+  }
   //#endregion
 
 
@@ -1683,8 +1720,6 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   showDetailBookingHotel(idBookingHotel: any, type: string) {
     this.resetDetailBookingForms();
     this.generalService.getBookingHotelById(idBookingHotel).subscribe({
-
-
       next: (res: any) => {
         if (res.isValid) {
           this.dataDetailBookingHotel = res.data;
@@ -1722,6 +1757,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   // @data: res trả về api chi tiết
   // & set data vào form group
   setFormDetailBookingHotel(data: any) {
+
     // set thông tin chung
     this.detailBookingGeneralForm.controls['id'].setValue(data.id);
     this.detailBookingGeneralForm.controls['otherRequirements'].setValue(data.otherRequirements);
@@ -1733,7 +1769,9 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
     this.detailContactUserForm.controls['userFullName'].setValue(data.userFullName);
 
     // set thông tin đặt phòng
-    this.detailBookingRoomForm.controls['id'].setValue(data.bookingHotelDetails[0].id);
+    console.log(data);
+    
+    this.detailBookingRoomForm.controls['id'].setValue(data?.bookingHotelDetails[0]?.id);
     this.detailBookingRoomForm.controls['hotelId'].setValue(data.bookingHotelDetails[0].hotelId);
     this.detailBookingRoomForm.controls['inf'].setValue(data.bookingHotelDetails[0].inf);
     this.detailBookingRoomForm.controls['price'].setValue(data.bookingHotelDetails[0].price);
@@ -2052,4 +2090,5 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   calcImplementerHistory(rowData: any) {
     return 'ID: ' + rowData.userIdModified + ' ,Name: ' + rowData.fullName;
   }
+
 }

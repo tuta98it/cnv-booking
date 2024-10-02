@@ -574,7 +574,7 @@
             </div>
             <div nz-col class="gutter-row" nzSpan="8">
               <div class="inner-box">
-                <nz-form-label>Ngày trả phòng <span style="color: tomato;v margin-left: 4px;">(*)</span></nz-form-label>
+                <nz-form-label>Ngày trả phòng <span style="color: tomato; margin-left: 4px;">(*)</span></nz-form-label>
                 <nz-form-control nzErrorTip="Không được để trống">
                   <span *ngIf="this.modeViewEditStatus === 0">{{ detailBookingRoomForm.value.checkoutDate | date: 'dd/MM/yyyy'}} </span>
                   <nz-date-picker *ngIf="this.modeViewEditStatus === 1" formControlName="checkoutDate"></nz-date-picker>
@@ -832,4 +832,17 @@
     </dx-data-grid>
   </ng-template>
   <ng-template #footer> </ng-template>
+</nz-modal>
+<!-- Xác nhận mã đặt phòng -->
+<nz-modal [(nzVisible)]="isVisibleConfirmRoomId" nzTitle="Thêm thông tin mã đặt phòng" (nzOnCancel)="handleCancel()" >
+  <div *nzModalContent>
+    <div class="input-wrap">
+      <label class="title-detail" style="width: 40%;">Mã đặt phòng<em class="fa fa-asterisk required"></em></label>
+      <input nz-input placeholder="Nhập mã đặt phòng" [(ngModel)]="bookingCode" maxlength="10" />
+  </div>
+  </div>
+  <div *nzModalFooter>
+    <button nz-button nzType="default" (click)="handleCancel()">Hủy</button>
+    <button nz-button nzType="primary" (click)="confirmBookingRoomId()">Xác nhận</button>
+  </div>
 </nz-modal>
