@@ -62,7 +62,7 @@
   <dxi-column caption="Lý do huỷ" [width]="150" dataField="noteSystemCancelled" dataTyp="string"></dxi-column> -->
 
   <!-- địa điểm  -->
-  <div *dxTemplate="let place of 'bookingCode'">
+  <div *dxTemplate="let place of 'placeCells'">
     {{place.data.bookingHotelDetails[0].province.name}}
   </div>
   <!-- trạng thái -->
@@ -96,7 +96,7 @@
         {{(status.data.bookingStatus | hotelBookingPipe)[0].name}}
       </div>
     </ng-container>
-    
+
   </div>
 
 
@@ -225,7 +225,7 @@
     <span [style.color]="urgent.value ? '#dc3545' : '#000'">
       {{ urgent.value ? 'Có' : 'Không' }}
     </span>
-  </div>  
+  </div>
   <div *dxTemplate="let hotelFlightExport of 'cellSystemCancelled'">
     <nz-switch [ngModel]="!hotelFlightExport.data.systemCancelled" [nzControl]="true" nzCheckedChildren="Tính công nợ"
       nzUnCheckedChildren="Không tính công nợ" [nzLoading]="loadingSystemStatus"
