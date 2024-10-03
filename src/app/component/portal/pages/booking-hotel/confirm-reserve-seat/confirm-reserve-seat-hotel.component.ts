@@ -91,7 +91,7 @@ export class ConfirmReserveSeatHotelComponent implements OnInit {
           {
             next: (res: any) => {
               if (res.isValid) {
-                this.notificationService.showNotification(Constant.SUCCESS, `Đã giữ phòng khách sạn thành công!`);
+                // this.notificationService.showNotification(Constant.SUCCESS, `Đã giữ phòng khách sạn thành công!`);
                 this.isReservedSuccess = true;
                 this.successMessenger = `Mã đặt phòng khách sạn : ${this.hotelBookingCurrent.bookingCode} đã được lưu lại trên hệ thống!`;
                 resolve(true);
@@ -119,12 +119,19 @@ export class ConfirmReserveSeatHotelComponent implements OnInit {
           }
         ).add(() => {
         });
-      } else if (this.hotelBookingCurrent.bookingStatus == this.BookingHotelStatusEnum.Confirmed) {
-        this.notificationService.showNotification(Constant.SUCCESS, `Phòng khách sạn ${this.hotelBookingCurrent.bookingCode} đã được xác nhận trước đó.`);
-        this.successMessenger = `Phòng khách sạn ${this.hotelBookingCurrent.bookingCode} đã được xác nhận trước đó!`;
+      } else if (this.hotelBookingCurrent.bookingStatus == this.BookingHotelStatusEnum.Confirmed ||
+        this.hotelBookingCurrent.bookingStatus == this.BookingHotelStatusEnum.Successful
+      ) {
+        // this.notificationService.showNotification(Constant.SUCCESS, `Phòng khách sạn ${this.hotelBookingCurrent.bookingCode} đã được xác nhận trước đó.`);
+        this.successMessenger = `Anh/chị đã thực hiện việc xác nhận trước đó hoặc đã đặt phòng thành công. Vui lòng truy cập lịch sử booking của dịch vụ để xem thêm thông tin chi tiết`;
         this.isReservedSuccess = true;
-      } else {
-        this.notificationService.showNotification(Constant.ERROR, 'Không thể xác nhận giữ phòng khách sạn');
+      } else if (this.hotelBookingCurrent.bookingStatus == this.BookingHotelStatusEnum.Failure){
+        // this.notificationService.showNotification(Constant.ERROR, 'Không thể xác nhận giữ phòng khách sạn');
+        this.errorMessenger = `Đặt phòng khách sạn thất bại. Vui lòng kiểm tra lại thông tin.`
+        this.isReservedSuccess = false;
+      }
+      else {
+        // this.notificationService.showNotification(Constant.ERROR, 'Không thể xác nhận giữ phòng khách sạn');
         this.errorMessenger = `Không thể xác nhận giữ phòng khách sạn. Vui lòng kiểm tra lại thông tin.`
         this.isReservedSuccess = false;
       }
