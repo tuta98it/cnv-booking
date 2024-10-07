@@ -14,6 +14,7 @@ import { DateFormatPipe } from 'src/app/shared/pipe/format-date.pipe';
 import { exportDataGrid } from 'devextreme/excel_exporter';
 import { saveAs } from 'file-saver-es';
 import { NzImageService } from 'ng-zorro-antd/image';
+import { combineLatest } from 'rxjs';
 // import { removeAccents } from ;
 import { removeAccents } from 'src/app/shared/utils/filters/remove-accents';
 
@@ -77,7 +78,9 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   isVisibleConfirmSendEmaiBooking: boolean = false;
   isConfirmLoading: boolean = false;
 
-  bookingCode: any;
+  private isStatusChecked = false;
+  today = new Date();
+  bookingRoomId: any;
   checkBookingId:any;
   dataEmail:any;
   // isOnSendEmailLoading: boolean = false;
@@ -307,6 +310,12 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
           });
           this.total = res.total;
           this.filteredDatas = this.datas;
+
+          if (!this.isStatusChecked) {
+            this.checkAndUpdateBookingStatus();
+            this.isStatusChecked = true;
+          }
+          
         },
 
         error: (error) => {
@@ -319,7 +328,6 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
       }
     );
   }
-
 
   getListUtilityHotels() {
     this.generalService.getListUtilityHotel().subscribe((res: any) => {
@@ -466,13 +474,14 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   //   // this.resetConfirmBookingHotel();
   // }
 
-  confirmBookingRoomId() {    
-    if (this.bookingCode != this.checkBookingId) {
-      this.notificationService.showNotification(Constant.ERROR, 'Mã không đúng');
+  async confirmBookingRoomId() {    
+    if (this.bookingRoomId == '' || this.bookingRoomId == null) {
+      this.notificationService.showNotification(Constant.ERROR, 'Chưa nhập mã');
       return;
+
     }else{
+      this.updateBookingHotelApprovalCode(this.dataEmail, this.bookingRoomId);
       this.isVisibleConfirmRoomId = false;
-      this.onConfirmSendEmailBookingHotel(this.dataEmail);
     }
   }
 
@@ -519,7 +528,8 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
       });
   }
   private findDataBookingHotelInFormEditor(dataBookingHotel: any) {
-    let patchDataBookingHotel = dataBookingHotel.data;
+    let patchDataBookingHotel = dataBookingHotel;
+    
     this.imageLogoVHL = Constant.LOGO_VHL;
     return new Promise((resolve, reject) => {
       this.contentFileConfirmBookingRoonHotel = `<html lang="vi">
@@ -1310,12 +1320,12 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   }
   handleOkConfirmSendEmailBookingHotel() {
     this.isConfirmSendEmailLoading = true;
-    let emailContact = this.item.data.contactEmail;
+    let emailContact = this.item.contactEmail;
      if (!StringUtils.validateEmail(emailContact)) {
        this.notificationService.showNotification(Constant.ERROR, 'Email người gửi chưa đúng định dạng');
        return;
      }
-    let bookingHotelId = this.item.data.id;
+    let bookingHotelId = this.item.id;
     let tempDiv = document.createElement('div');
     tempDiv.innerHTML = this.contentFileConfirmBookingRoonHotel;
     let logoVHL = tempDiv.querySelector<HTMLElement>('#logo-vhl');
@@ -1330,7 +1340,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
       content: tempDivString,
       bookingHotelId: bookingHotelId
     }
-    
+  
     this.generalService
       .sendEmailConfirmedBookingHotel(payloadSendEmailConfirmedBookingHotel)
       .subscribe({
@@ -1647,7 +1657,42 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
       }
     // else if(this)
   }
-
+  checkAndUpdateBookingStatus() {
+    const currentDate = new Date();
+    
+    this.filteredDatas.forEach(data => {
+      const checkinDate = new Date(data.bookingHotelDetails.checkinDate);
+      
+      const limitDate = new Date(checkinDate);
+      limitDate.setDate(limitDate.getDate() + 7);
+      
+      if (currentDate > limitDate) {
+        this.changeBookingHotelStatusFailed(data.id)
+          .then(() => console.log('Update successful'))
+          .catch(error => console.log('Error updating booking status', error));
+      }
+    });
+  }
+  changeBookingHotelStatusFailed(bookingHotelId: number, status = HotelBookingStatusEnum.Failure): Promise<any>{
+    return new Promise((resolve, rejects) => {
+      this.generalService.updateBookingHotelStatus(
+        {
+          bookingHotelId: bookingHotelId,
+          status: status,
+        }
+      ).subscribe({
+        next: (res) => {
+          resolve(true);
+        },
+        error: (error) => {
+          console.log(error);
+        },
+        complete: () => {
+          this.getListData();
+        }
+      });
+    });
+  }
   updateBookingHotelStatus(bookingHotelId: number, status: number): Promise<any> {
     return new Promise((resolve, rejects) => {
       this.generalService.updateBookingHotelStatus(
@@ -1669,7 +1714,6 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
         }
       });
     });
-
   }
   checkCallShowEditBookingHotel(oldValue: number, newValue: number) {
     if (oldValue === HotelBookingStatusEnum.SendRequest && newValue === HotelBookingStatusEnum.Holding) {
@@ -1757,7 +1801,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   // @data: res trả về api chi tiết
   // & set data vào form group
   setFormDetailBookingHotel(data: any) {
-
+    
     // set thông tin chung
     this.detailBookingGeneralForm.controls['id'].setValue(data.id);
     this.detailBookingGeneralForm.controls['otherRequirements'].setValue(data.otherRequirements);
@@ -1769,7 +1813,6 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
     this.detailContactUserForm.controls['userFullName'].setValue(data.userFullName);
 
     // set thông tin đặt phòng
-    console.log(data);
     
     this.detailBookingRoomForm.controls['id'].setValue(data?.bookingHotelDetails[0]?.id);
     this.detailBookingRoomForm.controls['hotelId'].setValue(data.bookingHotelDetails[0].hotelId);
@@ -1812,6 +1855,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
       form.controls['dateOfBirth'].setValue(new Date(data.bookingHotelDetails[0].bookingHotelPassengers[index].dateOfBirth));
       form.controls['height'].setValue(data.bookingHotelDetails[0].bookingHotelPassengers[index].height);
       form.controls['passengerType'].setValue(data.bookingHotelDetails[0].bookingHotelPassengers[index].passengerType);
+      
       this.detailHotelPassengerChdForm.push(form);
     }
   }
@@ -1908,6 +1952,8 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
         height: form.value.height
       }
     });
+    console.log(arrChd);
+    
     return [...arrAdt, ...arrChd];
   }
 
@@ -1991,6 +2037,9 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
         ],
         approvalCode: this.detailBookingRoomForm.value.approvalCode
       }
+
+      
+      
       this.generalService.updateBookingHotel(payload).subscribe({
         next: (res) => {
           this.notificationService.showNotification(Constant.SUCCESS, 'Cập nhật thông tin đặt phòng thành công');
@@ -2007,6 +2056,75 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
     });
 
   }
+  updateBookingHotelApprovalCode(dataBooking, bookingRoomId: any): Promise<any> {
+    console.log(dataBooking);
+    return new Promise((resolve, reject) => {
+      if (dataBooking.bookingHotelDetails && dataBooking.bookingHotelDetails.length > 0) {
+        let bookingDetail = dataBooking.bookingHotelDetails[0];
+  
+        let payload = {
+          id: dataBooking.id,
+          otherRequirements: dataBooking.otherRequirements,
+          isUrgent: dataBooking.isUrgent,
+          contactName: dataBooking.contactName,
+          contactPhone: dataBooking.contactPhone,
+          contactEmail: dataBooking.contactEmail,
+          roomDetails: [
+            {
+              id: bookingDetail.id,
+              hotelId: bookingDetail.hotelId,
+              roomHotelId: bookingDetail.roomHotelId,
+              checkinDate: new Date(bookingDetail.checkinDate),
+              checkoutDate: new Date(bookingDetail.checkoutDate),
+              numberOfNights: bookingDetail.numberOfNights,
+              amount: bookingDetail.amount,
+              extraBed: bookingDetail.extraBed,
+              adt: bookingDetail.adt,
+              chd: bookingDetail.chd,
+              inf: bookingDetail.inf,
+              price: bookingDetail.price,
+              adultSurcharge: bookingDetail.adultSurcharge,
+              childSurcharge: bookingDetail.childSurcharge,
+              extraBedPrice: bookingDetail.extraBedPrice,
+              totalPrice: bookingDetail.totalPrice,
+              passengers: bookingDetail.bookingHotelPassengers
+            }
+          ],
+          approvalCode: bookingRoomId
+        };
+  
+        console.log(payload);
+  
+        this.generalService.updateBookingHotel(payload).subscribe({
+          next: (res) => {
+            this.generalService.getBookingHotelById(this.dataEmail.id).subscribe({
+              next: (res) => {
+                this.dataEmail = res.data;
+                console.log("cbi emaul", this.dataEmail);
+                
+                this.onConfirmSendEmailBookingHotel(this.dataEmail);
+              },
+              error: (error) => {
+                console.error('Error fetching booking details:', error);
+              }
+            });
+  
+            resolve(true);
+          },
+          error: (error) => {
+            console.log(error);
+            reject(error);
+          },
+          complete: () => {},
+        });
+      } else {
+        console.error('bookingHotelDetails is empty or undefined');
+        reject('Invalid bookingHotelDetails');
+      }
+    });
+  }
+  
+  
 
   changeRoomType(event: any) {
     if (event) {
@@ -2054,10 +2172,28 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   }
   //#endregion thêm mã đặt phòng
 
+  disabledStartDate = (current: Date): boolean => {
+    const checkoutDate = this.detailBookingRoomForm.value.checkoutDate;
+    return current && (current < this.today || (checkoutDate ? current >= new Date(checkoutDate) : false));
+  };
+  
+  disabledEndDate = (current: Date): boolean => {
+    const checkinDate = this.detailBookingRoomForm.value.checkinDate;
+    return current && (current <= (checkinDate ? new Date(checkinDate) : this.today));
+  };
+  updateNumberOfNights() {
+    const { checkinDate, checkoutDate } = this.detailBookingRoomForm.value;
 
-
-
-
+    if (checkinDate && checkoutDate) {
+      const checkin = new Date(checkinDate);
+      const checkout = new Date(checkoutDate);
+      const numberOfNights = (checkout.getTime() - checkin.getTime()) / (1000 * 60 * 60 * 24);
+      this.detailBookingRoomForm.patchValue({ numberOfNights });
+    } else {
+      this.detailBookingRoomForm.patchValue({ numberOfNights: 0 });
+    }
+  }
+  
   //#region lịch sử
   isVisibleRequestBookingHistory = false;
   listRequestBookingHistories: any[] = [];
