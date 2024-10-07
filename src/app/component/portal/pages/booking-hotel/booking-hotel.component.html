@@ -44,7 +44,7 @@
   <!-- Khẩn cấp -->
   <dxi-column caption="Khẩn cấp" [width]="120" dataField="isUrgent" cellTemplate="cellIsUrgent"></dxi-column>
   <!-- Tổng giá dịch vụ -->
-  <dxi-column caption="Tổng giá dịch vụ" [width]="180" dataField="totalPrice" [format]="formatCurrencyVND"></dxi-column>
+  <dxi-column caption="Tổng giá dịch vụ" [width]="180" dataField="totalPrice" cellTemplate="cellTotalPrice" [format]="formatCurrencyVND" alignment="center"></dxi-column>
   <!-- Action -->
   <dxi-column cssClass="text-center" caption="Action" [fixed]="true" [width]="175" fixedPosition="right" [fixed]="true"
     cellTemplate="cellBtnTemplate"></dxi-column>
@@ -89,12 +89,17 @@
             [nzValue]="item.value"></nz-option>
         </nz-select>
       </div>
-      <div *ngSwitchCase="STATUS_LIST[3].value" class="fixed-text">
-        {{(status.data.bookingStatus | hotelBookingPipe)[0].name}}
+      <div *ngSwitchCase="STATUS_LIST[3].value" class="select-container">
+        <nz-select  [(ngModel)]="status.data.bookingStatus">
+          <nz-option [nzLabel]="(status.data.bookingStatus | hotelBookingPipe)[0].name" [nzValue]="status.data.bookingStatus"></nz-option>
+        </nz-select>
       </div>
-      <div *ngSwitchCase="STATUS_LIST[4].value" class="fixed-text">
-        {{(status.data.bookingStatus | hotelBookingPipe)[0].name}}
+      <div *ngSwitchCase="STATUS_LIST[4].value" class="select-container">
+        <nz-select  [(ngModel)]="status.data.bookingStatus">
+          <nz-option [nzLabel]="(status.data.bookingStatus | hotelBookingPipe)[0].name" [nzValue]="status.data.bookingStatus"></nz-option>
+        </nz-select>
       </div>
+      
     </ng-container>
 
   </div>
@@ -214,7 +219,6 @@
         <a nz-button nzType="link" (click)="previewDetailBookingHotelPassengers(bookingHotelPassenger.value)"
           nzBlock>«Chi tiết»</a>
       </div>
-
       <dxo-summary>
         <dxi-total-item column="hotelName" displayFormat="Số lượt booking: {0}" summaryType="count">
         </dxi-total-item>
@@ -225,6 +229,9 @@
     <span [style.color]="urgent.value ? '#dc3545' : '#000'">
       {{ urgent.value ? 'Có' : 'Không' }}
     </span>
+  </div>  
+  <div *dxTemplate="let totalPrice of 'cellTotalPrice'" class="cell-content-urgent">
+    {{ totalPrice.value ? (totalPrice.value | currency:'VND') : 0 }}
   </div>
   <div *dxTemplate="let hotelFlightExport of 'cellSystemCancelled'">
     <nz-switch [ngModel]="!hotelFlightExport.data.systemCancelled" [nzControl]="true" nzCheckedChildren="Tính công nợ"
@@ -570,9 +577,12 @@
                 <nz-form-label>Ngày nhận phòng <span style="color: tomato; margin-left: 4px;">(*)</span></nz-form-label>
                 <nz-form-control nzErrorTip="Không được để trống">
                   <span *ngIf="this.modeViewEditStatus === 0">{{ detailBookingRoomForm.value.checkinDate | date: 'dd/MM/yyyy' }}</span>
-                  <nz-date-picker *ngIf="this.modeViewEditStatus === 1" formControlName="checkinDate"></nz-date-picker>
+                  <nz-date-picker *ngIf="this.modeViewEditStatus === 1"
+                                  formControlName="checkinDate"
+                                  (ngModelChange)="updateNumberOfNights()"
+                                  [nzDisabledDate]="disabledStartDate">
+                  </nz-date-picker>
                 </nz-form-control>
-                  <!-- <input nz-input placeholder="Nhập ngày nhận phòng" formControlName="checkinDate" type="text" /> -->
               </div>
             </div>
             <div nz-col class="gutter-row" nzSpan="8">
@@ -580,10 +590,14 @@
                 <nz-form-label>Ngày trả phòng <span style="color: tomato; margin-left: 4px;">(*)</span></nz-form-label>
                 <nz-form-control nzErrorTip="Không được để trống">
                   <span *ngIf="this.modeViewEditStatus === 0">{{ detailBookingRoomForm.value.checkoutDate | date: 'dd/MM/yyyy'}} </span>
-                  <nz-date-picker *ngIf="this.modeViewEditStatus === 1" formControlName="checkoutDate"></nz-date-picker>
+                  <nz-date-picker *ngIf="this.modeViewEditStatus === 1"
+                                  formControlName="checkoutDate"
+                                  (ngModelChange)="updateNumberOfNights()"
+                                  [nzDisabledDate]="disabledEndDate">
+                  </nz-date-picker>
                 </nz-form-control>
               </div>
-            </div>
+            </div>            
             <div nz-col class="gutter-row" nzSpan="8">
               <div class="inner-box">
                 <nz-form-label>Số đêm</nz-form-label>
@@ -841,7 +855,7 @@
   <div *nzModalContent>
     <div class="input-wrap">
       <label class="title-detail" style="width: 40%;">Mã đặt phòng<em class="fa fa-asterisk required"></em></label>
-      <input nz-input placeholder="Nhập mã đặt phòng" [(ngModel)]="bookingCode" maxlength="10" />
+      <input nz-input placeholder="Nhập mã đặt phòng" [(ngModel)]="bookingRoomId" maxlength="10" />
   </div>
   </div>
   <div *nzModalFooter>
