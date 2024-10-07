@@ -401,32 +401,32 @@ export class ActionPartnerComponent implements OnInit {
             showRemoveIcon: false
           }
         } as UploadFileSetting;
-            this.itemPartner = await this.getPartnerById(idPartner).catch((reject) => {
-              this.notificationService.showNotification(Constant.ERROR, `Lỗi truy vấn dữ liệu doanh nghiệp`);
-              this.router.navigate([['/companies']]);
-            });
-            this.titleActionCompanyPage = this.itemPartner?.companyName ?? "";
-            this.setActionPageByStatus(this.itemPartner?.status);
-            this.resetFormBaseInfoCreatePartner(this.itemPartner);
-            this.resetFormContractUpdatePartner(this.itemPartner);
+        this.itemPartner = await this.getPartnerById(idPartner).catch((reject) => {
+          this.notificationService.showNotification(Constant.ERROR, `Lỗi truy vấn dữ liệu doanh nghiệp`);
+          this.router.navigate([['/companies']]);
+        });
+        this.titleActionCompanyPage = this.itemPartner?.companyName ?? "";
+        this.setActionPageByStatus(this.itemPartner?.status);
+        this.resetFormBaseInfoCreatePartner(this.itemPartner);
+        this.resetFormContractUpdatePartner(this.itemPartner);
 
-            this.getEmployeesByPartnerId();
+        this.getEmployeesByPartnerId();
 
 
-            this.getBalanceFluctuationsByPartnerId(this.itemPartner?.id).then((result: any) => {
-              this.debtBearingSales = result.debtBearingSales
-              this.debtFreeRevenue = result.debtFreeRevenue
-              this.listOfBalanceFluctuations = result.tableAccountBalancies;
-              let stt = 0;
-              this.listOfBalanceFluctuations.forEach(en => {
-                stt++;
-                en.stt = stt;
-              });
-            });
+        this.getBalanceFluctuationsByPartnerId(this.itemPartner?.id).then((result: any) => {
+          this.debtBearingSales = result.debtBearingSales
+          this.debtFreeRevenue = result.debtFreeRevenue
+          this.listOfBalanceFluctuations = result.tableAccountBalancies;
+          let stt = 0;
+          this.listOfBalanceFluctuations.forEach(en => {
+            stt++;
+            en.stt = stt;
+          });
+        });
 
-            this.getListBusinessServiceUsageHistoryByPartner(this.itemPartner?.id).then((result: any) => {
-              this.listOfBusinessUsageHistories = result;
-            });
+        this.getListBusinessServiceUsageHistoryByPartner(this.itemPartner?.id).then((result: any) => {
+          this.listOfBusinessUsageHistories = result;
+        });
 
       });
     }
@@ -566,19 +566,25 @@ export class ActionPartnerComponent implements OnInit {
   }
 
   disabledStartDate = (startValue: Date): boolean => {
-    let endValue = this.formBaseBusinessContractUpdate.value.endTimeContractDate;
+    const endValue = this.formBaseBusinessContractUpdate.value.endTimeContractDate;
+
     if (!startValue || !endValue) {
       return false;
     }
-    return startValue.getTime() > endValue.getTime();
+
+    // Ensure endValue is a Date object
+    const endDate = new Date(endValue);
+    return startValue.getTime() > endDate.getTime();
   };
 
   disabledEndDate = (endValue: Date): boolean => {
-    let startValue = this.formBaseBusinessContractUpdate.value.startTimeContractDate;
+    const startValue = this.formBaseBusinessContractUpdate.value.startTimeContractDate;
     if (!endValue || !startValue) {
       return false;
     }
-    return endValue.getTime() <= startValue.getTime();
+    // Ensure endValue is a Date object
+    const startDate = new Date(startValue);
+    return endValue.getTime() <= startDate.getTime();
   };
 
   getEmployeesByPartnerId() {
@@ -683,14 +689,14 @@ export class ActionPartnerComponent implements OnInit {
     //console.log('partnerFiles : ', itemPartner.partnerFiles);
     let partnerAuthorizationFiles = await itemPartner?.partnerFiles.filter((f: { type: TypeOfDocument }) => f.type == TypeOfDocument.AuthorizationFile);
     //console.log('partnerAuthorizationFiles : ', partnerAuthorizationFiles);
-      for (const partnerFile of partnerAuthorizationFiles) {
-        const objPartner = {
-          uid: partnerFile.id.toString(),
-          name: partnerFile.fileName,
-          url: `${this.configService.getConfig().api.baseUrl}/${partnerFile.filePath}`,
-        }
-        this.listUploadAuthorizationFile.push(objPartner)
+    for (const partnerFile of partnerAuthorizationFiles) {
+      const objPartner = {
+        uid: partnerFile.id.toString(),
+        name: partnerFile.fileName,
+        url: `${this.configService.getConfig().api.baseUrl}/${partnerFile.filePath}`,
       }
+      this.listUploadAuthorizationFile.push(objPartner)
+    }
   }
 
   private async resetFormContractUpdatePartner(itemPartner: any) {
@@ -723,24 +729,24 @@ export class ActionPartnerComponent implements OnInit {
 
     this.listUploadBusinessLicenseFile = [];
     const partnerBusinessLicenseFiles = await itemPartner?.partnerFiles.filter((f: { type: TypeOfDocument }) => f.type == TypeOfDocument.BusinessLicenseFile);
-      for (const partnerFile of partnerBusinessLicenseFiles) {
-        const objPartner = {
-          uid: partnerFile.id.toString(),
-          name: partnerFile.fileName,
-          url: `${this.configService.getConfig().api.baseUrl}/${partnerFile.filePath}`,
-        }
-        this.listUploadBusinessLicenseFile.push(objPartner)
+    for (const partnerFile of partnerBusinessLicenseFiles) {
+      const objPartner = {
+        uid: partnerFile.id.toString(),
+        name: partnerFile.fileName,
+        url: `${this.configService.getConfig().api.baseUrl}/${partnerFile.filePath}`,
       }
+      this.listUploadBusinessLicenseFile.push(objPartner)
+    }
     this.listUploadContractFile = [];
     const partnerContractFileFiles = await itemPartner?.partnerFiles.filter((f: { type: TypeOfDocument }) => f.type == TypeOfDocument.ContractFile);
-      for (const partnerFile of partnerContractFileFiles) {
-        const objPartner = {
-          uid: partnerFile.id.toString(),
-          name: partnerFile.fileName,
-          url: `${this.configService.getConfig().api.baseUrl}/${partnerFile.filePath}`,
-        }
-        this.listUploadContractFile.push(objPartner);
+    for (const partnerFile of partnerContractFileFiles) {
+      const objPartner = {
+        uid: partnerFile.id.toString(),
+        name: partnerFile.fileName,
+        url: `${this.configService.getConfig().api.baseUrl}/${partnerFile.filePath}`,
       }
+      this.listUploadContractFile.push(objPartner);
+    }
   }
 
   private getPartnerById(partnerId: number): Promise<any> {
