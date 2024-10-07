@@ -62,7 +62,7 @@
   <dxi-column caption="Lý do huỷ" [width]="150" dataField="noteSystemCancelled" dataTyp="string"></dxi-column> -->
 
   <!-- địa điểm  -->
-  <div *dxTemplate="let place of 'bookingCode'">
+  <div *dxTemplate="let place of 'placeCells'">
     {{place.data.bookingHotelDetails[0].province.name}}
   </div>
   <!-- trạng thái -->
@@ -101,7 +101,7 @@
       </div>
       
     </ng-container>
-    
+
   </div>
 
 

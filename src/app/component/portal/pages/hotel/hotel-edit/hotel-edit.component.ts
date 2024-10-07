@@ -279,11 +279,12 @@ export class HotelEditComponent implements OnInit {
             uid: contracFilePath,
             name: this.getFileName(contracFilePath),
             url: `${this.configService.getConfig().api.baseUrl}/${contracFilePath}`,
+            response: {path: contracFilePath}
           };
           this.fileContractList.push(objHotel);
         }
       }
-
+      console.log(this.fileContractList);
     });
 
 

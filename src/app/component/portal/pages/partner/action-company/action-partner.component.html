@@ -530,7 +530,7 @@
                       <div nz-col class="gutter-row" [nzSpan]="12">
                         <nz-date-picker [nzMode]="'date'" nzSize="default" style="border-radius: 4px; width: 100%;"
                           nzFormat="dd/MM/yyyy" nzPlaceHolder="Chọn thời gian bắt đầu"
-                          formControlName='startTimeContractDate'></nz-date-picker>
+                          formControlName='startTimeContractDate' [nzDisabledDate]="disabledStartDate"></nz-date-picker>
                       </div>
                     </div>
 
@@ -543,7 +543,7 @@
                       <div nz-col class="gutter-row" [nzSpan]="12">
                         <nz-date-picker [nzMode]="'date'" nzSize="default" style="border-radius: 4px; width: 100%;"
                           nzFormat="dd/MM/yyyy" nzPlaceHolder="Chọn thời gian kết thúc"
-                          formControlName='endTimeContractDate'></nz-date-picker>
+                          formControlName='endTimeContractDate' [nzDisabledDate]="disabledEndDate"></nz-date-picker>
                       </div>
                     </div>
 
