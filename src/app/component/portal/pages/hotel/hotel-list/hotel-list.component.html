@@ -68,13 +68,15 @@
         <span class="fa fa-edit fa-fw"></span>
       </button>
       <button [title]="item.data.isActive ? 'Khóa khách sạn' : 'Mở khóa khách sạn'" nz-button nzSize="small" nzType="default" (click)="doLock(item.data)">
-        <span class="fa fa-key fa-fw" *ngIf="item.data.isActive"></span>
-        <span class="fa fa-unlock fa-fw" *ngIf="!item.data.isActive"></span>
+        <span nz-icon nzType="lock" nzTheme="outline" *ngIf="item.data.isActive"></span>
+        <!-- <span class="fa fa-key fa-fw" *ngIf="item.data.isActive"></span> -->
+        <span nz-icon nzType="unlock" nzTheme="outline" *ngIf="!item.data.isActive"></span>
+        <!-- <span class="fa fa-unlock fa-fw" *ngIf="!item.data.isActive"></span> -->
       </button>
-      <button title="Xóa khách sạn" nz-button nzSize="small" nzType="default" class="btn-right button-update ant-btn-red"
+      <!-- <button title="Xóa khách sạn" nz-button nzSize="small" nzType="default" class="btn-right button-update ant-btn-red"
               (click)="showConfirmDeleteHotel(item.data.id)">
         <span class="fa fa-times fa-fw"></span>
-      </button>
+      </button> -->
     </div>
   </dx-data-grid>
 </div>

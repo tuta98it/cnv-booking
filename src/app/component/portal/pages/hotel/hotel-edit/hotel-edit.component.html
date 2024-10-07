@@ -236,13 +236,31 @@
             <h2 class="toolbar-title">Danh sách phòng</h2>
           </div>
           <div class="after">
-            <div class="buttons">
-              <button (click)="addNewRoom()" nz-button nzType="primary" class="" type="submitted">
-                <em class="fas fa-save fa-fw" style="margin-right: 4px;"></em> Thêm mới phòng
-              </button>
-              <!--<button nz-button nzType="default" class="ant-btn-primary" type="button">
-                <em class="fas fa-times fa-fw" style="margin-right: 4px;"></em> Hủy bỏ
-              </button>-->
+            <div class="d-flex justify-content-between">
+              <div class="input-list-room mr-2">
+                <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+                  <input type="text" nz-input placeholder="Tìm kiếm loại phòng" [(ngModel)]="searchRoomName" />
+                </nz-input-group>
+                <ng-template #suffixIconButton>
+                  <button nz-button nzType="primary" nzSearch (click)="searchRoomByName()">
+                    <span nz-icon nzType="search"></span>
+                  </button>
+                </ng-template>                
+              </div>
+              <div class="buttons">
+                <button (click)="addNewRoom()" nz-button nzType="primary" class="equal-width-btn" type="submitted">
+                  <div class="btn-action-listroom">
+                    <em class="fas fa-save fa-fw" ></em> 
+                    Thêm mới phòng
+                  </div>
+                </button>
+                <button nz-button nzType="default" class="btn-cancel equal-width-btn" type="button">
+                    <div class="btn-action-listroom">
+                      <span nz-icon nzType="lock" nzTheme="outline"></span>
+                      Khóa loại phòng
+                    </div>
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -283,8 +301,8 @@
                       cellTemplate="cellBtnDetailTemplate"></dxi-column>
 
           <div *dxTemplate="let cellInfo of 'cellActive'">
-            <span class="text-success" *ngIf="cellInfo.value">Đang hoạt động</span>
-            <span class="text-danger" *ngIf="!cellInfo.value">Khóa</span>
+            <span class="text-success" *ngIf="cellInfo.value">Đang sử dụng</span>
+            <span class="text-danger" *ngIf="!cellInfo.value">Đã khóa</span>
           </div>
 
           <div *dxTemplate="let isAvaliableRoomOBJ of 'cellIsRoom'">
@@ -309,19 +327,19 @@
             </button>
           </div>
           <div *dxTemplate="let room of 'cellBtnDetailTemplate'">
-            <button title="Xóa phòng" nz-button nzSize="small" nzType="default"
-                    class="btn-right button-update ant-btn-red" (click)="showConfirmDeleteRoom(room.data.id)">
-              <span class="fa fa-times fa-fw"></span>
-            </button>
-            <button title="Chỉnh sửa thông tin phòng" nz-button nzSize="small"
-                    nzType="default" class="btn-right button-update" (click)="routeLinkToEdit(room.data.id)">
-              <span class="fa fa-edit fa-fw"></span>
-            </button>
             <button [title]="room.data.isActive ? 'Khóa phòng' : 'Mở khóa phòng'" nz-button nzSize="small"
-                    nzType="default" (click)="setActive(room.data)">
+              nzType="default" class="btn-action-room" (click)="setActive(room.data)">
               <span class="fa fa-key fa-fw" *ngIf="room.data.isActive"></span>
               <span class="fa fa-unlock fa-fw" *ngIf="!room.data.isActive"></span>
-            </button>
+          </button>
+          <button title="Chỉnh sửa thông tin phòng" nz-button nzSize="small"
+              nzType="default" class="btn-action-room" (click)="routeLinkToEdit(room.data.id)">
+              <span class="fa fa-edit fa-fw"></span>
+          </button>
+            <!-- <button title="Xóa phòng" nz-button nzSize="small" nzType="default"
+                    class=" btn-action-room ant-btn-red" (click)="showConfirmDeleteRoom(room.data.id)">
+              <span class="fa fa-times fa-fw"></span>
+            </button> -->
           </div>
         </dx-data-grid>
       </nz-tab>
