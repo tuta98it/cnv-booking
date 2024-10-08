@@ -363,8 +363,8 @@ export class HotelEditComponent implements OnInit {
       delete formValue.amenities;
       /// add
       this.generalService.addHotel(formValue).subscribe((res: any) => {
-        if (res.ret && res.ret[0].code !== 0) {
-          this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
+        if (!res.isValid) {
+          this.notificationService.showNotification(Constant.ERROR, res.errors[0].errorMessage);
         } else {
           // this.getListData();
           this.router.navigate(['hotel/list']);
@@ -379,8 +379,8 @@ export class HotelEditComponent implements OnInit {
       delete formValue.hotelFileIds;
       delete formValue.amenities;*/
       this.generalService.updateHotelByID(formValue.id, formValue).subscribe((res: any) => {
-        if (res.ret && res.ret[0].code !== 0) {
-          this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
+        if (!res.isValid) {
+          this.notificationService.showNotification(Constant.ERROR, res.errors[0].errorMessage);
         } else {
           // this.getListData();
           // this.router.navigate(['hotel']);
