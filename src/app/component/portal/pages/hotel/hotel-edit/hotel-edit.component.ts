@@ -34,6 +34,8 @@ export class HotelEditComponent implements OnInit {
   utilityGroupOptions: any[];
   isEdit = false;
   transactionItem: any;
+  searchRoomName:any;
+  tmpRoomHotels:any
   @ViewChild('inputElementNumberPhone', {static: false}) inputElementNumberPhone?: ElementRef;
   @ViewChild('myForm') myForm!: NgForm;
   @ViewChild('contractForm') contractForm!: NgForm;
@@ -184,6 +186,19 @@ export class HotelEditComponent implements OnInit {
       this.rooms = res.data;
     });
   }*/
+    searchRoomByName() {
+      if (!this.searchRoomName || this.searchRoomName.trim() === '') {
+        return this.roomHotels = this.tmpRoomHotels;  
+      }
+    
+      const searchLower = this.searchRoomName.toLowerCase();
+  
+      return this.roomHotels = this.roomHotels = this.roomHotels.filter(room => 
+        room.name.toLowerCase().includes(searchLower)
+      );
+    }
+    
+    // In ra danh sách các phòng đã lọc vào console
   binHotelDetail() {
 
     this.generalService.getHotelById(this.hotelId).subscribe(res => {
@@ -193,6 +208,8 @@ export class HotelEditComponent implements OnInit {
         en.stt = index++;
       });
       this.roomHotels = res.roomHotels;
+      this.tmpRoomHotels = this.roomHotels
+      
       this.submitted = false;
       // this.item = data;
       this.editTitle = 'Sửa thông tin khách sạn';

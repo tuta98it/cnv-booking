@@ -73,17 +73,20 @@ h1{
   transform: translateY(-50%); /* Điều chỉnh để biểu tượng căn giữa theo chiều dọc */
   cursor: pointer; /* Thêm con trỏ để chỉ ra rằng biểu tượng có thể nhấp được */
 }
-.nz-status-select{
-  .select-container {
-    width: 200px; 
-    display: inline-block;
-  }
-  .fixed-text {
+.nz-status-select {
+  .select-container, .fixed-text {
     width: 200px;
     display: inline-block;
+    vertical-align: middle;
+  }
+  
+  .fixed-text {
     white-space: nowrap;
-    overflow: hidden; 
+    overflow: hidden;
     text-overflow: ellipsis;
+    height: 32px; 
+    line-height: 32px;
+    padding-left: 8px;
   }
 }
 .cell-content-urgent {
@@ -93,3 +96,7 @@ h1{
   height: 100%;
   text-align: center;
 }
+.dx-data-row td[data-field="totalPrice"] {
+  text-align: center !important;
+}
+

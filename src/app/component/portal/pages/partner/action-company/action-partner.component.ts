@@ -565,6 +565,28 @@ export class ActionPartnerComponent implements OnInit {
     }
   }
 
+  disabledStartDate = (startValue: Date): boolean => {
+    const endValue = this.formBaseBusinessContractUpdate.value.endTimeContractDate;
+
+    if (!startValue || !endValue) {
+      return false;
+    }
+
+    // Ensure endValue is a Date object
+    const endDate = new Date(endValue);
+    return startValue.getTime() > endDate.getTime();
+  };
+
+  disabledEndDate = (endValue: Date): boolean => {
+    const startValue = this.formBaseBusinessContractUpdate.value.startTimeContractDate;
+    if (!endValue || !startValue) {
+      return false;
+    }
+    // Ensure endValue is a Date object
+    const startDate = new Date(startValue);
+    return endValue.getTime() <= startDate.getTime();
+  };
+
   getEmployeesByPartnerId() {
     this.getUsersByPartnerId(this.itemPartner?.id).then((result: any) => {
       this.listOfEmployees = result;
@@ -1337,9 +1359,9 @@ export class ActionPartnerComponent implements OnInit {
       case ActionTypePageVHL.Update:
         this.router.navigate([`${url}`], { queryParams: { employeeId: idEmployee, partnerId: this.itemPartner.id } })
         break;
-        case ActionTypePageVHL.View:
-          this.router.navigate([`${url}`], { queryParams: { employeeId: idEmployee, partnerId: this.itemPartner.id } })
-          break;
+      case ActionTypePageVHL.View:
+        this.router.navigate([`${url}`], { queryParams: { employeeId: idEmployee, partnerId: this.itemPartner.id } })
+        break;
       default:
         break;
     }

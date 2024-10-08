@@ -104,7 +104,7 @@ export class ConfirmReserveSeatComponent implements OnInit {
           {
             next: (res: any) => {
               if (res.isValid) {
-                this.notificationService.showNotification(Constant.SUCCESS, `Đã giữ vé thành công!`);
+                // this.notificationService.showNotification(Constant.SUCCESS, `Đã giữ vé thành công!`);
                 this.isReservedSuccess = true;
                 this.successMessenger = `Mã đặt vé : ${this.requestBookingCurrent.bookingCode} đã được lưu lại trên hệ thống!`;
                 resolve(true);
@@ -123,7 +123,7 @@ export class ConfirmReserveSeatComponent implements OnInit {
               }
             },
             error: (err: any) => {
-              this.notificationService.showNotification(Constant.ERROR, 'Giữ vé thất bại do lỗi hệ thống');
+              // this.notificationService.showNotification(Constant.ERROR, 'Giữ vé thất bại do lỗi hệ thống');
               this.errorMessenger = "Giữ vé không thành công. Vui lòng kiểm tra lại đường truyền internet."
               this.isReservedSuccess = false;
             },
@@ -132,12 +132,20 @@ export class ConfirmReserveSeatComponent implements OnInit {
           }
         ).add(() => {
         });
-      } else if (this.requestBookingCurrent.status == this.BookingRequestStatusEnum.ReceivedTicket) {
-        this.notificationService.showNotification(Constant.SUCCESS, `Vé ${this.requestBookingCurrent.bookingCode} đã được xác nhận trước đó.`);
-        this.successMessenger = `Vé ${this.requestBookingCurrent.bookingCode} đã được xác nhận trước đó!`;
+      } else if (this.requestBookingCurrent.status == this.BookingRequestStatusEnum.ReceivedTicket||
+        this.requestBookingCurrent.status == this.BookingRequestStatusEnum.IssuedTicket
+      ) {
+        // this.notificationService.showNotification(Constant.SUCCESS, `Vé ${this.requestBookingCurrent.bookingCode} đã được xác nhận trước đó.`);
+        this.successMessenger = `Anh/chị đã thực hiện việc xác nhận trước đó hoặc vé đã được xác nhận thành công. Vui lòng truy cập lịch sử booking của dịch vụ để xem thêm thông tin chi tiết`;
         this.isReservedSuccess = true;
-      } else {
-        this.notificationService.showNotification(Constant.ERROR, 'Không thể xác nhận giữ vé');
+      } else if (this.requestBookingCurrent.status == this.BookingRequestStatusEnum.ExpiredTicket
+      ) {
+        // this.notificationService.showNotification(Constant.SUCCESS, `Vé ${this.requestBookingCurrent.bookingCode} đã được xác nhận trước đó.`);
+        this.errorMessenger = `Đã quá thời hạn xác nhận vé. Anh/chị vui lòng truy cập Lịch sử booking dịch vụ để xem thông tin chi tiết`;
+        this.isReservedSuccess = false;
+      }
+      else {
+        // this.notificationService.showNotification(Constant.ERROR, 'Không thể xác nhận giữ vé');
         this.errorMessenger = `Không thể xác nhận giữ vé. Vui lòng kiểm tra lại thông tin.`
         this.isReservedSuccess = false;
       }
