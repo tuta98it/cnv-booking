@@ -193,7 +193,7 @@ export class HotelEditComponent implements OnInit {
     
       const searchLower = this.searchRoomName.toLowerCase();
   
-      return this.roomHotels = this.roomHotels = this.roomHotels.filter(room => 
+      return this.roomHotels = this.tmpRoomHotels.filter(room => 
         room.name.toLowerCase().includes(searchLower)
       );
     }
@@ -413,30 +413,58 @@ export class HotelEditComponent implements OnInit {
     this.router.navigate(['hotel/list']);
   }
 
-  handleChangeImages({file, fileList}: NzUploadChangeParam, form: any): void {
-    const status = file.status;
-    if (status === 'done') {
-      this.msg.success(`file ${file.name} tải lên thành công.`);
-      if (form === 'hotel') {
-        this.fileList = fileList;
-        setTimeout(() => {
-          if (this.fileList.length > 0) {
-            this.fileList[this.fileList.length - 1].uid = file.response.hotelFileId.toString();
-            this.fileList[this.fileList.length - 1].url = `${this.configService.getConfig().api.baseUrl}/${file.response.path}`;
-          }
-        }, 0);
-        this.hotelFileIds.push(file.response.hotelFileId);
-        this.formAddHotel.controls.hotelFileIds.setValue(this.hotelFileIds);
-      } else if (form === 'room') {
+private errorNotifications: { [key: string]: boolean } = {};
 
-      } else if (form === 'contract') {
-        this.fileContractList = fileList;
-      }
-    } else if (status === 'error') {
-      this.msg.error(`file ${file.name} tải lên không thành công. ${file.error.error.text}`);
-    }
+handleChangeImages({file, fileList}: NzUploadChangeParam, form: any): void {
+  const status = file.status;
+
+  const validFormats = ['jpg', 'jpeg', 'png'];
+  const fileExtension = file.name.split('.').pop()?.toLowerCase();
+  const fileSizeLimit = 25 * 1024 * 1024;
+
+  if (file.status === 'removed') {
+    delete this.errorNotifications[file.name];
+    return; 
   }
 
+  if (file.size > fileSizeLimit) {
+    if (!this.errorNotifications[file.name]) {
+      this.msg.error(`File ${file.name} quá kích thước tối đa 25MB.`);
+      this.errorNotifications[file.name] = true;
+    }
+    return;
+  }
+
+  if (!validFormats.includes(fileExtension)) {
+    if (!this.errorNotifications[file.name]) {
+      this.msg.error(`File ${file.name} không hợp lệ. Vui lòng chọn file có định dạng jpg, jpeg hoặc png.`);
+      this.errorNotifications[file.name] = true;
+    }
+    return;
+  }
+
+  if (status === 'done') {
+    this.errorNotifications[file.name] = false;
+
+    this.msg.success(`File ${file.name} tải lên thành công.`);
+    if (form === 'hotel') {
+      this.fileList = fileList;
+      setTimeout(() => {
+        if (this.fileList.length > 0) {
+          this.fileList[this.fileList.length - 1].uid = file.response.hotelFileId.toString();
+          this.fileList[this.fileList.length - 1].url = `${this.configService.getConfig().api.baseUrl}/${file.response.path}`;
+        }
+      }, 0);
+      this.hotelFileIds.push(file.response.hotelFileId);
+      this.formAddHotel.controls.hotelFileIds.setValue(this.hotelFileIds);
+    } else if (form === 'room') {
+    } else if (form === 'contract') {
+      this.fileContractList = fileList;
+    }
+  } else if (status === 'error') {
+    this.msg.error(`File ${file.name} tải lên không thành công. ${file.error.error.text}`);
+  }
+}
 
   handleRemoveImageHotel = async (file: NzUploadFile): Promise<void> => {
     const idHotelImage = file.uid;
@@ -449,7 +477,6 @@ export class HotelEditComponent implements OnInit {
                 res.ret.forEach((el: any) => {
                   if (el.code === 0) {
                     this.msg.success(`Đã xoá ảnh ${file.name}.`);
-                    // this.getListData();
                   } else if (res.code === 404) {
                     this.msg.error(`Không tìm thấy ảnh ${file.name}.`);
                   } else {
@@ -598,6 +625,8 @@ export class HotelEditComponent implements OnInit {
   }
 
   setActive(data: any) {
+    console.log(data);
+    
     data.isActive = !data.isActive;
     this.generalService.setActiveRoom({roomId: data.id, isActive: data.isActive}).subscribe(
       {
@@ -618,6 +647,43 @@ export class HotelEditComponent implements OnInit {
       }
     );
   }
+  selectedRooms: any[] = [];
+
+onCheckboxChange(room: any) {
+  if (room.isChecked) {
+    this.selectedRooms.push(room);
+  } else {
+    this.selectedRooms = this.selectedRooms.filter(item => item.id !== room.id);
+  }
+}
+lockSelectedRooms() {
+  if (this.selectedRooms.length === 0) {
+    this.notificationService.showNotification(Constant.ERROR, 'Vui lòng chọn ít nhất một phòng để khóa');
+    return;
+  }
+
+  this.selectedRooms.forEach(room => {
+    room.isActive = false;
+
+    this.generalService.setActiveRoom({ roomId: room.id, isActive: room.isActive }).subscribe({
+      next: (res) => {
+        if (res.ret && res.ret[0].code !== 0) {
+          this.notificationService.showNotification(Constant.ERROR, `Khóa phòng ${room.name} thất bại: ${res.ret[0].message}`);
+        } else {
+          this.notificationService.showNotification(Constant.SUCCESS, `Khóa phòng ${room.name} thành công`);
+          room.isChecked = false;
+        }
+      },
+      error: (error) => {
+        this.notificationService.showNotification(Constant.ERROR, `Khóa phòng ${room.name} thất bại`);
+      }
+    });
+  });
+
+  this.selectedRooms = [];
+}
+
+  
 
   getHotelTransactionHistory() {
     const payload = {
