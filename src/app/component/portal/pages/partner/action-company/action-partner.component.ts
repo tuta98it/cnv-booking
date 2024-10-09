@@ -1162,6 +1162,7 @@ export class ActionPartnerComponent implements OnInit {
               this.notificationService.showNotification(Constant.SUCCESS, `Cập nhật thông tin doanh nghiệp thành công`);
               this.changeValueBaseBusinessContractReversal(true);
               this.itemPartner = res.data;
+              this.resetFormBaseInfoCreatePartner(this.itemPartner);
               // this.setIsActiveEditBaseInfo(this.itemPartner?.id == null);
               this.isActiveEditBaseInfo.setValue(this.itemPartner?.id == null);
 
@@ -1183,6 +1184,7 @@ export class ActionPartnerComponent implements OnInit {
             if (res.isValid) {
               this.notificationService.showNotification(Constant.SUCCESS, `Tạo mới thông tin doanh nghiệp thành công`);
               this.itemPartner = res.data;
+              this.resetFormBaseInfoCreatePartner(this.itemPartner);
               // this.setIsActiveEditBaseInfo(this.itemPartner?.id == null);
               this.isActiveEditBaseInfo.setValue(this.itemPartner?.id == null);
             } else {
@@ -1625,6 +1627,7 @@ export class ActionPartnerComponent implements OnInit {
     this.saveBaseInfoPartner().then((result) => {
       this.saveUpdateContractInfoForPartner().then((result) => {
         this.sendApprovalRequest().then((data) => {
+
           this.setActionValuPage(data);
         })
       })
@@ -1643,6 +1646,8 @@ export class ActionPartnerComponent implements OnInit {
         next: (res) => {
           if (res.isValid) {
             this.notificationService.showNotification(Constant.SUCCESS, `Đã chuyển về bản nháp`);
+            this.itemPartner = res.data;
+            this.resetFormBaseInfoCreatePartner(this.itemPartner);
             resolve(res.data);
           } else {
             if (res.errors && res.errors.length > 0) {
@@ -1671,6 +1676,8 @@ export class ActionPartnerComponent implements OnInit {
         next: (res: any) => {
           if (res.isValid) {
             this.notificationService.showNotification(Constant.SUCCESS, `Đã gửi yêu cầu phê duyệt doanh nghiệp ${this.itemPartner?.companyName ? this.itemPartner?.companyName : ""} thành công`);
+            this.itemPartner = res.data;
+            this.resetFormBaseInfoCreatePartner(this.itemPartner);
             resolve(res.data);
           } else {
             if (res.errors && res.errors.length > 0) {
@@ -1700,6 +1707,8 @@ export class ActionPartnerComponent implements OnInit {
         next: (res: any) => {
           if (res.isValid) {
             this.notificationService.showNotification(Constant.SUCCESS, `${this.itemPartner?.companyName ? this.itemPartner?.companyName : "doanh nghiệp"} đã được duyệt thành công`);
+            this.itemPartner = res.data;
+            this.resetFormBaseInfoCreatePartner(this.itemPartner);
             resolve(res.data);
             this.setActionValuPage(res.data);
           } else {
@@ -1863,5 +1872,30 @@ export class ActionPartnerComponent implements OnInit {
     }).add(() => {
     });
 
+  }
+
+  changeMenuUpgradePartner(option: any) {
+    this.selectedMenu = option.value
+
+    switch (this.selectedMenu) {
+      case this.MenuCreatePartner.ContractManagement:
+
+        break;
+
+      case this.MenuCreatePartner.ListEmployees:
+
+        break;
+
+      case this.MenuCreatePartner.AccountInfomation:
+
+        break;
+
+      case this.MenuCreatePartner.BusinessUsageHistory:
+
+        break;
+
+      default:
+        break;
+    }
   }
 }
