@@ -1883,14 +1883,33 @@ export class ActionPartnerComponent implements OnInit {
         break;
 
       case this.MenuCreatePartner.ListEmployees:
-
+        if (this.itemPartner?.id) {
+          this.getEmployeesByPartnerId();
+        }
         break;
 
       case this.MenuCreatePartner.AccountInfomation:
+        if (this.itemPartner?.id) {
+          this.getBalanceFluctuationsByPartnerId(this.itemPartner?.id).then((result: any) => {
+            this.debtBearingSales = result.debtBearingSales
+            this.debtFreeRevenue = result.debtFreeRevenue
+            this.listOfBalanceFluctuations = result.tableAccountBalancies;
+            let stt = 0;
+            this.listOfBalanceFluctuations.forEach(en => {
+              stt++;
+              en.stt = stt;
+            });
+          });
+        }
 
         break;
 
       case this.MenuCreatePartner.BusinessUsageHistory:
+        if (this.itemPartner?.id) {
+          this.getListBusinessServiceUsageHistoryByPartner(this.itemPartner?.id).then((result: any) => {
+            this.listOfBusinessUsageHistories = result;
+          });
+        }
 
         break;
 
