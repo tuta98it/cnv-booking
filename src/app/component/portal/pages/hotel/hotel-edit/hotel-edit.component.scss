@@ -14,3 +14,37 @@
     color: red;
     border: 1px solid red;
 }
+.checkBoxStatus {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background-color: #f0f0f0;
+    border: 2px solid #ccc;
+    border-radius: 3px;
+    position: relative;
+    cursor: pointer;
+    outline: none;
+    transition: background-color 0.3s, border-color 0.3s;
+  }
+  
+  .checkBoxStatus:checked {
+    background-color: #1890ff;
+    border-color: #1890ff;
+  }
+  
+  .checkBoxStatus:checked:before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+  }
+  
+  .checkBoxStatus:hover {
+    border-color: #999;
+  }
+  

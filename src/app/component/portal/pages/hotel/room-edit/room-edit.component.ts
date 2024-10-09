@@ -35,6 +35,9 @@ export class RoomEditComponent implements OnInit {
   isEdit = false;
   fileList: any[];
   roomFileIds: any[];
+  filterFromDate: string | null = null; 
+  filterToDate: string | null = null;
+  filteredPrices: any[] = [];
   statusPriceDetail: any[] = [];
   @ViewChild('myForm') myForm!: NgForm;
   constructor(
@@ -111,6 +114,7 @@ export class RoomEditComponent implements OnInit {
           amenities: this.utilityGroupOptions
         });
       }
+      
     });
 
     this.formAddRoom.controls.costPrice.valueChanges.subscribe(($event) => {
@@ -127,6 +131,7 @@ export class RoomEditComponent implements OnInit {
     this.editTitle = 'Sửa thông tin phòng';
     this.generalService.getRoomById(this.roomId).subscribe(res => {
       this.roomItem = res;
+      console.log(res);
       this.submitted = false;
       const item = res;
       this.formAddRoom.patchValue({
@@ -151,7 +156,7 @@ export class RoomEditComponent implements OnInit {
         prices: item.prices,
         priceByTime: item.priceByTime
       });
-
+      this.filterPrices();
       this.fileList = [];
       if (item.roomFiles) {
         for (const room of item.roomFiles) {
@@ -198,49 +203,51 @@ export class RoomEditComponent implements OnInit {
   saveRoom() {
     this.submitted = true;
     const formValue = this.formAddRoom.value;
+
     if (this.formAddRoom.invalid) {
-      this.notificationService.showNotification(Constant.ERROR, 'Tồn tại thông tin khách sạn chưa điền!');
-      return;
+        this.notificationService.showNotification(Constant.ERROR, 'Tồn tại thông tin khách sạn chưa điền!');
+        return;
     }
-    const utilitieIds = this.formAddRoom.value.amenities.filter(en => en.checked).map(en => en.value);
+
+    const utilitieIds = formValue.amenities.filter(en => en.checked).map(en => en.value);
     formValue.utilitieIds = utilitieIds;
+
     formValue.shortDescription = this.hotelItem.shortDescription;
     formValue.description = this.hotelItem.description;
+    formValue.isAvailable = this.roomItem.isAvailable; 
+
     console.log(this.formAddRoom.value);
+
     if (formValue.id === 0 || formValue.id === undefined || formValue.id === null) {
-      delete formValue.id;
-      delete formValue.amenities;
+        delete formValue.id;
+        delete formValue.amenities;
+        formValue.hotelId = this.hotelId;
+        formValue.roomFileIds = this.roomFileIds;
 
-      formValue.hotelId = this.hotelId;
-      formValue.roomFileIds = this.roomFileIds;
-      this.generalService.addRoom(formValue).subscribe((res: any) => {
-        if (res.ret && res.ret[0].code !== 0) {
-          this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
-        } else {
-          // this.getListData();
-          this.notificationService.showNotification(Constant.SUCCESS, Constant.MESSAGE_ADD_SUCCESS);
-          this.roomId = res.jsonData;
-          this.router.navigate(['hotel/edit-room', this.hotelId, this.roomId]);
-        }
-      }, (error: any) => {
-
-      });
+        this.generalService.addRoom(formValue).subscribe((res: any) => {
+            if (res.ret && res.ret[0].code !== 0) {
+                this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
+            } else {
+                this.notificationService.showNotification(Constant.SUCCESS, Constant.MESSAGE_ADD_SUCCESS);
+                this.roomId = res.jsonData;
+                this.router.navigate(['hotel/edit-room', this.hotelId, this.roomId]);
+            }
+        }, (error: any) => {
+        });
     } else {
-      // / update
-      delete formValue.amenities;
-      this.generalService.updateRoomByID(formValue.id, formValue).subscribe((res: any) => {
-        if (res.ret && res.ret[0].code !== 0) {
-          this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
-        } else {
-          // this.getListData();
-          // this.router.navigate(['hotel']);
-          this.notificationService.showNotification(Constant.SUCCESS, Constant.MESSAGE_UPDATE_SUCCESS);
-        }
-      }, error => {
+        delete formValue.amenities;
 
-      });
+        this.generalService.updateRoomByID(formValue.id, formValue).subscribe((res: any) => {
+            if (res.ret && res.ret[0].code !== 0) {
+                this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
+            } else {
+                this.notificationService.showNotification(Constant.SUCCESS, Constant.MESSAGE_UPDATE_SUCCESS);
+            }
+        }, error => {
+        });
     }
-  }
+}
+
   handleChangeImages({file, fileList}: NzUploadChangeParam, form: any): void {
     const status = file.status;
     if (status === 'done') {
@@ -385,4 +392,63 @@ export class RoomEditComponent implements OnInit {
   }
   onSavingPriceDetail(event: any) {
   }
+
+  filterPrices(): void {
+    const fromDate = this.filterFromDate ? new Date(this.filterFromDate) : null;
+    const toDate = this.filterToDate ? new Date(this.filterToDate) : null;
+
+    this.filteredPrices = this.formAddRoom.value.prices.filter(price => {
+      const priceFromDate = new Date(price.fromDate);
+      const priceToDate = new Date(price.toDate);
+
+      const isAfterFromDate = fromDate ? priceFromDate >= fromDate : true;
+      const isBeforeToDate = toDate ? priceToDate <= toDate : true;
+
+      return isAfterFromDate && isBeforeToDate;
+    });
+}
+  setActive(data: any) {
+    console.log(data);
+    data.isActive = !data.isActive;
+    this.generalService.setActiveRoom({roomId: data.id, isActive: data.isActive}).subscribe(
+      {
+        next: (res) => {
+          if (res.ret && res.ret[0].code !== 0) {
+            console.log(res);
+            
+            this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
+          } else {
+            this.notificationService.showNotification(Constant.SUCCESS, 'Cập nhật trạng thái phòng thành công');
+          }
+        },
+        error: (error) => {
+          this.notificationService.showNotification(Constant.ERROR, 'Cập nhật trạng thái phòng thất bại');
+        },
+
+        complete: () => {
+
+        }
+      }
+    );
+  }
+  clickSwitchIsAvaliable(isAvaliableUpdate: boolean, roomID: any): void {
+    const newIsAvailable = !isAvaliableUpdate;
+    this.generalService.SetAvailableRoom({ roomId: roomID, isAvailable: newIsAvailable }).subscribe(
+        {
+            next: (res) => {
+                if (res.ret && res.ret[0].code !== 0) {
+                    this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
+                } else {
+                    this.roomItem.isAvailable = newIsAvailable; 
+                    this.notificationService.showNotification(Constant.SUCCESS, 'Cập nhật trạng thái phòng thành công');
+                }
+            },
+            error: (error) => {
+                this.notificationService.showNotification(Constant.ERROR, 'Cập nhật trạng thái phòng thất bại');
+            },
+            complete: () => {}
+        }
+    );
+}
+
 }

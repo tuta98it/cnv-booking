@@ -5,6 +5,33 @@
     </div>
     <div class="after">
       <div class="buttons">
+        <button *ngIf="roomItem && roomItem.isAvailable !== undefined"
+            [disabled]="!formAddRoom.valid"
+            (click)="clickSwitchIsAvaliable(roomItem.isAvailable, roomItem.id)"
+            nz-button
+            [nzType]="roomItem.isAvailable ? 'primary' : 'danger'"
+            [ngClass]="roomItem.isAvailable ? 'ant-btn-primary' : 'ant-btn-danger'"
+            class="status-button"
+            type="button">
+            <em class="fas fa-couch" style="margin-right: 4px;"></em>
+            {{ roomItem.isAvailable ? 'Còn phòng' : 'Hết phòng' }} 
+      </button>
+
+    <ng-container *ngIf="roomItem && !roomItem.isActive; else elseTemplate"> 
+      <button [disabled]="!formAddRoom.valid" (click)="setActive(roomItem)" nz-button nzType="danger"
+        class="ant-btn-danger" type="button">
+        <span class="fa fa-lock fa-fw" style="margin-right: 4px;"></span>Khóa lại
+      </button>
+    </ng-container>
+
+    <ng-template #elseTemplate>
+      <button [disabled]="!formAddRoom.valid" (click)="setActive(roomItem)" nz-button nzType="primary"
+        class="ant-btn-danger" type="button">
+        <span class="fa fa-unlock fa-fw" style="margin-right: 4px;"></span>Mở khóa
+      </button>
+    </ng-template>
+
+
         <button [disabled]="!formAddRoom.valid" (click)="triggerSubmit()" nz-button nzType="primary"
                 class="ant-btn-primary" type="button">
           <em class="fas fa-save fa-fw" style="margin-right: 4px;"></em> Lưu lại
@@ -116,7 +143,7 @@
         </div>
       </nz-tab>
       <nz-tab nzTitle="Giá theo giai đoạn" [nzDisabled]="!isEdit">
-        <dx-data-grid id="gridContainerPriceRoomDetail" [dataSource]="formAddRoom.value.prices" keyExpr="id"
+        <dx-data-grid id="gridContainerPriceRoomDetail" [dataSource]="filteredPrices" keyExpr="id"
                       [allowColumnReordering]="true" [showBorders]="true" (onEditingStart)="logEvent('EditingStart')"
                       (onInitNewRow)="onInitNewRowPriceDetail($event)"
                       (onRowInserting)="onRowInsertingPriceDetail($event, formAddRoom.value.id)"
@@ -154,6 +181,12 @@
           </dxi-column>
 
           <dxo-toolbar>
+            <dxi-item location="after">
+              <div style="display: inline-flex; align-items: center; gap: 10px;">
+                <dx-date-box [(value)]="filterFromDate" (valueChange)="filterPrices()" displayFormat="dd/MM/yyyy" placeholder="Thời gian bắt đầu" type="date"></dx-date-box>
+                <dx-date-box [(value)]="filterToDate" (valueChange)="filterPrices()"   displayFormat="dd/MM/yyyy" placeholder="Thời gian kết thúc" type="date"></dx-date-box>
+              </div>
+            </dxi-item>
             <dxi-item name="addRowButton"></dxi-item>
             <dxi-item location="before">
               <div class="title-detail" style="width: 100%;">Thiết lập giá phòng theo thời gian:</div>

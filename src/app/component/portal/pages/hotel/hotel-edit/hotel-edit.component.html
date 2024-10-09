@@ -254,11 +254,11 @@
                     Thêm mới phòng
                   </div>
                 </button>
-                <button nz-button nzType="default" class="btn-cancel equal-width-btn" type="button">
-                    <div class="btn-action-listroom">
-                      <span nz-icon nzType="lock" nzTheme="outline"></span>
-                      Khóa loại phòng
-                    </div>
+                <button nz-button nzType="default" class="btn-cancel equal-width-btn" type="button" (click)="lockSelectedRooms()">
+                  <div class="btn-action-listroom">
+                    <span nz-icon nzType="lock" nzTheme="outline"></span>
+                    Khóa loại phòng
+                  </div>
                 </button>
               </div>
             </div>
@@ -277,8 +277,18 @@
           [allowColumnResizing]="true"
           [dataSource]="roomHotels">
 
-          <dxi-column cssClass="text-center" caption="STT" [width]="55" dataField="stt"
-                      [allowFiltering]="false" [allowSorting]="false"></dxi-column>
+          <dxi-column cssClass="text-center" caption="Trạng thái" [width]="100" cellTemplate="cellCheckBox" dataField="isChecked"></dxi-column>  
+
+          <div *dxTemplate="let cellInfo of 'cellCheckBox'">
+            <input 
+              type="checkbox" 
+              class="checkBoxStatus" 
+              [(ngModel)]="cellInfo.data.isChecked" 
+              (change)="onCheckboxChange(cellInfo.data)"
+              [disabled]="!cellInfo.data.isActive"
+            >
+          </div>
+          
           <dxi-column caption="Mã loại phòng" [width]="100" dataField="code" dataType="string"></dxi-column>
           <dxi-column caption="Tên loại phòng" [width]="200" dataField="name" dataType="string"></dxi-column>
 
@@ -329,7 +339,7 @@
           <div *dxTemplate="let room of 'cellBtnDetailTemplate'">
             <button [title]="room.data.isActive ? 'Khóa phòng' : 'Mở khóa phòng'" nz-button nzSize="small"
               nzType="default" class="btn-action-room" (click)="setActive(room.data)">
-              <span class="fa fa-key fa-fw" *ngIf="room.data.isActive"></span>
+              <span class="fa fa-lock fa-fw" *ngIf="room.data.isActive"></span>
               <span class="fa fa-unlock fa-fw" *ngIf="!room.data.isActive"></span>
           </button>
           <button title="Chỉnh sửa thông tin phòng" nz-button nzSize="small"

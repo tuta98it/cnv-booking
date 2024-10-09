@@ -81,7 +81,6 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   private isStatusChecked = false;
   today = new Date();
   bookingRoomId: any;
-  checkBookingId:any;
   dataEmail:any;
   // isOnSendEmailLoading: boolean = false;
   isConfirmSendEmailLoading: boolean = false;
@@ -480,7 +479,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
       return;
 
     }else{
-      this.updateBookingHotelApprovalCode(this.dataEmail, this.bookingRoomId);
+      this.addBookingRoomCodeId(this.dataEmail, this.bookingRoomId);
       this.isVisibleConfirmRoomId = false;
     }
   }
@@ -529,6 +528,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   }
   private findDataBookingHotelInFormEditor(dataBookingHotel: any) {
     let patchDataBookingHotel = dataBookingHotel;
+    console.log(patchDataBookingHotel.reservationCode);
     
     this.imageLogoVHL = Constant.LOGO_VHL;
     return new Promise((resolve, reject) => {
@@ -611,7 +611,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
                                       <span style="font-size: 14px; line-height: 175%;">Mã xác nhận :</span>
                                   </td>
                                   <td colspan="6" style="width: 54.48%; padding: 0in 5.4pt;">
-                                      <span style="font-size: 14px; line-height: 175%;"><span style="color:red;"><strong>${patchDataBookingHotel.approvalCode ? patchDataBookingHotel.approvalCode : ''}</strong></span></span>
+                                      <span style="font-size: 14px; line-height: 175%;"><span style="color:red;"><strong>${patchDataBookingHotel.reservationCode ? patchDataBookingHotel.reservationCode : ''}</strong></span></span>
                                   </td>
                                   <td colspan="3" style="width: 28.04%; padding: 0in 5.4pt;">
                                       <span style="font-size: 14px; line-height: 175%; text-align: left;">
@@ -1349,10 +1349,6 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
             this.notificationService.showNotification(Constant.SUCCESS, 'Xác nhận gửi Email đặt phòng thành công');
             this.isVisibleConfirmSendEmaiBooking = false;
             this.isConfirmSendEmailLoading = false;
-            if (this.checkBookingId != null) {      
-              this.updateBookingHotelStatus(this.dataEmail.id, HotelBookingStatusEnum.Successful);
-              this.checkBookingId = null;
-            }
           } else {
             if (res.errors && res.errors.length > 0) {
               res.errors.forEach((el: any) => {
@@ -1633,7 +1629,6 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
       return;
     }
     if(newValue === HotelBookingStatusEnum.Successful && oldValue === HotelBookingStatusEnum.Confirmed){
-      this.checkBookingId = dataFocus.data.bookingCode;
       this.dataEmail = dataFocus.data;
       this.isVisibleConfirmRoomId = true;
       return;
@@ -1952,7 +1947,6 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
         height: form.value.height
       }
     });
-    console.log(arrChd);
     
     return [...arrAdt, ...arrChd];
   }
@@ -2056,74 +2050,31 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
     });
 
   }
-  updateBookingHotelApprovalCode(dataBooking, bookingRoomId: any): Promise<any> {
-    console.log(dataBooking);
-    return new Promise((resolve, reject) => {
-      if (dataBooking.bookingHotelDetails && dataBooking.bookingHotelDetails.length > 0) {
-        let bookingDetail = dataBooking.bookingHotelDetails[0];
-  
-        let payload = {
-          id: dataBooking.id,
-          otherRequirements: dataBooking.otherRequirements,
-          isUrgent: dataBooking.isUrgent,
-          contactName: dataBooking.contactName,
-          contactPhone: dataBooking.contactPhone,
-          contactEmail: dataBooking.contactEmail,
-          roomDetails: [
-            {
-              id: bookingDetail.id,
-              hotelId: bookingDetail.hotelId,
-              roomHotelId: bookingDetail.roomHotelId,
-              checkinDate: new Date(bookingDetail.checkinDate),
-              checkoutDate: new Date(bookingDetail.checkoutDate),
-              numberOfNights: bookingDetail.numberOfNights,
-              amount: bookingDetail.amount,
-              extraBed: bookingDetail.extraBed,
-              adt: bookingDetail.adt,
-              chd: bookingDetail.chd,
-              inf: bookingDetail.inf,
-              price: bookingDetail.price,
-              adultSurcharge: bookingDetail.adultSurcharge,
-              childSurcharge: bookingDetail.childSurcharge,
-              extraBedPrice: bookingDetail.extraBedPrice,
-              totalPrice: bookingDetail.totalPrice,
-              passengers: bookingDetail.bookingHotelPassengers
-            }
-          ],
-          approvalCode: bookingRoomId
-        };
-  
-        console.log(payload);
-  
-        this.generalService.updateBookingHotel(payload).subscribe({
+
+  addBookingRoomCodeId(booking:any , bookingRoomId:any) {
+    console.log(booking);
+    
+    this.generalService.confirmBooking({ id: booking.id, reservationCode: bookingRoomId }).subscribe({
+      next: (res) => {
+        this.generalService.getBookingHotelById(booking.id).subscribe({
           next: (res) => {
-            this.generalService.getBookingHotelById(this.dataEmail.id).subscribe({
-              next: (res) => {
-                this.dataEmail = res.data;
-                console.log("cbi emaul", this.dataEmail);
-                
-                this.onConfirmSendEmailBookingHotel(this.dataEmail);
-              },
-              error: (error) => {
-                console.error('Error fetching booking details:', error);
-              }
-            });
-  
-            resolve(true);
+            this.dataEmail = res.data;
+            console.log(this.dataEmail);
+            this.onConfirmSendEmailBookingHotel(this.dataEmail);
           },
           error: (error) => {
-            console.log(error);
-            reject(error);
-          },
-          complete: () => {},
+            console.error('Error fetching booking details:', error);
+          }
         });
-      } else {
-        console.error('bookingHotelDetails is empty or undefined');
-        reject('Invalid bookingHotelDetails');
+      },
+      error: (error) => {
+
+      },
+      complete: () => {    
+          this.updateBookingHotelStatus(this.dataEmail.id, HotelBookingStatusEnum.Successful);
       }
-    });
+    })
   }
-  
   
 
   changeRoomType(event: any) {
