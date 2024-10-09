@@ -711,7 +711,8 @@
                         <span style="margin-left: 6px; line-height: normal;">Xuất file mẫu</span>
                       </div>
                     </li>
-                    <li nz-menu-item style="padding: 0.5rem 0;" [nzDisabled]="!itemPartner?.id" [style.opacity]=" listOfEmployees?.length ? '100%' : '50%'"
+                    <li nz-menu-item style="padding: 0.5rem 0;" [nzDisabled]="!itemPartner?.id"
+                      [style.opacity]=" listOfEmployees?.length ? '100%' : '50%'"
                       (click)="downloadExcelEmployeeForPartner(itemPartner?.id)">
                       <div style="display: flex; align-items: center;">
                         <span nz-icon nzType="download"></span>
@@ -777,7 +778,9 @@
                     </td>
                     <td [nzLeft]="fixedColumnEmployee" [nzDisabled]="data.disabled">{{ data.userType | userTypePipe }}
                     </td>
-                    <td [nzDisabled]="data.disabled"><a style="text-decoration: underline; color: #3B82F6" (click)="navigatePage('companies/employee-action/view', ActionTypePageVHL.View, data.id)">{{ data.userCode }}</a></td>
+                    <td [nzDisabled]="data.disabled"><a style="text-decoration: underline; color: #3B82F6"
+                        (click)="navigatePage('companies/employee-action/view', ActionTypePageVHL.View, data.id)">{{
+                        data.userCode }}</a></td>
                     <td [nzDisabled]="data.disabled">{{ data.fullname }}</td>
                     <td [nzDisabled]="data.disabled" [style.color]="COLOR_USER_STATUS[data.status]">{{
                       TEXT_USER_STATUS[data.status] }}</td>
@@ -907,11 +910,9 @@
           <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px;">
             <span style="font-weight: 500; font-size: 16px;">Biến động số dư</span>
             <div style="display: flex; align-items: center;">
-             <!-- <button [disabled]="!itemPartner?.id" nz-button nzType="primary" style="margin-right: 0.5rem;">
-                <div style="display: flex; align-items: center;">
-                  <span style="margin: 0 6px; line-height: normal;">In bảng kê khai</span>
-                </div>
-              </button> -->
+              <button [nzLoading]="isLoadingBalanceFluctuationStatement" [disabled]="!itemPartner?.id" nz-button nzType="primary" style="margin-right: 0.5rem;" (click)="downloadBalanceFluctuationStatementFile(itemPartner?.id)">
+                  In bảng kê khai
+              </button>
 
               <button [disabled]="!itemPartner?.id " nz-button nzType="primary"
                 style="margin-right: 0.5rem; background-color: #3B82F6;" (click)="showModalDepositAccount()">

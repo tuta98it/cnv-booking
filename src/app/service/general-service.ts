@@ -594,7 +594,9 @@ export class GeneralService extends BaseService {
   }
 
 
-
+  downloadBalanceFluctuationStatementFile(partnerId: number): Observable<any> {
+    return this.post(UrlConstant.LIST_PARTNERS + `/DownloadBalanceFluctuationStatementFile`, { partnerId: partnerId });
+  }
   // Booking
 
   // Xuất vé
@@ -828,7 +830,7 @@ export class GeneralService extends BaseService {
   }
 
   sendEmailToAdminVHLNotifyHotelBookingConfirmed(hotelBookingID: number): Observable<any> {
-    return this.post(`/api${UrlConstant.EMAIL}/SendEmailToAdminVHLNotifyHotelBookingConfirmed`, { hotelBookingID:hotelBookingID });
+    return this.post(`/api${UrlConstant.EMAIL}/SendEmailToAdminVHLNotifyHotelBookingConfirmed`, { hotelBookingID: hotelBookingID });
   }
   // News
   getNews(): Observable<any> {

@@ -145,6 +145,7 @@ export class ActionPartnerComponent implements OnInit {
   isVisibleChangePassword: boolean = false;
   listOfBusinessUsageHistories: any[];
 
+  isLoadingBalanceFluctuationStatement = false;
   constructor(
     private msg: NzMessageService,
     private activatedRoute: ActivatedRoute,
@@ -1833,5 +1834,34 @@ export class ActionPartnerComponent implements OnInit {
       }
     }).add(() => {
     });
+  }
+
+  downloadBalanceFluctuationStatementFile(partnerId: number) {
+    this.isLoadingBalanceFluctuationStatement = true;
+    this.generalService.downloadBalanceFluctuationStatementFile(partnerId).subscribe({
+      next: (res) => {
+        if (res.isValid) {
+          const relativeFilePath = res.data.relativeFilePath;
+          window.open(`${this.configService.getConfig().api.baseUrl}/${relativeFilePath}`, '_blank');
+        } else {
+          if (res.errors && res.errors.length > 0) {
+            res.errors.forEach((el: any) => {
+              this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+            });
+          } else {
+            this.notificationService.showNotification(Constant.ERROR, 'Đã có lỗi xảy ra');
+          }
+        }
+      },
+      error: (error: any) => {
+        this.notificationService.showNotification(Constant.ERROR, 'Không thể tải bảng kê khai số dư do lỗi hệ thống');
+      },
+
+      complete: () => {
+        this.isLoadingBalanceFluctuationStatement = false;
+      }
+    }).add(() => {
+    });
+
   }
 }
