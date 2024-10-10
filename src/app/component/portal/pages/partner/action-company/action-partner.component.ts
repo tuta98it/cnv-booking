@@ -145,6 +145,7 @@ export class ActionPartnerComponent implements OnInit {
   isVisibleChangePassword: boolean = false;
   listOfBusinessUsageHistories: any[];
 
+  isLoadingBalanceFluctuationStatement = false;
   constructor(
     private msg: NzMessageService,
     private activatedRoute: ActivatedRoute,
@@ -1161,6 +1162,7 @@ export class ActionPartnerComponent implements OnInit {
               this.notificationService.showNotification(Constant.SUCCESS, `Cập nhật thông tin doanh nghiệp thành công`);
               this.changeValueBaseBusinessContractReversal(true);
               this.itemPartner = res.data;
+              this.resetFormBaseInfoCreatePartner(this.itemPartner);
               // this.setIsActiveEditBaseInfo(this.itemPartner?.id == null);
               this.isActiveEditBaseInfo.setValue(this.itemPartner?.id == null);
 
@@ -1182,6 +1184,7 @@ export class ActionPartnerComponent implements OnInit {
             if (res.isValid) {
               this.notificationService.showNotification(Constant.SUCCESS, `Tạo mới thông tin doanh nghiệp thành công`);
               this.itemPartner = res.data;
+              this.resetFormBaseInfoCreatePartner(this.itemPartner);
               // this.setIsActiveEditBaseInfo(this.itemPartner?.id == null);
               this.isActiveEditBaseInfo.setValue(this.itemPartner?.id == null);
             } else {
@@ -1624,6 +1627,7 @@ export class ActionPartnerComponent implements OnInit {
     this.saveBaseInfoPartner().then((result) => {
       this.saveUpdateContractInfoForPartner().then((result) => {
         this.sendApprovalRequest().then((data) => {
+
           this.setActionValuPage(data);
         })
       })
@@ -1642,6 +1646,8 @@ export class ActionPartnerComponent implements OnInit {
         next: (res) => {
           if (res.isValid) {
             this.notificationService.showNotification(Constant.SUCCESS, `Đã chuyển về bản nháp`);
+            this.itemPartner = res.data;
+            this.resetFormBaseInfoCreatePartner(this.itemPartner);
             resolve(res.data);
           } else {
             if (res.errors && res.errors.length > 0) {
@@ -1670,6 +1676,8 @@ export class ActionPartnerComponent implements OnInit {
         next: (res: any) => {
           if (res.isValid) {
             this.notificationService.showNotification(Constant.SUCCESS, `Đã gửi yêu cầu phê duyệt doanh nghiệp ${this.itemPartner?.companyName ? this.itemPartner?.companyName : ""} thành công`);
+            this.itemPartner = res.data;
+            this.resetFormBaseInfoCreatePartner(this.itemPartner);
             resolve(res.data);
           } else {
             if (res.errors && res.errors.length > 0) {
@@ -1699,6 +1707,8 @@ export class ActionPartnerComponent implements OnInit {
         next: (res: any) => {
           if (res.isValid) {
             this.notificationService.showNotification(Constant.SUCCESS, `${this.itemPartner?.companyName ? this.itemPartner?.companyName : "doanh nghiệp"} đã được duyệt thành công`);
+            this.itemPartner = res.data;
+            this.resetFormBaseInfoCreatePartner(this.itemPartner);
             resolve(res.data);
             this.setActionValuPage(res.data);
           } else {
@@ -1833,5 +1843,78 @@ export class ActionPartnerComponent implements OnInit {
       }
     }).add(() => {
     });
+  }
+
+  downloadBalanceFluctuationStatementFile(partnerId: number) {
+    this.isLoadingBalanceFluctuationStatement = true;
+    this.generalService.downloadBalanceFluctuationStatementFile(partnerId).subscribe({
+      next: (res) => {
+        if (res.isValid) {
+          const relativeFilePath = res.data.relativeFilePath;
+          window.open(`${this.configService.getConfig().api.baseUrl}/${relativeFilePath}`, '_blank');
+        } else {
+          if (res.errors && res.errors.length > 0) {
+            res.errors.forEach((el: any) => {
+              this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+            });
+          } else {
+            this.notificationService.showNotification(Constant.ERROR, 'Đã có lỗi xảy ra');
+          }
+        }
+      },
+      error: (error: any) => {
+        this.notificationService.showNotification(Constant.ERROR, 'Không thể tải bảng kê khai số dư do lỗi hệ thống');
+      },
+
+      complete: () => {
+        this.isLoadingBalanceFluctuationStatement = false;
+      }
+    }).add(() => {
+    });
+
+  }
+
+  changeMenuUpgradePartner(option: any) {
+    this.selectedMenu = option.value
+
+    switch (this.selectedMenu) {
+      case this.MenuCreatePartner.ContractManagement:
+
+        break;
+
+      case this.MenuCreatePartner.ListEmployees:
+        if (this.itemPartner?.id) {
+          this.getEmployeesByPartnerId();
+        }
+        break;
+
+      case this.MenuCreatePartner.AccountInfomation:
+        if (this.itemPartner?.id) {
+          this.getBalanceFluctuationsByPartnerId(this.itemPartner?.id).then((result: any) => {
+            this.debtBearingSales = result.debtBearingSales
+            this.debtFreeRevenue = result.debtFreeRevenue
+            this.listOfBalanceFluctuations = result.tableAccountBalancies;
+            let stt = 0;
+            this.listOfBalanceFluctuations.forEach(en => {
+              stt++;
+              en.stt = stt;
+            });
+          });
+        }
+
+        break;
+
+      case this.MenuCreatePartner.BusinessUsageHistory:
+        if (this.itemPartner?.id) {
+          this.getListBusinessServiceUsageHistoryByPartner(this.itemPartner?.id).then((result: any) => {
+            this.listOfBusinessUsageHistories = result;
+          });
+        }
+
+        break;
+
+      default:
+        break;
+    }
   }
 }
