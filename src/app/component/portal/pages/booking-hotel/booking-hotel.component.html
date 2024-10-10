@@ -212,9 +212,10 @@
       <div *dxTemplate="let priceRoom of 'cellPriceRoom'">
         {{priceRoom.value ? priceRoom.value : 0 | currencyFormat}} đ
       </div>
-      <div *dxTemplate="let totalPrice of 'cellTotalPrice'">
-        {{totalPrice.value? totalPrice.value : 0 | currencyFormat}} đ
+      <div *dxTemplate="let totalPrice of 'cellTotalPrice'" class="cell-content-urgent">
+        {{ formatCurrency(totalPrice.value) }}
       </div>
+      
       <div *dxTemplate="let bookingHotelPassenger of 'cellBookingHotelPassengers'">
         <a nz-button nzType="link" (click)="previewDetailBookingHotelPassengers(bookingHotelPassenger.value)"
           nzBlock>«Chi tiết»</a>
@@ -231,8 +232,8 @@
     </span>
   </div>  
   <div *dxTemplate="let totalPrice of 'cellTotalPrice'" class="cell-content-urgent">
-    {{ totalPrice.value ? (totalPrice.value | currency:'VND') : 0 }}
-  </div>
+    {{ formatCurrency(totalPrice.value) }}
+  </div>  
   <div *dxTemplate="let hotelFlightExport of 'cellSystemCancelled'">
     <nz-switch [ngModel]="!hotelFlightExport.data.systemCancelled" [nzControl]="true" nzCheckedChildren="Tính công nợ"
       nzUnCheckedChildren="Không tính công nợ" [nzLoading]="loadingSystemStatus"

@@ -40,6 +40,8 @@ export class RoomEditComponent implements OnInit {
   filteredPrices: any[] = [];
   statusPriceDetail: any[] = [];
   @ViewChild('myForm') myForm!: NgForm;
+  isActiveChanged: any;
+  isAvailableChanged: any;
   constructor(
     private router: Router,
     private modalService: NzModalService,
@@ -209,12 +211,14 @@ export class RoomEditComponent implements OnInit {
         return;
     }
 
-    const utilitieIds = formValue.amenities.filter(en => en.checked).map(en => en.value);
+    const utilitieIds = this.formAddRoom.value.amenities.filter(en => en.checked).map(en => en.value);
     formValue.utilitieIds = utilitieIds;
 
     formValue.shortDescription = this.hotelItem.shortDescription;
     formValue.description = this.hotelItem.description;
-    formValue.isAvailable = this.roomItem.isAvailable; 
+
+    formValue.isActive = this.isActiveChanged ?? this.roomItem?.isActive ?? false;
+    formValue.isAvailable = this.isAvailableChanged ?? this.roomItem?.isAvailable ?? false;
 
     console.log(this.formAddRoom.value);
 
@@ -228,6 +232,7 @@ export class RoomEditComponent implements OnInit {
             if (res.ret && res.ret[0].code !== 0) {
                 this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
             } else {
+                // this.getListData();
                 this.notificationService.showNotification(Constant.SUCCESS, Constant.MESSAGE_ADD_SUCCESS);
                 this.roomId = res.jsonData;
                 this.router.navigate(['hotel/edit-room', this.hotelId, this.roomId]);
@@ -235,12 +240,14 @@ export class RoomEditComponent implements OnInit {
         }, (error: any) => {
         });
     } else {
+        // / update
         delete formValue.amenities;
-
         this.generalService.updateRoomByID(formValue.id, formValue).subscribe((res: any) => {
             if (res.ret && res.ret[0].code !== 0) {
                 this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
             } else {
+                // this.getListData();
+                // this.router.navigate(['hotel']);
                 this.notificationService.showNotification(Constant.SUCCESS, Constant.MESSAGE_UPDATE_SUCCESS);
             }
         }, error => {
@@ -410,6 +417,7 @@ export class RoomEditComponent implements OnInit {
   setActive(data: any) {
     console.log(data);
     data.isActive = !data.isActive;
+    this.isActiveChanged = data.isActive; 
     this.generalService.setActiveRoom({roomId: data.id, isActive: data.isActive}).subscribe(
       {
         next: (res) => {
@@ -433,6 +441,7 @@ export class RoomEditComponent implements OnInit {
   }
   clickSwitchIsAvaliable(isAvaliableUpdate: boolean, roomID: any): void {
     const newIsAvailable = !isAvaliableUpdate;
+    this.isAvailableChanged = newIsAvailable;
     this.generalService.SetAvailableRoom({ roomId: roomID, isAvailable: newIsAvailable }).subscribe(
         {
             next: (res) => {
@@ -450,5 +459,4 @@ export class RoomEditComponent implements OnInit {
         }
     );
 }
-
 }
