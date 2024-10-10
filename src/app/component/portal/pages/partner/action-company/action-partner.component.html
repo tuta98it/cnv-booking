@@ -320,21 +320,21 @@
                 <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
                   style="display: flex; align-items: center; padding: 8px 0;">
                   <div nz-col class="gutter-row" [nzSpan]="24" style="display: flex; align-items: center;">
-                    Số dư đầu kỳ
+                    Số dư hiện tại
                   </div>
                 </div>
                 <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
                   style="display: flex; align-items: center; padding: 8px 0;">
                   <div nz-col class="gutter-row fs-xl" [nzSpan]="24"
                     style="display: flex; align-items: center; color:  #007AFF;">
-                    {{debtFreeRevenue?.beginningBalance ? (debtFreeRevenue?.beginningBalance | currencyFormat) : '-' }}
+                    {{debtFreeRevenue?.currentBalance ? (debtFreeRevenue?.currentBalance | currencyFormat) : '-' }}
                     đ
                   </div>
                 </div>
                 <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
                   style="display: flex; align-items: center; padding: 8px 0;">
                   <div nz-col class="gutter-row" [nzSpan]="24" style="display: flex; align-items: center;">
-                    Phát sinh tăng trong kỳ
+                    Phát sinh tăng trong tháng
                   </div>
                 </div>
                 <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
@@ -350,7 +350,7 @@
                 <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
                   style="display: flex; align-items: center; padding: 8px 0;">
                   <div nz-col class="gutter-row" [nzSpan]="24" style="display: flex; align-items: center;">
-                    Phát sinh giảm trong kỳ
+                    Phát sinh giảm trong tháng
                   </div>
                 </div>
                 <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
@@ -361,7 +361,7 @@
                     ? (debtFreeRevenue?.decreaseInGeneration | currencyFormat) : '-' }} đ)
                   </div>
                 </div>
-                <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
+                <!-- <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
                   style="display: flex; align-items: center; padding: 8px 0;">
                   <div nz-col class="gutter-row" [nzSpan]="24" style="display: flex; align-items: center;">
                     Số dư cuối kỳ
@@ -373,7 +373,7 @@
                     style="display: flex; align-items: center; color: #007AFF;">
                     {{debtFreeRevenue?.endingBalance ? (debtFreeRevenue?.endingBalance | currencyFormat): '-' }} đ
                   </div>
-                </div>
+                </div> -->
               </div>
             </div>
           </div>
@@ -901,24 +901,28 @@
           <div *ngIf="formBaseInfoCreatePartner.get('allowDebt')?.value == AllowDebtPartner.NOT_ALLOW"
             style="display: flex; justify-content: space-between; align-items: center; font-size: 16px;">
             <div>
-              Số dư đầu kỳ {{debtFreeRevenue?.beginningBalance ? (debtFreeRevenue.beginningBalance | currencyFormat):
+              Số dư hiện tại {{debtFreeRevenue?.currentBalance ? (debtFreeRevenue.currentBalance | currencyFormat):
               '-' }} đ
             </div>
 
             <div>
-              Phát sinh tăng trong kỳ {{debtFreeRevenue?.increaseInGeneration ? (debtFreeRevenue.increaseInGeneration |
+              Phát sinh tăng trong tháng {{debtFreeRevenue?.increaseInGeneration ? (debtFreeRevenue.increaseInGeneration
+              |
               currencyFormat) :
               '-' }} đ
             </div>
 
-            <div style="color: #900B09;">
-              Phát sinh giảm trong kỳ ({{debtFreeRevenue?.decreaseInGeneration ? (debtFreeRevenue.decreaseInGeneration |
-              currencyFormat) :
-              '-' }} đ)
+            <div>
+              Phát sinh giảm trong tháng
+              <span style="color: #900B09;">
+                ({{debtFreeRevenue?.decreaseInGeneration ? (debtFreeRevenue.decreaseInGeneration |
+                currencyFormat) :
+                '-' }} đ)
+              </span>
             </div>
 
 
-            <div>
+            <!-- <div>
               Số dư cuối kỳ
               <span *ngIf="debtFreeRevenue?.endingBalance >= 0">
                 {{debtFreeRevenue?.endingBalance ? (debtFreeRevenue?.endingBalance | currencyFormat)
@@ -930,7 +934,7 @@
                 :
                 '-' }}) đ
               </span>
-            </div>
+            </div> -->
 
           </div>
 
