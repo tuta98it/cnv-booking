@@ -5,6 +5,7 @@ export enum AirlineTicketBookingRequestStatus {
   ExpiredTicket = 4,
   AdjustTicket = 5,
   IssuedTicket = 6,
+  FailureTicket = 7,
   All = 999,
 }
 
@@ -16,4 +17,5 @@ export const AIRLINE_TICKET_BOOKING_REQUEST_STATUS_OPTIONS = [
   { label: 'Hết hạn giữ vé', value: AirlineTicketBookingRequestStatus.ExpiredTicket },
   { label: 'Điều chỉnh vé', value: AirlineTicketBookingRequestStatus.AdjustTicket },
   { label: 'Xuất vé', value: AirlineTicketBookingRequestStatus.IssuedTicket },
+  { label: 'Đặt vé thật bại', value: AirlineTicketBookingRequestStatus.FailureTicket },
 ];
