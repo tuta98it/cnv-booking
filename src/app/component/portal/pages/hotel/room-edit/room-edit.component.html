@@ -6,32 +6,27 @@
     <div class="after">
       <div class="buttons">
         <button *ngIf="roomItem && roomItem.isAvailable !== undefined"
-            [disabled]="!formAddRoom.valid"
-            (click)="clickSwitchIsAvaliable(roomItem.isAvailable, roomItem.id)"
-            nz-button
-            [nzType]="roomItem.isAvailable ? 'primary' : 'danger'"
-            [ngClass]="roomItem.isAvailable ? 'ant-btn-primary' : 'ant-btn-danger'"
-            class="status-button"
-            type="button">
-            <em class="fas fa-couch" style="margin-right: 4px;"></em>
-            {{ roomItem.isAvailable ? 'Còn phòng' : 'Hết phòng' }} 
-      </button>
-
-    <ng-container *ngIf="roomItem && !roomItem.isActive; else elseTemplate"> 
-      <button [disabled]="!formAddRoom.valid" (click)="setActive(roomItem)" nz-button nzType="danger"
-        class="ant-btn-danger" type="button">
-        <span class="fa fa-lock fa-fw" style="margin-right: 4px;"></span>Khóa lại
-      </button>
-    </ng-container>
-
-    <ng-template #elseTemplate>
-      <button [disabled]="!formAddRoom.valid" (click)="setActive(roomItem)" nz-button nzType="primary"
-        class="ant-btn-danger" type="button">
-        <span class="fa fa-unlock fa-fw" style="margin-right: 4px;"></span>Mở khóa
-      </button>
-    </ng-template>
-
-
+        [disabled]="!formAddRoom.valid"
+        (click)="clickSwitchIsAvaliable(roomItem.isAvailable, roomItem.id)"
+        nz-button
+        [nzType]="roomItem.isAvailable ? 'danger' : 'primary'"
+        [ngClass]="roomItem.isAvailable ? 'ant-btn-danger' : 'ant-btn-primary'"
+        class="status-button"
+        type="button">
+        <em class="fas fa-couch" style="margin-right: 4px;"></em>
+        {{ roomItem.isAvailable ? 'Hết phòng' : 'Còn phòng' }} 
+  </button>
+      <button *ngIf="roomItem && roomItem.isActive !== undefined"
+      [disabled]="!formAddRoom.valid"
+      (click)="setActive(roomItem)"
+      nz-button
+      [nzType]="!roomItem.isActive ? 'primary' : 'danger'"
+      [ngClass]="!roomItem.isActive ? 'ant-btn-primary' : 'ant-btn-danger'" 
+      class="status-button"
+      type="button">
+      <em [class]="!roomItem.isActive ? 'fa fa-unlock fa-fw' : 'fa fa-lock fa-fw'" style="margin-right: 4px;"></em> 
+      {{ !roomItem.isActive ? 'Mở khóa' : 'Khóa lại' }}
+    </button>
         <button [disabled]="!formAddRoom.valid" (click)="triggerSubmit()" nz-button nzType="primary"
                 class="ant-btn-primary" type="button">
           <em class="fas fa-save fa-fw" style="margin-right: 4px;"></em> Lưu lại
@@ -46,6 +41,16 @@
     <div class="toolbar border-bottom">
       <div class="before">
         <h2 class="toolbar-title">Thông tin cơ bản</h2>
+      </div>
+      <div class="after">
+        <div class="after">
+          <div class="buttons">
+            <button [disabled]="!formAddRoom.valid" (click)="triggerSubmit()" nz-button nzType="primary"
+                    class="ant-btn-primary" type="button">
+              <em class="fas fa-pen fa-fw" style="margin-right: 4px;"></em> Chỉnh sửa
+            </button>
+          </div>
+        </div>
       </div>
     </div>
     <div class="card-body p-2">
@@ -127,12 +132,28 @@
   <div class="card border-0">
     <nz-tabset>
       <nz-tab nzTitle="Hình ảnh loại phòng">
+        <div class="toolbar">
+          <div class="before" style="color: rgb(49, 148, 206); font-size: 20px;">
+            Hình ảnh của loại phòng
+          </div>
+          <div class="after">
+            <div class="buttons">
+              <button [disabled]="!formAddRoom.valid" nz-button nzType="primary"
+                      class="ant-btn-primary" type="button">
+                <em class="fas fa-save fa-fw" style="margin-right: 4px;"></em> Lưu lại
+              </button>
+              <button [disabled]="!formAddRoom.valid" nz-button nzType="default" class="ant-btn-primary" type="button" >
+                <em class="fas fa-times fa-fw" style="margin-right: 4px;"></em> Hủy bỏ
+              </button>
+            </div>
+          </div>
+        </div>
         <div class="row">
           <div class="col-md-12">
             <div class="form-inline-custom align-items-baseline div-images">
               <nz-upload class="upload-list-inline" [nzMultiple]="true" [nzAction]="uploadUrl" nzName="postedFile"
                          [nzHeaders]="uploadHeader" nzListType="picture" [nzRemove]="handleRemoveImageRoom"
-                         (nzChange)="handleChangeImages($event, 'room')" [nzFileList]="fileList">
+                         (nzChange)="handleChangeImages($event, 'room')" [nzFileList]="fileList"  [nzShowUploadList]="true">
                 <button nz-button class="btn-flex">
                   <span nz-icon nzType="upload"></span>
                   Tải lên file ảnh

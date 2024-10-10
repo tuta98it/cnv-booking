@@ -12,12 +12,19 @@ export class MoneyUtils {
     return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' đ';
   }
 
-  static convertMoneyText(number: any) {
-    if (!this.to_vietnamese(number)) {
+  static convertMoneyText(number: any): string {
+    const vietnameseText = this.to_vietnamese(number);
+    if (!vietnameseText) {
       return '';
     }
-    return this.to_vietnamese(number) + ' đồng'
+    
+    return this.capitalizeFirstLetter(vietnameseText) + ' đồng';
   }
+  
+  static capitalizeFirstLetter(text: string): string {
+    return text.charAt(0).toUpperCase() + text.slice(1);
+  }
+  
 
   static defaultNumbers = ' hai ba bốn năm sáu bảy tám chín';
   static chuHangDonVi = ('1 một' + MoneyUtils.defaultNumbers).split(' ');

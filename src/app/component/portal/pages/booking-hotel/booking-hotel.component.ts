@@ -491,7 +491,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
     this.generalService.getBookingHotelById(booking.id)
       .subscribe({
         next: (res) => {
-
+          
           if (res.isValid) {
             if (res.data.id === 0) {
               this.notificationService.showNotification(Constant.ERROR, 'Dữ liệu đặt phòng không tồn tại');
@@ -528,7 +528,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   }
   private findDataBookingHotelInFormEditor(dataBookingHotel: any) {
     let patchDataBookingHotel = dataBookingHotel;
-    console.log(patchDataBookingHotel.reservationCode);
+    console.log(patchDataBookingHotel.bookingHotelDetails[0]);
     
     this.imageLogoVHL = Constant.LOGO_VHL;
     return new Promise((resolve, reject) => {
@@ -597,7 +597,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
                                       <span style="font-size: 14px; line-height: 175%;">Số điện thoại :</span>
                                   </td>
                                   <td colspan="6" style="width: 54.48%; padding: 0in 5.4pt;">
-                                      <span style="font-size: 14px; line-height: 175%;">${patchDataBookingHotel.bookingHotelDetails[0].hotelPhone}</span>
+                                      <span style="font-size: 14px; line-height: 175%;">${patchDataBookingHotel.bookingHotelDetails[0].phoneNumberOfPersonInCharge}</span>
                                   </td>
                                   <td colspan="3" style="width: 28.04%; padding: 0in 5.4pt;">
 
@@ -2177,5 +2177,8 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   calcImplementerHistory(rowData: any) {
     return 'ID: ' + rowData.userIdModified + ' ,Name: ' + rowData.fullName;
   }
-
+  formatCurrency(value: number): string {
+    if (!value) return '0 VNĐ';
+    return value.toLocaleString('vi-VN').replace(/,/g, '.') + ' VNĐ';
+  }
 }
