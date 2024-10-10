@@ -386,7 +386,8 @@
       <div class="inner-box">
         <ul nz-menu nzMode="horizontal">
           <li nz-menu-item [nzSelected]="selectedMenu == option.value"
-            *ngFor="let option of MENU_UPGRADE_PARTNER_OPTION; let i = index" (click)="changeMenuUpgradePartner(option)">
+            *ngFor="let option of MENU_UPGRADE_PARTNER_OPTION; let i = index"
+            (click)="changeMenuUpgradePartner(option)">
             {{option.label}}
           </li>
         </ul>
@@ -858,8 +859,17 @@
 
 
             <div>
-              Dư nợ đầu kỳ {{debtBearingSales?.beginningBalance ? (debtBearingSales.beginningBalance | currencyFormat) :
-              '-' }} đ
+              Dư nợ đầu kỳ
+              <span *ngIf="debtBearingSales?.beginningBalance >= 0">
+                {{debtBearingSales?.beginningBalance ? (debtBearingSales.beginningBalance | currencyFormat)
+                :
+                '-' }} đ
+              </span>
+              <span *ngIf="debtBearingSales?.beginningBalance < 0" style="color: #900B09;">
+                ({{debtBearingSales?.beginningBalance ? ( -debtBearingSales.beginningBalance | currencyFormat)
+                :
+                '-' }}) đ
+              </span>
             </div>
 
             <div>
@@ -868,8 +878,17 @@
             </div>
 
             <div>
-              Dư nợ cuối kỳ {{debtBearingSales?.endingBalance ? (debtBearingSales.endingBalance | currencyFormat): '-'
-              }} đ
+              Dư nợ cuối kỳ
+              <span *ngIf="debtBearingSales?.endingBalance >= 0">
+                {{debtBearingSales?.endingBalance ? (debtBearingSales.endingBalance | currencyFormat)
+                :
+                '-' }} đ
+              </span>
+              <span *ngIf="debtBearingSales?.endingBalance < 0" style="color: #900B09;">
+                ({{debtBearingSales?.endingBalance ? ( -debtBearingSales.endingBalance | currencyFormat)
+                :
+                '-' }}) đ
+              </span>
             </div>
 
             <div>
@@ -900,8 +919,17 @@
 
 
             <div>
-              Số dư cuối kỳ {{debtFreeRevenue?.endingBalance ? (debtFreeRevenue.endingBalance | currencyFormat) : '-' }}
-              đ
+              Số dư cuối kỳ
+              <span *ngIf="debtFreeRevenue?.endingBalance >= 0">
+                {{debtFreeRevenue?.endingBalance ? (debtFreeRevenue?.endingBalance | currencyFormat)
+                :
+                '-' }} đ
+              </span>
+              <span *ngIf="debtFreeRevenue?.endingBalance < 0" style="color: #900B09;">
+                ({{debtFreeRevenue?.endingBalance ? ( -debtFreeRevenue?.endingBalance | currencyFormat)
+                :
+                '-' }}) đ
+              </span>
             </div>
 
           </div>
@@ -910,8 +938,10 @@
           <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px;">
             <span style="font-weight: 500; font-size: 16px;">Biến động số dư</span>
             <div style="display: flex; align-items: center;">
-              <button [nzLoading]="isLoadingBalanceFluctuationStatement" [disabled]="!itemPartner?.id" nz-button nzType="primary" style="margin-right: 0.5rem;" (click)="downloadBalanceFluctuationStatementFile(itemPartner?.id)">
-                  In bảng kê khai
+              <button [nzLoading]="isLoadingBalanceFluctuationStatement" [disabled]="!itemPartner?.id" nz-button
+                nzType="primary" style="margin-right: 0.5rem;"
+                (click)="downloadBalanceFluctuationStatementFile(itemPartner?.id)">
+                In bảng kê khai
               </button>
 
               <button [disabled]="!itemPartner?.id " nz-button nzType="primary"
