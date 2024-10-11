@@ -537,8 +537,8 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
 
   private findDataBookingHotelInFormEditor(dataBookingHotel: any) {
     let patchDataBookingHotel = dataBookingHotel;
-    console.log(patchDataBookingHotel.bookingHotelDetails[0]);
-
+    // console.log(patchDataBookingHotel.bookingHotelDetails[0]);
+    
     this.imageLogoVHL = Constant.LOGO_VHL;
     return new Promise((resolve, reject) => {
       this.contentFileConfirmBookingRoonHotel = `<html lang="vi">
@@ -1747,7 +1747,6 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
           resolve(true);
         },
         error: (error) => {
-          console.log(error);
         },
         complete: () => {
           this.getListData();

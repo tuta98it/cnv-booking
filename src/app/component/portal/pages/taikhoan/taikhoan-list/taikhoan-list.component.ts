@@ -331,7 +331,6 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
   }
 
   showModalAdd() {
-    this.formAdd.reset();
     this.isAddForm = true;
     this.isVisibleAdd = true;
     this.submitted = false;
@@ -381,7 +380,11 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
   }
 
   showModalUpdate(data) {
+    // console.log(data);
     this.isAddForm = false;
+    this.loadPositionTitles();
+    this.loadDirectiveManagement();
+
     this.isVisibleAdd = true;
     this.submitted = false;
     this.item = data;
