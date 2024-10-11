@@ -528,7 +528,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   }
   private findDataBookingHotelInFormEditor(dataBookingHotel: any) {
     let patchDataBookingHotel = dataBookingHotel;
-    console.log(patchDataBookingHotel.bookingHotelDetails[0]);
+    // console.log(patchDataBookingHotel.bookingHotelDetails[0]);
     
     this.imageLogoVHL = Constant.LOGO_VHL;
     return new Promise((resolve, reject) => {
@@ -1680,7 +1680,6 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
           resolve(true);
         },
         error: (error) => {
-          console.log(error);
         },
         complete: () => {
           this.getListData();
@@ -2052,18 +2051,15 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   }
 
   addBookingRoomCodeId(booking:any , bookingRoomId:any) {
-    console.log(booking);
     
     this.generalService.confirmBooking({ id: booking.id, reservationCode: bookingRoomId }).subscribe({
       next: (res) => {
         this.generalService.getBookingHotelById(booking.id).subscribe({
           next: (res) => {
             this.dataEmail = res.data;
-            console.log(this.dataEmail);
             this.onConfirmSendEmailBookingHotel(this.dataEmail);
           },
           error: (error) => {
-            console.error('Error fetching booking details:', error);
           }
         });
       },

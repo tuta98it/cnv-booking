@@ -133,7 +133,6 @@ export class RoomEditComponent implements OnInit {
     this.editTitle = 'Sửa thông tin phòng';
     this.generalService.getRoomById(this.roomId).subscribe(res => {
       this.roomItem = res;
-      console.log(res);
       this.submitted = false;
       const item = res;
       this.formAddRoom.patchValue({
@@ -415,14 +414,12 @@ export class RoomEditComponent implements OnInit {
     });
 }
   setActive(data: any) {
-    console.log(data);
     data.isActive = !data.isActive;
     this.isActiveChanged = data.isActive; 
     this.generalService.setActiveRoom({roomId: data.id, isActive: data.isActive}).subscribe(
       {
         next: (res) => {
           if (res.ret && res.ret[0].code !== 0) {
-            console.log(res);
             
             this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
           } else {

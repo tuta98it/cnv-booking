@@ -165,7 +165,7 @@
       <div class="input-wrap">
         <label class="title-detail" nz-col [nzSpan]="8">Chức danh</label>
         <div nz-col [nzSpan]="16">
-          <ng-container *ngIf="isAddForm == false; else elseTemplate">
+          <!-- <ng-container *ngIf="isAddForm == false; else elseTemplate">
               <input nz-input formControlName="position" class="form-control form-control-disabled"
                  />
           </ng-container>
@@ -175,7 +175,13 @@
                 <option value="" disabled selected hidden>Chọn chức danh</option>
                 <option *ngFor="let pos of listPosition" [value]="pos.id">{{ pos.name }}</option>
               </select>
-          </ng-template>
+          </ng-template> -->
+          <select nz-select formControlName="titleId" class="form-control">
+            <option value="" >Chọn chức danh</option>
+            <option *ngFor="let pos of listPosition" [value]="pos.id">
+              {{ pos.name }}
+            </option>
+          </select>
         </div>
       </div>
 
@@ -199,28 +205,35 @@
       <div class="input-wrap" nz-row>
         <label class="title-detail" nz-col [nzSpan]="8">Quản lý trực tiếp</label>
         <div nz-col [nzSpan]="16">
-        <ng-container *ngIf="isAddForm == false ; else elseTemplate1">
+        <!-- <ng-container *ngIf="isAddForm == false ; else elseTemplate1">
             <input nz-input formControlName="directiveManagementUser" class="form-control form-control-disabled"/>
         </ng-container>
         <ng-template #elseTemplate1>
           <select formControlName="directManagementUserId" class="form-control"
          >
           <option value="" disabled selected hidden>Chọn quản lý trực tiếp của nhân viên</option>
-          <option *ngFor="let dir of listDirectiveManagement" [value]="dir.id">{{ dir.fullname }}</option>
+          <option *ngFor="let dir of listDirectiveManagement" [value]="dir.id" >{{ dir.fullname }}</option>
         </select>
-        </ng-template>
+        </ng-template> -->
+        <select formControlName="directManagementUserId" class="form-control">
+          <option value="" disabled hidden>Chọn quản lý trực tiếp của nhân viên</option>
+          <option *ngFor="let dir of listDirectiveManagement" [value]="dir.id">
+            {{ dir.fullname }}
+          </option>
+        </select>
       </div>
       </div>
 
       <div class="input-wrap" nz-row>
         <label class="title-detail" nz-col [nzSpan]="8">Phòng ban</label>
         <div nz-col [nzSpan]="16">
-          <ng-container *ngIf="isAddForm == false; else elseTemplate2">
+          <!-- <ng-container *ngIf="isAddForm == false; else elseTemplate2">
             <input nz-input formControlName="department" class="form-control form-control-disabled"/>
           </ng-container>
           <ng-template #elseTemplate2>
             <input nz-input formControlName="department" placeholder="Nhập phòng ban của nhân viên" class="form-control"/>
-          </ng-template>
+          </ng-template> -->
+          <input nz-input formControlName="department" placeholder="Nhập phòng ban của nhân viên" class="form-control"/>
         </div>
       </div>
 

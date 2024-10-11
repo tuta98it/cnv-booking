@@ -20,7 +20,7 @@
       <div class="before">
         <h2 class="toolbar-title">Thông tin cơ bản</h2>
       </div>
-      <div class="after">
+      <!-- <div class="after">
         <div class="buttons">
           <button [disabled]="!formAddHotel.valid" (click)="triggerSubmit()" nz-button nzType="primary"
                   class="ant-btn-primary" type="button">
@@ -30,7 +30,7 @@
             <em class="fas fa-times fa-fw" style="margin-right: 4px;"></em> Hủy bỏ
           </button>
         </div>
-      </div>
+      </div> -->
     </div>
     <div class="card-body p-2">
       <form [formGroup]="formAddHotel" class="container" (ngSubmit)="saveHotel()" #myForm="ngForm">
