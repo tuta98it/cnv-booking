@@ -13,6 +13,7 @@
 <dx-data-grid id="gridContainer" [dataSource]="filteredDatas" #ListBookingHotels [showColumnLines]="true"
   [showRowLines]="true" [height]="dxGridHeight" [rowAlternationEnabled]="true" [showBorders]="true"
   [allowColumnResizing]="true" columnResizingMode="widget" [columnMinWidth]="50" [columnAutoWidth]="true"
+  [paging]="{ enabled: false }"
   (onExporting)="onExporting($event)" (onCellPrepared)="onRowPrepared($event)">
   <dxo-scrolling rowRenderingMode="virtual"></dxo-scrolling>
   <dxo-sorting mode="multiple"></dxo-sorting>
@@ -24,11 +25,11 @@
   <dxi-column caption="STT" cssClass="text-center" [width]="55" dataField="stt" [fixed]="true" [allowFiltering]="false"
     [allowSorting]="false"></dxi-column>
   <!-- Mã yêu cầu  -->
-  <dxi-column caption="Mã yêu cầu" [width]="150" dataField="bookingCode" [fixed]="true" [width]="150"
+  <dxi-column caption="Mã yêu cầu" [width]="120" dataField="bookingCode" [fixed]="true" [width]="150"
     fixedPosition="left" dataType="string"></dxi-column>
   <!-- trạng thái -->
   <dxi-column caption="Trạng thái" cssClass="text-left vertical-align-middle" [fixed]="true" cellTemplate="cellStatus"
-    [width]="150"></dxi-column>
+    [width]="170"></dxi-column>
   <!-- Thời gian đặt -->
   <dxi-column caption="Thời gian đặt" [width]="150" dataType="date" dataField="dateCreated"
     format="HH:mm dd/MM/yy"></dxi-column>
@@ -84,7 +85,7 @@
       </div>
       <div *ngSwitchCase="STATUS_LIST[2].value" class="select-container">
         <nz-select nzShowSearch nzMode="default" [(ngModel)]="status.data.bookingStatus"
-          (ngModelChange)="handleChangeStatusByItem(STATUS_LIST[2].value, $event, status)">
+          (ngModelChange)="handleChangeStatusByItem(STATUS_LIST[2].value, $event, status, status.data)">
           <nz-option *ngFor="let item of (status.data.bookingStatus | hotelBookingPipe)" [nzLabel]="item.name"
             [nzValue]="item.value"></nz-option>
         </nz-select>
@@ -99,7 +100,7 @@
           <nz-option [nzLabel]="(status.data.bookingStatus | hotelBookingPipe)[0].name" [nzValue]="status.data.bookingStatus"></nz-option>
         </nz-select>
       </div>
-      
+
     </ng-container>
 
   </div>
@@ -215,7 +216,7 @@
       <div *dxTemplate="let totalPrice of 'cellTotalPrice'" class="cell-content-urgent">
         {{ formatCurrency(totalPrice.value) }}
       </div>
-      
+
       <div *dxTemplate="let bookingHotelPassenger of 'cellBookingHotelPassengers'">
         <a nz-button nzType="link" (click)="previewDetailBookingHotelPassengers(bookingHotelPassenger.value)"
           nzBlock>«Chi tiết»</a>
@@ -230,27 +231,31 @@
     <span [style.color]="urgent.value ? '#dc3545' : '#000'">
       {{ urgent.value ? 'Có' : 'Không' }}
     </span>
-  </div>  
+  </div>
   <div *dxTemplate="let totalPrice of 'cellTotalPrice'" class="cell-content-urgent">
     {{ formatCurrency(totalPrice.value) }}
-  </div>  
+  </div>
   <div *dxTemplate="let hotelFlightExport of 'cellSystemCancelled'">
     <nz-switch [ngModel]="!hotelFlightExport.data.systemCancelled" [nzControl]="true" nzCheckedChildren="Tính công nợ"
       nzUnCheckedChildren="Không tính công nợ" [nzLoading]="loadingSystemStatus"
       (click)="onChangeStatusBookingHotelExport(hotelFlightExport.data)"
       [nzDisabled]="hotelFlightExport.data.systemCancelled"></nz-switch>
   </div>
-  <dxo-summary>
+  <!--<dxo-summary>
     <dxi-total-item column="contactName" displayFormat="Số bản ghi: {0}" summaryType="count">
     </dxi-total-item>
-  </dxo-summary>
+  </dxo-summary>-->
 </dx-data-grid>
-
+<div class="grid-footer">
+  <nz-pagination [nzPageSizeOptions]="[20,40, 100]" nzShowSizeChanger="true" [nzPageSize]="defaultPageSize" (nzPageSizeChange)="pageSizeChange($event)"
+                 (nzPageIndexChange)="pageIndexChange($event)" [nzPageIndex]="1" [nzTotal]="total"></nz-pagination>
+  <div class="clearfix"></div>
+</div>
 
 <nz-modal [(nzVisible)]="isVisibleDetailBookingHotelPassengers" nzTitle="Thông tin chi tiết khách hàng"
   [nzContent]="contentDetail" nzWidth="1500px" (nzOnCancel)="handleCancel()">
   <ng-template #contentDetail>
-    <dx-data-grid id="gridContainer" [dataSource]="listBookingHotelPassengers" [showColumnLines]="true"
+    <dx-data-grid [dataSource]="listBookingHotelPassengers" [showColumnLines]="true"
       [showRowLines]="true" [height]="dxGridHeight" [rowAlternationEnabled]="true" [showBorders]="true"
       [allowColumnResizing]="true" columnResizingMode="widget" [columnMinWidth]="50" [columnAutoWidth]="true">
 
@@ -598,7 +603,7 @@
                   </nz-date-picker>
                 </nz-form-control>
               </div>
-            </div>            
+            </div>
             <div nz-col class="gutter-row" nzSpan="8">
               <div class="inner-box">
                 <nz-form-label>Số đêm</nz-form-label>

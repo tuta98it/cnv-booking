@@ -60,12 +60,6 @@ h1{
 :host ::ng-deep .upload-list-inline .ant-upload-animate-leave {
   animation-name: uploadAnimateInlineOut;
 }
-::ng-deep dx-data-grid {
-  &#gridContainer {
-    // height: 100%;
-    height: calc(100% - 38px) !important;
-  }
-}
 .customise-close-icon {
   position: absolute; /* Đặt biểu tượng ở vị trí tuyệt đối trong phạm vi phần tử cha */
   top: 50%; /* Căn giữa theo chiều dọc */
@@ -79,20 +73,20 @@ h1{
     display: inline-block;
     vertical-align: middle;
   }
-  
+
   .fixed-text {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    height: 32px; 
+    height: 32px;
     line-height: 32px;
     padding-left: 8px;
   }
 }
 .cell-content-urgent {
   display: flex;
-  justify-content: center; 
-  align-items: center;     
+  justify-content: center;
+  align-items: center;
   height: 100%;
   text-align: center;
 }

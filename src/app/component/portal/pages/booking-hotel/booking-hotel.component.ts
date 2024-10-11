@@ -87,7 +87,6 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   confirmBookingHotel = {
     textValueNoteConfirm: '',
     reservationCodeCodeConfirm: '',
-
   };
 
   systemCancelBookingHotel = {
@@ -163,7 +162,10 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   detailHotelPassengerChdForm: FormGroup[];
 
   orderForm: FormGroup;
-
+  pageIndex = 1;
+  pageSize: any;
+  defaultPageSize: any;
+  payload = {};
   constructor(
     private router: Router,
     private modalService: NzModalService,
@@ -261,12 +263,14 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
 
 
     this.contentFileConfirmBookingRoonHotel = ``;
+
+    this.pageSize = this.configService.getConfig().pageSize;
+    this.defaultPageSize = 20;
+    this.pageIndex = 1;
+    this.initTableHeight(1600);
   }
 
-  payload = {
-    page: 1,
-    pageSize: 1000
-  };
+
 
   ngOnInit(): void {
     this.getUserInfo();
@@ -295,8 +299,12 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   }
 
   getListData() {
+    const payload = {
+      page: this.pageIndex,
+      pageSize: this.defaultPageSize,
+    };
     this.loading = true;
-    this.generalService.getAdminBookingHotels(this.payload).subscribe(
+    this.generalService.getAdminBookingHotels(payload).subscribe(
       {
         next: (res: any) => {
           this.datas = res.data;
@@ -1647,7 +1655,15 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   statusOld = null;
   statusNew = null;
 
-  handleChangeStatusByItem(oldValue: number, newValue: number, dataFocus: any) {
+  async handleChangeStatusByItem(oldValue: number, newValue: number, dataFocus: any, dataItem = null) {
+    if (newValue === HotelBookingStatusEnum.Successful && dataItem) {
+      const res = await this.generalService.preCheckMoneyForConfirmBooking({id: dataItem.id}).toPromise();
+      if (!res.success) {
+        this.notificationService.showNotification(Constant.ERROR, res.message);
+        dataItem.bookingStatus = oldValue;
+        return;
+      }
+    }
     if (newValue === HotelBookingStatusEnum.Failure) {
       this.updateBookingHotelStatus(dataFocus.data.id, HotelBookingStatusEnum.Failure);
       return;
@@ -1693,6 +1709,29 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
           .then(() => console.log('Update successful'))
           .catch(error => console.log('Error updating booking status', error));
       }
+    });
+  }
+
+  preCheckMoneyForConfirmBooking(bookingHotelId) {
+    return new Promise((resolve, rejects) => {
+      this.generalService.preCheckMoneyForConfirmBooking(
+        {
+          id: bookingHotelId,
+        }
+      ).subscribe({
+        next: (res) => {
+          if (res.success) {
+            resolve(true);
+          } else {
+            resolve(res.message);
+          }
+        },
+        error: (error) => {
+          console.log(error);
+        },
+        complete: () => {
+        }
+      });
     });
   }
 
@@ -2247,5 +2286,17 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
       return '0 VNĐ';
     }
     return value.toLocaleString('vi-VN').replace(/,/g, '.') + ' VNĐ';
+  }
+  pageIndexChange($event: number) {
+    this.pageIndex = $event;
+    this.getListData();
+
+    console.log($event);
+  }
+
+  pageSizeChange($event: number) {
+    this.defaultPageSize = $event;
+    this.pageIndex = 1;
+    this.getListData();
   }
 }
