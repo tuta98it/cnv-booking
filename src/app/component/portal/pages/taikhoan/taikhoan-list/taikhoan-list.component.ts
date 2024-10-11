@@ -275,7 +275,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
     this.generalService.resetPasswordUser(user.id).subscribe({
       next: (res) => {
         if (res.isValid) {
-          this.notificationService.showNotification(Constant.SUCCESS, `Thiết lập mật khẩu mặc định tài khoản ${user.username} không thành công`);
+          this.notificationService.showNotification(Constant.SUCCESS, `Thiết lập mật khẩu mặc định tài khoản ${user.username} thành công`);
         } else {
           if (res.errors && res.errors.length > 0) {
             res.errors.forEach((el: any) => {
