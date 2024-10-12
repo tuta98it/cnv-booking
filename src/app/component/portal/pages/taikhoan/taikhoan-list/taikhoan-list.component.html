@@ -176,12 +176,10 @@
                 <option *ngFor="let pos of listPosition" [value]="pos.id">{{ pos.name }}</option>
               </select>
           </ng-template> -->
-          <select nz-select formControlName="titleId" class="form-control">
-            <option value="" >Chọn chức danh</option>
-            <option *ngFor="let pos of listPosition" [value]="pos.id">
-              {{ pos.name }}
-            </option>
-          </select>
+
+          <nz-select class="select-action" nzShowSearch nzMode="multiple" nzPlaceHolder="" [nzMaxTagCount]="3"  formControlName="titleIds">
+            <nz-option *ngFor="let option of listPosition" [nzLabel]="option.name" [nzValue]="option.id"></nz-option>
+          </nz-select>
         </div>
       </div>
 

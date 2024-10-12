@@ -220,10 +220,11 @@ export class MasterPageComponent implements OnInit, OnDestroy {
   getUserById() {
     this.generalService.getTaikhoanById(this.loginUserID).subscribe(res => {
       if (res !== null) {
-                this.isDisbledUser = false;
+        this.isDisbledUser = false;
         this.isVisibleUser = true;
         this.selectionUserId = null;
         this.selectionData = res;
+        this.selectionData.position = res.userGroups?.map(ug => ug?.group?.name).join(", "),
         this.selectionData.password = null;
         this.selectionData.roles = res.userRoles.map(en => en.roleId);
       }

@@ -25,7 +25,7 @@ export class UserService  extends  BaseService {
     return this.put( UrlConstant.UPDATE_USER, user);
   }
   updateUserStaffVHL(id: string, user: any): Observable<any> {
-    const url = `${UrlConstant.UPDATE_USER_STAFF_VHL}${id}`; 
+    const url = `${UrlConstant.UPDATE_USER_STAFF_VHL}${id}`;
     return this.put(url, user);
 }
   getUserByUsername(username): Observable<any> {

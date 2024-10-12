@@ -91,7 +91,7 @@ export class SmsLoginComponent implements OnInit {
               this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
             });
           } else {
-            this.notificationService.showNotification(Constant.ERROR, 'Không gửi thể gửi email');
+            this.notificationService.showNotification(Constant.ERROR, 'Không thể gửi email');
           }
         }
       },

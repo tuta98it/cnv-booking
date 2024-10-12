@@ -45,7 +45,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
   userTypeEnum = UserType;
   userType_ALL: UserType = this.userTypeEnum.All;
   data: any;
-  readonly allowedPageSizes = [20, 50, 100, 200, 500 ,'all']
+  readonly allowedPageSizes = [20, 50, 100, 200, 500, 'all']
   displayMode = 'full';
   showPageSizeSelector = true;
   showInfo = true;
@@ -81,9 +81,9 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
   searchText = '';
   userInfor: any;
   titleFormUser = '';
-  userCode:any;
-  listPosition:any;
-  listDirectiveManagement:any;
+  userCode: any;
+  listPosition: any;
+  listDirectiveManagement: any;
   isAddForm: boolean;
   constructor(
     public translate: TranslateService,
@@ -95,8 +95,8 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
     private fb: FormBuilder,
     private dateFormatPipe: DateFormatPipe,
     private router: Router,
-    private groupService:GroupService,
-    private userService:UserService
+    private groupService: GroupService,
+    private userService: UserService
   ) {
     super('id');
     this.formAdd = this.fb.group({
@@ -113,10 +113,11 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
       // repeatPassword: [null],
       position: [null],
       titleId: [null],
+      titleIds: [null],
       // partnerId: [null],
       userCode: [null],
-      directManagementUserId : [null],
-      directiveManagementUser :[null],
+      directManagementUserId: [null],
+      directiveManagementUser: [null],
       // signatureImageUrl: [null, [Validators.required]],
       // province: [null],
       // district: [null],
@@ -191,6 +192,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
               en.directManagementUserName = en?.directManagementUser?.fullname;
               en.statusText = TEXT_USER_STATUS[en.status];
               en.roleStr = this.getQuyen(en.userroles);
+              en.position = en.userGroups.map(ug => ug.group?.name ?? 0).join(", ")
             });
             this.filteredDatas = this.datas;
             super.setListOfAllData(this.datas);
@@ -349,34 +351,35 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
       // repeatPassword: '',
       position: '',
       titleId: '',
-      directManagementUserId:'',
-      directiveManagementUser:''
+      titleIds: [],
+      directManagementUserId: '',
+      directiveManagementUser: ''
 
       // partnerId: this.userInfor.id == 0 ? null : this.userInfor.partnerId
     });
     this.loadPositionTitles();
     this.loadDirectiveManagement();
   }
-    loadPositionTitles() {
-      this.groupService.getListAllTitle().subscribe(
-          res => {
-              this.listPosition = res;
-          },
-          err => {
-              console.error('Error loading position titles:', err);
-          }
-      );
+  loadPositionTitles() {
+    this.groupService.getListAllTitle().subscribe(
+      res => {
+        this.listPosition = res;
+      },
+      err => {
+        console.error('Error loading position titles:', err);
+      }
+    );
   }
 
   loadDirectiveManagement() {
-      this.userService.getListAdminEmployee().subscribe(
-          res => {
-              this.listDirectiveManagement = res;
-          },
-          err => {
-              console.error('Error loading directive management:', err);
-          }
-      );
+    this.userService.getListAdminEmployee().subscribe(
+      res => {
+        this.listDirectiveManagement = res;
+      },
+      err => {
+        console.error('Error loading directive management:', err);
+      }
+    );
   }
 
   showModalUpdate(data) {
@@ -402,6 +405,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
       // username: this.item.username,
       position: this.item.position,
       titleId: this.item.titleId,
+      titleIds: this.item.userGroups?.map(ug => ug?.groupId),
       // partnerId: this.item.partnerId,
       userCode: this.item.userCode,
       directiveManagementUser: this.item.directManagementUserName,
@@ -489,19 +493,25 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
       delete formValue.id;
       // formValue.status = 1;
       // userType = this.userInfor.userType == 0 ? 2 : this.userInfor.userType == 1 ? 3 : null;
-      const payload = { ...formValue};
+      const payload = { ...formValue };
       this.userService.addUserStaffVHL(payload).subscribe((res: any) => {
-        if (res.ret && res.ret[0].code !== 0) {
-
-          this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
-          formValue.id = 0;
-        } else {
+        if (res.isValid) {
           this.getListData();
           this.isVisibleAdd = false;
           this.notificationService.showNotification(Constant.SUCCESS, Constant.MESSAGE_ADD_SUCCESS);
+        } else {
+          formValue.id = 0;
+          if (res.errors && res.errors.length > 0) {
+            res.errors.forEach((el: any) => {
+              this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+            });
+          } else {
+            this.notificationService.showNotification(Constant.ERROR, 'Thêm nhân viên thất bại');
+          }
         }
       }, error => {
-
+        formValue.id = 0;
+        this.notificationService.showNotification(Constant.ERROR, 'Thêm nhân viên thất bại do lỗi hệ thống');
       });
 
 
@@ -515,19 +525,24 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
         return;
       }
 
-      this.userService.updateUserStaffVHL(formValue.id, formValue).subscribe(res => {
-        if (res.ret && res.ret[0].code !== 0) {
-          this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
-        } else {
-          this.getListData();
-          this.isVisibleAdd = false;
-          this.notificationService.showNotification(Constant.SUCCESS, Constant.MESSAGE_UPDATE_SUCCESS);
-        }
-      }, error => {
-
-      });
-
-
+      this.userService.updateUserStaffVHL(formValue.id, formValue).subscribe(
+        res => {
+          if (res.isValid) {
+            this.getListData();
+            this.isVisibleAdd = false;
+            this.notificationService.showNotification(Constant.SUCCESS, Constant.MESSAGE_UPDATE_SUCCESS);
+          } else {
+            if (res.errors && res.errors.length > 0) {
+              res.errors.forEach((el: any) => {
+                this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+              });
+            } else {
+              this.notificationService.showNotification(Constant.ERROR, 'Cập nhật thông tin viên thất bại');
+            }
+          }
+        }, error => {
+          this.notificationService.showNotification(Constant.ERROR, 'Cập nhật thông tin thất bại do lỗi hệ thống');
+        });
     }
   }
 
