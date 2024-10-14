@@ -419,7 +419,7 @@ export class ActionPartnerComponent implements OnInit {
           this.debtFreeRevenue = result.debtFreeRevenue
           this.listOfBalanceFluctuations = result.tableAccountBalancies;
           let stt = 0;
-          this.listOfBalanceFluctuations.forEach(en => {
+          this.listOfBalanceFluctuations?.forEach(en => {
             stt++;
             en.stt = stt;
           });
@@ -490,7 +490,7 @@ export class ActionPartnerComponent implements OnInit {
           this.debtFreeRevenue = result.debtFreeRevenue
           this.listOfBalanceFluctuations = result.tableAccountBalancies;
           let stt = 0;
-          this.listOfBalanceFluctuations.forEach(en => {
+          this.listOfBalanceFluctuations?.forEach(en => {
             stt++;
             en.stt = stt;
           });
@@ -881,7 +881,7 @@ export class ActionPartnerComponent implements OnInit {
       this.debtFreeRevenue = result.debtFreeRevenue
       this.listOfBalanceFluctuations = result.tableAccountBalancies;
       let stt = 0;
-      this.listOfBalanceFluctuations.forEach(en => {
+      this.listOfBalanceFluctuations?.forEach(en => {
         stt++;
         en.stt = stt;
       });
@@ -1625,12 +1625,12 @@ export class ActionPartnerComponent implements OnInit {
 
   handleSendApprovalRequest() {
     this.saveBaseInfoPartner().then((result) => {
-      this.saveUpdateContractInfoForPartner().then((result) => {
-        this.sendApprovalRequest().then((data) => {
-
-          this.setActionValuPage(data);
-        })
+      this.sendApprovalRequest().then((data) => {
+        this.setActionValuPage(data);
       })
+      // this.saveUpdateContractInfoForPartner().then((result) => {
+
+      // })
     })
   }
 
@@ -1895,7 +1895,7 @@ export class ActionPartnerComponent implements OnInit {
             this.debtFreeRevenue = result.debtFreeRevenue
             this.listOfBalanceFluctuations = result.tableAccountBalancies;
             let stt = 0;
-            this.listOfBalanceFluctuations.forEach(en => {
+            this.listOfBalanceFluctuations?.forEach(en => {
               stt++;
               en.stt = stt;
             });
