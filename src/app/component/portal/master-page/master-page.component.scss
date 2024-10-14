@@ -316,7 +316,8 @@ footer {
   }
 
   .menu-vhl .ant-layout-sider-children {
-    overflow-y: auto; /* Show scrollbar when hovering */
+    overflow-y: auto;
+    /* Show scrollbar when hovering */
     overflow-x: hidden;
     position: relative;
   }
@@ -328,13 +329,16 @@ footer {
   }
 
   .ant-layout-sider-children::-webkit-scrollbar-thumb {
-    background-color: rgba(136, 136, 136, 0); /* Start invisible */
+    background-color: rgba(136, 136, 136, 0);
+    /* Start invisible */
     border-radius: 10px;
-    transition: background-color 0.5s ease; /* Smooth fade effect */
+    transition: background-color 0.5s ease;
+    /* Smooth fade effect */
   }
 
   .menu-vhl:hover .ant-layout-sider-children::-webkit-scrollbar-thumb {
-    background-color: #EEE !important; /* Fully visible on hover */
+    background-color: #EEE !important;
+    /* Fully visible on hover */
     opacity: 0.5 !important;
     transition: all 0.5s ease;
   }
@@ -343,7 +347,8 @@ footer {
     border-right: none;
   }
 
-  .ant-menu > li.ant-menu-item, .ant-menu > li.ant-menu-submenu {
+  .ant-menu>li.ant-menu-item,
+  .ant-menu>li.ant-menu-submenu {
     border-bottom: solid 1px #EEE;
   }
 
@@ -400,7 +405,7 @@ footer {
     padding: 10px;
   }
 
-  .card .ant-tabs > .ant-tabs-nav {
+  .card .ant-tabs>.ant-tabs-nav {
     margin-bottom: 0;
   }
 
@@ -427,27 +432,32 @@ footer {
     }
   }
 }
-.form-control-disabled{
+
+.form-control-disabled {
   border: none;
   background: white;
 }
-.form-input-update{
+
+.form-input-update {
   padding-top: 23px;
   padding-bottom: 23px;
 }
-.button-submit{
+
+.button-submit {
   width: 110px;
   height: 40px;
   background-color: #3B82F6;
   color: white;
   border-radius: 10px;
 }
-.button-cancel{
+
+.button-cancel {
   height: 40px;
-  border-color:  #3B82F6;
-  color:  #3B82F6;
+  border-color: #3B82F6;
+  color: #3B82F6;
   border-radius: 10px;
 }
+
 .button-cancel span,
 .button-submit span {
   vertical-align: middle;
@@ -456,4 +466,37 @@ footer {
 
 .circle-button {
   border-radius: 100% !important;
+}
+
+.center-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.m-1 {
+  margin: 1px;
+ }
+
+ .p-1 {
+   padding: 1px;
+ }
+
+.m-2 {
+ margin: 2px;
+}
+
+.p-2 {
+  padding: 2px;
+}
+
+.font-size-dot-read  {
+  font-size: 0.5rem !important;
+}
+
+.top-notify-text-ellipsis {
+  width: 50vh;        /* Độ rộng cố định */
+  white-space: nowrap;  /* Không cho phép xuống dòng */
+  overflow: hidden;     /* Ẩn phần nội dung vượt quá */
+  text-overflow: ellipsis; /* Hiển thị dấu "..." */
 }

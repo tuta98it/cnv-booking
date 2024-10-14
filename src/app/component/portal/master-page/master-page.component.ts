@@ -18,6 +18,7 @@ import { AdminLayoutComponent } from '../../admin-layout/admin-layout.component'
 import { FileManagerService } from '../../../service/file-manager.service';
 import { UserType } from 'src/app/enums/user-type.enum';
 import { MenuStateService } from 'src/app/shared/app-state/menu-state.service';
+import { NotificationAPIService } from 'src/app/service/notification-service';
 
 @Component({
   selector: 'app-master-page',
@@ -25,6 +26,7 @@ import { MenuStateService } from 'src/app/shared/app-state/menu-state.service';
   styleUrls: ['./master-page.component.scss']
 })
 export class MasterPageComponent implements OnInit, OnDestroy {
+  Constant = Constant;
   protected _menuSubscription: Subscription;
   isShowMenu: boolean = true;
   userTypeEnum = UserType;
@@ -103,6 +105,8 @@ export class MasterPageComponent implements OnInit, OnDestroy {
   QUAN_LY_DANH_MUC: boolean;
   tinhThanhs = [];
   isCollapsed = false;
+  topNotifications: any = null;
+  totalTopNotifications: number = 0;
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -111,6 +115,7 @@ export class MasterPageComponent implements OnInit, OnDestroy {
     private generalService: GeneralService,
     private fileManagerService: FileManagerService,
     private notificationService: NotificationService,
+    private notificationAPIService: NotificationAPIService,
     private activeRoute: ActivatedRoute,
     private store: Store<fromAuth.AppState>,
     private actionsSubject$: ActionsSubject,
@@ -177,6 +182,7 @@ export class MasterPageComponent implements OnInit, OnDestroy {
         this.router.navigate(['/login']);
       }
     });
+    this.getTopNotifications();
     this.DANH_MUC_TB = this.checkPermission(Constant.DANH_MUC_TB);
     this.TONG_HOP_TB = this.checkPermission(Constant.TONG_HOP_TB);
     this.KIEM_DINH_TB = this.checkPermission(Constant.KIEM_DINH_TB);
@@ -198,6 +204,19 @@ export class MasterPageComponent implements OnInit, OnDestroy {
       this.sub.unsubscribe();
     }
   }
+
+  private getTopNotifications() {
+    this.notificationAPIService.getTopNotifications().subscribe(res => {
+      if (res !== null) {
+        this.topNotifications = res.data;
+        this.totalTopNotifications = res.total;
+      }
+    }, error => {
+      this.topNotifications = [];
+      this.totalTopNotifications = 0;
+    });
+  }
+
   private getPageInfo() {
     let child = this.activeRoute.firstChild;
     while (child.firstChild) {
@@ -225,7 +244,7 @@ export class MasterPageComponent implements OnInit, OnDestroy {
         this.selectionUserId = null;
         this.selectionData = res;
         this.selectionData.position = res.userGroups?.map(ug => ug?.group?.name).join(", "),
-        this.selectionData.password = null;
+          this.selectionData.password = null;
         this.selectionData.roles = res.userRoles.map(en => en.roleId);
       }
     }, error => {

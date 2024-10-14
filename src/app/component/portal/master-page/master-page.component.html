@@ -7,18 +7,47 @@
     </div>
     <div class="user-panel">
 
-      <nz-button-group style="margin-right: 1rem ;" >
-        <button nz-button nzShape="circle" class="circle-button" nz-dropdown [nzDropdownMenu]="menuTopNotify" nzPlacement="bottomRight">
+      <nz-button-group style="margin-right: 1rem ;">
+        <button nz-button nzShape="circle" class="circle-button" nz-dropdown [nzDropdownMenu]="menuTopNotify"
+          nzPlacement="bottomRight">
           <span nz-icon nzType="bell"></span>
         </button>
       </nz-button-group>
 
       <nz-dropdown-menu #menuTopNotify="nzDropdownMenu">
-        <ul nz-menu>
-          <li nz-menu-item>menu1 1st menu item</li>
-          <li nz-menu-item>menu1 2nd menu item</li>
-          <li nz-menu-item>menu1 3rd menu item</li>
-        </ul>
+        <div style="border-radius: 1rem;">
+          <div class="m-1 p-1">
+            <div class="center-box ">
+              <div style="font-size: x-large;">
+                Thông báo
+              </div>
+              <div >
+                <span class="fa fa-check-double fa-fw"></span>
+                <a href="" style="margin-left: 2px;">Đánh dấu đã đọc tất cả</a>
+              </div>
+            </div>
+          </div>
+          <ul nz-menu style="max-height: 85vh; overflow: auto;">
+            <ng-container *ngFor="let tn of topNotifications;let i = index" style="">
+              <li nz-menu-item class="m-1 p-1" title="{{tn.contentNotification}}">
+                <div class="center-box">
+                  <div>
+                    <div class="m-1 p-1 top-notify-text-ellipsis">
+                      {{tn.contentNotification}}
+                    </div>
+                    <div class="m-1 p-1" style="opacity: 0.5;">
+                      {{tn.datelog | dateFormat : Constant.DATE_FMT_HOUR }}
+                    </div>
+                  </div>
+                  <div class="m-1 p-1">
+                    <span class="font-size-dot-read fa fa-circle fa-fw"></span>
+                  </div>
+                </div>
+              </li>
+            </ng-container>
+          </ul>
+        </div>
+
       </nz-dropdown-menu>
 
       <nz-button-group>
