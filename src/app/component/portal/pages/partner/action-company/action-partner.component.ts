@@ -1745,6 +1745,7 @@ export class ActionPartnerComponent implements OnInit {
   setActionValuPage(value: any): Promise<any> {
     return new Promise((resolve, reject) => {
       this.itemPartner = value;
+      this.resetFormBaseInfoCreatePartner(this.itemPartner);
       this.setActionPageByStatus(this.itemPartner?.status);
       resolve(value);
     })
