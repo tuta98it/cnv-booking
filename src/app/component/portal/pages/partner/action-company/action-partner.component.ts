@@ -674,7 +674,7 @@ export class ActionPartnerComponent implements OnInit {
 
   private async resetFormBaseInfoCreatePartner(itemPartner: any) {
     this.formBaseInfoCreatePartner.reset({
-      status: { value: this.itemPartner?.status || PartnerStatus.CreatingProfile, disabled: this.actionPartnerVHL == ActionTypePageVHL.Create },
+      status: { value: this.itemPartner?.status != null || this.itemPartner?.status != undefined ? this.itemPartner?.status : PartnerStatus.Locked, disabled: this.actionPartnerVHL == ActionTypePageVHL.Create },
       code: this.itemPartner?.code || null,
       companyName: this.itemPartner?.companyName || null,
       taxCode: this.itemPartner?.taxCode || null,
