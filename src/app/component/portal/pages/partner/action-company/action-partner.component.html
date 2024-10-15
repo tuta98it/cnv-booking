@@ -595,14 +595,18 @@
                         <!-- <input style="border-radius: 4px;" nzSize="default" formControlName='debtMax' nz-input
                           type="text" placeholder="Nhập hạn mức tối đa"> -->
 
-                        <nz-input-group nzSuffix="VND">
+                        <!-- <nz-input-group nzSuffix="VND">
                           <input style="border-radius: 4px;" nz-input nzSize="default" formControlName="debtMax"
                             nz-tooltip nzTooltipTrigger="focus" nzTooltipPlacement="topLeft"
                             nzOverlayClassName="numeric-input" [nzTooltipTitle]="tooltipTitleAmount"
                             placeholder="Nhập hạn mức tối đa" (click)="onClickInputAmount($event, 'debtMax')"
                             (ngModelChange)="onChangeInputAmount($event, 'debtMax')"
                             (blur)="onBlurInputAmount('debtMax')">
-                        </nz-input-group>
+                        </nz-input-group> -->
+
+                        <dx-number-box formControlName='debtMax' placeholder="Nhập hạn mức tối đa" format="#,##0 VNĐ"></dx-number-box>
+
+
                       </div>
                     </div>
 
@@ -617,7 +621,7 @@
                       <div nz-col class="gutter-row" [nzSpan]="12">
                         <!-- <input style="border-radius: 4px;" nzSize="default" formControlName='warningLimitPrice' nz-input
                           type="text" placeholder="Nhập hạn mức cảnh báo"> -->
-                        <nz-input-group nzSuffix="VND">
+                        <!-- <nz-input-group nzSuffix="VND">
                           <input style="border-radius: 4px;" nz-input nzSize="default"
                             formControlName="warningLimitPrice" nz-tooltip nzTooltipTrigger="focus"
                             nzTooltipPlacement="topLeft" nzOverlayClassName="numeric-input"
@@ -625,7 +629,10 @@
                             (click)="onClickInputAmount($event, 'warningLimitPrice')"
                             (ngModelChange)="onChangeInputAmount($event, 'warningLimitPrice')"
                             (blur)="onBlurInputAmount('warningLimitPrice')">
-                        </nz-input-group>
+                        </nz-input-group> -->
+
+                        <dx-number-box formControlName='warningLimitPrice' placeholder="Nhập hạn mức cảnh báo" format="#,##0 VNĐ"></dx-number-box>
+
                       </div>
                     </div>
 
@@ -638,9 +645,9 @@
                       </div>
                       <div nz-col class="gutter-row" [nzSpan]="12">
                         <!-- <input style="border-radius: 4px;" nzSize="default" formControlName='warningLimitPrice' nz-input
-                          type="text" placeholder="Nhập hạn mức cảnh báo"> -->
+                          type="text" placeholder="Số dư cảnh báo"> -->
 
-                        <nz-input-group nzSuffix="VND">
+                        <!-- <nz-input-group nzSuffix="VND">
                           <input style="border-radius: 4px;" nz-input nzSize="default"
                             formControlName="warningLimitPrice" nz-tooltip nzTooltipTrigger="focus"
                             nzTooltipPlacement="topLeft" nzOverlayClassName="numeric-input"
@@ -648,7 +655,10 @@
                             (click)="onClickInputAmount($event, 'warningLimitPrice')"
                             (ngModelChange)="onChangeInputAmount($event, 'warningLimitPrice')"
                             (blur)="onBlurInputAmount('warningLimitPrice')">
-                        </nz-input-group>
+                        </nz-input-group> -->
+
+                        <dx-number-box formControlName='warningLimitPrice' placeholder="Số dư cảnh báo" format="#,##0 VNĐ"></dx-number-box>
+
                       </div>
                     </div>
 

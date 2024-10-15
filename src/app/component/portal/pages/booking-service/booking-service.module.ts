@@ -8,6 +8,7 @@ import { AirlineTicketBookingRequestComponent } from './airline-ticket-booking-r
 import { AirlineTicketBookingSystemComponent } from './airline-ticket-booking-system/airline-ticket-booking-system.component';
 import { BookingServiceRoutingModule } from './booking-service-routing.module';
 import { ConfirmReserveSeatComponent } from './airline-ticket-booking-request/confirm-reserve-seat/confirm-reserve-seat.component';
+import {DevExtremeModule} from 'devextreme-angular';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { ConfirmReserveSeatComponent } from './airline-ticket-booking-request/co
     BookingServiceRoutingModule,
     SharedModule,
     DxDataGridModule,
+    DevExtremeModule,
     NzModalModule
   ],
   providers: [GeneralService],
