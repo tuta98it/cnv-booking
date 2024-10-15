@@ -7,49 +7,47 @@
     </div>
     <div class="user-panel">
 
-      <!-- <nz-button-group style="margin-right: 1rem ;">
+      <nz-button-group style="margin-right: 1rem ;">
         <button nz-button nzShape="circle" class="circle-button" nz-dropdown [nzDropdownMenu]="menuTopNotify"
           nzPlacement="bottomRight">
           <span nz-icon nzType="bell"></span>
         </button>
-      </nz-button-group> -->
+      </nz-button-group>
 
-      <nz-dropdown-menu #menuTopNotify="nzDropdownMenu">
-        <div style="border-radius: 1rem;">
-          <div class="m-1 p-1">
-            <div class="center-box ">
-              <div style="font-size: x-large;">
-                Thông báo
-              </div>
-              <div >
-                <span class="fa fa-check-double fa-fw"></span>
-                <a href="" style="margin-left: 2px;">Đánh dấu đã đọc tất cả</a>
-              </div>
+      <nz-dropdown-menu #menuTopNotify="nzDropdownMenu" class="menuTopNotifyCSS">
+        <div class="dropdown-container">
+          <div class="header">
+            <div class="title">Thông báo</div>
+            <div class="mark-read">
+              <span class="fa fa-check-double fa-fw"></span>
+              <span class="read-all">Đánh dấu đã đọc tất cả</span>
             </div>
           </div>
-          <ul nz-menu style="max-height: 85vh; overflow: auto;">
-
-            <ng-container *ngFor="let tn of topNotifications;let i = index" style="">
-              <li nz-menu-item class="m-1 p-1" title="{{tn.contentNotification}}">
+          <ul nz-menu class="notifications-list">
+            <ng-container *ngFor="let tn of topNotifications; let i = index">
+              <li nz-menu-item class="notification-item" title="{{tn.contentNotification}}">
                 <div class="center-box">
-                  <div>
-                    <div class="m-1 p-1 top-notify-text-ellipsis">
+                  <div class="notification-content">
+                    <div class="notification-text">
                       {{tn.contentNotification}}
                     </div>
-                    <div class="m-1 p-1" style="opacity: 0.5;">
+                    <div class="notification-date">
                       {{tn.datelog | dateFormat : Constant.DATE_FMT_HOUR }}
                     </div>
                   </div>
-                  <div class="m-1 p-1">
+                  <div class="notification-status">
                     <span class="font-size-dot-read fa fa-circle fa-fw"></span>
                   </div>
                 </div>
               </li>
             </ng-container>
           </ul>
+          <div class="view-all-container">
+            <span class="read-all view-all">Xem toàn bộ thông báo</span>
+          </div>
         </div>
-
       </nz-dropdown-menu>
+
 
       <nz-button-group>
         <a nz-dropdown [nzDropdownMenu]="menu" class="sl-user">

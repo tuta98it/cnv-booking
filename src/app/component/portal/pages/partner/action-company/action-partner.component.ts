@@ -1002,14 +1002,21 @@ export class ActionPartnerComponent implements OnInit {
     if (info.file.status === 'done') {
       this.listUploadEmployeeForPartnerFile = info.fileList;
       setTimeout(() => {
-        info.file.response.errors.forEach((error: any) => {
-          this.msg.error(`${error?.errorMessage ?? ""}`);
-        });
-        // if (info.file.response.isValid) {
-        //   this.msg.success(`${info.file.name} file tải lên thành công có thề tồn tại một vài nhân viên không đặt yêu cầu.`);
-        // } else {
-        //   this.msg.error(`${info.file.name} file tải đã gặp lỗi hoặc tất các nhân viên không đạt yêu cầu.`);
-        // }
+        // info.file.response.errors.forEach((error: any) => {
+        //   this.msg.error(`${error?.errorMessage ?? ""}`);
+        // });
+        if (info.file.response.isValid) {
+          info.file.response.errors.filter(e => e.IsValid == true).forEach((success: any) => {
+            this.msg.error(`${success?.errorMessage ?? ""}`);
+          });
+
+          info.file.response.errors.filter(e => e.IsValid == false).forEach((error: any) => {
+            this.msg.error(`${error?.errorMessage ?? ""}`);
+          });
+          this.msg.success(`${info.file.name} file tải lên thành công có thề tồn tại một vài nhân viên không đặt yêu cầu.`);
+        } else {
+          this.msg.error(`${info.file.name} file tải đã gặp lỗi hoặc tất các nhân viên không đạt yêu cầu.`);
+        }
 
         // if (this.listUploadEmployeeForPartnerFile.length > 0) {
         //   this.listUploadEmployeeForPartnerFile[this.listUploadEmployeeForPartnerFile.length - 1].uid = info.file.response.partnerFileId.toString();

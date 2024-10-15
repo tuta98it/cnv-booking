@@ -463,40 +463,99 @@ footer {
   vertical-align: middle;
 }
 
-
 .circle-button {
   border-radius: 100% !important;
 }
 
-.center-box {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
 
-.m-1 {
-  margin: 1px;
- }
+::ng-deep {
+  .font-size-dot-read {
+    font-size: 0.5rem !important;
+  }
 
- .p-1 {
-   padding: 1px;
- }
+  .dropdown-container {
+    border-radius: 1rem;
+    background-color: #ffffff;
+  }
 
-.m-2 {
- margin: 2px;
-}
+  .header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 0.5rem;
+  }
 
-.p-2 {
-  padding: 2px;
-}
+  .title {
+    font-size: x-large;
+  }
 
-.font-size-dot-read  {
-  font-size: 0.5rem !important;
-}
+  .mark-read {
+    display: flex;
+    align-items: center;
+  }
 
-.top-notify-text-ellipsis {
-  width: 50vh;        /* Độ rộng cố định */
-  white-space: nowrap;  /* Không cho phép xuống dòng */
-  overflow: hidden;     /* Ẩn phần nội dung vượt quá */
-  text-overflow: ellipsis; /* Hiển thị dấu "..." */
+  .read-all {
+    margin-left: 2px;
+    cursor: pointer;
+  }
+
+  .read-all:hover {
+    text-decoration: underline;
+    color: #0056b3;
+    /* Tùy chỉnh màu khi hover */
+  }
+
+  .notifications-list {
+    border-radius: 1px;
+    max-height: 75vh;
+    overflow: auto;
+  }
+
+  .notification-item {
+    border-radius: 2px;
+    margin: 0.5rem;
+    padding: 0.5rem;
+  }
+
+  .center-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .notification-content {
+    flex-grow: 1;
+  }
+
+  .notification-text {
+    margin-bottom: 0.5rem;
+    width: 50vh;
+    /* Độ rộng cố định */
+    white-space: nowrap;
+    /* Không cho phép xuống dòng */
+    overflow: hidden;
+    /* Ẩn phần nội dung vượt quá */
+    text-overflow: ellipsis;
+    /* Hiển thị dấu "..." */
+  }
+
+  .notification-date {
+    opacity: 0.5;
+  }
+
+  .notification-status {
+    margin-left: 0.5rem;
+  }
+
+  .view-all-container {
+    display: flex;
+    justify-content: center;
+    padding: 0.5rem;
+  }
+
+  .view-all {
+    color: #208FFF;
+    text-decoration: underline;
+  }
+
 }
