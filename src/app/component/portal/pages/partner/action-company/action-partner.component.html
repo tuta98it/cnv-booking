@@ -23,7 +23,7 @@
 
 
           <button *ngIf="itemPartner?.status == PartnerStatus.PendingApproval" nz-button nzType="default"
-            style="margin-right: 8px;" (click)="submitRequestForApprovalConfirmation()">
+            style="margin-right: 8px;" (click)="handleSubmitRequestForApprovalConfirmation()">
             <div style="display: flex; align-items: center;">
               <span nz-icon nzType="send"></span>
               <span style="margin-left: 6px; line-height: normal;">Phê duyệt</span>
