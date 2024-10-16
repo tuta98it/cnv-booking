@@ -629,7 +629,7 @@ export class ActionPartnerComponent implements OnInit {
   onBlurInputAmount(controlName?: string): void {
     if (this.valueInputNumberAmount.charAt(this.valueInputNumberAmount.length - 1) === '.' || this.valueInputNumberAmount === '-') {
       this.updateValueInputAmount(this.valueInputNumberAmount.slice(0, -1), controlName);
-      this.tooltipTitleAmount = "0 đ"
+      this.tooltipTitleAmount = "0 VNĐ"
     }
   }
 
@@ -651,7 +651,7 @@ export class ActionPartnerComponent implements OnInit {
   }
 
   updateTooltipTitleAmount(): void {
-    this.tooltipTitleAmount = ((this.valueInputNumberAmount !== '-' ? this.formatNumber(this.valueInputNumberAmount) : '-') || '0') + " đ";
+    this.tooltipTitleAmount = ((this.valueInputNumberAmount !== '-' ? this.formatNumber(this.valueInputNumberAmount) : '-') || '0') + " VNĐ";
   }
 
   formatNumber(value: string): string {

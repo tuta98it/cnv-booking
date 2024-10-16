@@ -191,7 +191,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   onBlurInputAmount(controlName?: string): void {
     if (this.valueInputNumberAmount.charAt(this.valueInputNumberAmount.length - 1) === '.' || this.valueInputNumberAmount === '-') {
       this.updateValueInputAmount(this.valueInputNumberAmount.slice(0, -1), controlName);
-      this.tooltipTitleAmount = "0 đ"
+      this.tooltipTitleAmount = "0 VNĐ"
     }
   }
 
@@ -212,7 +212,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   }
 
   updateTooltipTitleAmount(): void {
-    this.tooltipTitleAmount = ((this.valueInputNumberAmount !== '-' ? this.formatNumber(this.valueInputNumberAmount) : '-') || '0') + " đ";
+    this.tooltipTitleAmount = ((this.valueInputNumberAmount !== '-' ? this.formatNumber(this.valueInputNumberAmount) : '-') || '0') + " VNĐ";
   }
 
   formatNumber(value: string): string {
@@ -475,9 +475,9 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
 
   formatCurrencyVND(value: any) {
     if (!value) {
-      return '0 đ';
+      return '0 VNĐ';
     }
-    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' đ';
+    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' VNĐ';
   }
 
   getLabelRequestBookingStatus(value: any) {
