@@ -133,7 +133,7 @@ export class UpgradeEmployeeComponent implements OnInit {
       bordered: [false],
       loading: [false],
       pagination: [true],
-      sizeChanger: [false],
+      sizeChanger: [true],
       title: [false],
       header: [true],
       footer: [false],

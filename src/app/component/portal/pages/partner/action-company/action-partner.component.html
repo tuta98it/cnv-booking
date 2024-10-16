@@ -259,7 +259,8 @@
                   style="display: flex; align-items: center; padding: 8px 0;">
                   <div nz-col class="gutter-row fs-xl" [nzSpan]="24"
                     style="display: flex; align-items: center; color: #007AFF;">
-                    {{debtBearingSales?.currentBalance ? (debtBearingSales?.currentBalance | currencyFormat) : '-' }} VNĐ
+                    {{debtBearingSales?.currentBalance ? (debtBearingSales?.currentBalance | currencyFormat) : '-' }}
+                    VNĐ
                   </div>
                 </div>
                 <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
@@ -604,7 +605,8 @@
                             (blur)="onBlurInputAmount('debtMax')">
                         </nz-input-group> -->
 
-                        <dx-number-box formControlName='debtMax' placeholder="Nhập hạn mức tối đa" format="#,##0 VNĐ"></dx-number-box>
+                        <dx-number-box formControlName='debtMax' placeholder="Nhập hạn mức tối đa"
+                          format="#,##0 VNĐ"></dx-number-box>
 
 
                       </div>
@@ -631,7 +633,8 @@
                             (blur)="onBlurInputAmount('warningLimitPrice')">
                         </nz-input-group> -->
 
-                        <dx-number-box formControlName='warningLimitPrice' placeholder="Nhập hạn mức cảnh báo" format="#,##0 VNĐ"></dx-number-box>
+                        <dx-number-box formControlName='warningLimitPrice' placeholder="Nhập hạn mức cảnh báo"
+                          format="#,##0 VNĐ"></dx-number-box>
 
                       </div>
                     </div>
@@ -657,7 +660,8 @@
                             (blur)="onBlurInputAmount('warningLimitPrice')">
                         </nz-input-group> -->
 
-                        <dx-number-box formControlName='warningLimitPrice' placeholder="Số dư cảnh báo" format="#,##0 VNĐ"></dx-number-box>
+                        <dx-number-box formControlName='warningLimitPrice' placeholder="Số dư cảnh báo"
+                          format="#,##0 VNĐ"></dx-number-box>
 
                       </div>
                     </div>
@@ -1021,24 +1025,35 @@
               (nzCurrentPageDataChange)="currentPageDataChangeBalanceFluctuation($event)">
               <thead>
                 <tr *ngIf="settingTableBalanceFluctuationValue.header">
-                  <th nzWidth="40px" [nzLeft]="fixedColumnBalanceFluctuation">STT</th>
+                  <!-- <th nzWidth="40px" [nzLeft]="fixedColumnBalanceFluctuation">STT</th>
                   <th [nzLeft]="fixedColumnBalanceFluctuation">Thời gian giao dịch</th>
                   <th>Người thực hiện</th>
                   <th>Số tiền phát sinh</th>
-                  <th>Nội dung giao dịch</th>
+                  <th>Nội dung giao dịch</th> -->
+
+
+                  <th *ngFor="let column of listOfColumnBalanceFluctuations" [nzWidth]="column.width"
+                    [nzAlign]="column.align" [nzSortOrder]="column.sortOrder" [nzSortFn]="column.sortFn"
+                    [nzSortDirections]="column.sortDirections" [nzShowFilter]="column.showFilter"
+                    [nzFilterMultiple]="column.filterMultiple" [nzFilters]="column.listOfFilter"
+                    [nzFilterFn]="column.filterFn">
+                    {{ column.name }}
+                  </th>
+
                 </tr>
               </thead>
               <tbody>
                 <ng-container *ngFor="let data of tagBalanceFluctuation.data">
                   <tr>
-                    <td [nzLeft]="fixedColumnBalanceFluctuation">
+                    <td [nzLeft]="fixedColumnBalanceFluctuation" style="text-align: center; align-items: center;">
                       {{ data.stt }}
                     </td>
                     <td [nzLeft]="fixedColumnBalanceFluctuation" [nzDisabled]="data.disabled">{{ data.transactionTime |
                       dateFormat : Constant.DATE_FMT_HOUR }}</td>
                     <td [nzDisabled]="data.disabled">{{ data.implementPersonInfo }}</td>
 
-                    <td [nzDisabled]="data.disabled" *ngIf="data.amount > 0">{{ (data.amount) | currencyFormat }} VNĐ</td>
+                    <td [nzDisabled]="data.disabled" *ngIf="data.amount > 0">{{ (data.amount) | currencyFormat }} VNĐ
+                    </td>
                     <td [nzDisabled]="data.disabled" *ngIf="data.amount <= 0" style="color: #FF3B30;">({{ (0 -
                       data.amount) | currencyFormat }}) VNĐ</td>
 
