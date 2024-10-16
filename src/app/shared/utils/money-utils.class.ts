@@ -7,9 +7,9 @@ export class MoneyUtils {
 
   static formatCurrencyVND(value: any) {
     if (!value) {
-      return '0 đ';
+      return '0 VNĐ';
     }
-    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' đ';
+    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' VNĐ';
   }
 
   static convertMoneyText(number: any): string {
@@ -17,14 +17,14 @@ export class MoneyUtils {
     if (!vietnameseText) {
       return '';
     }
-    
-    return this.capitalizeFirstLetter(vietnameseText) + ' đồng';
+
+    return this.capitalizeFirstLetter(vietnameseText) + ' VNĐ';
   }
-  
+
   static capitalizeFirstLetter(text: string): string {
     return text.charAt(0).toUpperCase() + text.slice(1);
   }
-  
+
 
   static defaultNumbers = ' hai ba bốn năm sáu bảy tám chín';
   static chuHangDonVi = ('1 một' + MoneyUtils.defaultNumbers).split(' ');
