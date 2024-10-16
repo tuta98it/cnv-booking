@@ -145,6 +145,7 @@ export class DepositAccountComponent implements OnInit {
   }
 
   handleDepositAccountCancel(): void {
+    this.formDepositAccount.reset();
     this.cancel.emit();
   }
 }

@@ -634,8 +634,7 @@
                         </nz-input-group> -->
 
                         <dx-number-box formControlName='warningLimitPrice' placeholder="Nhập hạn mức cảnh báo"
-                          format="#,##0 VNĐ"></dx-number-box>
-
+                          [max]="formBaseInfoCreatePartner.get('debtMax')?.value" format="#,##0 VNĐ"></dx-number-box>
                       </div>
                     </div>
 
