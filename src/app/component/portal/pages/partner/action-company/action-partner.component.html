@@ -976,11 +976,11 @@
           <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px;">
             <span style="font-weight: 500; font-size: 16px;">Biến động số dư</span>
             <div style="display: flex; align-items: center;">
-              <button [nzLoading]="isLoadingBalanceFluctuationStatement" [disabled]="!itemPartner?.id" nz-button
+              <!-- <button [nzLoading]="isLoadingBalanceFluctuationStatement" [disabled]="!itemPartner?.id" nz-button
                 nzType="primary" style="margin-right: 0.5rem;"
                 (click)="downloadBalanceFluctuationStatementFile(itemPartner?.id)">
                 In bảng kê khai
-              </button>
+              </button> -->
 
               <button [disabled]="!itemPartner?.id " nz-button nzType="primary"
                 style="margin-right: 0.5rem; background-color: #3B82F6;" (click)="showModalDepositAccount()">
@@ -1095,6 +1095,7 @@
                   <th>Tên người sử dụng</th>
                   <th>Dịch vụ người dụng</th>
                   <th>Nội dung sử dụng</th>
+                  <th>Tổng tiền</th>
                 </tr>
               </thead>
               <tbody>
@@ -1111,6 +1112,7 @@
                     <td>{{ data.fullnamePassengers}}</td>
                     <td>{{ data.serviceUsedName}}</td>
                     <td>{{ data.usageContent }}</td>
+                    <td>{{ data.totalPice | currencyFormat }} đ</td>
                   </tr>
                   <tr *ngIf="settingTableBusinessUsageHistoriesValue.expandable" [nzExpand]="data.expand">
                     <span>{{ data.description }}</span>
