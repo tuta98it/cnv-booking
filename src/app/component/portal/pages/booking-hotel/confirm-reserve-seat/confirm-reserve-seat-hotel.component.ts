@@ -123,11 +123,12 @@ export class ConfirmReserveSeatHotelComponent implements OnInit {
         this.hotelBookingCurrent.bookingStatus == this.BookingHotelStatusEnum.Successful
       ) {
         // this.notificationService.showNotification(Constant.SUCCESS, `Phòng khách sạn ${this.hotelBookingCurrent.bookingCode} đã được xác nhận trước đó.`);
-        this.successMessenger = `Anh/chị đã thực hiện việc xác nhận trước đó hoặc đã đặt phòng thành công. Vui lòng truy cập lịch sử booking của dịch vụ để xem thêm thông tin chi tiết`;
+        this.successMessenger = `Yêu cầu đã được anh/chị xác nhận hoặc hết hiệu lực. Vui lòng thử lại sau.`;
         this.isReservedSuccess = true;
       } else if (this.hotelBookingCurrent.bookingStatus == this.BookingHotelStatusEnum.Failure){
         // this.notificationService.showNotification(Constant.ERROR, 'Không thể xác nhận giữ phòng khách sạn');
-        this.errorMessenger = `Đặt phòng khách sạn thất bại. Vui lòng kiểm tra lại thông tin.`
+        this.errorMessenger = `Yêu cầu đã được anh/chị xác nhận hoặc hết hiệu lực. Vui lòng thử lại sau.`
+
         this.isReservedSuccess = false;
       }
       else {
