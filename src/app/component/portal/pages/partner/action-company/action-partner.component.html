@@ -605,7 +605,7 @@
                             (blur)="onBlurInputAmount('debtMax')">
                         </nz-input-group> -->
 
-                        <dx-number-box formControlName='debtMax' placeholder="Nhập hạn mức tối đa"
+                        <dx-number-box  [min]="0" formControlName='debtMax' placeholder="Nhập hạn mức tối đa"
                           format="#,##0 VNĐ"></dx-number-box>
 
 
@@ -633,7 +633,7 @@
                             (blur)="onBlurInputAmount('warningLimitPrice')">
                         </nz-input-group> -->
 
-                        <dx-number-box formControlName='warningLimitPrice' placeholder="Nhập hạn mức cảnh báo"
+                        <dx-number-box  [min]="0" formControlName='warningLimitPrice' placeholder="Nhập hạn mức cảnh báo"
                           [max]="formBaseInfoCreatePartner.get('debtMax')?.value" format="#,##0 VNĐ"></dx-number-box>
                       </div>
                     </div>
@@ -659,7 +659,7 @@
                             (blur)="onBlurInputAmount('warningLimitPrice')">
                         </nz-input-group> -->
 
-                        <dx-number-box formControlName='warningLimitPrice' placeholder="Số dư cảnh báo"
+                        <dx-number-box  [min]="0" formControlName='warningLimitPrice' placeholder="Số dư cảnh báo"
                           format="#,##0 VNĐ"></dx-number-box>
 
                       </div>

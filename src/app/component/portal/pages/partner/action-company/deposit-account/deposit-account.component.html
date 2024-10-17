@@ -24,7 +24,7 @@
                     (ngModelChange)="onChangeInputAmount($event, 'amountDeposited')" (blur)="onBlurInputAmount('amountDeposited')">
                 </nz-input-group> -->
 
-                <dx-number-box formControlName='amountDeposited' placeholder="Nhập số tiền nạp vào" format="#,##0 VNĐ"></dx-number-box>
+                <dx-number-box  [min]="0" formControlName='amountDeposited' placeholder="Nhập số tiền nạp vào" format="#,##0 VNĐ"></dx-number-box>
 
 
             </div>
