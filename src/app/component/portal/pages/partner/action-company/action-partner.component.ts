@@ -26,7 +26,7 @@ import { DatePipe } from '@angular/common';
 import { COLOR_USER_STATUS, TEXT_USER_STATUS, USER_STATUS_OPTIONS, UserStatus } from 'src/app/enums/user-status.enum';
 import { LockType } from 'src/app/enums/lock-type.enum';
 import { NzModalService } from 'ng-zorro-antd/modal';
-
+import { ColumnItem } from './../../../../../Interfaces/column-item.interface';
 // interface ItemData {
 //   name: string;
 //   age: number | string;
@@ -76,6 +76,74 @@ export class ActionPartnerComponent implements OnInit {
   actionPartnerVHL: any;
   settingTableListEmployeesForm: FormGroup;
   settingTableListBalanceFluctuationForm: FormGroup;
+  // <!-- <th nzWidth="40px" [nzLeft]="fixedColumnBalanceFluctuation">STT</th>
+  // <th [nzLeft]="fixedColumnBalanceFluctuation">Thời gian giao dịch</th>
+  // <th>Người thực hiện</th>
+  // <th>Số tiền phát sinh</th>
+  // <th>Nội dung giao dịch</th> -->
+  listOfColumnBalanceFluctuations: ColumnItem[] = [
+    {
+      name: 'STT',
+      align: 'center',
+      width: '100px',
+      sortOrder: null,
+      sortFn: (a: any, b: any) => a.stt - b.stt,
+      showFilter: false,
+      sortDirections: ['ascend', 'descend', null],
+      filterMultiple: false,
+      listOfFilter: [],
+      filterFn: null
+    },
+    {
+      name: 'Thời gian giao dịch',
+      align: 'left',
+      width: null,
+      sortOrder: 'null',
+      sortFn: (a: any, b: any) => a.transactionTime.localeCompare(b.transactionTime),
+      sortDirections: ['ascend', 'descend', null],
+      showFilter: false,
+      listOfFilter: [],
+      filterFn: null,
+      filterMultiple: true
+    },
+    {
+      name: 'Người thực hiện',
+      width: null,
+      align: 'left',
+      sortOrder: null,
+      sortDirections: ['ascend', 'descend', null],
+      sortFn: (a: any, b: any) => a.implementPersonInfo.localeCompare(b.implementPersonInfo),
+      showFilter: false,
+      filterMultiple: false,
+      listOfFilter: [],
+      filterFn: null,
+    },
+    {
+      name: 'Số tiền phát sinh',
+      width: null,
+      align: 'left',
+      sortOrder: null,
+      sortDirections: ['ascend', 'descend', null],
+      sortFn: (a: any, b: any) => a.amount - b.amount,
+      showFilter: false,
+      filterMultiple: false,
+      listOfFilter: [],
+      filterFn: null,
+    },
+    {
+      name: 'Số tiền phát sinh',
+      width: null,
+      align: 'left',
+      sortOrder: null,
+      sortDirections: ['ascend', 'descend', null],
+      sortFn: (a: any, b: any) => a.transactionContent.localeCompare(b.transactionContent),
+      showFilter: false,
+      filterMultiple: false,
+      listOfFilter: [],
+      filterFn: null,
+    }
+  ];
+
   settingTableBusinessUsageHistoriesForm: FormGroup;
   allCheckedEmployee = false;
   indeterminateEmployee = false;
@@ -202,7 +270,7 @@ export class ActionPartnerComponent implements OnInit {
       bordered: [false],
       loading: [false],
       pagination: [true],
-      sizeChanger: [false],
+      sizeChanger: [true],
       title: [false],
       header: [true],
       footer: [false],
@@ -224,7 +292,7 @@ export class ActionPartnerComponent implements OnInit {
       bordered: [false],
       loading: [false],
       pagination: [true],
-      sizeChanger: [false],
+      sizeChanger: [true],
       title: [false],
       header: [true],
       footer: [false],
@@ -246,7 +314,7 @@ export class ActionPartnerComponent implements OnInit {
       bordered: [false],
       loading: [false],
       pagination: [true],
-      sizeChanger: [false],
+      sizeChanger: [true],
       title: [false],
       header: [true],
       footer: [false],
@@ -629,7 +697,7 @@ export class ActionPartnerComponent implements OnInit {
   onBlurInputAmount(controlName?: string): void {
     if (this.valueInputNumberAmount.charAt(this.valueInputNumberAmount.length - 1) === '.' || this.valueInputNumberAmount === '-') {
       this.updateValueInputAmount(this.valueInputNumberAmount.slice(0, -1), controlName);
-      this.tooltipTitleAmount = "0 đ"
+      this.tooltipTitleAmount = "0 VNĐ"
     }
   }
 
@@ -651,7 +719,7 @@ export class ActionPartnerComponent implements OnInit {
   }
 
   updateTooltipTitleAmount(): void {
-    this.tooltipTitleAmount = ((this.valueInputNumberAmount !== '-' ? this.formatNumber(this.valueInputNumberAmount) : '-') || '0') + " đ";
+    this.tooltipTitleAmount = ((this.valueInputNumberAmount !== '-' ? this.formatNumber(this.valueInputNumberAmount) : '-') || '0') + " VNĐ";
   }
 
   formatNumber(value: string): string {
@@ -1382,6 +1450,8 @@ export class ActionPartnerComponent implements OnInit {
     window.open(`${this.configService.getConfig().api.baseUrl}/Uploads/FileMau/file_mau_import_nhan_vien_30082024.xls`, '_blank')
   }
 
+
+
   downloadExcelEmployeeForPartner(partnerId?: number) {
     if (partnerId) {
       this.generalService.downloadExcelEmployeeForPartner(partnerId).subscribe({
@@ -1934,4 +2004,5 @@ export class ActionPartnerComponent implements OnInit {
         break;
     }
   }
+
 }

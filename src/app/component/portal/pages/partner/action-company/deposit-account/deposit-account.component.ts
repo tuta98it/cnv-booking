@@ -73,7 +73,7 @@ export class DepositAccountComponent implements OnInit {
   onBlurInputAmount(controlName?: string): void {
     if (this.valueInputNumberAmount.charAt(this.valueInputNumberAmount.length - 1) === '.' || this.valueInputNumberAmount === '-') {
       this.updateValueInputAmount(this.valueInputNumberAmount.slice(0, -1), controlName);
-      this.tooltipTitleAmount = "0 đ"
+      this.tooltipTitleAmount = "0 VNĐ"
     }
   }
 
@@ -145,6 +145,7 @@ export class DepositAccountComponent implements OnInit {
   }
 
   handleDepositAccountCancel(): void {
+    this.formDepositAccount.reset();
     this.cancel.emit();
   }
 }
