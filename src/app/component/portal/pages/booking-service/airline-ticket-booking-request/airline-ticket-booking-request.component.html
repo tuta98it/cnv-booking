@@ -67,9 +67,10 @@
 
   <dxi-column caption="Trạng thái" dataField="status" cssClass="text-left vertical-align-middle"
     cellTemplate="cellStatus"></dxi-column>
-  <div *dxTemplate="let status of 'cellStatus'" style="display: flex;">
+  <div *dxTemplate="let status of 'cellStatus'" style="display: flex;" >
     <nz-select nzShowSearch nzMode="default" nzPlaceHolder="Trạng thái" style="width: 200px; margin-left: 0.5rem;"
-      [(ngModel)]="status.value" (ngModelChange)="handleChangeStatusByItem(status)">
+      [(ngModel)]="status.value" (ngModelChange)="handleChangeStatusByItem(status)" [title]="status.data.notes ? status.data.notes : ''">
+
       <nz-option [nzLabel]="'Gửi yêu cầu'" [nzValue]="BookingRequestStatusEnum.SubmitRequest" *ngIf="(
         status.value == BookingRequestStatusEnum.SubmitRequest ||
         status.value == BookingRequestStatusEnum.ReserveSeat
@@ -94,6 +95,10 @@
       <nz-option [nzLabel]="'Xuất vé'" [nzValue]="BookingRequestStatusEnum.IssuedTicket" *ngIf="(
         status.value == BookingRequestStatusEnum.IssuedTicket ||
         status.value == BookingRequestStatusEnum.ReceivedTicket)"></nz-option>
+
+      <nz-option [nzLabel]="'Xuất vé thất bại'" [nzValue]="BookingRequestStatusEnum.FailureTicket" *ngIf="(
+        status.value == BookingRequestStatusEnum.FailureTicket ||
+        status.value == BookingRequestStatusEnum.IssuedTicket)" ></nz-option>
     </nz-select>
     <!-- <container-element [ngSwitch]="status.value">
       <some-element *ngSwitchCase="AirlineTicketBookingRequestStatusEnum.SubmitRequest">
@@ -398,7 +403,8 @@
                     (ngModelChange)="onChangeInputAmount($event, 'ticketPriceDeparture')" (blur)="onBlurInputAmount('ticketPriceDeparture')">
                 </nz-input-group> -->
 
-                <dx-number-box formControlName='ticketPriceDeparture' placeholder="Nhập giá vé" format="#,##0 VNĐ"></dx-number-box>
+                <dx-number-box formControlName='ticketPriceDeparture' placeholder="Nhập giá vé"
+                  format="#,##0 VNĐ"></dx-number-box>
 
               </div>
             </div>
@@ -417,7 +423,8 @@
                     (click)="onClickInputAmount($event, 'baggageFeeDeparture')"
                     (ngModelChange)="onChangeInputAmount($event, 'baggageFeeDeparture')" (blur)="onBlurInputAmount('baggageFeeDeparture')">
                 </nz-input-group> -->
-                <dx-number-box formControlName='baggageFeeDeparture' placeholder="Nhập phí hành lý" format="#,##0 VNĐ"></dx-number-box>
+                <dx-number-box formControlName='baggageFeeDeparture' placeholder="Nhập phí hành lý"
+                  format="#,##0 VNĐ"></dx-number-box>
 
               </div>
             </div>
@@ -441,7 +448,8 @@
                     (ngModelChange)="onChangeInputAmount($event, 'refundFeeDeparture')" (blur)="onBlurInputAmount('refundFeeDeparture')">
                 </nz-input-group> -->
 
-                <dx-number-box formControlName='refundFeeDeparture' placeholder="Nhập phí huỷ vé" format="#,##0 VNĐ"></dx-number-box>
+                <dx-number-box formControlName='refundFeeDeparture' placeholder="Nhập phí huỷ vé"
+                  format="#,##0 VNĐ"></dx-number-box>
 
               </div>
             </div>
@@ -461,7 +469,8 @@
                     (ngModelChange)="onChangeInputAmount($event, 'cancelFeeDeparture')" (blur)="onBlurInputAmount('cancelFeeDeparture')">
                 </nz-input-group> -->
 
-                <dx-number-box formControlName='cancelFeeDeparture' placeholder="Nhập phí huỷ vé" format="#,##0 VNĐ"></dx-number-box>
+                <dx-number-box formControlName='cancelFeeDeparture' placeholder="Nhập phí huỷ vé"
+                  format="#,##0 VNĐ"></dx-number-box>
 
               </div>
             </div>
@@ -480,7 +489,8 @@
                     (ngModelChange)="onChangeInputAmount($event, 'changeFeeDeparture')" (blur)="onBlurInputAmount('changeFeeDeparture')">
                 </nz-input-group> -->
 
-                <dx-number-box formControlName='changeFeeDeparture' placeholder="Nhập phí đổi vé" format="#,##0 VNĐ"></dx-number-box>
+                <dx-number-box formControlName='changeFeeDeparture' placeholder="Nhập phí đổi vé"
+                  format="#,##0 VNĐ"></dx-number-box>
 
               </div>
             </div>
@@ -581,7 +591,8 @@
                     (ngModelChange)="onChangeInputAmount($event, 'ticketPriceReturn')" (blur)="onBlurInputAmount('ticketPriceReturn')">
                 </nz-input-group> -->
 
-                <dx-number-box formControlName='ticketPriceReturn' placeholder="Nhập giá vé" format="#,##0 VNĐ"></dx-number-box>
+                <dx-number-box formControlName='ticketPriceReturn' placeholder="Nhập giá vé"
+                  format="#,##0 VNĐ"></dx-number-box>
 
               </div>
             </div>
@@ -600,7 +611,8 @@
                     (ngModelChange)="onChangeInputAmount($event, 'baggageFeeReturn')" (blur)="onBlurInputAmount('baggageFeeReturn')">
                 </nz-input-group> -->
 
-                <dx-number-box formControlName='baggageFeeReturn' placeholder="Nhập phí thêm hành lý" format="#,##0 VNĐ"></dx-number-box>
+                <dx-number-box formControlName='baggageFeeReturn' placeholder="Nhập phí thêm hành lý"
+                  format="#,##0 VNĐ"></dx-number-box>
 
               </div>
             </div>
@@ -621,7 +633,8 @@
                     (ngModelChange)="onChangeInputAmount($event, 'refundFeeReturn')" (blur)="onBlurInputAmount('refundFeeReturn')">
                 </nz-input-group> -->
 
-                <dx-number-box formControlName='refundFeeReturn' placeholder="Nhập phí hoàn vé" format="#,##0 VNĐ"></dx-number-box>
+                <dx-number-box formControlName='refundFeeReturn' placeholder="Nhập phí hoàn vé"
+                  format="#,##0 VNĐ"></dx-number-box>
 
               </div>
             </div>
@@ -640,7 +653,8 @@
                     (ngModelChange)="onChangeInputAmount($event, 'cancelFeeReturn')" (blur)="onBlurInputAmount('cancelFeeReturn')">
                 </nz-input-group> -->
 
-                <dx-number-box formControlName='cancelFeeReturn' placeholder="Nhập phí huỷ vé" format="#,##0 VNĐ"></dx-number-box>
+                <dx-number-box formControlName='cancelFeeReturn' placeholder="Nhập phí huỷ vé"
+                  format="#,##0 VNĐ"></dx-number-box>
 
               </div>
             </div>
@@ -659,7 +673,8 @@
                     (ngModelChange)="onChangeInputAmount($event, 'changeFeeReturn')" (blur)="onBlurInputAmount('changeFeeReturn')">
                 </nz-input-group> -->
 
-                <dx-number-box formControlName='changeFeeReturn' placeholder="Nhập phí đổi vé" format="#,##0 VNĐ"></dx-number-box>
+                <dx-number-box formControlName='changeFeeReturn' placeholder="Nhập phí đổi vé"
+                  format="#,##0 VNĐ"></dx-number-box>
 
               </div>
             </div>
@@ -678,8 +693,8 @@
           <div nz-col class="gutter-row" nzSpan="22">
             <div class="inner-box">
               <div>
-                <nz-upload class="upload-list-inline" [nzMultiple]="true" [nzAction]="uploadUrlFlightTicket" nzName="postedFile"
-                  [nzHeaders]="uploadHeader" [nzRemove]="handleRemoveFileTicketBookingRequest"
+                <nz-upload class="upload-list-inline" [nzMultiple]="true" [nzAction]="uploadUrlFlightTicket"
+                  nzName="postedFile" [nzHeaders]="uploadHeader" [nzRemove]="handleRemoveFileTicketBookingRequest"
                   (nzChange)="handleUploadFileTicketBookingRequest1($event)" [nzFileList]="fileFlightTicketList"
                   [nzShowUploadList]="showUploadListOption">
                   <button *ngIf="optionAirlineTicketInfo == OptionAirlineTicketInfoEnum.Update" nz-button>
@@ -718,8 +733,8 @@
           <div nz-col class="gutter-row" nzSpan="22">
             <div class="inner-box">
               <div>
-                <nz-upload class="upload-list-inline" [nzMultiple]="true" [nzAction]="uploadUrlInvoice" nzName="postedFile"
-                  [nzHeaders]="uploadHeader" [nzRemove]="handleRemoveFileInvoiceBookingRequest"
+                <nz-upload class="upload-list-inline" [nzMultiple]="true" [nzAction]="uploadUrlInvoice"
+                  nzName="postedFile" [nzHeaders]="uploadHeader" [nzRemove]="handleRemoveFileInvoiceBookingRequest"
                   (nzChange)="handleUploadFileInvoiceBookingRequest1($event)" [nzFileList]="fileInvoiceList"
                   [nzShowUploadList]="showUploadListOption">
                   <button *ngIf="optionAirlineTicketInfo == OptionAirlineTicketInfoEnum.Update" nz-button>

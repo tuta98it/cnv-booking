@@ -1199,7 +1199,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
               } else {
                 this.notificationService.showNotification(Constant.ERROR, 'Xuất vé không thành công.');
               }
-              resolve(false);
+              reject(false);
             }
           },
           error: (err: any) => {
