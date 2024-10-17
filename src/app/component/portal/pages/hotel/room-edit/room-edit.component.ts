@@ -42,6 +42,7 @@ export class RoomEditComponent implements OnInit {
   @ViewChild('myForm') myForm!: NgForm;
   isActiveChanged: any;
   isAvailableChanged: any;
+  amenityCheckAll = false;
   constructor(
     private router: Router,
     private modalService: NzModalService,
@@ -80,7 +81,8 @@ export class RoomEditComponent implements OnInit {
       roomFileIds: [[]],
       prices: [[]],
       amenities: [[]],
-      priceByTime: [false]
+      priceByTime: [false],
+      amenityCheckAll: [false]
     });
     this.uploadHeader = {
       Authorization: 'Bearer ' + localStorage.getItem(Constant.TOKEN),
@@ -129,6 +131,13 @@ export class RoomEditComponent implements OnInit {
           price: parseFloat($event) * 1.06
         });
       }
+    });
+
+    this.formAddRoom.get('amenities')?.valueChanges.subscribe(value => {
+      this.amenityCheckAll = !this.utilityGroupOptions.map(en => en.checked).includes(false);
+      this.formAddRoom.patchValue({
+        amenityCheckAll: this.amenityCheckAll
+      });
     });
   }
 
@@ -262,6 +271,7 @@ export class RoomEditComponent implements OnInit {
     if (status === 'done') {
       this.msg.success(`file ${file.name} tải lên thành công.`);
       if (form === 'room') {
+        alert('vao day');
         this.fileList = fileList;
         setTimeout(() => {
           if (this.fileList.length > 0) {
@@ -269,9 +279,8 @@ export class RoomEditComponent implements OnInit {
             this.fileList[this.fileList.length - 1].url = `${this.configService.getConfig().api.baseUrl}/${file.response.path1}`;
           }
         }, 0);
-        if (this.isEdit) {
-          this.roomFileIds.push(file.response.roomFileId);
-        }
+        this.roomFileIds.push(file.response.roomFileId);
+        console.log(this.roomFileIds);
       }
     } else if (status === 'error') {
       this.msg.error(`file ${file.name} tải lên không thành công. ${file.error.error.text}`);
@@ -458,5 +467,13 @@ export class RoomEditComponent implements OnInit {
             complete: () => {}
         }
     );
-}
+  }
+  onUserInteraction($event: Event) {
+    this.utilityGroupOptions.filter(en => {
+      en.checked = this.formAddRoom.get('amenityCheckAll')?.value;
+    });
+    this.formAddRoom.patchValue({
+      amenities: this.utilityGroupOptions
+    });
+  }
 }

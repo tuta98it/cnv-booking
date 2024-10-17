@@ -36,6 +36,7 @@ export class HotelEditComponent implements OnInit {
   transactionItem: any;
   searchRoomName: any;
   tmpRoomHotels: any;
+  amenityCheckAll = false;
   @ViewChild('inputElementNumberPhone', {static: false}) inputElementNumberPhone?: ElementRef;
   @ViewChild('myForm') myForm!: NgForm;
   @ViewChild('contractForm') contractForm!: NgForm;
@@ -124,7 +125,8 @@ export class HotelEditComponent implements OnInit {
       hotelFile: [[]],
       hotelFileIds: [[]],
       linkGoogleMap: [null],
-      amenities: [[]]
+      amenities: [[]],
+      amenityCheckAll: [false]
     });
     this.formContract = this.fb.group({
       taxCode: [null],
@@ -171,33 +173,29 @@ export class HotelEditComponent implements OnInit {
         this.formAddHotel.patchValue({
           amenities: this.utilityGroupOptions
         });
+        this.amenityCheckAll = false;
       }
     });
 
     this.getProvinces();
     this.getUserInfo();
+
+    this.formAddHotel.get('amenities')?.valueChanges.subscribe(value => {
+      this.amenityCheckAll = !this.utilityGroupOptions.map(en => en.checked).includes(false);
+      this.formAddHotel.patchValue({
+        amenityCheckAll: this.amenityCheckAll
+      });
+    });
   }
 
   getUserInfo() {
     this.userInfo = JSON.parse(localStorage.getItem(Constant.USER_INFO));
   }
-
-  /*getRoomList() {
-    this.generalService.getRoomHotels(this.hotelId).subscribe(res => {
-      let index = 1;
-      res.data.forEach(en => {
-        en.stt = index++;
-      });
-      this.rooms = res.data;
-    });
-  }*/
   searchRoomByName() {
     if (!this.searchRoomName || this.searchRoomName.trim() === '') {
       return this.roomHotels = this.tmpRoomHotels;
     }
-
     const searchLower = this.searchRoomName.toLowerCase();
-
     return this.roomHotels = this.tmpRoomHotels.filter(room =>
       room.name.toLowerCase().includes(searchLower)
     );
@@ -266,12 +264,15 @@ export class HotelEditComponent implements OnInit {
         this.fileList.push(objHotel);
       }
       const utilityHotelIds = item.utilityHotels.map(en => en.id);
+
+      this.amenityCheckAll = true;
       this.utilityGroupOptions.forEach(en => {
         en.checked = utilityHotelIds.includes(en.value);
       });
       this.formAddHotel.patchValue({
-        amenities: this.utilityGroupOptions
+        amenities: this.utilityGroupOptions,
       });
+
       this.uploadUrl = `${this.configService.getConfig().api.baseUrl}/Upload/UploadHotelImage?hotelId=${item.id}`;
       this.uploadContractFileUrl = `${this.configService.getConfig().api.baseUrl}/Upload/UploadHotelContractFile?hotelId=${item.id}`;
 
@@ -385,18 +386,13 @@ export class HotelEditComponent implements OnInit {
         if (!res.isValid) {
           this.notificationService.showNotification(Constant.ERROR, res.errors[0].errorMessage);
         } else {
-          // this.getListData();
-          this.router.navigate(['hotel/list']);
+          this.router.navigate(['/hotel/edit-hotel', res.data]);
           this.notificationService.showNotification(Constant.SUCCESS, Constant.MESSAGE_ADD_SUCCESS);
         }
       }, (error: any) => {
         this.notificationService.showNotification(Constant.ERROR, Constant.MESSAGE_SERVICE_ERROR);
       });
     } else {
-      // / update
-      /*delete formValue.hotelFile;
-      delete formValue.hotelFileIds;
-      delete formValue.amenities;*/
       this.generalService.updateHotelByID(formValue.id, formValue).subscribe((res: any) => {
         if (!res.isValid) {
           this.notificationService.showNotification(Constant.ERROR, res.errors[0].errorMessage);
@@ -416,9 +412,7 @@ export class HotelEditComponent implements OnInit {
   private errorNotifications: { [key: string]: boolean } = {};
 
   handleChangeImages({file, fileList}: NzUploadChangeParam, form: any): void {
-
     const status = file.status;
-
     const validFormats = ['jpg', 'jpeg', 'png'];
     const validDocumentFormat = ['pdf', 'doc', 'docx', 'xls', 'xlsx'];
     const fileExtension = file.name.split('.').pop()?.toLowerCase();
@@ -428,7 +422,6 @@ export class HotelEditComponent implements OnInit {
       delete this.errorNotifications[file.name];
       return;
     }
-    fileList = fileList.filter(en => en.uid !== file.uid);
     if (file.size > fileSizeLimit) {
       if (!this.errorNotifications[file.name]) {
         this.msg.error(`File ${file.name} quá kích thước tối đa 25MB.`);
@@ -458,7 +451,6 @@ export class HotelEditComponent implements OnInit {
 
     if (status === 'done') {
       this.errorNotifications[file.name] = false;
-
       this.msg.success(`File ${file.name} tải lên thành công.`);
       if (form === 'hotel') {
         this.fileList = fileList;
@@ -470,6 +462,7 @@ export class HotelEditComponent implements OnInit {
         }, 0);
         this.hotelFileIds.push(file.response.hotelFileId);
         this.formAddHotel.controls.hotelFileIds.setValue(this.hotelFileIds);
+        console.log(this.fileList);
       } else if (form === 'room') {
       } else if (form === 'contract') {
         this.fileContractList = fileList;
@@ -791,5 +784,14 @@ export class HotelEditComponent implements OnInit {
 
   deleteFile(item: any) {
     this.fileContractList = this.fileContractList.filter(en => en.fileName !== item.fileName);
+  }
+
+  onUserInteraction($event: Event) {
+    this.utilityGroupOptions.filter(en => {
+      en.checked = this.formAddHotel.get('amenityCheckAll')?.value;
+    });
+    this.formAddHotel.patchValue({
+      amenities: this.utilityGroupOptions
+    });
   }
 }

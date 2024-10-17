@@ -94,9 +94,14 @@
             </div>
           </div>
           <div class="col-md-4">
-            <div class="form-inline-custom align-items-baseline">
-              <label>Tiện ích</label>
-              <nz-checkbox-group formControlName="amenities"></nz-checkbox-group>
+            <div>
+              <div>
+                <label class="mr-2">Tiện ích</label>
+                <label nz-checkbox formControlName="amenityCheckAll" (change)="onUserInteraction($event)">&nbsp;</label>
+              </div>
+              <div class="border p-1">
+                <nz-checkbox-group class="grid-3" formControlName="amenities"></nz-checkbox-group>
+              </div>
             </div>
           </div>
         </div>
@@ -187,19 +192,19 @@
                     </li>
                   </ul>
                   <dx-file-uploader *ngIf="fileContractList.length <= 2"
-                      #fileUploader
-                      uploadMode="instantly"
-                      [uploadHeaders]="uploadHeader"
+                                    #fileUploader
+                                    uploadMode="instantly"
+                                    [uploadHeaders]="uploadHeader"
                                     labelText=""
-                      [(uploadUrl)]="uploadContractFileUrl"
-                      [selectButtonText]="'Chọn file hợp đồng'"
-                      [uploadButtonText]="'Upload files'"
-                      name="postedFile"
-                      [showFileList]="false"
-                      [multiple]="false"
-                      [visible]="true"
-                      (onUploadStarted)="onUploadStarted($event)"
-                      (onUploaded)="onFileUploaded($event)">
+                                    [(uploadUrl)]="uploadContractFileUrl"
+                                    [selectButtonText]="'Chọn file hợp đồng'"
+                                    [uploadButtonText]="'Upload files'"
+                                    name="postedFile"
+                                    [showFileList]="false"
+                                    [multiple]="false"
+                                    [visible]="true"
+                                    (onUploadStarted)="onUploadStarted($event)"
+                                    (onUploaded)="onFileUploaded($event)">
                   </dx-file-uploader>
                 </div>
               </div>
@@ -386,7 +391,7 @@
           </div>
           <div *dxTemplate="let room of 'cellBtnDetailTemplate'">
             <button [title]="room.data.isActive ? 'Khóa phòng' : 'Mở khóa phòng'" nz-button nzSize="small"
-                    nzType="default" class="btn-action-room" (click)="setActive(room.data)">
+                    nzType="default" class="btn-action-room mr-1" (click)="setActive(room.data)">
               <span class="fa fa-lock fa-fw" *ngIf="room.data.isActive"></span>
               <span class="fa fa-unlock fa-fw" *ngIf="!room.data.isActive"></span>
             </button>

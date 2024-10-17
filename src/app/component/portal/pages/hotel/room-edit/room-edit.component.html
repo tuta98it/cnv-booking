@@ -113,7 +113,10 @@
           </div>
           <div class="col-md-4">
             <div>
-              <label>Tiện ích</label>
+              <div>
+                <label class="mr-2">Tiện ích</label>
+                <label nz-checkbox formControlName="amenityCheckAll" (change)="onUserInteraction($event)">&nbsp;</label>
+              </div>
               <div class="border p-1">
                 <nz-checkbox-group class="grid-3" formControlName="amenities"></nz-checkbox-group>
               </div>
