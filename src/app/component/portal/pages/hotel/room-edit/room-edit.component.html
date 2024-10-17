@@ -14,17 +14,17 @@
         class="status-button"
         type="button">
         <em class="fas fa-couch" style="margin-right: 4px;"></em>
-        {{ roomItem.isAvailable ? 'Hết phòng' : 'Còn phòng' }} 
+        {{ roomItem.isAvailable ? 'Hết phòng' : 'Còn phòng' }}
   </button>
       <button *ngIf="roomItem && roomItem.isActive !== undefined"
       [disabled]="!formAddRoom.valid"
       (click)="setActive(roomItem)"
       nz-button
       [nzType]="!roomItem.isActive ? 'primary' : 'danger'"
-      [ngClass]="!roomItem.isActive ? 'ant-btn-primary' : 'ant-btn-danger'" 
+      [ngClass]="!roomItem.isActive ? 'ant-btn-primary' : 'ant-btn-danger'"
       class="status-button"
       type="button">
-      <em [class]="!roomItem.isActive ? 'fa fa-unlock fa-fw' : 'fa fa-lock fa-fw'" style="margin-right: 4px;"></em> 
+      <em [class]="!roomItem.isActive ? 'fa fa-unlock fa-fw' : 'fa fa-lock fa-fw'" style="margin-right: 4px;"></em>
       {{ !roomItem.isActive ? 'Mở khóa' : 'Khóa lại' }}
     </button>
         <button [disabled]="!formAddRoom.valid" (click)="triggerSubmit()" nz-button nzType="primary"
@@ -59,7 +59,7 @@
           <div class="col-md-4">
             <div class="form-inline-custom">
               <label>Trạng thái </label>
-              <input nz-input [value]="'Đang hoạt động'" disabled/>
+              <input [ngClass]="{'lock': !roomItem.isActive}" nz-input [value]="roomItem.isActive ? 'Đang hoạt động' : 'Khóa'" disabled/>
             </div>
             <div class="form-inline-custom">
               <label>Mã loại phòng</label>
@@ -72,7 +72,7 @@
             </div>
             <div class="form-inline-custom">
               <label>Số lượng phòng </label>
-              <dx-number-box [showSpinButtons]="true" width="100%" formControlName="roomNumber"></dx-number-box>
+              <dx-number-box [showSpinButtons]="true" [min]="0" width="100%" formControlName="roomNumber"></dx-number-box>
             </div>
             <div class="form-inline-custom">
               <label>Số người lớn <span class="required">*</span></label>
@@ -113,7 +113,10 @@
           </div>
           <div class="col-md-4">
             <div>
-              <label>Tiện ích</label>
+              <div>
+                <label class="mr-2">Tiện ích</label>
+                <label nz-checkbox formControlName="amenityCheckAll" (change)="onUserInteraction($event)">&nbsp;</label>
+              </div>
               <div class="border p-1">
                 <nz-checkbox-group class="grid-3" formControlName="amenities"></nz-checkbox-group>
               </div>
@@ -210,7 +213,7 @@
             </dxi-item>
             <dxi-item name="addRowButton"></dxi-item>
             <dxi-item location="before">
-              <div class="title-detail" style="width: 100%;">Thiết lập giá phòng theo thời gian:</div>
+              <div class="title-detail" style="width: 100%;">Bảng giá theo giai đoạn:</div>
             </dxi-item>
           </dxo-toolbar>
 

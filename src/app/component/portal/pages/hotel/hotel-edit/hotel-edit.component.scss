@@ -26,12 +26,12 @@
     outline: none;
     transition: background-color 0.3s, border-color 0.3s;
   }
-  
+
   .checkBoxStatus:checked {
     background-color: #1890ff;
     border-color: #1890ff;
   }
-  
+
   .checkBoxStatus:checked:before {
     content: '';
     position: absolute;
@@ -43,8 +43,40 @@
     border: solid white;
     border-width: 0 2px 2px 0;
   }
-  
+
   .checkBoxStatus:hover {
     border-color: #999;
   }
-  
+  ::ng-deep .upload-list-inline{
+    max-width: 400px;
+  }
+.ul_files{
+  padding: 0;
+}
+.ul_files li, .ul-class li {
+  list-style: none;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.ul_files a {
+  text-decoration: none;
+}
+.ul_files a.link {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+.grid-3{
+  display: grid;
+  grid-template-columns: 30% 30% 30%;
+  gap: 0 10px;
+}
+::ng-deep .div-images .ant-upload-list-picture{
+  display: flex;
+  .ant-upload-list-picture-container{
+    margin-right: 10px;
+  }
+}

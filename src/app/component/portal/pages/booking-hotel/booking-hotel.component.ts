@@ -538,7 +538,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   private findDataBookingHotelInFormEditor(dataBookingHotel: any) {
     let patchDataBookingHotel = dataBookingHotel;
     // console.log(patchDataBookingHotel.bookingHotelDetails[0]);
-    
+
     this.imageLogoVHL = Constant.LOGO_VHL;
     return new Promise((resolve, reject) => {
       this.contentFileConfirmBookingRoonHotel = `<html lang="vi">
@@ -2140,11 +2140,9 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   }
 
   addBookingRoomCodeId(booking: any, bookingRoomId: any) {
-    console.log(booking);
-
     this.generalService.confirmBooking({id: booking.id, reservationCode: bookingRoomId}).subscribe({
       next: (res) => {
-        if (res.success) {
+        if (res.isValid) {
           this.updateBookingHotelStatus(this.dataEmail.id, HotelBookingStatusEnum.Successful);
           this.generalService.getBookingHotelById(booking.id).subscribe({
             next: (resBooking) => {
@@ -2158,7 +2156,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
           });
         } else {
           this.getListData();
-          this.notificationService.showNotification(Constant.ERROR, res.message);
+          this.notificationService.showNotification(Constant.ERROR, res.errors[0].errorMessage);
         }
       },
       error: (error) => {
@@ -2200,12 +2198,12 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
     }
     this.generalService.confirmBooking({id: this.item.data.id, reservationCode: this.bookingRoomCodeForm.value.reservationCode}).subscribe({
       next: (res) => {
-        console.log('confirmBooking', res);
-        if (res.success) {
+        console.log('confirmBooking addBookingRoomCode', res);
+        if (res.isValid) {
           this.notificationService.showNotification(Constant.SUCCESS, 'Xác nhận đặt phòng thành công');
           this.updateBookingHotelStatus(this.item.data.id, HotelBookingStatusEnum.Successful);
         } else {
-          this.notificationService.showNotification(Constant.ERROR, res.message);
+          this.notificationService.showNotification(Constant.ERROR, res.errors[0].errorMessage);
         }
       },
       error: (error) => {
