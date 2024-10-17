@@ -320,7 +320,7 @@
                 <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
                   style="display: flex; align-items: center; padding: 8px 0;">
                   <div nz-col class="gutter-row fs-xl box-center" [nzSpan]="24">
-                    {{amountOfMoneyUsed ? amountOfMoneyUsed : "-"}} VNĐ
+                    {{amountOfMoneyUsed ? (amountOfMoneyUsed  | currencyFormat ): "-"}} VNĐ
                   </div>
                 </div>
               </div>
