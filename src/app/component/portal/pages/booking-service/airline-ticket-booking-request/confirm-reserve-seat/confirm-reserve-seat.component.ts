@@ -136,7 +136,7 @@ export class ConfirmReserveSeatComponent implements OnInit {
         this.requestBookingCurrent.status == this.BookingRequestStatusEnum.IssuedTicket
       ) {
         // this.notificationService.showNotification(Constant.SUCCESS, `Vé ${this.requestBookingCurrent.bookingCode} đã được xác nhận trước đó.`);
-        this.successMessenger = `Anh/chị đã thực hiện việc xác nhận trước đó hoặc vé đã được xác nhận thành công. Vui lòng truy cập lịch sử booking của dịch vụ để xem thêm thông tin chi tiết`;
+        this.successMessenger = `Yêu cầu đã được anh/chị xác nhận hoặc hết hiệu lực. Vui lòng thử lại sau`;
         this.isReservedSuccess = true;
       } else if (this.requestBookingCurrent.status == this.BookingRequestStatusEnum.ExpiredTicket
       ) {
