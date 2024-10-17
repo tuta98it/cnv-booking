@@ -250,8 +250,8 @@ export class ActionPartnerComponent implements OnInit {
       startTimeContractDate: new FormControl({ value: null, disabled: true }, Validators.required),
       endTimeContractDate: new FormControl({ value: null, disabled: true }, Validators.required),
       emailToReceiveInvoice: new FormControl({ value: null, disabled: true }, Validators.required),
-      paymentPeriodType: new FormControl({ value: null, disabled: true }, Validators.required),
-      dayOfPeriodType: new FormControl({ value: null, disabled: true }, Validators.required),
+      paymentPeriodType: [{ value: null, disabled: true }, [this.formBaseInfoCreatePartner.get('allowDebt')?.value == AllowDebtPartner.ALLOW ? Validators.required : Validators.nullValidator]],
+      dayOfPeriodType: [{ value: null, disabled: true }, [this.formBaseInfoCreatePartner.get('allowDebt')?.value == AllowDebtPartner.ALLOW ? Validators.required : Validators.nullValidator]],
       debtMax: [{ value: null, disabled: true }, [this.formBaseInfoCreatePartner.get('allowDebt')?.value == AllowDebtPartner.ALLOW ? Validators.required : Validators.nullValidator]],
       warningLimitPrice: [{ value: null, disabled: true }, [this.formBaseInfoCreatePartner.get('allowDebt')?.value == AllowDebtPartner.ALLOW ? Validators.required : Validators.nullValidator]],
 
@@ -816,6 +816,8 @@ export class ActionPartnerComponent implements OnInit {
       }
       this.listUploadContractFile.push(objPartner);
     }
+
+    this.changeAllowDebt();
   }
 
   private getPartnerById(partnerId: number): Promise<any> {
@@ -1376,10 +1378,11 @@ export class ActionPartnerComponent implements OnInit {
       let partnerTypeOfServices = this.checkOptionsBusinessServiceVHL?.filter(option => option.checked).map(option => option.value) ?? null;
       this.formBaseBusinessContractUpdate.controls['typeOfServices'].setValue(JSON.stringify(partnerTypeOfServices));
 
+
+
       if (this.formBaseBusinessContractUpdate.valid) {
         if (this.formBaseInfoCreatePartner.get('allowDebt')?.value == AllowDebtPartner.NOT_ALLOW) {
           this.formBaseBusinessContractUpdate.controls['debtMax'].setValue(null);
-          this.formBaseBusinessContractUpdate.controls['warningLimitPrice'].setValue(null);
         }
         let valueSave = this.formBaseBusinessContractUpdate.value;
         if (this.itemPartner?.id) {
@@ -1689,10 +1692,18 @@ export class ActionPartnerComponent implements OnInit {
     this.formBaseBusinessContractUpdate.get('warningLimitPrice')?.setValidators(
       allowDebt ? Validators.required : Validators.nullValidator
     );
+    this.formBaseBusinessContractUpdate.get('paymentPeriodType')?.setValidators(
+      allowDebt ? Validators.required : Validators.nullValidator
+    );
+    this.formBaseBusinessContractUpdate.get('dayOfPeriodType')?.setValidators(
+      allowDebt ? Validators.required : Validators.nullValidator
+    );
 
     // Update the validation state of the entire form
     this.formBaseBusinessContractUpdate.get('debtMax')?.updateValueAndValidity();
     this.formBaseBusinessContractUpdate.get('warningLimitPrice')?.updateValueAndValidity();
+    this.formBaseBusinessContractUpdate.get('paymentPeriodType')?.updateValueAndValidity();
+    this.formBaseBusinessContractUpdate.get('dayOfPeriodType')?.updateValueAndValidity();
 
 
 
