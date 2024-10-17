@@ -38,7 +38,8 @@
           <div class="col-md-4">
             <div class="form-inline-custom">
               <label>Trạng thái </label>
-              <input nz-input [value]="'Đang hoạt động'" disabled/>
+              <input [ngClass]="{'lock': !hotelItem.isActive}" nz-input
+                     [value]="hotelItem.isActive ? 'Đang hoạt động' : 'Khóa'" disabled/>
             </div>
             <div class="form-inline-custom">
               <label>Mã khách sạn <span class="required">*</span></label>
@@ -123,9 +124,13 @@
         <div class="row">
           <div class="col-md-6">
             <div class="form-inline-custom align-items-baseline">
-              <label>Mô tả ngắn <i *ngIf="hotelItem.shortDescription?.length">({{hotelItem.shortDescription?.length}}
-                /500)</i><span class="required">*</span></label>
-              <textarea class="form-control" [(ngModel)]="hotelItem.shortDescription"></textarea>
+              <label>Mô tả ngắn <span class="required">*</span>
+                <div style="font-size: 12px" *ngIf="hotelItem.shortDescription?.length">
+                  ({{hotelItem.shortDescription?.length}}/500)
+                </div>
+              </label>
+              <textarea rows="5" (ngModelChange)="changeShortLength($event)" class="form-control"
+                        [(ngModel)]="hotelItem.shortDescription"></textarea>
             </div>
             <div class="form-inline-custom align-items-baseline">
               <label>Mô tả đầy đủ </label>
@@ -165,16 +170,38 @@
           <div class="row">
             <div class="col-md-4">
               <div class="form-inline-custom align-items-baseline">
-                <label>File hợp đồng </label>
-                <nz-upload *ngIf="fileContractList.length < 3" class="upload-list-inline" [nzMultiple]="true"
-                           [nzAction]="uploadContractFileUrl"
-                           nzName="postedFile"
-                           [nzHeaders]="uploadHeader" nzListType="text" [nzRemove]="handleRemoveContractFile"
-                           (nzChange)="handleChangeImages($event, 'contract')" [nzFileList]="fileContractList">
-                  <button nz-button>
-                    <span nz-icon nzType="upload"></span>
-                  </button>
-                </nz-upload>
+                <label>File hợp đồng
+                  <div style="font-size: 10px">(Tối đa 3 file)</div>
+                </label>
+                <div>
+                  <ul class="ul_files" ng-if="dataItem.files.length">
+                    <li *ngFor="let item of fileContractList">
+                      <a class="link" style="display: flex" target="_blank" [href]="item.viewPath"
+                         [title]="item.filename">
+                        <span class="dx-icon-file"></span>
+                        <span>{{item.fileName}}</span>
+                      </a>
+                      <a class="" (click)="deleteFile(item)">
+                        <span class="dx-icon-trash"></span>
+                      </a>
+                    </li>
+                  </ul>
+                  <dx-file-uploader *ngIf="fileContractList.length <= 2"
+                      #fileUploader
+                      uploadMode="instantly"
+                      [uploadHeaders]="uploadHeader"
+                                    labelText=""
+                      [(uploadUrl)]="uploadContractFileUrl"
+                      [selectButtonText]="'Chọn file hợp đồng'"
+                      [uploadButtonText]="'Upload files'"
+                      name="postedFile"
+                      [showFileList]="false"
+                      [multiple]="false"
+                      [visible]="true"
+                      (onUploadStarted)="onUploadStarted($event)"
+                      (onUploaded)="onFileUploaded($event)">
+                  </dx-file-uploader>
+                </div>
               </div>
               <div class="form-inline-custom">
                 <label>Mã số thuế </label>
@@ -220,22 +247,30 @@
               </div>
               <div class="form-inline-custom">
                 <label>Thời gian kết thúc HĐ </label>
-                <dx-date-box width="100%" formControlName="endTimeContract" placeholder="dd/MM/yyyy" type="date"
+                <dx-date-box width="100%" formControlName="endTimeContract"
+                             [min]="formControlContract.beginTimeContract.value" placeholder="dd/MM/yyyy" type="date"
                              [showClearButton]="true"
                              [useMaskBehavior]="true" displayFormat="dd/MM/yyyy"
                 ></dx-date-box>
               </div>
               <div class="form-inline-custom">
                 <label>Số tài khoản <span class="required">*</span></label>
-                <input nz-input formControlName="businessAccountNumber" type="text"/>
+                <input nz-input formControlName="businessAccountNumber" type="text"
+                       [ngClass]="{ 'is-invalid': submittedContract && formControlContract.businessAccountNumber.errors?.required }"
+                />
+
               </div>
               <div class="form-inline-custom">
                 <label>Chủ tài khoản <span class="required">*</span></label>
-                <input nz-input formControlName="businessAccountOwner" type="text"/>
+                <input nz-input formControlName="businessAccountOwner" type="text"
+                       [ngClass]="{ 'is-invalid': submittedContract && formControlContract.businessAccountOwner.errors?.required }"
+                />
               </div>
               <div class="form-inline-custom">
                 <label>Ngân hàng - Chi nhánh <span class="required">*</span></label>
-                <input nz-input formControlName="businessBankBranch" type="text"/>
+                <input nz-input formControlName="businessBankBranch" type="text"
+                       [ngClass]="{ 'is-invalid': submittedContract && formControlContract.businessBankBranch.errors?.required }"
+                />
               </div>
             </div>
           </div>
@@ -250,22 +285,23 @@
             <div class="d-flex justify-content-between">
               <div class="input-list-room mr-2">
                 <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
-                  <input type="text" nz-input placeholder="Tìm kiếm loại phòng" [(ngModel)]="searchRoomName" />
+                  <input type="text" nz-input placeholder="Tìm kiếm loại phòng" [(ngModel)]="searchRoomName"/>
                 </nz-input-group>
                 <ng-template #suffixIconButton>
                   <button nz-button nzType="primary" nzSearch (click)="searchRoomByName()">
                     <span nz-icon nzType="search"></span>
                   </button>
-                </ng-template>                
+                </ng-template>
               </div>
               <div class="buttons">
                 <button (click)="addNewRoom()" nz-button nzType="primary" class="equal-width-btn" type="submitted">
                   <div class="btn-action-listroom">
-                    <em class="fas fa-save fa-fw" ></em> 
+                    <em class="fas fa-save fa-fw"></em>
                     Thêm mới phòng
                   </div>
                 </button>
-                <button nz-button nzType="default" class="btn-cancel equal-width-btn" type="button" (click)="lockSelectedRooms()">
+                <button nz-button nzType="default" class="btn-cancel equal-width-btn" type="button"
+                        (click)="lockSelectedRooms()">
                   <div class="btn-action-listroom">
                     <span nz-icon nzType="lock" nzTheme="outline"></span>
                     Khóa loại phòng
@@ -288,18 +324,19 @@
           [allowColumnResizing]="true"
           [dataSource]="roomHotels">
 
-          <dxi-column cssClass="text-center" caption="Trạng thái" [width]="100" cellTemplate="cellCheckBox" dataField="isChecked"></dxi-column>  
+          <dxi-column cssClass="text-center" caption="Trạng thái" [width]="100" cellTemplate="cellCheckBox"
+                      dataField="isChecked"></dxi-column>
 
           <div *dxTemplate="let cellInfo of 'cellCheckBox'">
-            <input 
-              type="checkbox" 
-              class="checkBoxStatus" 
-              [(ngModel)]="cellInfo.data.isChecked" 
+            <input
+              type="checkbox"
+              class="checkBoxStatus"
+              [(ngModel)]="cellInfo.data.isChecked"
               (change)="onCheckboxChange(cellInfo.data)"
               [disabled]="!cellInfo.data.isActive"
             >
           </div>
-          
+
           <dxi-column caption="Mã loại phòng" [width]="100" dataField="code" dataType="string"></dxi-column>
           <dxi-column caption="Tên loại phòng" [width]="200" dataField="name" dataType="string"></dxi-column>
 
@@ -311,7 +348,7 @@
           <!-- <dxi-column cssClass="text-center" caption="Diện tích phòng" [width]="150" dataField="roomArea"
                        [format]="areaUtils.areaNumberFormat"></dxi-column>-->
           <dxi-column caption="Số lượng phòng" [width]="120" dataField="roomNumber" dataType="string"
-                      ></dxi-column>
+          ></dxi-column>
           <dxi-column caption="Giá phòng" cssClass="text-left" [width]="150" dataField="price"
                       cellTemplate="cellPrice"></dxi-column>
           <dxi-column caption="Hình ảnh phòng" cssClass="text-center" [width]="200" dataField="roomFiles"
@@ -349,14 +386,14 @@
           </div>
           <div *dxTemplate="let room of 'cellBtnDetailTemplate'">
             <button [title]="room.data.isActive ? 'Khóa phòng' : 'Mở khóa phòng'" nz-button nzSize="small"
-              nzType="default" class="btn-action-room" (click)="setActive(room.data)">
+                    nzType="default" class="btn-action-room" (click)="setActive(room.data)">
               <span class="fa fa-lock fa-fw" *ngIf="room.data.isActive"></span>
               <span class="fa fa-unlock fa-fw" *ngIf="!room.data.isActive"></span>
-          </button>
-          <button title="Chỉnh sửa thông tin phòng" nz-button nzSize="small"
-              nzType="default" class="btn-action-room" (click)="routeLinkToEdit(room.data.id)">
+            </button>
+            <button title="Chỉnh sửa thông tin phòng" nz-button nzSize="small"
+                    nzType="default" class="btn-action-room" (click)="routeLinkToEdit(room.data.id)">
               <span class="fa fa-edit fa-fw"></span>
-          </button>
+            </button>
             <!-- <button title="Xóa phòng" nz-button nzSize="small" nzType="default"
                     class=" btn-action-room ant-btn-red" (click)="showConfirmDeleteRoom(room.data.id)">
               <span class="fa fa-times fa-fw"></span>
@@ -397,9 +434,9 @@
           </div>
           <div class="after">
             <div class="buttons">
-               <button (click)="showPopupPayment()" nz-button nzType="primary" class="" type="submitted">
-                 <em class="fas fa-save fa-fw" style="margin-right: 4px;"></em> Ghi nhận thanh toán
-               </button>
+              <button (click)="showPopupPayment()" nz-button nzType="primary" class="" type="submitted">
+                <em class="fas fa-save fa-fw" style="margin-right: 4px;"></em> Ghi nhận thanh toán
+              </button>
             </div>
           </div>
         </div>
@@ -417,8 +454,10 @@
           [dataSource]="transactionItem.data">
           <dxi-column cssClass="text-center" caption="STT" [width]="60" dataField="stt"
                       [allowFiltering]="false" [allowSorting]="false"></dxi-column>
-          <dxi-column caption="Thời gian giao dịch" format="HH:mm dd/MM/yyyy" [width]="200" dataField="transactionTime" dataType="date"></dxi-column>
-          <dxi-column caption="Số tiền phát sinh" dataType="number" format="#,##0 đ" [width]="200" dataField="amount"></dxi-column>
+          <dxi-column caption="Thời gian giao dịch" format="HH:mm dd/MM/yyyy" [width]="200" dataField="transactionTime"
+                      dataType="date"></dxi-column>
+          <dxi-column caption="Số tiền phát sinh" dataType="number" format="#,##0 đ" [width]="200"
+                      dataField="amount"></dxi-column>
           <dxi-column cssClass="text-center" caption="Nội dung giao dịch" dataField="transactionContent"></dxi-column>
         </dx-data-grid>
       </nz-tab>
@@ -443,13 +482,13 @@
     <div class="input-wrap" nz-row>
       <label class="title-detail" nz-col [nzSpan]="8">Họ tên<em class="fas fa-asterisk required"></em></label>
       <div nz-col [nzSpan]="16">
-        <input disabled nz-input [(ngModel)]="userInfo.fullname" />
+        <input disabled nz-input [(ngModel)]="userInfo.fullname"/>
       </div>
     </div>
     <div class="input-wrap" nz-row>
       <label class="title-detail" nz-col [nzSpan]="8">Nội dung<em class="fas fa-asterisk required"></em></label>
       <div nz-col [nzSpan]="16">
-        <input nz-input [(ngModel)]="paymentItem.content" />
+        <input nz-input [(ngModel)]="paymentItem.content"/>
       </div>
     </div>
   </div>

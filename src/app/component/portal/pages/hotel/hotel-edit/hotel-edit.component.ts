@@ -34,8 +34,8 @@ export class HotelEditComponent implements OnInit {
   utilityGroupOptions: any[];
   isEdit = false;
   transactionItem: any;
-  searchRoomName:any;
-  tmpRoomHotels:any
+  searchRoomName: any;
+  tmpRoomHotels: any;
   @ViewChild('inputElementNumberPhone', {static: false}) inputElementNumberPhone?: ElementRef;
   @ViewChild('myForm') myForm!: NgForm;
   @ViewChild('contractForm') contractForm!: NgForm;
@@ -44,7 +44,7 @@ export class HotelEditComponent implements OnInit {
   hotelId: any;
   hotelFileIds: any[];
   fileList: NzUploadFile[] = [];
-  fileContractList: NzUploadFile[] = [];
+  fileContractList: any[] = [];
   uploadContractFileUrl: any;
   isShowPopupPayment: boolean;
   configDescriptionHotel: AngularEditorConfig = {
@@ -91,6 +91,8 @@ export class HotelEditComponent implements OnInit {
   roomHotels: any[];
   paymentItem: any;
   userInfo: any;
+  now: any;
+
   constructor(private fb: FormBuilder,
               private router: Router,
               private route: ActivatedRoute,
@@ -125,15 +127,15 @@ export class HotelEditComponent implements OnInit {
       amenities: [[]]
     });
     this.formContract = this.fb.group({
-      taxCode: [null, [Validators.required]],
-      businessName: [null, [Validators.required]],
-      businessNameEnglish: [null, [Validators.required]],
+      taxCode: [null],
+      businessName: [null],
+      businessNameEnglish: [null],
       personInCharge: [null, [Validators.required]],
-      positionOfPersonInCharge: [null, [Validators.required]],
+      positionOfPersonInCharge: [null],
       phoneNumberOfPersonInCharge: [null, [Validators.required]],
       emailOfPersonInCharge: [null, [Validators.required]],
-      beginTimeContract: [null, [Validators.required]],
-      endTimeContract: [null, [Validators.required]],
+      beginTimeContract: [null],
+      endTimeContract: [null],
       businessAccountNumber: [null, [Validators.required]],
       businessAccountOwner: [null, [Validators.required]],
       businessBankBranch: [null, [Validators.required]],
@@ -142,12 +144,13 @@ export class HotelEditComponent implements OnInit {
       Authorization: 'Bearer ' + localStorage.getItem(Constant.TOKEN),
     };
     this.uploadUrl = `${this.configService.getConfig().api.baseUrl}/Upload/UploadHotelImage?hotelId=0`;
-    this.hotelItem = {};
+    this.hotelItem = {isActive: true};
     this.fileList = [];
     this.hotelFileIds = [];
     this.fileContractList = [];
     this.transactionItem = {};
     this.paymentItem = {};
+    this.now = new Date();
   }
 
   ngOnInit(): void {
@@ -174,9 +177,11 @@ export class HotelEditComponent implements OnInit {
     this.getProvinces();
     this.getUserInfo();
   }
+
   getUserInfo() {
     this.userInfo = JSON.parse(localStorage.getItem(Constant.USER_INFO));
   }
+
   /*getRoomList() {
     this.generalService.getRoomHotels(this.hotelId).subscribe(res => {
       let index = 1;
@@ -186,21 +191,20 @@ export class HotelEditComponent implements OnInit {
       this.rooms = res.data;
     });
   }*/
-    searchRoomByName() {
-      if (!this.searchRoomName || this.searchRoomName.trim() === '') {
-        return this.roomHotels = this.tmpRoomHotels;  
-      }
-    
-      const searchLower = this.searchRoomName.toLowerCase();
-  
-      return this.roomHotels = this.tmpRoomHotels.filter(room => 
-        room.name.toLowerCase().includes(searchLower)
-      );
+  searchRoomByName() {
+    if (!this.searchRoomName || this.searchRoomName.trim() === '') {
+      return this.roomHotels = this.tmpRoomHotels;
     }
-    
-    // In ra danh sách các phòng đã lọc vào console
-  binHotelDetail() {
 
+    const searchLower = this.searchRoomName.toLowerCase();
+
+    return this.roomHotels = this.tmpRoomHotels.filter(room =>
+      room.name.toLowerCase().includes(searchLower)
+    );
+  }
+
+  // In ra danh sách các phòng đã lọc vào console
+  binHotelDetail() {
     this.generalService.getHotelById(this.hotelId).subscribe(res => {
       this.hotelItem = res;
       let index = 1;
@@ -208,8 +212,8 @@ export class HotelEditComponent implements OnInit {
         en.stt = index++;
       });
       this.roomHotels = res.roomHotels;
-      this.tmpRoomHotels = this.roomHotels
-      
+      this.tmpRoomHotels = this.roomHotels;
+
       this.submitted = false;
       // this.item = data;
       this.editTitle = 'Sửa thông tin khách sạn';
@@ -276,10 +280,9 @@ export class HotelEditComponent implements OnInit {
         const contracFilePath = item[`fileContract${i}Path`];
         if (contracFilePath) {
           const objHotel = {
-            uid: contracFilePath,
-            name: this.getFileName(contracFilePath),
-            url: `${this.configService.getConfig().api.baseUrl}/${contracFilePath}`,
-            response: {path: contracFilePath}
+            fileName: this.getFileName(contracFilePath),
+            path: contracFilePath,
+            viewPath: `${this.configService.getConfig().api.baseUrl}/${contracFilePath}`,
           };
           this.fileContractList.push(objHotel);
         }
@@ -378,7 +381,6 @@ export class HotelEditComponent implements OnInit {
       delete formValue.id;
       delete formValue.hotelFile;
       delete formValue.amenities;
-      /// add
       this.generalService.addHotel(formValue).subscribe((res: any) => {
         if (!res.isValid) {
           this.notificationService.showNotification(Constant.ERROR, res.errors[0].errorMessage);
@@ -388,7 +390,7 @@ export class HotelEditComponent implements OnInit {
           this.notificationService.showNotification(Constant.SUCCESS, Constant.MESSAGE_ADD_SUCCESS);
         }
       }, (error: any) => {
-
+        this.notificationService.showNotification(Constant.ERROR, Constant.MESSAGE_SERVICE_ERROR);
       });
     } else {
       // / update
@@ -399,12 +401,10 @@ export class HotelEditComponent implements OnInit {
         if (!res.isValid) {
           this.notificationService.showNotification(Constant.ERROR, res.errors[0].errorMessage);
         } else {
-          // this.getListData();
-          // this.router.navigate(['hotel']);
           this.notificationService.showNotification(Constant.SUCCESS, Constant.MESSAGE_UPDATE_SUCCESS);
         }
       }, error => {
-
+        this.notificationService.showNotification(Constant.ERROR, Constant.MESSAGE_SERVICE_ERROR);
       });
     }
   }
@@ -413,58 +413,71 @@ export class HotelEditComponent implements OnInit {
     this.router.navigate(['hotel/list']);
   }
 
-private errorNotifications: { [key: string]: boolean } = {};
+  private errorNotifications: { [key: string]: boolean } = {};
 
-handleChangeImages({file, fileList}: NzUploadChangeParam, form: any): void {
-  const status = file.status;
+  handleChangeImages({file, fileList}: NzUploadChangeParam, form: any): void {
 
-  const validFormats = ['jpg', 'jpeg', 'png'];
-  const fileExtension = file.name.split('.').pop()?.toLowerCase();
-  const fileSizeLimit = 25 * 1024 * 1024;
+    const status = file.status;
 
-  if (file.status === 'removed') {
-    delete this.errorNotifications[file.name];
-    return; 
-  }
+    const validFormats = ['jpg', 'jpeg', 'png'];
+    const validDocumentFormat = ['pdf', 'doc', 'docx', 'xls', 'xlsx'];
+    const fileExtension = file.name.split('.').pop()?.toLowerCase();
+    const fileSizeLimit = 25 * 1024 * 1024;
 
-  if (file.size > fileSizeLimit) {
-    if (!this.errorNotifications[file.name]) {
-      this.msg.error(`File ${file.name} quá kích thước tối đa 25MB.`);
-      this.errorNotifications[file.name] = true;
+    if (file.status === 'removed') {
+      delete this.errorNotifications[file.name];
+      return;
     }
-    return;
-  }
-
-  if (!validFormats.includes(fileExtension)) {
-    if (!this.errorNotifications[file.name]) {
-      this.msg.error(`File ${file.name} không hợp lệ. Vui lòng chọn file có định dạng jpg, jpeg hoặc png.`);
-      this.errorNotifications[file.name] = true;
+    fileList = fileList.filter(en => en.uid !== file.uid);
+    if (file.size > fileSizeLimit) {
+      if (!this.errorNotifications[file.name]) {
+        this.msg.error(`File ${file.name} quá kích thước tối đa 25MB.`);
+        this.errorNotifications[file.name] = true;
+      }
+      return;
     }
-    return;
-  }
 
-  if (status === 'done') {
-    this.errorNotifications[file.name] = false;
-
-    this.msg.success(`File ${file.name} tải lên thành công.`);
-    if (form === 'hotel') {
-      this.fileList = fileList;
-      setTimeout(() => {
-        if (this.fileList.length > 0) {
-          this.fileList[this.fileList.length - 1].uid = file.response.hotelFileId.toString();
-          this.fileList[this.fileList.length - 1].url = `${this.configService.getConfig().api.baseUrl}/${file.response.path}`;
-        }
-      }, 0);
-      this.hotelFileIds.push(file.response.hotelFileId);
-      this.formAddHotel.controls.hotelFileIds.setValue(this.hotelFileIds);
-    } else if (form === 'room') {
-    } else if (form === 'contract') {
-      this.fileContractList = fileList;
+    if (form !== 'contract' && !validFormats.includes(fileExtension)) {
+      if (!this.errorNotifications[file.name]) {
+        this.msg.error(`File ${file.name} không hợp lệ. Vui lòng chọn file có định dạng jpg, jpeg hoặc png.`);
+        this.errorNotifications[file.name] = true;
+      }
+      return;
     }
-  } else if (status === 'error') {
-    this.msg.error(`File ${file.name} tải lên không thành công. ${file.error.error.text}`);
+    if (form === 'contract' && !validDocumentFormat.includes(fileExtension)) {
+      if (!this.errorNotifications[file.name]) {
+        this.msg.error(`File ${file.name} không hợp lệ. Vui lòng chọn tệp là ảnh hoặc tài liệu`);
+        this.errorNotifications[file.name] = true;
+        setTimeout(() => {
+          fileList = fileList.filter(en => en.uid !== file.uid);
+          console.log(fileList);
+        }, 100);
+      }
+      return;
+    }
+
+    if (status === 'done') {
+      this.errorNotifications[file.name] = false;
+
+      this.msg.success(`File ${file.name} tải lên thành công.`);
+      if (form === 'hotel') {
+        this.fileList = fileList;
+        setTimeout(() => {
+          if (this.fileList.length > 0) {
+            this.fileList[this.fileList.length - 1].uid = file.response.hotelFileId.toString();
+            this.fileList[this.fileList.length - 1].url = `${this.configService.getConfig().api.baseUrl}/${file.response.path}`;
+          }
+        }, 0);
+        this.hotelFileIds.push(file.response.hotelFileId);
+        this.formAddHotel.controls.hotelFileIds.setValue(this.hotelFileIds);
+      } else if (form === 'room') {
+      } else if (form === 'contract') {
+        this.fileContractList = fileList;
+      }
+    } else if (status === 'error') {
+      this.msg.error(`File ${file.name} tải lên không thành công. ${file.error.error.text}`);
+    }
   }
-}
 
   handleRemoveImageHotel = async (file: NzUploadFile): Promise<void> => {
     const idHotelImage = file.uid;
@@ -501,32 +514,35 @@ handleChangeImages({file, fileList}: NzUploadChangeParam, form: any): void {
   handleRemoveContractFile = async (file: NzUploadFile): Promise<void> => {
     const fileId = file.uid;
     if (fileId) {
-      alert(fileId);
-      console.log('this.fileContractList', this.fileContractList);
+      console.log('this.fileContractList', fileId, this.fileContractList);
+      this.fileContractList = this.fileContractList.filter(en => en.uid !== fileId);
     }
   };
 
   saveContract() {
     const formValue = this.contractForm.value;
+
     this.submittedContract = true;
     const checkEmail = this.validateEmail(formValue.emailOfPersonInCharge);
     if (!checkEmail) {
       this.notificationService.showNotification(Constant.ERROR, 'Email không đúng định dạng!');
       return;
     }
-    console.log(this.contractForm.value);
     formValue.id = this.hotelItem.id;
-
-    console.log(this.fileContractList);
     if (this.fileContractList.length) {
       let i = 1;
       for (let j = 1; j <= 3; j++) {
         formValue[`fileContract${i}Path`] = null;
       }
       this.fileContractList.forEach(f => {
-        formValue[`fileContract${i}Path`] = f.response.path;
+        formValue[`fileContract${i}Path`] = f.path;
         i++;
       });
+    }
+    console.log(this.contractForm.valid);
+    if (!this.contractForm.valid) {
+      this.notificationService.showNotification(Constant.ERROR, 'Vui lòng nhập đầy đủ các trường bắt buộc');
+      return;
     }
     this.generalService.saveHotelContract(formValue).subscribe((res: any) => {
       if (res.ret && res.ret[0].code !== 0) {
@@ -626,7 +642,7 @@ handleChangeImages({file, fileList}: NzUploadChangeParam, form: any): void {
 
   setActive(data: any) {
     console.log(data);
-    
+
     data.isActive = !data.isActive;
     this.generalService.setActiveRoom({roomId: data.id, isActive: data.isActive}).subscribe(
       {
@@ -647,43 +663,44 @@ handleChangeImages({file, fileList}: NzUploadChangeParam, form: any): void {
       }
     );
   }
+
   selectedRooms: any[] = [];
 
-onCheckboxChange(room: any) {
-  if (room.isChecked) {
-    this.selectedRooms.push(room);
-  } else {
-    this.selectedRooms = this.selectedRooms.filter(item => item.id !== room.id);
-  }
-}
-lockSelectedRooms() {
-  if (this.selectedRooms.length === 0) {
-    this.notificationService.showNotification(Constant.ERROR, 'Vui lòng chọn ít nhất một phòng để khóa');
-    return;
+  onCheckboxChange(room: any) {
+    if (room.isChecked) {
+      this.selectedRooms.push(room);
+    } else {
+      this.selectedRooms = this.selectedRooms.filter(item => item.id !== room.id);
+    }
   }
 
-  this.selectedRooms.forEach(room => {
-    room.isActive = false;
+  lockSelectedRooms() {
+    if (this.selectedRooms.length === 0) {
+      this.notificationService.showNotification(Constant.ERROR, 'Vui lòng chọn ít nhất một phòng để khóa');
+      return;
+    }
 
-    this.generalService.setActiveRoom({ roomId: room.id, isActive: room.isActive }).subscribe({
-      next: (res) => {
-        if (res.ret && res.ret[0].code !== 0) {
-          this.notificationService.showNotification(Constant.ERROR, `Khóa phòng ${room.name} thất bại: ${res.ret[0].message}`);
-        } else {
-          this.notificationService.showNotification(Constant.SUCCESS, `Khóa phòng ${room.name} thành công`);
-          room.isChecked = false;
+    this.selectedRooms.forEach(room => {
+      room.isActive = false;
+
+      this.generalService.setActiveRoom({roomId: room.id, isActive: room.isActive}).subscribe({
+        next: (res) => {
+          if (res.ret && res.ret[0].code !== 0) {
+            this.notificationService.showNotification(Constant.ERROR, `Khóa phòng ${room.name} thất bại: ${res.ret[0].message}`);
+          } else {
+            this.notificationService.showNotification(Constant.SUCCESS, `Khóa phòng ${room.name} thành công`);
+            room.isChecked = false;
+          }
+        },
+        error: (error) => {
+          this.notificationService.showNotification(Constant.ERROR, `Khóa phòng ${room.name} thất bại`);
         }
-      },
-      error: (error) => {
-        this.notificationService.showNotification(Constant.ERROR, `Khóa phòng ${room.name} thất bại`);
-      }
+      });
     });
-  });
 
-  this.selectedRooms = [];
-}
+    this.selectedRooms = [];
+  }
 
-  
 
   getHotelTransactionHistory() {
     const payload = {
@@ -743,5 +760,36 @@ lockSelectedRooms() {
         }
       }
     );
+  }
+
+  changeShortLength($event: any) {
+    if ($event.length >= 500) {
+      console.log($event.length);
+      setTimeout(() => {
+        this.hotelItem.shortDescription = this.hotelItem.shortDescription.substring(0, 500);
+        console.log(this.hotelItem.shortDescription);
+      }, 100);
+      this.notificationService.showNotification(Constant.ERROR, 'Mô tả ngắn đã vượt quá 500 ký tự');
+    }
+  }
+
+  onUploadStarted(e: any) {
+
+  }
+
+  onFileUploaded(e: any) {
+    const response = JSON.parse(e.request.response);
+    if (response) {
+      const fileItem = {
+        path: response.path,
+        fileName: response.fileName,
+        viewPath: this.configService.getConfig().api.baseUrl + '/' + response.path,
+      };
+      this.fileContractList.push(fileItem);
+    }
+  }
+
+  deleteFile(item: any) {
+    this.fileContractList = this.fileContractList.filter(en => en.fileName !== item.fileName);
   }
 }

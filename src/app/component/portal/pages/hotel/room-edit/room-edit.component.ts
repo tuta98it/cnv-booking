@@ -35,7 +35,7 @@ export class RoomEditComponent implements OnInit {
   isEdit = false;
   fileList: any[];
   roomFileIds: any[];
-  filterFromDate: string | null = null; 
+  filterFromDate: string | null = null;
   filterToDate: string | null = null;
   filteredPrices: any[] = [];
   statusPriceDetail: any[] = [];
@@ -92,6 +92,9 @@ export class RoomEditComponent implements OnInit {
       { name: 'Kích hoạt', value: true },
       { name: 'Vô hiệu hoá', value: false },
     ];
+    this.roomItem = {
+      isActive: true
+    };
   }
 
   ngOnInit(): void {
@@ -116,7 +119,7 @@ export class RoomEditComponent implements OnInit {
           amenities: this.utilityGroupOptions
         });
       }
-      
+
     });
 
     this.formAddRoom.controls.costPrice.valueChanges.subscribe(($event) => {
@@ -415,12 +418,12 @@ export class RoomEditComponent implements OnInit {
 }
   setActive(data: any) {
     data.isActive = !data.isActive;
-    this.isActiveChanged = data.isActive; 
+    this.isActiveChanged = data.isActive;
     this.generalService.setActiveRoom({roomId: data.id, isActive: data.isActive}).subscribe(
       {
         next: (res) => {
           if (res.ret && res.ret[0].code !== 0) {
-            
+
             this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
           } else {
             this.notificationService.showNotification(Constant.SUCCESS, 'Cập nhật trạng thái phòng thành công');
@@ -445,7 +448,7 @@ export class RoomEditComponent implements OnInit {
                 if (res.ret && res.ret[0].code !== 0) {
                     this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
                 } else {
-                    this.roomItem.isAvailable = newIsAvailable; 
+                    this.roomItem.isAvailable = newIsAvailable;
                     this.notificationService.showNotification(Constant.SUCCESS, 'Cập nhật trạng thái phòng thành công');
                 }
             },

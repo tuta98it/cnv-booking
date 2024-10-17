@@ -31,7 +31,7 @@ export abstract class TableSelectionAbstract implements TableSelectionInterface 
       const filterBottom = document.getElementsByClassName('filter')[0];
       filterHeight += filterBottom ? filterBottom.clientHeight : 0;
 
-      let gridHeight = window.innerHeight - 105 - filterHeight; // 34: pagging height
+      let gridHeight = window.innerHeight - 110 - filterHeight; // 34: pagging height
       const gridFooter = document.getElementsByClassName('grid-footer')[0];
       if (gridFooter) {
         gridHeight = gridHeight - gridFooter.clientHeight;
