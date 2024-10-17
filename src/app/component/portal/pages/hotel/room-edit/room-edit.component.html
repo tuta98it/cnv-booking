@@ -163,13 +163,13 @@
           </div>
         </div>
       </nz-tab>
+      <!-- (onRowInserting)="onRowInsertingPriceDetail($event, formAddRoom.value.id)" -->
       <nz-tab nzTitle="Giá theo giai đoạn" [nzDisabled]="!isEdit">
         <dx-data-grid id="gridContainerPriceRoomDetail" [dataSource]="filteredPrices" keyExpr="id"
                       [allowColumnReordering]="true" [showBorders]="true" (onEditingStart)="logEvent('EditingStart')"
-                      (onInitNewRow)="onInitNewRowPriceDetail($event)"
-                      (onRowInserting)="onRowInsertingPriceDetail($event, formAddRoom.value.id)"
-                      (onRowInserted)="onRowInsertedPriceDetail($event)"
                       (onRowUpdating)="onRowUpdatingPriceDetail($event)"
+                      (onInitNewRow)="onInitNewRowPriceDetail($event)"
+                      (onRowInserted)="onRowInsertedPriceDetail($event)"
                       (onRowUpdated)="onRowUpdatedPriceDetail($event)" (onRowRemoving)="+($event)"
                       (onRowRemoved)="logEvent('RowRemoved')" (onSaving)="onSavingPriceDetail($event)"
                       (onSaved)="logEvent('Saved')" (onEditCanceling)="logEvent('EditCanceling')"
@@ -208,20 +208,64 @@
                 <dx-date-box [(value)]="filterToDate" (valueChange)="filterPrices()"   displayFormat="dd/MM/yyyy" placeholder="Thời gian kết thúc" type="date"></dx-date-box>
               </div>
             </dxi-item>
-            <dxi-item name="addRowButton"></dxi-item>
+            <!-- <dxi-item name="addRowButton"></dxi-item> -->
+            <dxi-item location="after">
+              <button class="ant-btn-primary" (click)="openAddRecordPopup(formAddRoom.value.id)" 
+                      style="border: none; color: white; padding: 10px 20px; 
+                             text-align: center; text-decoration: none; display: inline-flex; align-items: center; 
+                             font-size: 14px; border-radius: 5px; cursor: pointer;">
+                <span nz-icon nzType="plus" nzTheme="outline" style="margin-right: 5px;"></span>
+                Thêm
+              </button>
+            </dxi-item>            
             <dxi-item location="before">
               <div class="title-detail" style="width: 100%;">Thiết lập giá phòng theo thời gian:</div>
             </dxi-item>
           </dxo-toolbar>
 
-          <dxi-column type="buttons">
+          <!-- <dxi-column type="buttons">
             <dxi-button name="edit" text="Sửa thông tin giá"></dxi-button>
             <dxi-button name="delete" text="Giá thông giá"></dxi-button>
             <dxi-button name="save" text="Lưu thông giá phòng"></dxi-button>
             <dxi-button name="cancel" text="Huỷ"></dxi-button>
-          </dxi-column>
+          </dxi-column> -->
         </dx-data-grid>
       </nz-tab>
     </nz-tabset>
   </div>
 </div>
+<nz-modal [(nzVisible)]="isAddRecordVisible" nzTitle="Thêm thông tin giá phòng" 
+          (nzOnCancel)="handleCancelPopUp()" [nzOkLoading]="isLoading" 
+          (nzOnOk)="onAddRecord()" nzOkText="Lưu" nzCancelText="Huỷ">
+  
+  <form [formGroup]="roomPriceForm">
+    <div class="input-wrap" nz-row>
+      <label class="title-detail" nz-col [nzSpan]="8">Tiêu đề</label>
+      <div nz-col [nzSpan]="16">
+        <input nz-input formControlName="title" placeholder="Nhập tiêu đề" [ngClass]="{ 'is-invalid': submitted && f.title.errors }" />
+      </div>
+    </div>    
+    <div class="input-wrap" nz-row>
+      <label class="title-detail" nz-col [nzSpan]="8">Giá phòng</label>
+      <div nz-col [nzSpan]="16">
+        <nz-input-group [nzSuffix]="'VNĐ'">
+          <input nz-input type="text" [value]="priceValue" (input)="onPriceInput($event)" formControlName="price" [ngClass]="{ 'is-invalid': submitted && f.price.errors }"  />
+        </nz-input-group>
+      </div>
+    </div>
+    
+    <div class="input-wrap" nz-row>
+      <label class="title-detail" nz-col [nzSpan]="8">Thời điểm bắt đầu</label>
+      <div nz-col [nzSpan]="16">
+        <input nz-input type="date" formControlName="fromDate" [ngClass]="{ 'is-invalid': submitted && f.fromDate.errors }"  />
+      </div>
+    </div>
+    
+    <div class="input-wrap" nz-row>
+      <label class="title-detail" nz-col [nzSpan]="8">Thời điểm kết thúc</label>
+      <div nz-col [nzSpan]="16">
+        <input nz-input type="date" formControlName="toDate" [ngClass]="{ 'is-invalid': submitted && f.toDate.errors }"  />
+      </div>
+    </div>
+  </form>
+</nz-modal>

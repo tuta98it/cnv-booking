@@ -42,6 +42,12 @@ export class RoomEditComponent implements OnInit {
   @ViewChild('myForm') myForm!: NgForm;
   isActiveChanged: any;
   isAvailableChanged: any;
+  
+  priceValue: string = '';
+  isAddRecordVisible = false;
+  selectedRoomId: number;
+  roomPriceForm: FormGroup;
+  isLoading = false;
   constructor(
     private router: Router,
     private modalService: NzModalService,
@@ -81,6 +87,15 @@ export class RoomEditComponent implements OnInit {
       prices: [[]],
       amenities: [[]],
       priceByTime: [false]
+    });
+    this.roomPriceForm = this.fb.group({
+      title: [''],
+      price: [null],
+      fromDate: [''],
+      toDate: [''],
+    });
+    this.roomPriceForm.get('price')?.valueChanges.subscribe(value => {
+      this.priceValue = this.formatCurrency(value);
     });
     this.uploadHeader = {
       Authorization: 'Bearer ' + localStorage.getItem(Constant.TOKEN),
@@ -185,6 +200,10 @@ export class RoomEditComponent implements OnInit {
 
   handleCancel() {
     this.formAddRoom.reset();
+  }
+  handleCancelPopUp(){
+    this.isAddRecordVisible = false;
+    this.roomPriceForm.reset();
   }
 
   goHotelDetail() {
@@ -312,45 +331,45 @@ export class RoomEditComponent implements OnInit {
   onInitNewRowPriceDetail(event: any) {
   }
 
-  onRowInsertingPriceDetail(event: any, roomId: any) {
-    if (!this.isEdit) {
-      return;
-    }
-    const newData = event.data === null ? event : event.data;
-    const newPriceDetail = {
-      id: 0,
-      roomId,
-      title: newData.title,
-      price: newData.price,
-      fromDate: newData.fromDate,
-      toDate: newData.toDate,
-      isUse: true
-    }
-    this.generalService.createRoomPriceDetail(newPriceDetail).subscribe({
-      next: (res) => {
-        if (res.isValid) {
-          this.notificationService.showNotification(Constant.SUCCESS, 'Tạo giá phòng thành công');
-        } else {
-          if (res.errors && res.errors.length > 0) {
-            res.errors.forEach((error: any) => {
-              this.notificationService.showNotification(Constant.ERROR, error.errorMessage);
-            });
-          } else {
-            this.notificationService.showNotification(Constant.ERROR, 'Tạo giá phòng thật bại');
-          }
-        }
-      },
+  // onRowInsertingPriceDetail(event: any, roomId: any) {
+  //   if (!this.isEdit) {
+  //     return;
+  //   }
+  //   const newData = event.data === null ? event : event.data;
+  //   const newPriceDetail = {
+  //     id: 0,
+  //     roomId,
+  //     title: newData.title,
+  //     price: newData.price,
+  //     fromDate: newData.fromDate,
+  //     toDate: newData.toDate,
+  //     isUse: true
+  //   }
+  //   this.generalService.createRoomPriceDetail(newPriceDetail).subscribe({
+  //     next: (res) => {
+  //       if (res.isValid) {
+  //         this.notificationService.showNotification(Constant.SUCCESS, 'Tạo giá phòng thành công');
+  //       } else {
+  //         if (res.errors && res.errors.length > 0) {
+  //           res.errors.forEach((error: any) => {
+  //             this.notificationService.showNotification(Constant.ERROR, error.errorMessage);
+  //           });
+  //         } else {
+  //           this.notificationService.showNotification(Constant.ERROR, 'Tạo giá phòng thật bại');
+  //         }
+  //       }
+  //     },
 
-      error: (error) => {
-        this.notificationService.showNotification(Constant.ERROR, 'Dữ liệu trả về đã gặp lỗi');
-      },
+  //     error: (error) => {
+  //       this.notificationService.showNotification(Constant.ERROR, 'Dữ liệu trả về đã gặp lỗi');
+  //     },
 
-      complete: () => {
-      }
-    }).add(() => {
-      this.binRoomDetail();
-    });
-  }
+  //     complete: () => {
+  //     }
+  //   }).add(() => {
+  //     this.binRoomDetail();
+  //   });
+  // }
 
   onRowInsertedPriceDetail(event: any) {
   }
@@ -455,5 +474,64 @@ export class RoomEditComponent implements OnInit {
             complete: () => {}
         }
     );
+}
+openAddRecordPopup(roomId: number): void {
+  this.selectedRoomId = roomId;
+  this.isAddRecordVisible = true;
+}
+
+onAddRecord(): void {
+  if (!this.roomPriceForm.valid) {
+    console.error('Form is invalid');
+    return;
+  }
+
+  const newPriceDetail = {
+    id: 0,
+    roomId: this.selectedRoomId,
+    title: this.roomPriceForm.value.title,
+    price: this.roomPriceForm.value.price,
+    fromDate: this.roomPriceForm.value.fromDate,
+    toDate: this.roomPriceForm.value.toDate,
+    isUse: true
+  };
+
+  this.generalService.createRoomPriceDetail(newPriceDetail).subscribe({
+    next: (res) => {
+      if (res.isValid) {
+        this.notificationService.showNotification(Constant.SUCCESS, 'Tạo giá phòng thành công');
+        this.isAddRecordVisible = false;
+        this.roomPriceForm.reset();
+        this.binRoomDetail();
+      } else {
+        if (res.errors && res.errors.length > 0) { 
+          res.errors.forEach((error: any) => {
+            this.notificationService.showNotification(Constant.ERROR, error.errorMessage);
+          });
+        } else {
+          this.notificationService.showNotification(Constant.ERROR, 'Tạo giá phòng thất bại');
+        }
+      }
+    },
+    error: (error) => {
+      this.notificationService.showNotification(Constant.ERROR, 'Dữ liệu trả về đã gặp lỗi');
+    },
+    complete: () => {
+    }
+  });
+}
+onPriceInput(event: any): void {
+  const inputValue = event.target.value.replace(/\D/g, '');
+  this.priceValue = this.formatCurrency(inputValue); 
+
+  this.roomPriceForm.get('price')?.setValue(inputValue, { emitEvent: false });
+}
+
+formatCurrency(value: string): string {
+  if (!value) return '';
+  return value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+}
+get f() {
+  return this.roomPriceForm.controls;
 }
 }
