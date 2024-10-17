@@ -4,8 +4,16 @@
   gap: 0 10px;
 }
 ::ng-deep .div-images .ant-upload-list-picture{
-  display: flex;
+  display: grid;
+  grid-template-columns: 24% 24% 24% 24%;
+  gap: 10px;
   .ant-upload-list-picture-container{
     margin-right: 10px;
   }
+  .ant-upload-list::before{
+    display: none !important;
+  }
+}
+::ng-deep .ant-upload-list::before{
+  display: none !important;
 }

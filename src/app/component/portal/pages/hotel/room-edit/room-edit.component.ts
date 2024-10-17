@@ -271,7 +271,6 @@ export class RoomEditComponent implements OnInit {
     if (status === 'done') {
       this.msg.success(`file ${file.name} tải lên thành công.`);
       if (form === 'room') {
-        alert('vao day');
         this.fileList = fileList;
         setTimeout(() => {
           if (this.fileList.length > 0) {
@@ -303,7 +302,7 @@ export class RoomEditComponent implements OnInit {
                   } else if (res.code === 404) {
                     this.msg.error(`Không tìm thấy ảnh ${file.name}.`);
                   } else {
-                    this.msg.error(`Đã có lỗi xảy ra. Không thể xoá ảnh ${file.name}`);
+                    // this.msg.error(`Đã có lỗi xảy ra. Không thể xoá ảnh ${file.name}`);
                   }
                 });
               }
