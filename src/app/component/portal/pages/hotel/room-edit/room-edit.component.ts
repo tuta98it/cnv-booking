@@ -96,9 +96,6 @@ export class RoomEditComponent implements OnInit {
       fromDate: [''],
       toDate: [''],
     });
-    this.roomPriceForm.get('price')?.valueChanges.subscribe(value => {
-      this.priceValue = this.formatCurrency(value);
-    });
     this.uploadHeader = {
       Authorization: 'Bearer ' + localStorage.getItem(Constant.TOKEN),
     };
@@ -530,17 +527,6 @@ export class RoomEditComponent implements OnInit {
       complete: () => {
       }
     });
-  }
-  onPriceInput(event: any): void {
-    const inputValue = event.target.value.replace(/\D/g, '');
-    this.priceValue = this.formatCurrency(inputValue);
-
-    this.roomPriceForm.get('price')?.setValue(inputValue, { emitEvent: false });
-  }
-
-  formatCurrency(value: string): string {
-    if (!value) return '';
-    return value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
   }
   get f() {
     return this.roomPriceForm.controls;

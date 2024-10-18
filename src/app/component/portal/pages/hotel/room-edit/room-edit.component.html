@@ -251,9 +251,8 @@
     <div class="input-wrap" nz-row>
       <label class="title-detail" nz-col [nzSpan]="8">Giá phòng</label>
       <div nz-col [nzSpan]="16">
-        <nz-input-group [nzSuffix]="'VNĐ'">
-          <input nz-input type="text" [value]="priceValue" (input)="onPriceInput($event)" formControlName="price" [ngClass]="{ 'is-invalid': submitted && f.price.errors }"  />
-        </nz-input-group>
+        <dx-number-box  [min]="0" formControlName='price' placeholder="Nhập giá phòng"
+                  format="#,##0 VNĐ"></dx-number-box>
       </div>
     </div>
     
