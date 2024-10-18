@@ -1832,12 +1832,12 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
     this.generalService.getBookingHotelById(idBookingHotel).subscribe({
       next: (res: any) => {
         if (res.isValid) {
-          this.dataDetailBookingHotel = res.data;
+          this.dataDetailBookingHotel = res?.data;
           if (type === 'add') {
-            this.showViewBookingHotel(res.data);
+            this.showViewBookingHotel(res?.data);
           } else {
-            this.showEditBookingHotel(res.data);
-            this.getRoomsByIdHotel(res.data.bookingHotelDetails[0].hotelId);
+            this.showEditBookingHotel(res?.data);
+            this.getRoomsByIdHotel(res?.data.bookingHotelDetails[0].hotelId);
           }
 
         } else {
@@ -1871,58 +1871,58 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   setFormDetailBookingHotel(data: any) {
 
     // set thông tin chung
-    this.detailBookingGeneralForm.controls['id'].setValue(data.id);
-    this.detailBookingGeneralForm.controls['otherRequirements'].setValue(data.otherRequirements);
-    this.detailBookingGeneralForm.controls['isUrgent'].setValue(data.isUrgent);
+    this.detailBookingGeneralForm.controls['id'].setValue(data?.id);
+    this.detailBookingGeneralForm.controls['otherRequirements'].setValue(data?.otherRequirements);
+    this.detailBookingGeneralForm.controls['isUrgent'].setValue(data?.isUrgent);
 
     // set thông tin người dặt vé
-    this.detailContactUserForm.controls['companyName'].setValue(data.companyName);
-    this.detailContactUserForm.controls['userCode'].setValue(data.userCode);
-    this.detailContactUserForm.controls['userFullName'].setValue(data.userFullName);
+    this.detailContactUserForm.controls['companyName'].setValue(data?.companyName);
+    this.detailContactUserForm.controls['userCode'].setValue(data?.userCode);
+    this.detailContactUserForm.controls['userFullName'].setValue(data?.userFullName);
 
     // set thông tin đặt phòng
 
     this.detailBookingRoomForm.controls['id'].setValue(data?.bookingHotelDetails[0]?.id);
-    this.detailBookingRoomForm.controls['hotelId'].setValue(data.bookingHotelDetails[0].hotelId);
-    this.detailBookingRoomForm.controls['inf'].setValue(data.bookingHotelDetails[0].inf);
-    this.detailBookingRoomForm.controls['price'].setValue(data.bookingHotelDetails[0].price);
-    this.detailBookingRoomForm.controls['adultSurcharge'].setValue(data.bookingHotelDetails[0].adultSurcharge);
-    this.detailBookingRoomForm.controls['childSurcharge'].setValue(data.bookingHotelDetails[0].childSurcharge);
-    this.detailBookingRoomForm.controls['extraBedPrice'].setValue(data.bookingHotelDetails[0].extraBedPrice);
-    this.detailBookingRoomForm.controls['totalPrice'].setValue(data.bookingHotelDetails[0].totalPrice);
+    this.detailBookingRoomForm.controls['hotelId'].setValue(data?.bookingHotelDetails[0]?.hotelId);
+    this.detailBookingRoomForm.controls['inf'].setValue(data?.bookingHotelDetails[0]?.inf);
+    this.detailBookingRoomForm.controls['price'].setValue(data?.bookingHotelDetails[0]?.price);
+    this.detailBookingRoomForm.controls['adultSurcharge'].setValue(data?.bookingHotelDetails[0]?.adultSurcharge);
+    this.detailBookingRoomForm.controls['childSurcharge'].setValue(data?.bookingHotelDetails[0]?.childSurcharge);
+    this.detailBookingRoomForm.controls['extraBedPrice'].setValue(data?.bookingHotelDetails[0]?.extraBedPrice);
+    this.detailBookingRoomForm.controls['totalPrice'].setValue(data?.bookingHotelDetails[0]?.totalPrice);
 
-    this.detailBookingRoomForm.controls['checkinDate'].setValue(new Date(data.bookingHotelDetails[0].checkinDate));
-    this.detailBookingRoomForm.controls['checkoutDate'].setValue(new Date(data.bookingHotelDetails[0].checkoutDate));
-    this.detailBookingRoomForm.controls['numberOfNights'].setValue(data.bookingHotelDetails[0].numberOfNights);
+    this.detailBookingRoomForm.controls['checkinDate'].setValue(new Date(data?.bookingHotelDetails[0]?.checkinDate));
+    this.detailBookingRoomForm.controls['checkoutDate'].setValue(new Date(data?.bookingHotelDetails[0]?.checkoutDate));
+    this.detailBookingRoomForm.controls['numberOfNights'].setValue(data?.bookingHotelDetails[0]?.numberOfNights);
     this.detailBookingRoomForm.controls['room'].setValue({
-      id: data.bookingHotelDetails[0].roomId,
-      name: data.bookingHotelDetails[0].roomName
+      id: data?.bookingHotelDetails[0].roomId,
+      name: data?.bookingHotelDetails[0].roomName
     });
-    this.detailBookingRoomForm.controls['amount'].setValue(data.bookingHotelDetails[0].amount);
-    this.detailBookingRoomForm.controls['adt'].setValue(data.bookingHotelDetails[0].adt);
-    this.detailBookingRoomForm.controls['chd'].setValue(data.bookingHotelDetails[0].chd);
-    this.detailBookingRoomForm.controls['extraBed'].setValue(data.bookingHotelDetails[0].extraBed);
-    this.detailBookingRoomForm.controls['approvalCode'].setValue(data.approvalCode);
+    this.detailBookingRoomForm.controls['amount'].setValue(data?.bookingHotelDetails[0]?.amount);
+    this.detailBookingRoomForm.controls['adt'].setValue(data?.bookingHotelDetails[0]?.adt);
+    this.detailBookingRoomForm.controls['chd'].setValue(data?.bookingHotelDetails[0]?.chd);
+    this.detailBookingRoomForm.controls['extraBed'].setValue(data?.bookingHotelDetails[0]?.extraBed);
+    this.detailBookingRoomForm.controls['approvalCode'].setValue(data?.approvalCode);
     // set giá trị thông tin người lưu trú (người lớn)
     let index = 0;
     for (; index < this.detailBookingRoomForm.value.adt; index++) {
       let form = this.createBookingHotelPassengerForm(0);
-      form.controls['id'].setValue(data.bookingHotelDetails[0].bookingHotelPassengers[index].id);
-      form.controls['fullName'].setValue(data.bookingHotelDetails[0].bookingHotelPassengers[index].fullName);
-      form.controls['phone'].setValue(data.bookingHotelDetails[0].bookingHotelPassengers[index].phone);
-      form.controls['email'].setValue(data.bookingHotelDetails[0].bookingHotelPassengers[index].email);
-      form.controls['passengerType'].setValue(data.bookingHotelDetails[0].bookingHotelPassengers[index].passengerType);
-      form.controls['jobTitle'].setValue(data.bookingHotelDetails[0].bookingHotelPassengers[index].jobTitle);
+      form.controls['id'].setValue(data?.bookingHotelDetails[0]?.bookingHotelPassengers[index]?.id);
+      form.controls['fullName'].setValue(data?.bookingHotelDetails[0]?.bookingHotelPassengers[index]?.fullName);
+      form.controls['phone'].setValue(data?.bookingHotelDetails[0]?.bookingHotelPassengers[index]?.phone);
+      form.controls['email'].setValue(data?.bookingHotelDetails[0]?.bookingHotelPassengers[index]?.email);
+      form.controls['passengerType'].setValue(data?.bookingHotelDetails[0]?.bookingHotelPassengers[index]?.passengerType);
+      form.controls['jobTitle'].setValue(data?.bookingHotelDetails[0]?.bookingHotelPassengers[index]?.jobTitle);
       this.detailHotelPassengerAdtForm.push(form);
     }
     // set giá trị thông tin người lưu trú (trẻ em)
     for (; index < this.detailBookingRoomForm.value.chd + this.detailBookingRoomForm.value.adt; index++) {
       let form = this.createBookingHotelPassengerForm(1);
-      form.controls['id'].setValue(data.bookingHotelDetails[0].bookingHotelPassengers[index].id);
-      form.controls['fullName'].setValue(data.bookingHotelDetails[0].bookingHotelPassengers[index].fullName);
-      form.controls['dateOfBirth'].setValue(new Date(data.bookingHotelDetails[0].bookingHotelPassengers[index].dateOfBirth));
-      form.controls['height'].setValue(data.bookingHotelDetails[0].bookingHotelPassengers[index].height);
-      form.controls['passengerType'].setValue(data.bookingHotelDetails[0].bookingHotelPassengers[index].passengerType);
+      form.controls['id'].setValue(data?.bookingHotelDetails[0]?.bookingHotelPassengers[index]?.id);
+      form.controls['fullName'].setValue(data?.bookingHotelDetails[0]?.bookingHotelPassengers[index]?.fullName);
+      form.controls['dateOfBirth'].setValue(new Date(data?.bookingHotelDetails[0]?.bookingHotelPassengers[index]?.dateOfBirth));
+      form.controls['height'].setValue(data?.bookingHotelDetails[0]?.bookingHotelPassengers[index]?.height);
+      form.controls['passengerType'].setValue(data?.bookingHotelDetails[0]?.bookingHotelPassengers[index]?.passengerType);
 
       this.detailHotelPassengerChdForm.push(form);
     }

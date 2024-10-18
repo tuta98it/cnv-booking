@@ -131,13 +131,13 @@
   <div *dxTemplate="let item of 'cellBtnTemplate'">
     <div style="display: flex;">
       <button title="Xem yêu cầu lưu trú" nz-button nzSize="small" nzType="default" class="btn-right button-update"
-        (click)="showDetailBookingHotel(item.data.id, 'add')">
+        (click)="showDetailBookingHotel(item.data?.id, 'add')">
         <span nz-icon nzType="eye" nzTheme="outline"></span>
       </button>
 
       <button *ngIf="item.data.bookingStatus === STATUS_LIST[3].value" title="Xem file xác nhận lưu trú" nz-button
         nzSize="small" nzType="default" class="btn-right button-update"
-        (click)="onConfirmSendEmailBookingHotel(item.data)">
+        (click)="onConfirmSendEmailBookingHotel(item?.data)">
         <span nz-icon nzType="file-pdf" nzTheme="outline"></span>
       </button>
 
