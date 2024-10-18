@@ -93,7 +93,7 @@ export class ConfirmReserveSeatHotelComponent implements OnInit {
               if (res.isValid) {
                 // this.notificationService.showNotification(Constant.SUCCESS, `Đã giữ phòng khách sạn thành công!`);
                 this.isReservedSuccess = true;
-                this.successMessenger = `Mã đặt phòng khách sạn : ${this.hotelBookingCurrent.bookingCode} đã được lưu lại trên hệ thống!`;
+                this.successMessenger = `Thông tin đặt dịch vụ của bạn đã được ghi nhận, VHL sẽ liên hệ đến bạn sớm nhất!`;
                 resolve(true);
               } else {
                 if (res.errors && res.errors.length > 0) {
