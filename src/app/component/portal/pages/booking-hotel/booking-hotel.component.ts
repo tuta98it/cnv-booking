@@ -87,7 +87,6 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   confirmBookingHotel = {
     textValueNoteConfirm: '',
     reservationCodeCodeConfirm: '',
-
   };
 
   systemCancelBookingHotel = {
@@ -163,7 +162,10 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   detailHotelPassengerChdForm: FormGroup[];
 
   orderForm: FormGroup;
-
+  pageIndex = 1;
+  pageSize: any;
+  defaultPageSize: any;
+  payload = {};
   constructor(
     private router: Router,
     private modalService: NzModalService,
@@ -261,12 +263,14 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
 
 
     this.contentFileConfirmBookingRoonHotel = ``;
+
+    this.pageSize = this.configService.getConfig().pageSize;
+    this.defaultPageSize = 20;
+    this.pageIndex = 1;
+    this.initTableHeight(1600);
   }
 
-  payload = {
-    page: 1,
-    pageSize: 1000
-  };
+
 
   ngOnInit(): void {
     this.getUserInfo();
@@ -295,8 +299,12 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   }
 
   getListData() {
+    const payload = {
+      page: this.pageIndex,
+      pageSize: this.defaultPageSize,
+    };
     this.loading = true;
-    this.generalService.getAdminBookingHotels(this.payload).subscribe(
+    this.generalService.getAdminBookingHotels(payload).subscribe(
       {
         next: (res: any) => {
           this.datas = res.data;
@@ -530,7 +538,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   private findDataBookingHotelInFormEditor(dataBookingHotel: any) {
     let patchDataBookingHotel = dataBookingHotel;
     // console.log(patchDataBookingHotel.bookingHotelDetails[0]);
-    
+
     this.imageLogoVHL = Constant.LOGO_VHL;
     return new Promise((resolve, reject) => {
       this.contentFileConfirmBookingRoonHotel = `<html lang="vi">
@@ -1647,7 +1655,15 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   statusOld = null;
   statusNew = null;
 
-  handleChangeStatusByItem(oldValue: number, newValue: number, dataFocus: any) {
+  async handleChangeStatusByItem(oldValue: number, newValue: number, dataFocus: any, dataItem = null) {
+    if (newValue === HotelBookingStatusEnum.Successful && dataItem) {
+      const res = await this.generalService.preCheckMoneyForConfirmBooking({id: dataItem.id}).toPromise();
+      if (!res.success) {
+        this.notificationService.showNotification(Constant.ERROR, res.message);
+        dataItem.bookingStatus = oldValue;
+        return;
+      }
+    }
     if (newValue === HotelBookingStatusEnum.Failure) {
       this.updateBookingHotelStatus(dataFocus.data.id, HotelBookingStatusEnum.Failure);
       return;
@@ -1693,6 +1709,29 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
           .then(() => console.log('Update successful'))
           .catch(error => console.log('Error updating booking status', error));
       }
+    });
+  }
+
+  preCheckMoneyForConfirmBooking(bookingHotelId) {
+    return new Promise((resolve, rejects) => {
+      this.generalService.preCheckMoneyForConfirmBooking(
+        {
+          id: bookingHotelId,
+        }
+      ).subscribe({
+        next: (res) => {
+          if (res.success) {
+            resolve(true);
+          } else {
+            resolve(res.message);
+          }
+        },
+        error: (error) => {
+          console.log(error);
+        },
+        complete: () => {
+        }
+      });
     });
   }
 
@@ -1793,12 +1832,12 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
     this.generalService.getBookingHotelById(idBookingHotel).subscribe({
       next: (res: any) => {
         if (res.isValid) {
-          this.dataDetailBookingHotel = res.data;
+          this.dataDetailBookingHotel = res?.data;
           if (type === 'add') {
-            this.showViewBookingHotel(res.data);
+            this.showViewBookingHotel(res?.data);
           } else {
-            this.showEditBookingHotel(res.data);
-            this.getRoomsByIdHotel(res.data.bookingHotelDetails[0].hotelId);
+            this.showEditBookingHotel(res?.data);
+            this.getRoomsByIdHotel(res?.data.bookingHotelDetails[0].hotelId);
           }
 
         } else {
@@ -1832,58 +1871,58 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   setFormDetailBookingHotel(data: any) {
 
     // set thông tin chung
-    this.detailBookingGeneralForm.controls['id'].setValue(data.id);
-    this.detailBookingGeneralForm.controls['otherRequirements'].setValue(data.otherRequirements);
-    this.detailBookingGeneralForm.controls['isUrgent'].setValue(data.isUrgent);
+    this.detailBookingGeneralForm.controls['id'].setValue(data?.id);
+    this.detailBookingGeneralForm.controls['otherRequirements'].setValue(data?.otherRequirements);
+    this.detailBookingGeneralForm.controls['isUrgent'].setValue(data?.isUrgent);
 
     // set thông tin người dặt vé
-    this.detailContactUserForm.controls['companyName'].setValue(data.companyName);
-    this.detailContactUserForm.controls['userCode'].setValue(data.userCode);
-    this.detailContactUserForm.controls['userFullName'].setValue(data.userFullName);
+    this.detailContactUserForm.controls['companyName'].setValue(data?.companyName);
+    this.detailContactUserForm.controls['userCode'].setValue(data?.userCode);
+    this.detailContactUserForm.controls['userFullName'].setValue(data?.userFullName);
 
     // set thông tin đặt phòng
 
     this.detailBookingRoomForm.controls['id'].setValue(data?.bookingHotelDetails[0]?.id);
-    this.detailBookingRoomForm.controls['hotelId'].setValue(data.bookingHotelDetails[0].hotelId);
-    this.detailBookingRoomForm.controls['inf'].setValue(data.bookingHotelDetails[0].inf);
-    this.detailBookingRoomForm.controls['price'].setValue(data.bookingHotelDetails[0].price);
-    this.detailBookingRoomForm.controls['adultSurcharge'].setValue(data.bookingHotelDetails[0].adultSurcharge);
-    this.detailBookingRoomForm.controls['childSurcharge'].setValue(data.bookingHotelDetails[0].childSurcharge);
-    this.detailBookingRoomForm.controls['extraBedPrice'].setValue(data.bookingHotelDetails[0].extraBedPrice);
-    this.detailBookingRoomForm.controls['totalPrice'].setValue(data.bookingHotelDetails[0].totalPrice);
+    this.detailBookingRoomForm.controls['hotelId'].setValue(data?.bookingHotelDetails[0]?.hotelId);
+    this.detailBookingRoomForm.controls['inf'].setValue(data?.bookingHotelDetails[0]?.inf);
+    this.detailBookingRoomForm.controls['price'].setValue(data?.bookingHotelDetails[0]?.price);
+    this.detailBookingRoomForm.controls['adultSurcharge'].setValue(data?.bookingHotelDetails[0]?.adultSurcharge);
+    this.detailBookingRoomForm.controls['childSurcharge'].setValue(data?.bookingHotelDetails[0]?.childSurcharge);
+    this.detailBookingRoomForm.controls['extraBedPrice'].setValue(data?.bookingHotelDetails[0]?.extraBedPrice);
+    this.detailBookingRoomForm.controls['totalPrice'].setValue(data?.bookingHotelDetails[0]?.totalPrice);
 
-    this.detailBookingRoomForm.controls['checkinDate'].setValue(new Date(data.bookingHotelDetails[0].checkinDate));
-    this.detailBookingRoomForm.controls['checkoutDate'].setValue(new Date(data.bookingHotelDetails[0].checkoutDate));
-    this.detailBookingRoomForm.controls['numberOfNights'].setValue(data.bookingHotelDetails[0].numberOfNights);
+    this.detailBookingRoomForm.controls['checkinDate'].setValue(new Date(data?.bookingHotelDetails[0]?.checkinDate));
+    this.detailBookingRoomForm.controls['checkoutDate'].setValue(new Date(data?.bookingHotelDetails[0]?.checkoutDate));
+    this.detailBookingRoomForm.controls['numberOfNights'].setValue(data?.bookingHotelDetails[0]?.numberOfNights);
     this.detailBookingRoomForm.controls['room'].setValue({
-      id: data.bookingHotelDetails[0].roomId,
-      name: data.bookingHotelDetails[0].roomName
+      id: data?.bookingHotelDetails[0].roomId,
+      name: data?.bookingHotelDetails[0].roomName
     });
-    this.detailBookingRoomForm.controls['amount'].setValue(data.bookingHotelDetails[0].amount);
-    this.detailBookingRoomForm.controls['adt'].setValue(data.bookingHotelDetails[0].adt);
-    this.detailBookingRoomForm.controls['chd'].setValue(data.bookingHotelDetails[0].chd);
-    this.detailBookingRoomForm.controls['extraBed'].setValue(data.bookingHotelDetails[0].extraBed);
-    this.detailBookingRoomForm.controls['approvalCode'].setValue(data.approvalCode);
+    this.detailBookingRoomForm.controls['amount'].setValue(data?.bookingHotelDetails[0]?.amount);
+    this.detailBookingRoomForm.controls['adt'].setValue(data?.bookingHotelDetails[0]?.adt);
+    this.detailBookingRoomForm.controls['chd'].setValue(data?.bookingHotelDetails[0]?.chd);
+    this.detailBookingRoomForm.controls['extraBed'].setValue(data?.bookingHotelDetails[0]?.extraBed);
+    this.detailBookingRoomForm.controls['approvalCode'].setValue(data?.approvalCode);
     // set giá trị thông tin người lưu trú (người lớn)
     let index = 0;
     for (; index < this.detailBookingRoomForm.value.adt; index++) {
       let form = this.createBookingHotelPassengerForm(0);
-      form.controls['id'].setValue(data.bookingHotelDetails[0].bookingHotelPassengers[index].id);
-      form.controls['fullName'].setValue(data.bookingHotelDetails[0].bookingHotelPassengers[index].fullName);
-      form.controls['phone'].setValue(data.bookingHotelDetails[0].bookingHotelPassengers[index].phone);
-      form.controls['email'].setValue(data.bookingHotelDetails[0].bookingHotelPassengers[index].email);
-      form.controls['passengerType'].setValue(data.bookingHotelDetails[0].bookingHotelPassengers[index].passengerType);
-      form.controls['jobTitle'].setValue(data.bookingHotelDetails[0].bookingHotelPassengers[index].jobTitle);
+      form.controls['id'].setValue(data?.bookingHotelDetails[0]?.bookingHotelPassengers[index]?.id);
+      form.controls['fullName'].setValue(data?.bookingHotelDetails[0]?.bookingHotelPassengers[index]?.fullName);
+      form.controls['phone'].setValue(data?.bookingHotelDetails[0]?.bookingHotelPassengers[index]?.phone);
+      form.controls['email'].setValue(data?.bookingHotelDetails[0]?.bookingHotelPassengers[index]?.email);
+      form.controls['passengerType'].setValue(data?.bookingHotelDetails[0]?.bookingHotelPassengers[index]?.passengerType);
+      form.controls['jobTitle'].setValue(data?.bookingHotelDetails[0]?.bookingHotelPassengers[index]?.jobTitle);
       this.detailHotelPassengerAdtForm.push(form);
     }
     // set giá trị thông tin người lưu trú (trẻ em)
     for (; index < this.detailBookingRoomForm.value.chd + this.detailBookingRoomForm.value.adt; index++) {
       let form = this.createBookingHotelPassengerForm(1);
-      form.controls['id'].setValue(data.bookingHotelDetails[0].bookingHotelPassengers[index].id);
-      form.controls['fullName'].setValue(data.bookingHotelDetails[0].bookingHotelPassengers[index].fullName);
-      form.controls['dateOfBirth'].setValue(new Date(data.bookingHotelDetails[0].bookingHotelPassengers[index].dateOfBirth));
-      form.controls['height'].setValue(data.bookingHotelDetails[0].bookingHotelPassengers[index].height);
-      form.controls['passengerType'].setValue(data.bookingHotelDetails[0].bookingHotelPassengers[index].passengerType);
+      form.controls['id'].setValue(data?.bookingHotelDetails[0]?.bookingHotelPassengers[index]?.id);
+      form.controls['fullName'].setValue(data?.bookingHotelDetails[0]?.bookingHotelPassengers[index]?.fullName);
+      form.controls['dateOfBirth'].setValue(new Date(data?.bookingHotelDetails[0]?.bookingHotelPassengers[index]?.dateOfBirth));
+      form.controls['height'].setValue(data?.bookingHotelDetails[0]?.bookingHotelPassengers[index]?.height);
+      form.controls['passengerType'].setValue(data?.bookingHotelDetails[0]?.bookingHotelPassengers[index]?.passengerType);
 
       this.detailHotelPassengerChdForm.push(form);
     }
@@ -2101,11 +2140,9 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   }
 
   addBookingRoomCodeId(booking: any, bookingRoomId: any) {
-    console.log(booking);
-
     this.generalService.confirmBooking({id: booking.id, reservationCode: bookingRoomId}).subscribe({
       next: (res) => {
-        if (res.success) {
+        if (res.isValid) {
           this.updateBookingHotelStatus(this.dataEmail.id, HotelBookingStatusEnum.Successful);
           this.generalService.getBookingHotelById(booking.id).subscribe({
             next: (resBooking) => {
@@ -2119,7 +2156,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
           });
         } else {
           this.getListData();
-          this.notificationService.showNotification(Constant.ERROR, res.message);
+          this.notificationService.showNotification(Constant.ERROR, res.errors[0].errorMessage);
         }
       },
       error: (error) => {
@@ -2161,12 +2198,12 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
     }
     this.generalService.confirmBooking({id: this.item.data.id, reservationCode: this.bookingRoomCodeForm.value.reservationCode}).subscribe({
       next: (res) => {
-        console.log('confirmBooking', res);
-        if (res.success) {
+        console.log('confirmBooking addBookingRoomCode', res);
+        if (res.isValid) {
           this.notificationService.showNotification(Constant.SUCCESS, 'Xác nhận đặt phòng thành công');
           this.updateBookingHotelStatus(this.item.data.id, HotelBookingStatusEnum.Successful);
         } else {
-          this.notificationService.showNotification(Constant.ERROR, res.message);
+          this.notificationService.showNotification(Constant.ERROR, res.errors[0].errorMessage);
         }
       },
       error: (error) => {
@@ -2258,5 +2295,17 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
       return '0 VNĐ';
     }
     return value.toLocaleString('vi-VN').replace(/,/g, '.') + ' VNĐ';
+  }
+  pageIndexChange($event: number) {
+    this.pageIndex = $event;
+    this.getListData();
+
+    console.log($event);
+  }
+
+  pageSizeChange($event: number) {
+    this.defaultPageSize = $event;
+    this.pageIndex = 1;
+    this.getListData();
   }
 }

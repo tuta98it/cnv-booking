@@ -7,7 +7,7 @@ import { ActionPartnerComponent } from './action-company/action-partner.componen
 import { DepositAccountComponent } from './action-company/deposit-account/deposit-account.component';
 import { ChangePasswordComponent } from './action-company/change-password/change-password.component';
 
-
+import {DevExtremeModule} from 'devextreme-angular';
 @NgModule({
   declarations: [
     ActionPartnerComponent,
@@ -16,6 +16,7 @@ import { ChangePasswordComponent } from './action-company/change-password/change
   ],
   imports: [
     SharedModule,
+    DevExtremeModule,
     PartnerRoutingModule
   ],
   providers: [GeneralService],

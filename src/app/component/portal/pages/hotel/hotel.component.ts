@@ -992,9 +992,9 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
 
   formatCurrencyVND(value) {
     if (!value) {
-      return '0 đ';
+      return '0 VNĐ';
     }
-    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' đ';
+    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' VNĐ';
   }
 
   onChangeActiveHotel(hotel: any) {

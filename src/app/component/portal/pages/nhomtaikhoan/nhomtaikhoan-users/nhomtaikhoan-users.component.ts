@@ -54,11 +54,11 @@ export class NhomtaikhoanUsersComponent implements OnInit, OnChanges {
       nzOnOk: () => this.removeUserFromGroup(id, this.nhomtaikhoan.id )
     });
   }
-  handleOk() {
+  addNewEmployeeInTitle() {
     const formValue = this.formAdd.value;
     this.addUserToGroup(formValue.userId, this.nhomtaikhoan.id);
   }
-  handleCancel() {
+  cancelModalEmployeeInTitle() {
     this.isVisible = false;
     this.closeModal.emit(true);
   }

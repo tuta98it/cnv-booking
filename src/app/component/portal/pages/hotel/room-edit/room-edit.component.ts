@@ -1,20 +1,20 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {FormBuilder, FormGroup, NgForm, Validators} from '@angular/forms';
-import {Constant} from '../../../../../shared/constants/constant.class';
-import {ActivatedRoute, Router} from '@angular/router';
-import {NzModalService} from 'ng-zorro-antd/modal';
-import {NotificationService} from '../../../../../service/notification.service';
-import {GeneralService} from '../../../../../service/general-service';
-import {ActionsSubject} from '@ngrx/store';
-import {AppConfigService} from '../../../../../../app-config.service';
-import {DateFormatPipe} from '../../../../../shared/pipe/format-date.pipe';
-import {NzImageService} from 'ng-zorro-antd/image';
-import {NzMessageService} from 'ng-zorro-antd/message';
-import {DataService} from '../../../../../service/data.service';
-import {PhoneUtils} from '../../../../../shared/utils/phone-utils.class';
-import {AreaUtils} from '../../../../../shared/utils/area-utils.class';
-import {forkJoin} from 'rxjs';
-import {NzUploadChangeParam, NzUploadFile} from 'ng-zorro-antd/upload';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
+import { Constant } from '../../../../../shared/constants/constant.class';
+import { ActivatedRoute, Router } from '@angular/router';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { NotificationService } from '../../../../../service/notification.service';
+import { GeneralService } from '../../../../../service/general-service';
+import { ActionsSubject } from '@ngrx/store';
+import { AppConfigService } from '../../../../../../app-config.service';
+import { DateFormatPipe } from '../../../../../shared/pipe/format-date.pipe';
+import { NzImageService } from 'ng-zorro-antd/image';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { DataService } from '../../../../../service/data.service';
+import { PhoneUtils } from '../../../../../shared/utils/phone-utils.class';
+import { AreaUtils } from '../../../../../shared/utils/area-utils.class';
+import { forkJoin } from 'rxjs';
+import { NzUploadChangeParam, NzUploadFile } from 'ng-zorro-antd/upload';
 
 @Component({
   selector: 'app-room-edit',
@@ -35,19 +35,20 @@ export class RoomEditComponent implements OnInit {
   isEdit = false;
   fileList: any[];
   roomFileIds: any[];
-  filterFromDate: string | null = null; 
+  filterFromDate: string | null = null;
   filterToDate: string | null = null;
   filteredPrices: any[] = [];
   statusPriceDetail: any[] = [];
   @ViewChild('myForm') myForm!: NgForm;
   isActiveChanged: any;
   isAvailableChanged: any;
-  
+
   priceValue: string = '';
   isAddRecordVisible = false;
   selectedRoomId: number;
   roomPriceForm: FormGroup;
   isLoading = false;
+  amenityCheckAll = false;
   constructor(
     private router: Router,
     private modalService: NzModalService,
@@ -86,7 +87,8 @@ export class RoomEditComponent implements OnInit {
       roomFileIds: [[]],
       prices: [[]],
       amenities: [[]],
-      priceByTime: [false]
+      priceByTime: [false],
+      amenityCheckAll: [false]
     });
     this.roomPriceForm = this.fb.group({
       title: [''],
@@ -107,6 +109,9 @@ export class RoomEditComponent implements OnInit {
       { name: 'Kích hoạt', value: true },
       { name: 'Vô hiệu hoá', value: false },
     ];
+    this.roomItem = {
+      isActive: true
+    };
   }
 
   ngOnInit(): void {
@@ -120,7 +125,7 @@ export class RoomEditComponent implements OnInit {
       console.log(resUtility.data);
       this.hotelItem = hotelItem;
       this.utilityGroupOptions = resUtility.data.map(en => {
-        return {label: en.name, value: en.id, checked: false};
+        return { label: en.name, value: en.id, checked: false };
       });
       if (this.roomId) {
         this.isEdit = true;
@@ -131,7 +136,7 @@ export class RoomEditComponent implements OnInit {
           amenities: this.utilityGroupOptions
         });
       }
-      
+
     });
 
     this.formAddRoom.controls.costPrice.valueChanges.subscribe(($event) => {
@@ -141,6 +146,13 @@ export class RoomEditComponent implements OnInit {
           price: parseFloat($event) * 1.06
         });
       }
+    });
+
+    this.formAddRoom.get('amenities')?.valueChanges.subscribe(value => {
+      this.amenityCheckAll = !this.utilityGroupOptions.map(en => en.checked).includes(false);
+      this.formAddRoom.patchValue({
+        amenityCheckAll: this.amenityCheckAll
+      });
     });
   }
 
@@ -201,7 +213,7 @@ export class RoomEditComponent implements OnInit {
   handleCancel() {
     this.formAddRoom.reset();
   }
-  handleCancelPopUp(){
+  handleCancelPopUp() {
     this.isAddRecordVisible = false;
     this.roomPriceForm.reset();
   }
@@ -225,8 +237,8 @@ export class RoomEditComponent implements OnInit {
     const formValue = this.formAddRoom.value;
 
     if (this.formAddRoom.invalid) {
-        this.notificationService.showNotification(Constant.ERROR, 'Tồn tại thông tin khách sạn chưa điền!');
-        return;
+      this.notificationService.showNotification(Constant.ERROR, 'Tồn tại thông tin khách sạn chưa điền!');
+      return;
     }
 
     const utilitieIds = this.formAddRoom.value.amenities.filter(en => en.checked).map(en => en.value);
@@ -241,39 +253,39 @@ export class RoomEditComponent implements OnInit {
     console.log(this.formAddRoom.value);
 
     if (formValue.id === 0 || formValue.id === undefined || formValue.id === null) {
-        delete formValue.id;
-        delete formValue.amenities;
-        formValue.hotelId = this.hotelId;
-        formValue.roomFileIds = this.roomFileIds;
+      delete formValue.id;
+      delete formValue.amenities;
+      formValue.hotelId = this.hotelId;
+      formValue.roomFileIds = this.roomFileIds;
 
-        this.generalService.addRoom(formValue).subscribe((res: any) => {
-            if (res.ret && res.ret[0].code !== 0) {
-                this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
-            } else {
-                // this.getListData();
-                this.notificationService.showNotification(Constant.SUCCESS, Constant.MESSAGE_ADD_SUCCESS);
-                this.roomId = res.jsonData;
-                this.router.navigate(['hotel/edit-room', this.hotelId, this.roomId]);
-            }
-        }, (error: any) => {
-        });
+      this.generalService.addRoom(formValue).subscribe((res: any) => {
+        if (res.ret && res.ret[0].code !== 0) {
+          this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
+        } else {
+          // this.getListData();
+          this.notificationService.showNotification(Constant.SUCCESS, Constant.MESSAGE_ADD_SUCCESS);
+          this.roomId = res.jsonData;
+          this.router.navigate(['hotel/edit-room', this.hotelId, this.roomId]);
+        }
+      }, (error: any) => {
+      });
     } else {
-        // / update
-        delete formValue.amenities;
-        this.generalService.updateRoomByID(formValue.id, formValue).subscribe((res: any) => {
-            if (res.ret && res.ret[0].code !== 0) {
-                this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
-            } else {
-                // this.getListData();
-                // this.router.navigate(['hotel']);
-                this.notificationService.showNotification(Constant.SUCCESS, Constant.MESSAGE_UPDATE_SUCCESS);
-            }
-        }, error => {
-        });
+      // / update
+      delete formValue.amenities;
+      this.generalService.updateRoomByID(formValue.id, formValue).subscribe((res: any) => {
+        if (res.ret && res.ret[0].code !== 0) {
+          this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
+        } else {
+          // this.getListData();
+          // this.router.navigate(['hotel']);
+          this.notificationService.showNotification(Constant.SUCCESS, Constant.MESSAGE_UPDATE_SUCCESS);
+        }
+      }, error => {
+      });
     }
-}
+  }
 
-  handleChangeImages({file, fileList}: NzUploadChangeParam, form: any): void {
+  handleChangeImages({ file, fileList }: NzUploadChangeParam, form: any): void {
     const status = file.status;
     if (status === 'done') {
       this.msg.success(`file ${file.name} tải lên thành công.`);
@@ -285,9 +297,8 @@ export class RoomEditComponent implements OnInit {
             this.fileList[this.fileList.length - 1].url = `${this.configService.getConfig().api.baseUrl}/${file.response.path1}`;
           }
         }, 0);
-        if (this.isEdit) {
-          this.roomFileIds.push(file.response.roomFileId);
-        }
+        this.roomFileIds.push(file.response.roomFileId);
+        console.log(this.roomFileIds);
       }
     } else if (status === 'error') {
       this.msg.error(`file ${file.name} tải lên không thành công. ${file.error.error.text}`);
@@ -310,7 +321,7 @@ export class RoomEditComponent implements OnInit {
                   } else if (res.code === 404) {
                     this.msg.error(`Không tìm thấy ảnh ${file.name}.`);
                   } else {
-                    this.msg.error(`Đã có lỗi xảy ra. Không thể xoá ảnh ${file.name}`);
+                    // this.msg.error(`Đã có lỗi xảy ra. Không thể xoá ảnh ${file.name}`);
                   }
                 });
               }
@@ -431,15 +442,15 @@ export class RoomEditComponent implements OnInit {
 
       return isAfterFromDate && isBeforeToDate;
     });
-}
+  }
   setActive(data: any) {
     data.isActive = !data.isActive;
-    this.isActiveChanged = data.isActive; 
-    this.generalService.setActiveRoom({roomId: data.id, isActive: data.isActive}).subscribe(
+    this.isActiveChanged = data.isActive;
+    this.generalService.setActiveRoom({ roomId: data.id, isActive: data.isActive }).subscribe(
       {
         next: (res) => {
           if (res.ret && res.ret[0].code !== 0) {
-            
+
             this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
           } else {
             this.notificationService.showNotification(Constant.SUCCESS, 'Cập nhật trạng thái phòng thành công');
@@ -459,79 +470,88 @@ export class RoomEditComponent implements OnInit {
     const newIsAvailable = !isAvaliableUpdate;
     this.isAvailableChanged = newIsAvailable;
     this.generalService.SetAvailableRoom({ roomId: roomID, isAvailable: newIsAvailable }).subscribe(
-        {
-            next: (res) => {
-                if (res.ret && res.ret[0].code !== 0) {
-                    this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
-                } else {
-                    this.roomItem.isAvailable = newIsAvailable; 
-                    this.notificationService.showNotification(Constant.SUCCESS, 'Cập nhật trạng thái phòng thành công');
-                }
-            },
-            error: (error) => {
-                this.notificationService.showNotification(Constant.ERROR, 'Cập nhật trạng thái phòng thất bại');
-            },
-            complete: () => {}
-        }
+      {
+        next: (res) => {
+          if (res.ret && res.ret[0].code !== 0) {
+            this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
+          } else {
+            this.roomItem.isAvailable = newIsAvailable;
+            this.notificationService.showNotification(Constant.SUCCESS, 'Cập nhật trạng thái phòng thành công');
+          }
+        },
+        error: (error) => {
+          this.notificationService.showNotification(Constant.ERROR, 'Cập nhật trạng thái phòng thất bại');
+        },
+        complete: () => { }
+      }
     );
-}
-openAddRecordPopup(roomId: number): void {
-  this.selectedRoomId = roomId;
-  this.isAddRecordVisible = true;
-}
-
-onAddRecord(): void {
-  if (!this.roomPriceForm.valid) {
-    console.error('Form is invalid');
-    return;
+  }
+  openAddRecordPopup(roomId: number): void {
+    this.selectedRoomId = roomId;
+    this.isAddRecordVisible = true;
   }
 
-  const newPriceDetail = {
-    id: 0,
-    roomId: this.selectedRoomId,
-    title: this.roomPriceForm.value.title,
-    price: this.roomPriceForm.value.price,
-    fromDate: this.roomPriceForm.value.fromDate,
-    toDate: this.roomPriceForm.value.toDate,
-    isUse: true
-  };
-
-  this.generalService.createRoomPriceDetail(newPriceDetail).subscribe({
-    next: (res) => {
-      if (res.isValid) {
-        this.notificationService.showNotification(Constant.SUCCESS, 'Tạo giá phòng thành công');
-        this.isAddRecordVisible = false;
-        this.roomPriceForm.reset();
-        this.binRoomDetail();
-      } else {
-        if (res.errors && res.errors.length > 0) { 
-          res.errors.forEach((error: any) => {
-            this.notificationService.showNotification(Constant.ERROR, error.errorMessage);
-          });
-        } else {
-          this.notificationService.showNotification(Constant.ERROR, 'Tạo giá phòng thất bại');
-        }
-      }
-    },
-    error: (error) => {
-      this.notificationService.showNotification(Constant.ERROR, 'Dữ liệu trả về đã gặp lỗi');
-    },
-    complete: () => {
+  onAddRecord(): void {
+    if (!this.roomPriceForm.valid) {
+      console.error('Form is invalid');
+      return;
     }
-  });
-}
-onPriceInput(event: any): void {
-  const inputValue = event.target.value.replace(/\D/g, '');
-  this.priceValue = this.formatCurrency(inputValue); 
 
-  this.roomPriceForm.get('price')?.setValue(inputValue, { emitEvent: false });
-}
+    const newPriceDetail = {
+      id: 0,
+      roomId: this.selectedRoomId,
+      title: this.roomPriceForm.value.title,
+      price: this.roomPriceForm.value.price,
+      fromDate: this.roomPriceForm.value.fromDate,
+      toDate: this.roomPriceForm.value.toDate,
+      isUse: true
+    };
 
-formatCurrency(value: string): string {
-  if (!value) return '';
-  return value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-}
-get f() {
-  return this.roomPriceForm.controls;
-}
+    this.generalService.createRoomPriceDetail(newPriceDetail).subscribe({
+      next: (res) => {
+        if (res.isValid) {
+          this.notificationService.showNotification(Constant.SUCCESS, 'Tạo giá phòng thành công');
+          this.isAddRecordVisible = false;
+          this.roomPriceForm.reset();
+          this.binRoomDetail();
+        } else {
+          if (res.errors && res.errors.length > 0) {
+            res.errors.forEach((error: any) => {
+              this.notificationService.showNotification(Constant.ERROR, error.errorMessage);
+            });
+          } else {
+            this.notificationService.showNotification(Constant.ERROR, 'Tạo giá phòng thất bại');
+          }
+        }
+      },
+      error: (error) => {
+        this.notificationService.showNotification(Constant.ERROR, 'Dữ liệu trả về đã gặp lỗi');
+      },
+      complete: () => {
+      }
+    });
+  }
+  onPriceInput(event: any): void {
+    const inputValue = event.target.value.replace(/\D/g, '');
+    this.priceValue = this.formatCurrency(inputValue);
+
+    this.roomPriceForm.get('price')?.setValue(inputValue, { emitEvent: false });
+  }
+
+  formatCurrency(value: string): string {
+    if (!value) return '';
+    return value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  }
+  get f() {
+    return this.roomPriceForm.controls;
+  }
+
+  onUserInteraction($event: Event) {
+    this.utilityGroupOptions.filter(en => {
+      en.checked = this.formAddRoom.get('amenityCheckAll')?.value;
+    });
+    this.formAddRoom.patchValue({
+      amenities: this.utilityGroupOptions
+    });
+  }
 }

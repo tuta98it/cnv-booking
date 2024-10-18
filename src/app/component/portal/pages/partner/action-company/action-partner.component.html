@@ -23,7 +23,7 @@
 
 
           <button *ngIf="itemPartner?.status == PartnerStatus.PendingApproval" nz-button nzType="default"
-            style="margin-right: 8px;" (click)="submitRequestForApprovalConfirmation()">
+            style="margin-right: 8px;" (click)="handleSubmitRequestForApprovalConfirmation()">
             <div style="display: flex; align-items: center;">
               <span nz-icon nzType="send"></span>
               <span style="margin-left: 6px; line-height: normal;">Phê duyệt</span>
@@ -76,7 +76,7 @@
             <span style="font-weight: 500; font-size: 18px;">Thông tin cơ bản</span>
             <div>
               <button *ngIf="isActiveEditBaseInfo.value" nz-button nzType="primary" style="margin-right: 8px;"
-                (click)="saveBaseInfoPartner()">
+                (click)="saveBaseInfoPartner(true)">
                 <div style="display: flex; align-items: center;">
                   <span nz-icon nzType="save"></span>
                   <span style="margin-left: 6px; line-height: normal;">Lưu lại</span>
@@ -259,7 +259,8 @@
                   style="display: flex; align-items: center; padding: 8px 0;">
                   <div nz-col class="gutter-row fs-xl" [nzSpan]="24"
                     style="display: flex; align-items: center; color: #007AFF;">
-                    {{debtBearingSales?.currentBalance ? (debtBearingSales?.currentBalance | currencyFormat) : '-' }} đ
+                    {{debtBearingSales?.currentBalance ? (debtBearingSales?.currentBalance | currencyFormat) : '-' }}
+                    VNĐ
                   </div>
                 </div>
                 <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
@@ -271,7 +272,7 @@
                 <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
                   style="display: flex; align-items: center; padding: 8px 0;">
                   <div nz-col class="gutter-row fs-xl" [nzSpan]="24" style="display: flex; align-items: center;">
-                    {{debtBearingSales?.debtMax ? (debtBearingSales?.debtMax | currencyFormat) : '-' }} đ
+                    {{debtBearingSales?.debtMax ? (debtBearingSales?.debtMax | currencyFormat) : '-' }} VNĐ
                   </div>
                 </div>
               </div>
@@ -290,13 +291,13 @@
                       {{debtBearingSales?.amountIncurredDuringPeriod ? (debtBearingSales?.amountIncurredDuringPeriod |
                       currencyFormat) :
                       '-'
-                      }} đ
+                      }} VNĐ
                     </span>
                     <span *ngIf="debtBearingSales?.amountIncurredDuringPeriod < 0" style="color: #900B09">
                       ({{debtBearingSales?.amountIncurredDuringPeriod ? (debtBearingSales?.amountIncurredDuringPeriod |
                       currencyFormat) :
                       '-'
-                      }} đ)
+                      }} VNĐ)
                     </span>
                   </div>
                 </div>
@@ -310,7 +311,7 @@
                   style="display: flex; align-items: center; padding: 8px 0;">
                   <div nz-col class="gutter-row fs-xl" [nzSpan]="24"
                     style="display: flex; align-items: center; color: #188D47">
-                    {{debtBearingSales?.usageLimit ? (debtBearingSales?.usageLimit | currencyFormat) : '-' }} đ
+                    {{debtBearingSales?.usageLimit ? (debtBearingSales?.usageLimit | currencyFormat) : '-' }} VNĐ
                   </div>
                 </div>
               </div>
@@ -328,7 +329,7 @@
                   <div nz-col class="gutter-row fs-xl" [nzSpan]="24"
                     style="display: flex; align-items: center; color:  #007AFF;">
                     {{debtFreeRevenue?.currentBalance ? (debtFreeRevenue?.currentBalance | currencyFormat) : '-' }}
-                    đ
+                    VNĐ
                   </div>
                 </div>
                 <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
@@ -341,7 +342,7 @@
                   style="display: flex; align-items: center; padding: 8px 0;">
                   <div nz-col class="gutter-row fs-xl" [nzSpan]="24" style="display: flex; align-items: center;">
                     {{debtFreeRevenue?.increaseInGeneration ? (debtFreeRevenue?.increaseInGeneration | currencyFormat) :
-                    '-' }} đ
+                    '-' }} VNĐ
                   </div>
                 </div>
               </div>
@@ -358,7 +359,7 @@
                   <div nz-col class="gutter-row fs-xl" [nzSpan]="24"
                     style="display: flex; align-items: center; color: #900B09;">
                     ({{debtFreeRevenue?.decreaseInGeneration
-                    ? (debtFreeRevenue?.decreaseInGeneration | currencyFormat) : '-' }} đ)
+                    ? (debtFreeRevenue?.decreaseInGeneration | currencyFormat) : '-' }} VNĐ)
                   </div>
                 </div>
                 <!-- <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
@@ -371,7 +372,7 @@
                   style="display: flex; align-items: center; padding: 8px 0;">
                   <div nz-col class="gutter-row fs-xl" [nzSpan]="24"
                     style="display: flex; align-items: center; color: #007AFF;">
-                    {{debtFreeRevenue?.endingBalance ? (debtFreeRevenue?.endingBalance | currencyFormat): '-' }} đ
+                    {{debtFreeRevenue?.endingBalance ? (debtFreeRevenue?.endingBalance | currencyFormat): '-' }} VNĐ
                   </div>
                 </div> -->
               </div>
@@ -398,7 +399,7 @@
             <span style="font-weight: 500; font-size: 16px;">Quản lý thông tin hợp đồng</span>
             <div>
               <button nz-button nzType="primary" style="margin-right: 8px;" [disabled]="!itemPartner?.id "
-                *ngIf="isEditBaseBusinessContract" (click)="saveUpdateContractInfoForPartner()">
+                *ngIf="isEditBaseBusinessContract" (click)="saveUpdateContractInfoForPartner(true)">
                 <div style="display: flex; align-items: center;">
                   <span nz-icon nzType="save"></span>
                   <span style="margin-left: 6px; line-height: normal;">Lưu lại</span>
@@ -595,14 +596,19 @@
                         <!-- <input style="border-radius: 4px;" nzSize="default" formControlName='debtMax' nz-input
                           type="text" placeholder="Nhập hạn mức tối đa"> -->
 
-                        <nz-input-group nzSuffix="VND">
+                        <!-- <nz-input-group nzSuffix="VND">
                           <input style="border-radius: 4px;" nz-input nzSize="default" formControlName="debtMax"
                             nz-tooltip nzTooltipTrigger="focus" nzTooltipPlacement="topLeft"
                             nzOverlayClassName="numeric-input" [nzTooltipTitle]="tooltipTitleAmount"
                             placeholder="Nhập hạn mức tối đa" (click)="onClickInputAmount($event, 'debtMax')"
                             (ngModelChange)="onChangeInputAmount($event, 'debtMax')"
                             (blur)="onBlurInputAmount('debtMax')">
-                        </nz-input-group>
+                        </nz-input-group> -->
+
+                        <dx-number-box  [min]="0" formControlName='debtMax' placeholder="Nhập hạn mức tối đa"
+                          format="#,##0 VNĐ"></dx-number-box>
+
+
                       </div>
                     </div>
 
@@ -617,7 +623,7 @@
                       <div nz-col class="gutter-row" [nzSpan]="12">
                         <!-- <input style="border-radius: 4px;" nzSize="default" formControlName='warningLimitPrice' nz-input
                           type="text" placeholder="Nhập hạn mức cảnh báo"> -->
-                        <nz-input-group nzSuffix="VND">
+                        <!-- <nz-input-group nzSuffix="VND">
                           <input style="border-radius: 4px;" nz-input nzSize="default"
                             formControlName="warningLimitPrice" nz-tooltip nzTooltipTrigger="focus"
                             nzTooltipPlacement="topLeft" nzOverlayClassName="numeric-input"
@@ -625,7 +631,10 @@
                             (click)="onClickInputAmount($event, 'warningLimitPrice')"
                             (ngModelChange)="onChangeInputAmount($event, 'warningLimitPrice')"
                             (blur)="onBlurInputAmount('warningLimitPrice')">
-                        </nz-input-group>
+                        </nz-input-group> -->
+
+                        <dx-number-box  [min]="0" formControlName='warningLimitPrice' placeholder="Nhập hạn mức cảnh báo"
+                          [max]="formBaseInfoCreatePartner.get('debtMax')?.value" format="#,##0 VNĐ"></dx-number-box>
                       </div>
                     </div>
 
@@ -638,9 +647,9 @@
                       </div>
                       <div nz-col class="gutter-row" [nzSpan]="12">
                         <!-- <input style="border-radius: 4px;" nzSize="default" formControlName='warningLimitPrice' nz-input
-                          type="text" placeholder="Nhập hạn mức cảnh báo"> -->
+                          type="text" placeholder="Số dư cảnh báo"> -->
 
-                        <nz-input-group nzSuffix="VND">
+                        <!-- <nz-input-group nzSuffix="VND">
                           <input style="border-radius: 4px;" nz-input nzSize="default"
                             formControlName="warningLimitPrice" nz-tooltip nzTooltipTrigger="focus"
                             nzTooltipPlacement="topLeft" nzOverlayClassName="numeric-input"
@@ -648,7 +657,11 @@
                             (click)="onClickInputAmount($event, 'warningLimitPrice')"
                             (ngModelChange)="onChangeInputAmount($event, 'warningLimitPrice')"
                             (blur)="onBlurInputAmount('warningLimitPrice')">
-                        </nz-input-group>
+                        </nz-input-group> -->
+
+                        <dx-number-box  [min]="0" formControlName='warningLimitPrice' placeholder="Số dư cảnh báo"
+                          format="#,##0 VNĐ"></dx-number-box>
+
                       </div>
                     </div>
 
@@ -867,7 +880,7 @@
             <div>
               <div>
                 Hạn mức sử dụng {{debtBearingSales?.usageLimit ? (debtBearingSales?.usageLimit | currencyFormat): '-' }}
-                đ / {{debtBearingSales?.debtMax ? (debtBearingSales?.debtMax | currencyFormat): '-' }} đ
+                VNĐ / {{debtBearingSales?.debtMax ? (debtBearingSales?.debtMax | currencyFormat): '-' }} VNĐ
 
               </div>
               <div>
@@ -887,18 +900,18 @@
               <span *ngIf="debtBearingSales?.beginningBalance >= 0">
                 {{debtBearingSales?.beginningBalance ? (debtBearingSales.beginningBalance | currencyFormat)
                 :
-                '-' }} đ
+                '-' }} VNĐ
               </span>
               <span *ngIf="debtBearingSales?.beginningBalance < 0" style="color: #900B09;">
                 ({{debtBearingSales?.beginningBalance ? ( -debtBearingSales.beginningBalance | currencyFormat)
                 :
-                '-' }}) đ
+                '-' }}) VNĐ
               </span>
             </div>
 
             <div>
               Phát sinh trong kỳ {{debtBearingSales?.amountIncurredDuringPeriod?
-              (debtBearingSales.amountIncurredDuringPeriod | currencyFormat): '-' }} đ
+              (debtBearingSales.amountIncurredDuringPeriod | currencyFormat): '-' }} VNĐ
             </div>
 
             <div>
@@ -906,12 +919,12 @@
               <span *ngIf="debtBearingSales?.endingBalance >= 0">
                 {{debtBearingSales?.endingBalance ? (debtBearingSales.endingBalance | currencyFormat)
                 :
-                '-' }} đ
+                '-' }} VNĐ
               </span>
               <span *ngIf="debtBearingSales?.endingBalance < 0" style="color: #900B09;">
                 ({{debtBearingSales?.endingBalance ? ( -debtBearingSales.endingBalance | currencyFormat)
                 :
-                '-' }}) đ
+                '-' }}) VNĐ
               </span>
             </div>
 
@@ -926,14 +939,14 @@
             style="display: flex; justify-content: space-between; align-items: center; font-size: 16px;">
             <div>
               Số dư hiện tại {{debtFreeRevenue?.currentBalance ? (debtFreeRevenue.currentBalance | currencyFormat):
-              '-' }} đ
+              '-' }} VNĐ
             </div>
 
             <div>
               Phát sinh tăng trong tháng {{debtFreeRevenue?.increaseInGeneration ? (debtFreeRevenue.increaseInGeneration
               |
               currencyFormat) :
-              '-' }} đ
+              '-' }} VNĐ
             </div>
 
             <div>
@@ -941,7 +954,7 @@
               <span style="color: #900B09;">
                 ({{debtFreeRevenue?.decreaseInGeneration ? (debtFreeRevenue.decreaseInGeneration |
                 currencyFormat) :
-                '-' }} đ)
+                '-' }} VNĐ)
               </span>
             </div>
 
@@ -951,12 +964,12 @@
               <span *ngIf="debtFreeRevenue?.endingBalance >= 0">
                 {{debtFreeRevenue?.endingBalance ? (debtFreeRevenue?.endingBalance | currencyFormat)
                 :
-                '-' }} đ
+                '-' }} VNĐ
               </span>
               <span *ngIf="debtFreeRevenue?.endingBalance < 0" style="color: #900B09;">
                 ({{debtFreeRevenue?.endingBalance ? ( -debtFreeRevenue?.endingBalance | currencyFormat)
                 :
-                '-' }}) đ
+                '-' }}) VNĐ
               </span>
             </div> -->
 
@@ -966,11 +979,11 @@
           <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px;">
             <span style="font-weight: 500; font-size: 16px;">Biến động số dư</span>
             <div style="display: flex; align-items: center;">
-              <button [nzLoading]="isLoadingBalanceFluctuationStatement" [disabled]="!itemPartner?.id" nz-button
+              <!-- <button [nzLoading]="isLoadingBalanceFluctuationStatement" [disabled]="!itemPartner?.id" nz-button
                 nzType="primary" style="margin-right: 0.5rem;"
                 (click)="downloadBalanceFluctuationStatementFile(itemPartner?.id)">
                 In bảng kê khai
-              </button>
+              </button> -->
 
               <button [disabled]="!itemPartner?.id " nz-button nzType="primary"
                 style="margin-right: 0.5rem; background-color: #3B82F6;" (click)="showModalDepositAccount()">
@@ -1011,26 +1024,37 @@
               (nzCurrentPageDataChange)="currentPageDataChangeBalanceFluctuation($event)">
               <thead>
                 <tr *ngIf="settingTableBalanceFluctuationValue.header">
-                  <th nzWidth="40px" [nzLeft]="fixedColumnBalanceFluctuation">STT</th>
+                  <!-- <th nzWidth="40px" [nzLeft]="fixedColumnBalanceFluctuation">STT</th>
                   <th [nzLeft]="fixedColumnBalanceFluctuation">Thời gian giao dịch</th>
                   <th>Người thực hiện</th>
                   <th>Số tiền phát sinh</th>
-                  <th>Nội dung giao dịch</th>
+                  <th>Nội dung giao dịch</th> -->
+
+
+                  <th *ngFor="let column of listOfColumnBalanceFluctuations" [nzWidth]="column.width"
+                    [nzAlign]="column.align" [nzSortOrder]="column.sortOrder" [nzSortFn]="column.sortFn"
+                    [nzSortDirections]="column.sortDirections" [nzShowFilter]="column.showFilter"
+                    [nzFilterMultiple]="column.filterMultiple" [nzFilters]="column.listOfFilter"
+                    [nzFilterFn]="column.filterFn">
+                    {{ column.name }}
+                  </th>
+
                 </tr>
               </thead>
               <tbody>
                 <ng-container *ngFor="let data of tagBalanceFluctuation.data">
                   <tr>
-                    <td [nzLeft]="fixedColumnBalanceFluctuation">
+                    <td [nzLeft]="fixedColumnBalanceFluctuation" style="text-align: center; align-items: center;">
                       {{ data.stt }}
                     </td>
                     <td [nzLeft]="fixedColumnBalanceFluctuation" [nzDisabled]="data.disabled">{{ data.transactionTime |
                       dateFormat : Constant.DATE_FMT_HOUR }}</td>
                     <td [nzDisabled]="data.disabled">{{ data.implementPersonInfo }}</td>
 
-                    <td [nzDisabled]="data.disabled" *ngIf="data.amount > 0">{{ (data.amount) | currencyFormat }} đ</td>
+                    <td [nzDisabled]="data.disabled" *ngIf="data.amount > 0">{{ (data.amount) | currencyFormat }} VNĐ
+                    </td>
                     <td [nzDisabled]="data.disabled" *ngIf="data.amount <= 0" style="color: #FF3B30;">({{ (0 -
-                      data.amount) | currencyFormat }}) đ</td>
+                      data.amount) | currencyFormat }}) VNĐ</td>
 
                     <td [nzDisabled]="data.disabled">{{ data.transactionContent}}</td>
                   </tr>
@@ -1085,6 +1109,7 @@
                   <th>Tên người sử dụng</th>
                   <th>Dịch vụ người dụng</th>
                   <th>Nội dung sử dụng</th>
+                  <th>Tổng tiền</th>
                 </tr>
               </thead>
               <tbody>
@@ -1101,6 +1126,7 @@
                     <td>{{ data.fullnamePassengers}}</td>
                     <td>{{ data.serviceUsedName}}</td>
                     <td>{{ data.usageContent }}</td>
+                    <td>{{ data.totalPice | currencyFormat }} VNĐ</td>
                   </tr>
                   <tr *ngIf="settingTableBusinessUsageHistoriesValue.expandable" [nzExpand]="data.expand">
                     <span>{{ data.description }}</span>

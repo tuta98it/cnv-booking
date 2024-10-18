@@ -662,9 +662,9 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
 
   formatCurrencyVND(value) {
     if (!value) {
-      return '0 đ';
+      return '0 VNĐ';
     }
-    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' đ';
+    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' VNĐ';
   }
 
   formatAllowDebt(value: any) {

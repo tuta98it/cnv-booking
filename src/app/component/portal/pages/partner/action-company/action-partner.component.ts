@@ -26,7 +26,7 @@ import { DatePipe } from '@angular/common';
 import { COLOR_USER_STATUS, TEXT_USER_STATUS, USER_STATUS_OPTIONS, UserStatus } from 'src/app/enums/user-status.enum';
 import { LockType } from 'src/app/enums/lock-type.enum';
 import { NzModalService } from 'ng-zorro-antd/modal';
-
+import { ColumnItem } from './../../../../../Interfaces/column-item.interface';
 // interface ItemData {
 //   name: string;
 //   age: number | string;
@@ -76,6 +76,74 @@ export class ActionPartnerComponent implements OnInit {
   actionPartnerVHL: any;
   settingTableListEmployeesForm: FormGroup;
   settingTableListBalanceFluctuationForm: FormGroup;
+  // <!-- <th nzWidth="40px" [nzLeft]="fixedColumnBalanceFluctuation">STT</th>
+  // <th [nzLeft]="fixedColumnBalanceFluctuation">Thời gian giao dịch</th>
+  // <th>Người thực hiện</th>
+  // <th>Số tiền phát sinh</th>
+  // <th>Nội dung giao dịch</th> -->
+  listOfColumnBalanceFluctuations: ColumnItem[] = [
+    {
+      name: 'STT',
+      align: 'center',
+      width: '100px',
+      sortOrder: null,
+      sortFn: (a: any, b: any) => a.stt - b.stt,
+      showFilter: false,
+      sortDirections: ['ascend', 'descend', null],
+      filterMultiple: false,
+      listOfFilter: [],
+      filterFn: null
+    },
+    {
+      name: 'Thời gian giao dịch',
+      align: 'left',
+      width: null,
+      sortOrder: 'null',
+      sortFn: (a: any, b: any) => a.transactionTime.localeCompare(b.transactionTime),
+      sortDirections: ['ascend', 'descend', null],
+      showFilter: false,
+      listOfFilter: [],
+      filterFn: null,
+      filterMultiple: true
+    },
+    {
+      name: 'Người thực hiện',
+      width: null,
+      align: 'left',
+      sortOrder: null,
+      sortDirections: ['ascend', 'descend', null],
+      sortFn: (a: any, b: any) => a.implementPersonInfo.localeCompare(b.implementPersonInfo),
+      showFilter: false,
+      filterMultiple: false,
+      listOfFilter: [],
+      filterFn: null,
+    },
+    {
+      name: 'Số tiền phát sinh',
+      width: null,
+      align: 'left',
+      sortOrder: null,
+      sortDirections: ['ascend', 'descend', null],
+      sortFn: (a: any, b: any) => a.amount - b.amount,
+      showFilter: false,
+      filterMultiple: false,
+      listOfFilter: [],
+      filterFn: null,
+    },
+    {
+      name: 'Số tiền phát sinh',
+      width: null,
+      align: 'left',
+      sortOrder: null,
+      sortDirections: ['ascend', 'descend', null],
+      sortFn: (a: any, b: any) => a.transactionContent.localeCompare(b.transactionContent),
+      showFilter: false,
+      filterMultiple: false,
+      listOfFilter: [],
+      filterFn: null,
+    }
+  ];
+
   settingTableBusinessUsageHistoriesForm: FormGroup;
   allCheckedEmployee = false;
   indeterminateEmployee = false;
@@ -182,8 +250,8 @@ export class ActionPartnerComponent implements OnInit {
       startTimeContractDate: new FormControl({ value: null, disabled: true }, Validators.required),
       endTimeContractDate: new FormControl({ value: null, disabled: true }, Validators.required),
       emailToReceiveInvoice: new FormControl({ value: null, disabled: true }, Validators.required),
-      paymentPeriodType: new FormControl({ value: null, disabled: true }, Validators.required),
-      dayOfPeriodType: new FormControl({ value: null, disabled: true }, Validators.required),
+      paymentPeriodType: [{ value: null, disabled: true }, [this.formBaseInfoCreatePartner.get('allowDebt')?.value == AllowDebtPartner.ALLOW ? Validators.required : Validators.nullValidator]],
+      dayOfPeriodType: [{ value: null, disabled: true }, [this.formBaseInfoCreatePartner.get('allowDebt')?.value == AllowDebtPartner.ALLOW ? Validators.required : Validators.nullValidator]],
       debtMax: [{ value: null, disabled: true }, [this.formBaseInfoCreatePartner.get('allowDebt')?.value == AllowDebtPartner.ALLOW ? Validators.required : Validators.nullValidator]],
       warningLimitPrice: [{ value: null, disabled: true }, [this.formBaseInfoCreatePartner.get('allowDebt')?.value == AllowDebtPartner.ALLOW ? Validators.required : Validators.nullValidator]],
 
@@ -202,7 +270,7 @@ export class ActionPartnerComponent implements OnInit {
       bordered: [false],
       loading: [false],
       pagination: [true],
-      sizeChanger: [false],
+      sizeChanger: [true],
       title: [false],
       header: [true],
       footer: [false],
@@ -224,7 +292,7 @@ export class ActionPartnerComponent implements OnInit {
       bordered: [false],
       loading: [false],
       pagination: [true],
-      sizeChanger: [false],
+      sizeChanger: [true],
       title: [false],
       header: [true],
       footer: [false],
@@ -246,7 +314,7 @@ export class ActionPartnerComponent implements OnInit {
       bordered: [false],
       loading: [false],
       pagination: [true],
-      sizeChanger: [false],
+      sizeChanger: [true],
       title: [false],
       header: [true],
       footer: [false],
@@ -419,7 +487,7 @@ export class ActionPartnerComponent implements OnInit {
           this.debtFreeRevenue = result.debtFreeRevenue
           this.listOfBalanceFluctuations = result.tableAccountBalancies;
           let stt = 0;
-          this.listOfBalanceFluctuations.forEach(en => {
+          this.listOfBalanceFluctuations?.forEach(en => {
             stt++;
             en.stt = stt;
           });
@@ -490,7 +558,7 @@ export class ActionPartnerComponent implements OnInit {
           this.debtFreeRevenue = result.debtFreeRevenue
           this.listOfBalanceFluctuations = result.tableAccountBalancies;
           let stt = 0;
-          this.listOfBalanceFluctuations.forEach(en => {
+          this.listOfBalanceFluctuations?.forEach(en => {
             stt++;
             en.stt = stt;
           });
@@ -629,7 +697,7 @@ export class ActionPartnerComponent implements OnInit {
   onBlurInputAmount(controlName?: string): void {
     if (this.valueInputNumberAmount.charAt(this.valueInputNumberAmount.length - 1) === '.' || this.valueInputNumberAmount === '-') {
       this.updateValueInputAmount(this.valueInputNumberAmount.slice(0, -1), controlName);
-      this.tooltipTitleAmount = "0 đ"
+      this.tooltipTitleAmount = "0 VNĐ"
     }
   }
 
@@ -651,7 +719,7 @@ export class ActionPartnerComponent implements OnInit {
   }
 
   updateTooltipTitleAmount(): void {
-    this.tooltipTitleAmount = ((this.valueInputNumberAmount !== '-' ? this.formatNumber(this.valueInputNumberAmount) : '-') || '0') + " đ";
+    this.tooltipTitleAmount = ((this.valueInputNumberAmount !== '-' ? this.formatNumber(this.valueInputNumberAmount) : '-') || '0') + " VNĐ";
   }
 
   formatNumber(value: string): string {
@@ -674,7 +742,7 @@ export class ActionPartnerComponent implements OnInit {
 
   private async resetFormBaseInfoCreatePartner(itemPartner: any) {
     this.formBaseInfoCreatePartner.reset({
-      status: { value: this.itemPartner?.status || PartnerStatus.CreatingProfile, disabled: this.actionPartnerVHL == ActionTypePageVHL.Create },
+      status: { value: this.itemPartner?.status != null || this.itemPartner?.status != undefined ? this.itemPartner?.status : PartnerStatus.Locked, disabled: this.actionPartnerVHL == ActionTypePageVHL.Create },
       code: this.itemPartner?.code || null,
       companyName: this.itemPartner?.companyName || null,
       taxCode: this.itemPartner?.taxCode || null,
@@ -748,6 +816,8 @@ export class ActionPartnerComponent implements OnInit {
       }
       this.listUploadContractFile.push(objPartner);
     }
+
+    this.changeAllowDebt();
   }
 
   private getPartnerById(partnerId: number): Promise<any> {
@@ -881,7 +951,7 @@ export class ActionPartnerComponent implements OnInit {
       this.debtFreeRevenue = result.debtFreeRevenue
       this.listOfBalanceFluctuations = result.tableAccountBalancies;
       let stt = 0;
-      this.listOfBalanceFluctuations.forEach(en => {
+      this.listOfBalanceFluctuations?.forEach(en => {
         stt++;
         en.stt = stt;
       });
@@ -1002,23 +1072,32 @@ export class ActionPartnerComponent implements OnInit {
     if (info.file.status === 'done') {
       this.listUploadEmployeeForPartnerFile = info.fileList;
       setTimeout(() => {
-        info.file.response.errors.forEach((error: any) => {
-          this.msg.error(`${error?.errorMessage ?? ""}`);
-        });
+
         if (info.file.response.isValid) {
-          this.msg.success(`${info.file.name} file tải lên thành công có thề tồn tại một vài nhân viên không đặt yê cầu.`);
+          info.file.response.errors.forEach((result: any) => {
+            const message = result?.errorMessage ?? "";
+            result.IsValid ? this.msg.success(message) : this.msg.error(message);
+          });
+
         } else {
-          this.msg.error(`${info.file.name} file tải đã gặp lỗi hoặc tất các nhân viên không đạt yêu cầu.`);
+          this.msg.error(`${info.file.response?.otherData ?? ""}`);
         }
 
+        // info.file.response.errors.forEach((error: any) => {
+        //   this.msg.error(`${error?.errorMessage ?? ""}`);
+        // });
+        // this.msg.success(`${info.file.name} file tải lên thành công có thề tồn tại một vài nhân viên không đặt yêu cầu.`);
+        // this.msg.error(`${info.file.name} file tải đã gặp lỗi hoặc tất các nhân viên không đạt yêu cầu.`);
         // if (this.listUploadEmployeeForPartnerFile.length > 0) {
         //   this.listUploadEmployeeForPartnerFile[this.listUploadEmployeeForPartnerFile.length - 1].uid = info.file.response.partnerFileId.toString();
         //   this.listUploadEmployeeForPartnerFile[this.listUploadEmployeeForPartnerFile.length - 1].url = `${this.configService.getConfig().api.baseUrl}/${info.file.response.path}`;
         // }
       }, 200);
+      this.getEmployeesByPartnerId();
     } else if (info.file.status === 'error') {
       this.msg.error(`${info.file.name} file tải lên thất bại.`);
     }
+
   }
 
   handleRemoveUploadAuthorizationFile = (file: NzUploadFile) => {
@@ -1148,7 +1227,7 @@ export class ActionPartnerComponent implements OnInit {
     }
   }
 
-  saveBaseInfoPartner(): Promise<any> {
+  saveBaseInfoPartner(isShowNotiySuccess: boolean): Promise<any> {
     return new Promise((resolve, rejects) => {
       this.formBaseInfoCreatePartner.enable();
       if (this.formBaseInfoCreatePartner.valid) {
@@ -1159,7 +1238,9 @@ export class ActionPartnerComponent implements OnInit {
         if (this.itemPartner?.id) {
           this.generalService.updateBaseInfoById(valueSave, this.itemPartner?.id).subscribe((res: any) => {
             if (res.isValid) {
-              this.notificationService.showNotification(Constant.SUCCESS, `Cập nhật thông tin doanh nghiệp thành công`);
+              if(isShowNotiySuccess){
+                this.notificationService.showNotification(Constant.SUCCESS, `Cập nhật thông tin doanh nghiệp thành công`);
+              }
               this.changeValueBaseBusinessContractReversal(true);
               this.itemPartner = res.data;
               this.resetFormBaseInfoCreatePartner(this.itemPartner);
@@ -1182,7 +1263,7 @@ export class ActionPartnerComponent implements OnInit {
         } else {
           this.generalService.addBaseInfoPartner(valueSave).subscribe((res: any) => {
             if (res.isValid) {
-              this.notificationService.showNotification(Constant.SUCCESS, `Tạo mới thông tin doanh nghiệp thành công`);
+              // this.notificationService.showNotification(Constant.SUCCESS, `Tạo mới thông tin doanh nghiệp thành công`);
               this.itemPartner = res.data;
               this.resetFormBaseInfoCreatePartner(this.itemPartner);
               // this.setIsActiveEditBaseInfo(this.itemPartner?.id == null);
@@ -1205,7 +1286,7 @@ export class ActionPartnerComponent implements OnInit {
         // Đánh dấu tất cả các trường là đã được chạm (touched) để hiển thị lỗi
         this.formBaseInfoCreatePartner.markAllAsTouched();
         // this.notificationService.showNotification(Constant.SUCCESS, "Tồn tại trường thông tin chưa được nhập");
-        this.msg.error(`Tồn tại trường thông tin chưa được nhập`);
+        this.msg.error(`Tồn tại trường thông tin cơ bản chưa được nhập`);
       }
     })
 
@@ -1288,7 +1369,7 @@ export class ActionPartnerComponent implements OnInit {
 
   }
 
-  saveUpdateContractInfoForPartner() {
+  saveUpdateContractInfoForPartner(isShowNotiySuccess: boolean) {
     return new Promise((resolve, reject) => {
       let partnerBusinessLicenseFileIds = this.listUploadBusinessLicenseFile?.map((bl: any) => bl.uid) ?? null;
       this.formBaseBusinessContractUpdate.controls['partnerBusinessLicenseFileIDs'].setValue(partnerBusinessLicenseFileIds);
@@ -1299,16 +1380,19 @@ export class ActionPartnerComponent implements OnInit {
       let partnerTypeOfServices = this.checkOptionsBusinessServiceVHL?.filter(option => option.checked).map(option => option.value) ?? null;
       this.formBaseBusinessContractUpdate.controls['typeOfServices'].setValue(JSON.stringify(partnerTypeOfServices));
 
+
+
       if (this.formBaseBusinessContractUpdate.valid) {
         if (this.formBaseInfoCreatePartner.get('allowDebt')?.value == AllowDebtPartner.NOT_ALLOW) {
           this.formBaseBusinessContractUpdate.controls['debtMax'].setValue(null);
-          this.formBaseBusinessContractUpdate.controls['warningLimitPrice'].setValue(null);
         }
         let valueSave = this.formBaseBusinessContractUpdate.value;
         if (this.itemPartner?.id) {
           this.generalService.updateContractInfoForPartner(this.itemPartner?.id, valueSave).subscribe((res: any) => {
             if (res.isValid) {
-              this.notificationService.showNotification(Constant.SUCCESS, `Cập nhật thông tin hợp đồng doanh nghiệp thành công`);
+              if(isShowNotiySuccess){
+                this.notificationService.showNotification(Constant.SUCCESS, `Cập nhật thông tin hợp đồng doanh nghiệp thành công`);
+              }
               this.changeValueBaseBusinessContractReversal();
               resolve(true);
             } else {
@@ -1331,7 +1415,7 @@ export class ActionPartnerComponent implements OnInit {
         // Đánh dấu tất cả các trường là đã được chạm (touched) để hiển thị lỗi
         this.formBaseInfoCreatePartner.markAllAsTouched();
         // this.notificationService.showNotification(Constant.SUCCESS, "Tồn tại trường thông tin chưa được nhập");
-        this.msg.error(`Tồn tại trường thông tin chưa được nhập`);
+        this.msg.error(`Tồn tại trường thông tin quản lý hợp đồng chưa được nhập`);
       }
     });
 
@@ -1372,6 +1456,8 @@ export class ActionPartnerComponent implements OnInit {
   downloadFileEmployeeForPartnerTemplate() {
     window.open(`${this.configService.getConfig().api.baseUrl}/Uploads/FileMau/file_mau_import_nhan_vien_30082024.xls`, '_blank')
   }
+
+
 
   downloadExcelEmployeeForPartner(partnerId?: number) {
     if (partnerId) {
@@ -1610,10 +1696,18 @@ export class ActionPartnerComponent implements OnInit {
     this.formBaseBusinessContractUpdate.get('warningLimitPrice')?.setValidators(
       allowDebt ? Validators.required : Validators.nullValidator
     );
+    this.formBaseBusinessContractUpdate.get('paymentPeriodType')?.setValidators(
+      allowDebt ? Validators.required : Validators.nullValidator
+    );
+    this.formBaseBusinessContractUpdate.get('dayOfPeriodType')?.setValidators(
+      allowDebt ? Validators.required : Validators.nullValidator
+    );
 
     // Update the validation state of the entire form
     this.formBaseBusinessContractUpdate.get('debtMax')?.updateValueAndValidity();
     this.formBaseBusinessContractUpdate.get('warningLimitPrice')?.updateValueAndValidity();
+    this.formBaseBusinessContractUpdate.get('paymentPeriodType')?.updateValueAndValidity();
+    this.formBaseBusinessContractUpdate.get('dayOfPeriodType')?.updateValueAndValidity();
 
 
 
@@ -1624,12 +1718,9 @@ export class ActionPartnerComponent implements OnInit {
 
 
   handleSendApprovalRequest() {
-    this.saveBaseInfoPartner().then((result) => {
-      this.saveUpdateContractInfoForPartner().then((result) => {
-        this.sendApprovalRequest().then((data) => {
-
-          this.setActionValuPage(data);
-        })
+    this.saveBaseInfoPartner(false).then((result) => {
+      this.sendApprovalRequest().then((data) => {
+        this.setActionValuPage(data);
       })
     })
   }
@@ -1675,7 +1766,7 @@ export class ActionPartnerComponent implements OnInit {
       this.generalService.sendApprovalRequest(this.itemPartner.id).subscribe({
         next: (res: any) => {
           if (res.isValid) {
-            this.notificationService.showNotification(Constant.SUCCESS, `Đã gửi yêu cầu phê duyệt doanh nghiệp ${this.itemPartner?.companyName ? this.itemPartner?.companyName : ""} thành công`);
+            this.notificationService.showNotification(Constant.SUCCESS, `Đã gửi yêu cầu phê duyệt doanh nghiệp ${this.itemPartner?.companyName ? this.itemPartner?.companyName : ""} `);
             this.itemPartner = res.data;
             this.resetFormBaseInfoCreatePartner(this.itemPartner);
             resolve(res.data);
@@ -1685,7 +1776,7 @@ export class ActionPartnerComponent implements OnInit {
                 this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
               });
             } else {
-              this.notificationService.showNotification(Constant.ERROR, `Gửi yêu cầu phê duyệt doanh nghiệp ${this.itemPartner?.companyName ? this.itemPartner?.companyName : ""} không thành công`);
+              this.notificationService.showNotification(Constant.ERROR, `Không thể gửi yêu cầu phê duyệt doanh nghiệp ${this.itemPartner?.companyName ? this.itemPartner?.companyName : ""}`);
             }
             reject(res.errors);
           }
@@ -1699,6 +1790,16 @@ export class ActionPartnerComponent implements OnInit {
         }
       });
     });
+  }
+
+  handleSubmitRequestForApprovalConfirmation() {
+    this.saveBaseInfoPartner(false).then((result) => {
+      this.saveUpdateContractInfoForPartner(false).then((result) => {
+        this.submitRequestForApprovalConfirmation().then((data) => {
+          this.setActionValuPage(data);
+        });
+      });
+    })
   }
 
   submitRequestForApprovalConfirmation(): Promise<any> {
@@ -1736,6 +1837,7 @@ export class ActionPartnerComponent implements OnInit {
   setActionValuPage(value: any): Promise<any> {
     return new Promise((resolve, reject) => {
       this.itemPartner = value;
+      this.resetFormBaseInfoCreatePartner(this.itemPartner);
       this.setActionPageByStatus(this.itemPartner?.status);
       resolve(value);
     })
@@ -1895,7 +1997,7 @@ export class ActionPartnerComponent implements OnInit {
             this.debtFreeRevenue = result.debtFreeRevenue
             this.listOfBalanceFluctuations = result.tableAccountBalancies;
             let stt = 0;
-            this.listOfBalanceFluctuations.forEach(en => {
+            this.listOfBalanceFluctuations?.forEach(en => {
               stt++;
               en.stt = stt;
             });
@@ -1917,4 +2019,5 @@ export class ActionPartnerComponent implements OnInit {
         break;
     }
   }
+
 }

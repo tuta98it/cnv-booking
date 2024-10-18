@@ -1510,3 +1510,9 @@ h1 {
   display: flex;
   align-items: center;
 }
+.grid-footer{
+  margin-top: 4px;
+}
+.ant-input[disabled].lock{
+  color: red !important;
+}

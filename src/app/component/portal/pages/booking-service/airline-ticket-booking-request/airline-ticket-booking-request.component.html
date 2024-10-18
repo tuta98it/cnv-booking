@@ -67,9 +67,10 @@
 
   <dxi-column caption="Trạng thái" dataField="status" cssClass="text-left vertical-align-middle"
     cellTemplate="cellStatus"></dxi-column>
-  <div *dxTemplate="let status of 'cellStatus'" style="display: flex;">
+  <div *dxTemplate="let status of 'cellStatus'" style="display: flex;" >
     <nz-select nzShowSearch nzMode="default" nzPlaceHolder="Trạng thái" style="width: 200px; margin-left: 0.5rem;"
-      [(ngModel)]="status.value" (ngModelChange)="handleChangeStatusByItem(status)">
+      [(ngModel)]="status.value" (ngModelChange)="handleChangeStatusByItem(status)" [title]="status.data.notes ? status.data.notes : ''">
+
       <nz-option [nzLabel]="'Gửi yêu cầu'" [nzValue]="BookingRequestStatusEnum.SubmitRequest" *ngIf="(
         status.value == BookingRequestStatusEnum.SubmitRequest ||
         status.value == BookingRequestStatusEnum.ReserveSeat
@@ -94,6 +95,10 @@
       <nz-option [nzLabel]="'Xuất vé'" [nzValue]="BookingRequestStatusEnum.IssuedTicket" *ngIf="(
         status.value == BookingRequestStatusEnum.IssuedTicket ||
         status.value == BookingRequestStatusEnum.ReceivedTicket)"></nz-option>
+
+      <nz-option [nzLabel]="'Xuất vé thất bại'" [nzValue]="BookingRequestStatusEnum.FailureTicket" *ngIf="(
+        status.value == BookingRequestStatusEnum.FailureTicket ||
+        status.value == BookingRequestStatusEnum.IssuedTicket)" ></nz-option>
     </nz-select>
     <!-- <container-element [ngSwitch]="status.value">
       <some-element *ngSwitchCase="AirlineTicketBookingRequestStatusEnum.SubmitRequest">
@@ -390,13 +395,16 @@
             </div>
             <div nz-col class="gutter-row" nzSpan="10">
               <div class="inner-box">
-                <nz-input-group nzSuffix="VND">
+                <!-- <nz-input-group nzSuffix="VND">
                   <input style="border-radius: 4px;" nz-input nzSize="default" formControlName="ticketPriceDeparture"
                     nz-tooltip nzTooltipTrigger="focus" nzTooltipPlacement="topLeft" nzOverlayClassName="numeric-input"
                     [nzTooltipTitle]="tooltipTitleAmount" placeholder="Nhập giá vé"
                     (click)="onClickInputAmount($event, 'ticketPriceDeparture')"
                     (ngModelChange)="onChangeInputAmount($event, 'ticketPriceDeparture')" (blur)="onBlurInputAmount('ticketPriceDeparture')">
-                </nz-input-group>
+                </nz-input-group> -->
+
+                <dx-number-box  [min]="0" formControlName='ticketPriceDeparture' placeholder="Nhập giá vé"
+                  format="#,##0 VNĐ"></dx-number-box>
 
               </div>
             </div>
@@ -407,14 +415,16 @@
             </div>
             <div nz-col class="gutter-row" nzSpan="9">
               <div class="inner-box">
-                <nz-input-group nzSuffix="VND">
+                <!-- <nz-input-group nzSuffix="VND">
                   <input style="border-radius: 4px;" nz-input nzSize="default" plaeholder=""
                     formControlName="baggageFeeDeparture" nz-tooltip nzTooltipTrigger="focus"
                     nzTooltipPlacement="topLeft" nzOverlayClassName="numeric-input"
                     [nzTooltipTitle]="tooltipTitleAmount" placeholder="Nhập phí hành lý"
                     (click)="onClickInputAmount($event, 'baggageFeeDeparture')"
                     (ngModelChange)="onChangeInputAmount($event, 'baggageFeeDeparture')" (blur)="onBlurInputAmount('baggageFeeDeparture')">
-                </nz-input-group>
+                </nz-input-group> -->
+                <dx-number-box  [min]="0" formControlName='baggageFeeDeparture' placeholder="Nhập phí hành lý"
+                  format="#,##0 VNĐ"></dx-number-box>
 
               </div>
             </div>
@@ -429,14 +439,17 @@
             </div>
             <div nz-col class="gutter-row" nzSpan="6">
               <div class="inner-box">
-                <nz-input-group nzSuffix="VND">
+                <!-- <nz-input-group nzSuffix="VND">
                   <input style="border-radius: 4px;" nz-input nzSize="default" placeholder=""
                     formControlName="refundFeeDeparture" nz-tooltip nzTooltipTrigger="focus"
                     nzTooltipPlacement="topLeft" nzOverlayClassName="numeric-input"
                     [nzTooltipTitle]="tooltipTitleAmount" placeholder="Nhập phí huỷ vé"
                     (click)="onClickInputAmount($event, 'refundFeeDeparture')"
                     (ngModelChange)="onChangeInputAmount($event, 'refundFeeDeparture')" (blur)="onBlurInputAmount('refundFeeDeparture')">
-                </nz-input-group>
+                </nz-input-group> -->
+
+                <dx-number-box  [min]="0" formControlName='refundFeeDeparture' placeholder="Nhập phí huỷ vé"
+                  format="#,##0 VNĐ"></dx-number-box>
 
               </div>
             </div>
@@ -447,14 +460,17 @@
             </div>
             <div nz-col class="gutter-row" nzSpan="6">
               <div class="inner-box">
-                <nz-input-group nzSuffix="VND">
+                <!-- <nz-input-group nzSuffix="VND">
                   <input style="border-radius: 4px;" nz-input nzSize="default" placeholder=""
                     formControlName="cancelFeeDeparture" nz-tooltip nzTooltipTrigger="focus"
                     nzTooltipPlacement="topLeft" nzOverlayClassName="numeric-input"
                     [nzTooltipTitle]="tooltipTitleAmount" placeholder="Nhập phí huỷ vé"
                     (click)="onClickInputAmount($event, 'cancelFeeDeparture')"
                     (ngModelChange)="onChangeInputAmount($event, 'cancelFeeDeparture')" (blur)="onBlurInputAmount('cancelFeeDeparture')">
-                </nz-input-group>
+                </nz-input-group> -->
+
+                <dx-number-box  [min]="0" formControlName='cancelFeeDeparture' placeholder="Nhập phí huỷ vé"
+                  format="#,##0 VNĐ"></dx-number-box>
 
               </div>
             </div>
@@ -465,13 +481,16 @@
             </div>
             <div nz-col class="gutter-row" nzSpan="6">
               <div class="inner-box">
-                <nz-input-group nzSuffix="VND">
+                <!-- <nz-input-group nzSuffix="VND">
                   <input style="border-radius: 4px;" nz-input nzSize="default" formControlName="changeFeeDeparture"
                     nz-tooltip nzTooltipTrigger="focus" nzTooltipPlacement="topLeft" nzOverlayClassName="numeric-input"
                     [nzTooltipTitle]="tooltipTitleAmount" placeholder="Nhập phí đổi vé"
                     (click)="onClickInputAmount($event, 'changeFeeDeparture')"
                     (ngModelChange)="onChangeInputAmount($event, 'changeFeeDeparture')" (blur)="onBlurInputAmount('changeFeeDeparture')">
-                </nz-input-group>
+                </nz-input-group> -->
+
+                <dx-number-box  [min]="0" formControlName='changeFeeDeparture' placeholder="Nhập phí đổi vé"
+                  format="#,##0 VNĐ"></dx-number-box>
 
               </div>
             </div>
@@ -564,13 +583,17 @@
             </div>
             <div nz-col class="gutter-row" nzSpan="10">
               <div class="inner-box">
-                <nz-input-group nzSuffix="VND">
+                <!-- <nz-input-group nzSuffix="VND">
                   <input style="border-radius: 4px;" nzSize="default" formControlName="ticketPriceReturn" nz-input
                     nz-tooltip nzTooltipTrigger="focus" nzTooltipPlacement="topLeft" nzOverlayClassName="numeric-input"
                     [nzTooltipTitle]="tooltipTitleAmount" placeholder="Nhập giá vé"
                     (click)="onClickInputAmount($event, 'ticketPriceReturn')"
                     (ngModelChange)="onChangeInputAmount($event, 'ticketPriceReturn')" (blur)="onBlurInputAmount('ticketPriceReturn')">
-                </nz-input-group>
+                </nz-input-group> -->
+
+                <dx-number-box  [min]="0" formControlName='ticketPriceReturn' placeholder="Nhập giá vé"
+                  format="#,##0 VNĐ"></dx-number-box>
+
               </div>
             </div>
             <div nz-col class="gutter-row" nzSpan="3">
@@ -580,13 +603,16 @@
             </div>
             <div nz-col class="gutter-row" nzSpan="9">
               <div class="inner-box">
-                <nz-input-group nzSuffix="VND">
+                <!-- <nz-input-group nzSuffix="VND">
                   <input style="border-radius: 4px;" nz-input nzSize="default" formControlName="baggageFeeReturn"
                     nz-tooltip nzTooltipTrigger="focus" nzTooltipPlacement="topLeft" nzOverlayClassName="numeric-input"
-                    [nzTooltipTitle]="tooltipTitleAmount" placeholder="Nhập thêm hành lý"
+                    [nzTooltipTitle]="tooltipTitleAmount" placeholder="Nhập phí thêm hành lý"
                     (click)="onClickInputAmount($event, 'baggageFeeReturn')"
                     (ngModelChange)="onChangeInputAmount($event, 'baggageFeeReturn')" (blur)="onBlurInputAmount('baggageFeeReturn')">
-                </nz-input-group>
+                </nz-input-group> -->
+
+                <dx-number-box  [min]="0" formControlName='baggageFeeReturn' placeholder="Nhập phí thêm hành lý"
+                  format="#,##0 VNĐ"></dx-number-box>
 
               </div>
             </div>
@@ -599,13 +625,16 @@
             </div>
             <div nz-col class="gutter-row" nzSpan="6">
               <div class="inner-box">
-                <nz-input-group nzSuffix="VND">
+                <!-- <nz-input-group nzSuffix="VND">
                   <input style="border-radius: 4px;" nz-input nzSize="default" formControlName="refundFeeReturn"
                     nz-input nz-tooltip nzTooltipTrigger="focus" nzTooltipPlacement="topLeft"
                     nzOverlayClassName="numeric-input" [nzTooltipTitle]="tooltipTitleAmount"
                     placeholder="Nhập phí hoàn vé" (click)="onClickInputAmount($event, 'refundFeeReturn')"
                     (ngModelChange)="onChangeInputAmount($event, 'refundFeeReturn')" (blur)="onBlurInputAmount('refundFeeReturn')">
-                </nz-input-group>
+                </nz-input-group> -->
+
+                <dx-number-box  [min]="0" formControlName='refundFeeReturn' placeholder="Nhập phí hoàn vé"
+                  format="#,##0 VNĐ"></dx-number-box>
 
               </div>
             </div>
@@ -616,13 +645,16 @@
             </div>
             <div nz-col class="gutter-row" nzSpan="6">
               <div class="inner-box">
-                <nz-input-group nzSuffix="VND">
+                <!-- <nz-input-group nzSuffix="VND">
                   <input style="border-radius: 4px;" nz-input nzSize="default" formControlName="cancelFeeReturn"
                     nz-tooltip nzTooltipTrigger="focus" nzTooltipPlacement="topLeft" nzOverlayClassName="numeric-input"
                     [nzTooltipTitle]="tooltipTitleAmount" placeholder="Nhập phí huỷ vé"
                     (click)="onClickInputAmount($event, 'cancelFeeReturn')"
                     (ngModelChange)="onChangeInputAmount($event, 'cancelFeeReturn')" (blur)="onBlurInputAmount('cancelFeeReturn')">
-                </nz-input-group>
+                </nz-input-group> -->
+
+                <dx-number-box  [min]="0" formControlName='cancelFeeReturn' placeholder="Nhập phí huỷ vé"
+                  format="#,##0 VNĐ"></dx-number-box>
 
               </div>
             </div>
@@ -633,13 +665,16 @@
             </div>
             <div nz-col class="gutter-row" nzSpan="6">
               <div class="inner-box">
-                <nz-input-group nzSuffix="VND">
+                <!-- <nz-input-group nzSuffix="VND">
                   <input style="border-radius: 4px;" nz-input nzSize="default" formControlName="changeFeeReturn"
                     nz-tooltip nzTooltipTrigger="focus" nzTooltipPlacement="topLeft" nzOverlayClassName="numeric-input"
                     [nzTooltipTitle]="tooltipTitleAmount" placeholder="Nhập phí đổi vé"
                     (click)="onClickInputAmount($event, 'changeFeeReturn')"
                     (ngModelChange)="onChangeInputAmount($event, 'changeFeeReturn')" (blur)="onBlurInputAmount('changeFeeReturn')">
-                </nz-input-group>
+                </nz-input-group> -->
+
+                <dx-number-box  [min]="0" formControlName='changeFeeReturn' placeholder="Nhập phí đổi vé"
+                  format="#,##0 VNĐ"></dx-number-box>
 
               </div>
             </div>
@@ -658,8 +693,8 @@
           <div nz-col class="gutter-row" nzSpan="22">
             <div class="inner-box">
               <div>
-                <nz-upload class="upload-list-inline" [nzMultiple]="true" [nzAction]="uploadUrlFlightTicket" nzName="postedFile"
-                  [nzHeaders]="uploadHeader" [nzRemove]="handleRemoveFileTicketBookingRequest"
+                <nz-upload class="upload-list-inline" [nzMultiple]="true" [nzAction]="uploadUrlFlightTicket"
+                  nzName="postedFile" [nzHeaders]="uploadHeader" [nzRemove]="handleRemoveFileTicketBookingRequest"
                   (nzChange)="handleUploadFileTicketBookingRequest1($event)" [nzFileList]="fileFlightTicketList"
                   [nzShowUploadList]="showUploadListOption">
                   <button *ngIf="optionAirlineTicketInfo == OptionAirlineTicketInfoEnum.Update" nz-button>
@@ -698,8 +733,8 @@
           <div nz-col class="gutter-row" nzSpan="22">
             <div class="inner-box">
               <div>
-                <nz-upload class="upload-list-inline" [nzMultiple]="true" [nzAction]="uploadUrlInvoice" nzName="postedFile"
-                  [nzHeaders]="uploadHeader" [nzRemove]="handleRemoveFileInvoiceBookingRequest"
+                <nz-upload class="upload-list-inline" [nzMultiple]="true" [nzAction]="uploadUrlInvoice"
+                  nzName="postedFile" [nzHeaders]="uploadHeader" [nzRemove]="handleRemoveFileInvoiceBookingRequest"
                   (nzChange)="handleUploadFileInvoiceBookingRequest1($event)" [nzFileList]="fileInvoiceList"
                   [nzShowUploadList]="showUploadListOption">
                   <button *ngIf="optionAirlineTicketInfo == OptionAirlineTicketInfoEnum.Update" nz-button>

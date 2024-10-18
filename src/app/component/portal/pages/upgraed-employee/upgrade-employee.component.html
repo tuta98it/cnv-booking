@@ -167,7 +167,7 @@
                     </div>
                     <div nz-col class="gutter-row" [nzSpan]="3" style="display: flex; align-items: center;">
                       CCCD
-                      <span style="color: tomato; margin-left: 4px;">*</span>
+                      <!-- <span style="color: tomato; margin-left: 4px;">*</span> -->
                     </div>
                     <div nz-col class="gutter-row" [nzSpan]="8">
                       <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
@@ -320,7 +320,7 @@
                 <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
                   style="display: flex; align-items: center; padding: 8px 0;">
                   <div nz-col class="gutter-row fs-xl box-center" [nzSpan]="24">
-                    {{amountOfMoneyUsed ? amountOfMoneyUsed : "-"}} đ
+                    {{amountOfMoneyUsed ? (amountOfMoneyUsed  | currencyFormat ): "-"}} VNĐ
                   </div>
                 </div>
               </div>

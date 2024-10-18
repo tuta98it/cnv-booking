@@ -6,13 +6,59 @@
       <img class="logo-image-vhl" src="/assets/image/logo-vhl-green.svg">
     </div>
     <div class="user-panel">
-      <a nz-dropdown [nzDropdownMenu]="menu" class="sl-user">
-        <nz-avatar nzIcon="user" nzSize="small"></nz-avatar>
-        <span style="margin-left: 4px;">
-          {{username}}
-        </span>
-        <span nz-icon nzType="down"></span>
-      </a>
+
+      <!-- <nz-button-group style="margin-right: 1rem ;">
+        <button nz-button nzShape="circle" class="circle-button" nz-dropdown [nzDropdownMenu]="menuTopNotify"
+          nzPlacement="bottomRight">
+          <span nz-icon nzType="bell"></span>
+        </button>
+      </nz-button-group> -->
+
+      <nz-dropdown-menu #menuTopNotify="nzDropdownMenu" class="menuTopNotifyCSS">
+        <div class="dropdown-container">
+          <div class="header">
+            <div class="title">Thông báo</div>
+            <div class="mark-read">
+              <span class="fa fa-check-double fa-fw"></span>
+              <span class="read-all">Đánh dấu đã đọc tất cả</span>
+            </div>
+          </div>
+          <ul nz-menu class="notifications-list">
+            <ng-container *ngFor="let tn of topNotifications; let i = index">
+              <li nz-menu-item class="notification-item" title="{{tn.contentNotification}}">
+                <div class="center-box">
+                  <div class="notification-content">
+                    <div class="notification-text">
+                      {{tn.contentNotification}}
+                    </div>
+                    <div class="notification-date">
+                      {{tn.datelog | dateFormat : Constant.DATE_FMT_HOUR }}
+                    </div>
+                  </div>
+                  <div class="notification-status">
+                    <span class="font-size-dot-read fa fa-circle fa-fw"></span>
+                  </div>
+                </div>
+              </li>
+            </ng-container>
+          </ul>
+          <div class="view-all-container">
+            <span class="read-all view-all">Xem toàn bộ thông báo</span>
+          </div>
+        </div>
+      </nz-dropdown-menu>
+
+
+      <nz-button-group>
+        <a nz-dropdown [nzDropdownMenu]="menu" class="sl-user">
+          <nz-avatar nzIcon="user" nzSize="small"></nz-avatar>
+          <span style="margin-left: 4px;">
+            {{username}}
+          </span>
+          <span nz-icon nzType="down"></span>
+        </a>
+      </nz-button-group>
+
       <nz-dropdown-menu #menu="nzDropdownMenu">
         <ul nz-menu nzSelectable>
           <li nz-menu-item (click)="logout()"><span class="fa fa-sign-out"></span>&nbsp;Đăng xuất</li>
@@ -254,7 +300,7 @@
 
       <!-- Menu trả về từ backend theoo quyền user -->
       <ul nz-menu nzTheme="" [nzMode]="modeMenu ? 'vertical' : 'inline'">
-        <div *ngFor="let menu of menus;let i = index;">
+        <ng-container *ngFor="let menu of menus;let i = index;">
           <li *ngIf="menu.children.length == 0" nz-menu-item [nzSelected]="url == '{{menu.path}}'">
             <i nz-icon nzType="{{menu.iconType}}"></i>
             <span>
@@ -264,7 +310,7 @@
 
           <li *ngIf="menu.children.length > 0" nz-submenu nzTitle="{{menu.name}}" nzIcon="{{menu.iconType}}">
             <ul>
-              <div *ngFor="let child of menu.children">
+              <ng-container *ngFor="let child of menu.children">
 
                 <li *ngIf="child.children.length == 0" nz-menu-item [nzSelected]="url == '{{child.path}}'">
                   <i nz-icon nzType="{{child.iconType}}"></i>
@@ -275,20 +321,20 @@
 
                 <li *ngIf="child.children.length > 0" nz-submenu nzTitle="{{child.name}}" nzIcon="{{child.iconType}}">
                   <ul>
-                    <div *ngFor="let grandchildren of child.children">
+                    <ng-container *ngFor="let grandchildren of child.children">
                       <li nz-menu-item [nzSelected]="url == '{{grandchildren.path}}'">
                         <i nz-icon nzType="{{grandchildren.iconType}}"></i>
                         <span>
                           <a routerLink="{{grandchildren.path}}">{{grandchildren.name}}</a>
                         </span>
                       </li>
-                    </div>
+                    </ng-container>
                   </ul>
                 </li>
-              </div>
+              </ng-container>
             </ul>
           </li>
-        </div>
+        </ng-container>
       </ul>
     </nz-sider>
     <nz-content>
@@ -321,7 +367,8 @@
           <label>Mã người dùng</label>
         </div>
         <div class="form-group col-md-10">
-          <input type="text" disabled class="form-control form-control-disabled form-control-lg" [(ngModel)]="selectionData.userCode">
+          <input type="text" disabled class="form-control form-control-disabled form-control-lg"
+            [(ngModel)]="selectionData.userCode">
         </div>
       </div>
       <div class="form-row align-items-center">
@@ -329,7 +376,8 @@
           <label>Họ và tên<span class="required">*</span></label>
         </div>
         <div class="form-group col-md-10">
-          <input type="text" class="form-control form-control-lg form-input-update" [(ngModel)]="selectionData.fullname">
+          <input type="text" class="form-control form-control-lg form-input-update"
+            [(ngModel)]="selectionData.fullname">
         </div>
       </div>
       <div class="form-row align-items-center">
@@ -337,7 +385,8 @@
           <label>Chức danh</label>
         </div>
         <div class="form-group col-md-10">
-          <input type="text" disabled class="form-control form-control-disabled form-control-lg" [(ngModel)]="selectionData.position">
+          <input type="text" disabled class="form-control form-control-disabled form-control-lg"
+            [(ngModel)]="selectionData.position">
         </div>
       </div>
       <div class="form-row align-items-center">
@@ -361,7 +410,8 @@
           <label>Quản lý trực tiếp</label>
         </div>
         <div class="form-group col-md-10">
-          <input type="text" disabled class="form-control form-control-disabled form-control-lg" [(ngModel)]="selectionData.directManagementUserName">
+          <input type="text" disabled class="form-control form-control-disabled form-control-lg"
+            [(ngModel)]="selectionData.directManagementUserName">
         </div>
       </div>
       <div class="form-row align-items-center">
@@ -369,7 +419,8 @@
           <label>Phòng ban</label>
         </div>
         <div class="form-group col-md-10">
-          <input type="text" disabled class="form-control form-control-disabled form-control-lg" [(ngModel)]="selectionData.department">
+          <input type="text" disabled class="form-control form-control-disabled form-control-lg"
+            [(ngModel)]="selectionData.department">
         </div>
       </div>
     </nz-tab>
@@ -379,30 +430,35 @@
           <label>Mật khẩu cũ<span class="required">*</span></label>
         </div>
         <div class="form-group col-md-9">
-          <input type="password" class="form-control form-control-lg form-input-update" placeholder="Nhập mật khẩu cũ" [(ngModel)]="selectionPassword.oldPassword">
+          <input type="password" class="form-control form-control-lg form-input-update" placeholder="Nhập mật khẩu cũ"
+            [(ngModel)]="selectionPassword.oldPassword">
         </div>
       </div>
-        <div class="form-row align-items-center justify-content-center">
-          <div class="form-group col-md-3">
-            <label>Mật khẩu mới<span class="required">*</span></label>
-          </div>
-          <div class="form-group col-md-9">
-            <input type="password" class="form-control form-control-lg form-input-update" placeholder="Nhập mật khẩu mới" [(ngModel)]="selectionPassword.password">
-          </div>
+      <div class="form-row align-items-center justify-content-center">
+        <div class="form-group col-md-3">
+          <label>Mật khẩu mới<span class="required">*</span></label>
         </div>
-        <div class="form-row align-items-center justify-content-center">
-          <div class="form-group col-md-3">
-            <label>Nhập lại mật khẩu<span class="required">*</span></label>
-          </div>
-          <div class="form-group col-md-9">
-            <input type="password" class="form-control form-control-lg form-input-update" placeholder="Nhập lại mật khẩu mới" [(ngModel)]="selectionPassword.repeatPassword">
-          </div>
+        <div class="form-group col-md-9">
+          <input type="password" class="form-control form-control-lg form-input-update" placeholder="Nhập mật khẩu mới"
+            [(ngModel)]="selectionPassword.password">
         </div>
+      </div>
+      <div class="form-row align-items-center justify-content-center">
+        <div class="form-group col-md-3">
+          <label>Nhập lại mật khẩu<span class="required">*</span></label>
+        </div>
+        <div class="form-group col-md-9">
+          <input type="password" class="form-control form-control-lg form-input-update"
+            placeholder="Nhập lại mật khẩu mới" [(ngModel)]="selectionPassword.repeatPassword">
+        </div>
+      </div>
     </nz-tab>
   </nz-tabset>
   <div *nzModalFooter>
-    <button nz-button (click)="handleCancel()" class="button-cancel"><span nz-icon nzType="close" nzTheme="outline"></span> {{'cancel' | translate }}</button>
-    <button [disabled]="isDisbled" nz-button  (click)="handleOk()" class="button-submit"><span nz-icon nzType="save" nzTheme="outline"></span> Lưu lại
+    <button nz-button (click)="handleCancel()" class="button-cancel"><span nz-icon nzType="close"
+        nzTheme="outline"></span> {{'cancel' | translate }}</button>
+    <button [disabled]="isDisbled" nz-button (click)="handleOk()" class="button-submit"><span nz-icon nzType="save"
+        nzTheme="outline"></span> Lưu lại
     </button>
   </div>
 </nz-modal>

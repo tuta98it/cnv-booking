@@ -15,6 +15,12 @@ export class ErrorInterceptor implements HttpInterceptor {
     req: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
+    const excludedUrl = '/confirm-reserve-seat'; // Định nghĩa route mà bạn muốn bỏ qua xác thực
+    const requestUrl = this.router.routerState.snapshot.url;
+    if (requestUrl.includes(excludedUrl)) {
+      // Bỏ qua kiểm tra xác thực cho route này
+      return next.handle(req);
+    }
     if (!req.headers.get('skipLoading')) {
       this.totalRequests++;
       this.loaderService.show();

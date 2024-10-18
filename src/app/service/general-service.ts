@@ -799,6 +799,9 @@ export class GeneralService extends BaseService {
   updateBookingHotelStatus(payload: any): Observable<any> {
     return this.post(`/api${UrlConstant.BOOKING_HOTEL}/UpdateBookingHotelStatus`, payload);
   }
+  preCheckMoneyForConfirmBooking(payload: any): Observable<any> {
+    return this.post(`/api${UrlConstant.BOOKING_HOTEL}/PreCheckMoneyForConfirmBooking`, payload);
+  }
   updateBookingHotel(payload: any): Observable<any> {
     return this.put(`/api${UrlConstant.BOOKING_HOTEL}/UpdateBookHotel`, payload);
   }

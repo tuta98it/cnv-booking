@@ -1,13 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { AirlineTicketBookingRequestStatus } from 'src/app/enums/airline-ticket-booking-request-status.enum';
-import { GeneralService } from 'src/app/service/general-service';
-import { NotificationService } from 'src/app/service/notification.service';
-import { Constant } from 'src/app/shared/constants/constant.class';
-import { FlightUtils } from 'src/app/shared/utils/flight-utils.class';
-import { MenuStateService } from 'src/app/shared/app-state/menu-state.service';
+import {Component, OnInit} from '@angular/core';
+import {Router} from '@angular/router';
+import {AirlineTicketBookingRequestStatus} from 'src/app/enums/airline-ticket-booking-request-status.enum';
+import {GeneralService} from 'src/app/service/general-service';
+import {NotificationService} from 'src/app/service/notification.service';
+import {Constant} from 'src/app/shared/constants/constant.class';
+import {FlightUtils} from 'src/app/shared/utils/flight-utils.class';
+import {MenuStateService} from 'src/app/shared/app-state/menu-state.service';
 
 @Component({
+  // tslint:disable-next-line:component-selector
   selector: 'confirm-reserve-seat',
   templateUrl: './confirm-reserve-seat.component.html',
   styleUrls: ['./confirm-reserve-seat.component.scss']
@@ -18,25 +19,30 @@ export class ConfirmReserveSeatComponent implements OnInit {
   requestBookingCurrent: any;
   airports: any;
   isReservedSuccess: boolean = null;
-  BookingRequestStatusEnum = AirlineTicketBookingRequestStatus
+  BookingRequestStatusEnum = AirlineTicketBookingRequestStatus;
   errorMessenger: any;
   successMessenger: any;
+  feToken: any;
+
   constructor(private router: Router,
-    private generalService: GeneralService,
-    private notificationService: NotificationService,
-    public flightUtils: FlightUtils,
-    private menuStateService: MenuStateService
-  ) { }
+              private generalService: GeneralService,
+              private notificationService: NotificationService,
+              public flightUtils: FlightUtils,
+              private menuStateService: MenuStateService
+  ) {
+  }
 
   ngOnInit(): void {
-    //this.menuStateService.dispatch(false);
     this.successMessenger = ``;
     const currentUrl = window.location.href;
     // Tạo một đối tượng URL từ URL hiện tại
     const url = new URL(currentUrl);
     // Lấy giá trị của tham số 'request-booking-id'
     this.requestBookingId = +url.searchParams.get('request-booking-id');
-
+    this.feToken = url.searchParams.get('token');
+    if (this.feToken) { // Trường hợp confirm từ fe
+      localStorage.setItem(Constant.TOKEN, this.feToken);
+    }
     this.getAirport().then((r) => {
       this.getRequestBookingByID().then((r) => {
         this.reserveSeateRequestBookingById(this.requestBookingId).then((r) => {
@@ -45,12 +51,6 @@ export class ConfirmReserveSeatComponent implements OnInit {
       });
     });
   }
-
-
-  ngAfterViewChecked() {
-
-  }
-
 
   getAirport() {
     return new Promise((resolve, reject) => {
@@ -88,8 +88,6 @@ export class ConfirmReserveSeatComponent implements OnInit {
           error: (err: any) => {
             this.notificationService.showNotification(Constant.ERROR, 'Lấy thông lượt đặt vé theo yêu cầu thất bại do lỗi hệ thống');
           },
-          complete: () => {
-          }
         }
       ).add(() => {
       });
@@ -99,32 +97,32 @@ export class ConfirmReserveSeatComponent implements OnInit {
 
   reserveSeateRequestBookingById(id: number) {
     return new Promise((resolve, reject) => {
-      if (this.requestBookingCurrent.status == this.BookingRequestStatusEnum.ReserveSeat || this.requestBookingCurrent.status == this.BookingRequestStatusEnum.AdjustTicket) {
+      if (this.requestBookingCurrent.status === this.BookingRequestStatusEnum.ReserveSeat || this.requestBookingCurrent.status === this.BookingRequestStatusEnum.AdjustTicket) {
         this.generalService.updateStatusRequestBooking(id, this.BookingRequestStatusEnum.ReceivedTicket).subscribe(
           {
             next: (res: any) => {
               if (res.isValid) {
                 // this.notificationService.showNotification(Constant.SUCCESS, `Đã giữ vé thành công!`);
                 this.isReservedSuccess = true;
-                this.successMessenger = `Mã đặt vé : ${this.requestBookingCurrent.bookingCode} đã được lưu lại trên hệ thống!`;
+                this.successMessenger = `Thông tin đặt vé của bạn đã được ghi nhận, VHL sẽ liên hệ đến bạn sớm nhất!`;
                 resolve(true);
               } else {
                 if (res.errors && res.errors.length > 0) {
                   res.errors.forEach((el: any) => {
                     this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
-                    this.errorMessenger = "Giữ vé không thành công. Vui lòng kiểm tra lại thông tin."
+                    this.errorMessenger = 'Giữ vé không thành công. Vui lòng kiểm tra lại thông tin.';
                     this.isReservedSuccess = false;
                   });
                 } else {
                   this.notificationService.showNotification(Constant.ERROR, 'Giữ vé không thành công.');
-                  this.errorMessenger = "Giữ vé không thành công. Vui lòng kiểm tra lại thông tin."
+                  this.errorMessenger = 'Giữ vé không thành công. Vui lòng kiểm tra lại thông tin.';
                   this.isReservedSuccess = false;
                 }
               }
             },
             error: (err: any) => {
               // this.notificationService.showNotification(Constant.ERROR, 'Giữ vé thất bại do lỗi hệ thống');
-              this.errorMessenger = "Giữ vé không thành công. Vui lòng kiểm tra lại đường truyền internet."
+              this.errorMessenger = 'Giữ vé không thành công. Vui lòng kiểm tra lại đường truyền internet.';
               this.isReservedSuccess = false;
             },
             complete: () => {
@@ -132,21 +130,20 @@ export class ConfirmReserveSeatComponent implements OnInit {
           }
         ).add(() => {
         });
-      } else if (this.requestBookingCurrent.status == this.BookingRequestStatusEnum.ReceivedTicket||
+      } else if (this.requestBookingCurrent.status == this.BookingRequestStatusEnum.ReceivedTicket ||
         this.requestBookingCurrent.status == this.BookingRequestStatusEnum.IssuedTicket
       ) {
         // this.notificationService.showNotification(Constant.SUCCESS, `Vé ${this.requestBookingCurrent.bookingCode} đã được xác nhận trước đó.`);
-        this.successMessenger = `Anh/chị đã thực hiện việc xác nhận trước đó hoặc vé đã được xác nhận thành công. Vui lòng truy cập lịch sử booking của dịch vụ để xem thêm thông tin chi tiết`;
+        this.successMessenger = `Yêu cầu đã được anh/chị xác nhận trước đó. Vui lòng thử lại sau!`;
         this.isReservedSuccess = true;
       } else if (this.requestBookingCurrent.status == this.BookingRequestStatusEnum.ExpiredTicket
       ) {
         // this.notificationService.showNotification(Constant.SUCCESS, `Vé ${this.requestBookingCurrent.bookingCode} đã được xác nhận trước đó.`);
         this.errorMessenger = `Đã quá thời hạn xác nhận vé. Anh/chị vui lòng truy cập Lịch sử booking dịch vụ để xem thông tin chi tiết`;
         this.isReservedSuccess = false;
-      }
-      else {
+      } else {
         // this.notificationService.showNotification(Constant.ERROR, 'Không thể xác nhận giữ vé');
-        this.errorMessenger = `Không thể xác nhận giữ vé. Vui lòng kiểm tra lại thông tin.`
+        this.errorMessenger = `Không thể xác nhận giữ vé. Vui lòng kiểm tra lại thông tin.`;
         this.isReservedSuccess = false;
       }
     });

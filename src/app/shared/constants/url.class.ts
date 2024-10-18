@@ -18,6 +18,8 @@ export class UrlConstant {
   public static readonly LIST_STAFF = '/staff';
   public static readonly LIST_WORKROLE = '/workRole';
 
+  public static readonly LIST_NOTIFY = '/Notification';
+
   /*Dinh duong*/
   public static readonly LIST_PHONG = '/department';
   public static readonly LIST_LOAIMON = '/loaimon';
@@ -79,5 +81,5 @@ export class UrlConstant {
   public static readonly AIRPORT = "/Airport";
 
   public static readonly ACCOUNT_DEPOSIT_HISTORIES = "/AccountDepositHistories";
-  
+
 }
