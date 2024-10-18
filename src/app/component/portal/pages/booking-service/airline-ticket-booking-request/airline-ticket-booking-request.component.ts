@@ -961,6 +961,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
         switch (this.newStatus) {
           case this.BookingRequestStatusEnum.ReserveSeat:
             this.ReserveSeatRequestBookingById(this.itemBookingRequest.id).then((result) => {
+              this.notificationService.showNotification(Constant.SUCCESS, "Cập nhật vé thành công");
               this.getListData();
               if (result) {
                 // this.isVisiblePopupUpdateNumberTicket = this.signalOpenPopupUpdateNumberTicket;
@@ -978,6 +979,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
 
           case this.BookingRequestStatusEnum.AdjustTicket:
             this.AdjuctTicketRequestBookingById(this.itemBookingRequest.id).then((r) => {
+              this.notificationService.showNotification(Constant.SUCCESS, "Cập nhật vé thành công");
               this.getListData();
               this.sendEmailToPassengerToConfirmFlightTicket(this.itemBookingRequest.id).then(() => {
                 // this.isSendEmailToPassengerToConfirmFlightTicket = false;
@@ -1015,16 +1017,40 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   updateRequestBooking(payload: any) {
     return new Promise((resolve, reject) => {
       this.generalService.updateRequestBooking(payload).subscribe(
-        (res: any) => {
-          if (res.ret && res.ret[0].code !== 0) {
-            this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
-          } else {
-            this.notificationService.showNotification(Constant.SUCCESS, "Cập nhật vé thành công");
-            resolve(true);
+        // (res: any) => {
+        //   if (res.ret && res.ret[0].code !== 0) {
+        //     this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
+        //   } else {
+        //     // this.notificationService.showNotification(Constant.SUCCESS, "Cập nhật vé thành công");
+        //     resolve(true);
+        //   }
+        // }, error => {
+        //   reject(error);
+        // }
+        {
+          next: (res) => {
+            if (res.isValid) {
+              resolve(res.data);
+            } else {
+              if (res.errors && res.errors.length > 0) {
+                reject(res.errors)
+                res.errors.forEach((el: any) => {
+                  this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+                });
+              } else {
+                this.notificationService.showNotification(Constant.ERROR, 'Cập nhật vé không thành công');
+              }
+            }
+          },
+          error: (error) => {
+            this.notificationService.showNotification(Constant.ERROR, 'Cập nhật thông tin vé phòng thật bại do lỗi hệ thống');
+          },
+
+          complete: () => {
           }
-        }, error => {
-          reject(error);
-        });
+        }
+
+      );
     });
 
   }
@@ -1137,7 +1163,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
               } else {
                 this.notificationService.showNotification(Constant.ERROR, 'Giữ chỗ không thành công.');
               }
-              resolve(false);
+              reject(res.errors);
             }
           },
           error: (err: any) => {
@@ -1167,7 +1193,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
               } else {
                 this.notificationService.showNotification(Constant.ERROR, 'Điều chỉnh vé không thành công.');
               }
-              resolve(false);
+              reject(res.errors);
             }
           },
           error: (err: any) => {
