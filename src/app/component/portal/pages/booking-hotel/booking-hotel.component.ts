@@ -2219,25 +2219,37 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   //#endregion thêm mã đặt phòng
 
   disabledStartDate = (current: Date): boolean => {
-    const checkoutDate = this.detailBookingRoomForm.value.checkoutDate;
-    return current && (current < this.today || (checkoutDate ? current >= new Date(checkoutDate) : false));
+    return current && current < this.today;
   };
 
   disabledEndDate = (current: Date): boolean => {
     const checkinDate = this.detailBookingRoomForm.value.checkinDate;
     return current && (current <= (checkinDate ? new Date(checkinDate) : this.today));
   };
-
+  updateCheckinDate() {
+    const checkinDate = this.detailBookingRoomForm.value.checkinDate;
+  
+    if (checkinDate) {
+      const checkin = new Date(checkinDate);
+      const nextDay = new Date(checkin);
+      nextDay.setDate(checkin.getDate() + 1);
+  
+      this.detailBookingRoomForm.patchValue({
+        checkoutDate: nextDay,  
+        numberOfNights: 1
+      });
+    }
+  }
   updateNumberOfNights() {
     const {checkinDate, checkoutDate} = this.detailBookingRoomForm.value;
-
+  
     if (checkinDate && checkoutDate) {
       const checkin = new Date(checkinDate);
       const checkout = new Date(checkoutDate);
       const numberOfNights = (checkout.getTime() - checkin.getTime()) / (1000 * 60 * 60 * 24);
-      this.detailBookingRoomForm.patchValue({numberOfNights});
+      this.detailBookingRoomForm.patchValue({ numberOfNights });
     } else {
-      this.detailBookingRoomForm.patchValue({numberOfNights: 0});
+      this.detailBookingRoomForm.patchValue({ numberOfNights: 0 });
     }
   }
 
