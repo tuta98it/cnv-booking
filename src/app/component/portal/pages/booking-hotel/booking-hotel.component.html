@@ -577,20 +577,25 @@
               <div class="inner-box">
                 <nz-form-label>Ngày nhận phòng <span style="color: tomato; margin-left: 4px;">(*)</span></nz-form-label>
                 <nz-form-control nzErrorTip="Không được để trống">
-                  <span *ngIf="this.modeViewEditStatus === 0">{{ detailBookingRoomForm.value.checkinDate | date: 'dd/MM/yyyy' }}</span>
+                  <span *ngIf="this.modeViewEditStatus === 0">
+                    {{ detailBookingRoomForm.value.checkinDate | date: 'dd/MM/yyyy' }}
+                  </span>
                   <nz-date-picker *ngIf="this.modeViewEditStatus === 1"
                                   formControlName="checkinDate"
-                                  (ngModelChange)="updateNumberOfNights()"
+                                  (ngModelChange)="updateCheckinDate()"
                                   [nzDisabledDate]="disabledStartDate">
                   </nz-date-picker>
                 </nz-form-control>
               </div>
             </div>
+          
             <div nz-col class="gutter-row" nzSpan="8">
               <div class="inner-box">
                 <nz-form-label>Ngày trả phòng <span style="color: tomato; margin-left: 4px;">(*)</span></nz-form-label>
                 <nz-form-control nzErrorTip="Không được để trống">
-                  <span *ngIf="this.modeViewEditStatus === 0">{{ detailBookingRoomForm.value.checkoutDate | date: 'dd/MM/yyyy'}} </span>
+                  <span *ngIf="this.modeViewEditStatus === 0">
+                    {{ detailBookingRoomForm.value.checkoutDate | date: 'dd/MM/yyyy' }}
+                  </span>
                   <nz-date-picker *ngIf="this.modeViewEditStatus === 1"
                                   formControlName="checkoutDate"
                                   (ngModelChange)="updateNumberOfNights()"
@@ -598,17 +603,23 @@
                   </nz-date-picker>
                 </nz-form-control>
               </div>
-            </div>            
+            </div>
+          
             <div nz-col class="gutter-row" nzSpan="8">
               <div class="inner-box">
                 <nz-form-label>Số đêm</nz-form-label>
                 <nz-form-control nzErrorTip="Không được để trống">
-                  <span *ngIf="this.modeViewEditStatus === 0">{{ detailBookingRoomForm.value.numberOfNights }}</span>
-                  <nz-input-number *ngIf="this.modeViewEditStatus === 1" [nzMin]="0" [nzStep]="1" formControlName="numberOfNights"></nz-input-number>
+                  <span *ngIf="this.modeViewEditStatus === 0">
+                    {{ detailBookingRoomForm.value.numberOfNights }}
+                  </span>
+                  <nz-input-number *ngIf="this.modeViewEditStatus === 1"
+                                   [nzMin]="0" [nzStep]="1" formControlName="numberOfNights">
+                  </nz-input-number>
                 </nz-form-control>
               </div>
             </div>
           </div>
+          
           <div class="pb-3" nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
             <div nz-col class="gutter-row" nzSpan="8">
               <div class="inner-box">
