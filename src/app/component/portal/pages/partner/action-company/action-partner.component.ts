@@ -1227,7 +1227,7 @@ export class ActionPartnerComponent implements OnInit {
     }
   }
 
-  saveBaseInfoPartner(): Promise<any> {
+  saveBaseInfoPartner(isShowNotiySuccess: boolean): Promise<any> {
     return new Promise((resolve, rejects) => {
       this.formBaseInfoCreatePartner.enable();
       if (this.formBaseInfoCreatePartner.valid) {
@@ -1238,7 +1238,9 @@ export class ActionPartnerComponent implements OnInit {
         if (this.itemPartner?.id) {
           this.generalService.updateBaseInfoById(valueSave, this.itemPartner?.id).subscribe((res: any) => {
             if (res.isValid) {
-              // this.notificationService.showNotification(Constant.SUCCESS, `Cập nhật thông tin doanh nghiệp thành công`);
+              if(isShowNotiySuccess){
+                this.notificationService.showNotification(Constant.SUCCESS, `Cập nhật thông tin doanh nghiệp thành công`);
+              }
               this.changeValueBaseBusinessContractReversal(true);
               this.itemPartner = res.data;
               this.resetFormBaseInfoCreatePartner(this.itemPartner);
@@ -1367,7 +1369,7 @@ export class ActionPartnerComponent implements OnInit {
 
   }
 
-  saveUpdateContractInfoForPartner() {
+  saveUpdateContractInfoForPartner(isShowNotiySuccess: boolean) {
     return new Promise((resolve, reject) => {
       let partnerBusinessLicenseFileIds = this.listUploadBusinessLicenseFile?.map((bl: any) => bl.uid) ?? null;
       this.formBaseBusinessContractUpdate.controls['partnerBusinessLicenseFileIDs'].setValue(partnerBusinessLicenseFileIds);
@@ -1388,7 +1390,9 @@ export class ActionPartnerComponent implements OnInit {
         if (this.itemPartner?.id) {
           this.generalService.updateContractInfoForPartner(this.itemPartner?.id, valueSave).subscribe((res: any) => {
             if (res.isValid) {
-              // this.notificationService.showNotification(Constant.SUCCESS, `Cập nhật thông tin hợp đồng doanh nghiệp thành công`);
+              if(isShowNotiySuccess){
+                this.notificationService.showNotification(Constant.SUCCESS, `Cập nhật thông tin hợp đồng doanh nghiệp thành công`);
+              }
               this.changeValueBaseBusinessContractReversal();
               resolve(true);
             } else {
@@ -1714,7 +1718,7 @@ export class ActionPartnerComponent implements OnInit {
 
 
   handleSendApprovalRequest() {
-    this.saveBaseInfoPartner().then((result) => {
+    this.saveBaseInfoPartner(false).then((result) => {
       this.sendApprovalRequest().then((data) => {
         this.setActionValuPage(data);
       })
@@ -1789,8 +1793,8 @@ export class ActionPartnerComponent implements OnInit {
   }
 
   handleSubmitRequestForApprovalConfirmation() {
-    this.saveBaseInfoPartner().then((result) => {
-      this.saveUpdateContractInfoForPartner().then((result) => {
+    this.saveBaseInfoPartner(false).then((result) => {
+      this.saveUpdateContractInfoForPartner(false).then((result) => {
         this.submitRequestForApprovalConfirmation().then((data) => {
           this.setActionValuPage(data);
         });

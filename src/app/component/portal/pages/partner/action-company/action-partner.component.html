@@ -76,7 +76,7 @@
             <span style="font-weight: 500; font-size: 18px;">Thông tin cơ bản</span>
             <div>
               <button *ngIf="isActiveEditBaseInfo.value" nz-button nzType="primary" style="margin-right: 8px;"
-                (click)="saveBaseInfoPartner()">
+                (click)="saveBaseInfoPartner(true)">
                 <div style="display: flex; align-items: center;">
                   <span nz-icon nzType="save"></span>
                   <span style="margin-left: 6px; line-height: normal;">Lưu lại</span>
@@ -399,7 +399,7 @@
             <span style="font-weight: 500; font-size: 16px;">Quản lý thông tin hợp đồng</span>
             <div>
               <button nz-button nzType="primary" style="margin-right: 8px;" [disabled]="!itemPartner?.id "
-                *ngIf="isEditBaseBusinessContract" (click)="saveUpdateContractInfoForPartner()">
+                *ngIf="isEditBaseBusinessContract" (click)="saveUpdateContractInfoForPartner(true)">
                 <div style="display: flex; align-items: center;">
                   <span nz-icon nzType="save"></span>
                   <span style="margin-left: 6px; line-height: normal;">Lưu lại</span>
