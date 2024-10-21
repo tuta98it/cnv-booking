@@ -27,6 +27,7 @@ import { COLOR_USER_STATUS, TEXT_USER_STATUS, USER_STATUS_OPTIONS, UserStatus } 
 import { LockType } from 'src/app/enums/lock-type.enum';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { ColumnItem } from './../../../../../Interfaces/column-item.interface';
+import { DownloadFileService } from 'src/app/service/download-file.service';
 // interface ItemData {
 //   name: string;
 //   age: number | string;
@@ -224,6 +225,9 @@ export class ActionPartnerComponent implements OnInit {
     private router: Router,
     private datePipe: DatePipe,
     private modalService: NzModalService,
+    private downloadFileService: DownloadFileService,
+
+
   ) {
 
     this.formBaseInfoCreatePartner = this.formBuilder.group({
@@ -1454,7 +1458,33 @@ export class ActionPartnerComponent implements OnInit {
     }
   }
   downloadFileEmployeeForPartnerTemplate() {
-    window.open(`${this.configService.getConfig().api.baseUrl}/Uploads/FileMau/file_mau_import_nhan_vien_30082024.xls`, '_blank')
+    return new Promise((resolve, reject) => {
+      this.downloadFileService.downloadEmployeeVHLSampleFileImport().subscribe(
+        {
+          next: (res: any) => {
+            if (res.isValid) {
+              var pathEmployeeVHLSampleFileImport = res.data;
+              window.open(`${this.configService.getConfig().api.baseUrl}/${pathEmployeeVHLSampleFileImport}`, '_blank');
+              resolve(true);
+            } else {
+              if (res.errors && res.errors.length > 0) {
+                res.errors.forEach((el: any) => {
+                  this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+                });
+              } else {
+              }
+              reject(res.errors);
+            }
+          },
+          error: (err: any) => {
+            reject(err);
+          },
+          complete: () => {
+          }
+        }
+      ).add(() => {
+      });
+    });
   }
 
 

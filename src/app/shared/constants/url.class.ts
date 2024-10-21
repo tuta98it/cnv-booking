@@ -19,6 +19,7 @@ export class UrlConstant {
   public static readonly LIST_WORKROLE = '/workRole';
 
   public static readonly LIST_NOTIFY = '/Notification';
+  public static readonly DOWNLOAD_FILE = '/DownloadFile';
 
   /*Dinh duong*/
   public static readonly LIST_PHONG = '/department';
