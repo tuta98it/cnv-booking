@@ -460,6 +460,10 @@ export class GeneralService extends BaseService {
   }
 
 
+  getImplementersByPartnerId(partnerId: number): Observable<any> {
+    return this.get(UrlConstant.LIST_USER + `/GetImplementersByPartnerId/${partnerId}`);
+  }
+
 
   // putAccountForPartner(id: any, newData: any) {
   //   return this.put(UrlConstant.LIST_USER + `/PutAccountForPartner/${id}`, newData);

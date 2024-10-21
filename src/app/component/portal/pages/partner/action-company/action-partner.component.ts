@@ -215,6 +215,7 @@ export class ActionPartnerComponent implements OnInit {
   listOfBusinessUsageHistories: any[];
 
   isLoadingBalanceFluctuationStatement = false;
+  listOfImolementers: any;
   constructor(
     private msg: NzMessageService,
     private activatedRoute: ActivatedRoute,
@@ -627,6 +628,8 @@ export class ActionPartnerComponent implements OnInit {
     });
 
     this.getEmployees();
+
+
   }
 
 
@@ -666,6 +669,10 @@ export class ActionPartnerComponent implements OnInit {
       this.listOfEmployees.forEach(e => {
         e.isLoadingResetPassword = false;
       });
+    });
+
+    this.getImplementersByPartnerId(this.itemPartner?.id).then((result: any) => {
+      this.listOfImolementers = result;
     });
   }
 
@@ -881,6 +888,29 @@ export class ActionPartnerComponent implements OnInit {
         }
       }, error => {
         this.notificationService.showNotification(Constant.ERROR, 'Lấy ra danh sách nhân viên doanh nghiệp thất bại do lỗi hệ thống');
+        reject(error);
+      });
+    });
+
+  }
+
+  private getImplementersByPartnerId(idPartner: number): Promise<any> {
+    this.settingTableEmployeesValue.loading = true;
+    return new Promise((resolve, reject) => {
+      this.generalService.getImplementersByPartnerId(idPartner).subscribe((res: any) => {
+        if (res.isValid) {
+          resolve(res.data);
+          this.settingTableEmployeesValue.loading = false;
+        } else {
+          if (res.errors && res.errors.length > 0) {
+            res.errors.forEach((el: any) => {
+              this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+            });
+          } else {
+          }
+          reject(res.errors);
+        }
+      }, error => {
         reject(error);
       });
     });
