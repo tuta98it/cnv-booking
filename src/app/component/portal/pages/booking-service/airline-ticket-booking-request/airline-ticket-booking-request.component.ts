@@ -628,10 +628,12 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
               } else {
                 this.notificationService.showNotification(Constant.ERROR, 'Thay đổi trạng thái không thành công');
               }
+              reject(res.errors);
             }
           },
           error: (err: any) => {
             this.notificationService.showNotification(Constant.ERROR, 'Thay đổi trạng thái thất bại do lỗi hệ thống');
+            reject(err);
           },
           complete: () => {
           }
@@ -955,7 +957,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
       this.isLoadingButtonSaveAirlineTicketInfo = true;
       this.updateRequestBooking(payload).then((result) => {
         this.isLoadingButtonSaveAirlineTicketInfo = false;
-        this.isVisibleAirlineTicketInfo = false;
+        // this.isVisibleAirlineTicketInfo = false;
         this.isSetSinalUpdateStatusRequestBooking = true;
         // Mở popup cập nhật số vé
         switch (this.newStatus) {
@@ -963,6 +965,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
             this.ReserveSeatRequestBookingById(this.itemBookingRequest.id).then((result) => {
               this.notificationService.showNotification(Constant.SUCCESS, "Cập nhật vé thành công");
               this.getListData();
+              this.isVisibleAirlineTicketInfo = false;
               if (result) {
                 // this.isVisiblePopupUpdateNumberTicket = this.signalOpenPopupUpdateNumberTicket;
                 // this.isVisiblePopupUpdateNumberTicket = false;
@@ -978,8 +981,71 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
             break;
 
           case this.BookingRequestStatusEnum.AdjustTicket:
+            this
+            if (payload) {
+              if (payload.typeTicket == TypeAirlineTicket.OneWay) {
+
+                var isValidateFile = true;
+                if (!payload?.refundFee) {
+                  this.msg.error("Phí hoàn vé không được để trống");
+                  isValidateFile = false;
+
+                }
+
+                if (!payload.cancelFee) {
+                  this.msg.error("Phí huỷ vé không được để trống");
+                  isValidateFile = false;
+                }
+
+                if (!payload.changeFee) {
+                  this.msg.error("Phí đổi vé không được để trống");
+                  isValidateFile = false;
+                }
+                if (!isValidateFile) {
+                  return;
+                }
+              } else if (payload.typeTicket == TypeAirlineTicket.RoundTrip) {
+                var isValidateFile = true;
+                if (!payload?.refundFee) {
+                  this.msg.error("Phí hoàn vé chiều đi không được để trống");
+                  isValidateFile = false;
+
+                }
+
+                if (!payload?.cancelFee) {
+                  this.msg.error("Phí huỷ vé chiều đi  không được để trống");
+                  isValidateFile = false;
+                }
+
+                if (!payload?.changeFee) {
+                  this.msg.error("Phí đổi vé chiều đi không được để trống");
+                  isValidateFile = false;
+                }
+
+                if (!payload?.returnRefundFee) {
+                  this.msg.error("Phí hoàn vé chiều về không được để trống");
+                  isValidateFile = false;
+
+                }
+
+                if (!payload.returnCancelFee) {
+                  this.msg.error("Phí huỷ vé chiều về  không được để trống");
+                  isValidateFile = false;
+                }
+
+                if (!payload.returnChangeFee) {
+                  this.msg.error("Phí đổi vé chiều về không được để trống");
+                  isValidateFile = false;
+                }
+
+                if (!isValidateFile) {
+                  return;
+                }
+              }
+            }
             this.AdjuctTicketRequestBookingById(this.itemBookingRequest.id).then((r) => {
               this.notificationService.showNotification(Constant.SUCCESS, "Cập nhật vé thành công");
+              this.isVisibleAirlineTicketInfo = false;
               this.getListData();
               this.sendEmailToPassengerToConfirmFlightTicket(this.itemBookingRequest.id).then(() => {
                 // this.isSendEmailToPassengerToConfirmFlightTicket = false;
@@ -995,6 +1061,21 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
             break;
 
           case this.BookingRequestStatusEnum.IssuedTicket:
+            var isValidateFile = true;
+            if (this.fileFlightTicketList == null || this.fileFlightTicketList == undefined || this.fileFlightTicketList?.length == 0) {
+              this.msg.error("File vé máy bay không được để trống");
+              isValidateFile = false;
+            }
+
+            if (this.fileInvoiceList == null || this.fileInvoiceList == undefined || this.fileInvoiceList?.length == 0) {
+              this.msg.error("File hoá đơn không được để trống");
+              isValidateFile = false;
+            }
+
+            if (!isValidateFile) {
+              return;
+            }
+            this.isVisibleAirlineTicketInfo = false;
             this.isVisiblePopupUpdateNumberTicket = true;
             break;
           default:
@@ -1002,8 +1083,9 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
         }
       }).catch((error) => {
         this.getListData();
+        this.isVisibleAirlineTicketInfo = true;
         this.isSetSinalUpdateStatusRequestBooking = true;
-      });;
+      });
 
     } else {
       // Đánh dấu tất cả các trường là đã được chạm (touched) để hiển thị lỗi
@@ -1093,7 +1175,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
       const passengersUpdatePayload = this.itemBookingRequest.passengers;
       let findPassengerError = passengersUpdatePayload.find(passenger => !passenger.ticketNumber);
       if (findPassengerError) {
-        this.notificationService.showNotification(Constant.ERROR, "Tồn tại trường số vé chưa nhập");
+        this.msg.error("Tồn tại trường số vé chưa nhập");
       } else {
         this.generalService.updatePassengerRequestBookings({ passengers: passengersUpdatePayload }).subscribe(
           {
