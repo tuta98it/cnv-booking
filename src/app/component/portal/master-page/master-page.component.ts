@@ -105,8 +105,7 @@ export class MasterPageComponent implements OnInit, OnDestroy {
   QUAN_LY_DANH_MUC: boolean;
   tinhThanhs = [];
   isCollapsed = false;
-  topNotifications: any = null;
-  totalTopNotifications: number = 0;
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -182,7 +181,7 @@ export class MasterPageComponent implements OnInit, OnDestroy {
         this.router.navigate(['/login']);
       }
     });
-    this.getTopNotifications();
+
     this.DANH_MUC_TB = this.checkPermission(Constant.DANH_MUC_TB);
     this.TONG_HOP_TB = this.checkPermission(Constant.TONG_HOP_TB);
     this.KIEM_DINH_TB = this.checkPermission(Constant.KIEM_DINH_TB);
@@ -203,18 +202,6 @@ export class MasterPageComponent implements OnInit, OnDestroy {
     if (this.sub) {
       this.sub.unsubscribe();
     }
-  }
-
-  private getTopNotifications() {
-    this.notificationAPIService.getTopNotifications().subscribe(res => {
-      if (res !== null) {
-        this.topNotifications = res.data;
-        this.totalTopNotifications = res.total;
-      }
-    }, error => {
-      this.topNotifications = [];
-      this.totalTopNotifications = 0;
-    });
   }
 
   private getPageInfo() {
@@ -303,4 +290,8 @@ export class MasterPageComponent implements OnInit, OnDestroy {
 
     });
   }
+
+  // readedNotifyById(tn.id) {
+
+  // }
 }

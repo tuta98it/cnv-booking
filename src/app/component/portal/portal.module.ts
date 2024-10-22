@@ -40,6 +40,7 @@ import {UtilitRoomComponent} from './pages/utility/utility-room/utility-room.com
 import {NzIconModule} from 'ng-zorro-antd/icon';
 import {UploadService} from 'src/app/service/upload-service';
 import {DxButtonModule, DxDataGridModule, DxNumberBoxModule, DxTabPanelModule} from 'devextreme-angular';
+import { TopNotificationComponent } from './master-page/top-notification/top-notification.component';
 
 
 @NgModule({
@@ -61,6 +62,7 @@ import {DxButtonModule, DxDataGridModule, DxNumberBoxModule, DxTabPanelModule} f
     UtilitHotelComponent,
     UtilitRoomComponent,
     DataHotelsComponent,
+    TopNotificationComponent,
   ],
   imports: [
     RouterModule.forChild([]),

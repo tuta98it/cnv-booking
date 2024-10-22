@@ -7,47 +7,9 @@
     </div>
     <div class="user-panel">
 
-      <!-- <nz-button-group style="margin-right: 1rem ;">
-        <button nz-button nzShape="circle" class="circle-button" nz-dropdown [nzDropdownMenu]="menuTopNotify"
-          nzPlacement="bottomRight">
-          <span nz-icon nzType="bell"></span>
-        </button>
-      </nz-button-group> -->
+      <app-top-notification>
 
-      <nz-dropdown-menu #menuTopNotify="nzDropdownMenu" class="menuTopNotifyCSS">
-        <div class="dropdown-container">
-          <div class="header">
-            <div class="title">Thông báo</div>
-            <div class="mark-read">
-              <span class="fa fa-check-double fa-fw"></span>
-              <span class="read-all">Đánh dấu đã đọc tất cả</span>
-            </div>
-          </div>
-          <ul nz-menu class="notifications-list">
-            <ng-container *ngFor="let tn of topNotifications; let i = index">
-              <li nz-menu-item class="notification-item" title="{{tn.contentNotification}}">
-                <div class="center-box">
-                  <div class="notification-content">
-                    <div class="notification-text">
-                      {{tn.contentNotification}}
-                    </div>
-                    <div class="notification-date">
-                      {{tn.datelog | dateFormat : Constant.DATE_FMT_HOUR }}
-                    </div>
-                  </div>
-                  <div class="notification-status">
-                    <span class="font-size-dot-read fa fa-circle fa-fw"></span>
-                  </div>
-                </div>
-              </li>
-            </ng-container>
-          </ul>
-          <div class="view-all-container">
-            <span class="read-all view-all">Xem toàn bộ thông báo</span>
-          </div>
-        </div>
-      </nz-dropdown-menu>
-
+      </app-top-notification>
 
       <nz-button-group>
         <a nz-dropdown [nzDropdownMenu]="menu" class="sl-user">
