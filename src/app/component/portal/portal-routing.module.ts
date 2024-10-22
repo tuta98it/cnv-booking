@@ -191,6 +191,14 @@ const routes: Routes = [
           breadcrumb: 'Tiện ích phòng'
         }
       },
+      {
+        path: 'notifications',
+        loadChildren: () => import('./pages/notifications/notifications.module').then(m => m.NotificationsModule),
+        data: {
+          pagename: 'Trang chủ',
+          breadcrumb: 'Danh sách thông báo'
+        }
+      },
     ]
   },
 ];

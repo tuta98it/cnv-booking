@@ -41,6 +41,7 @@ import {NzIconModule} from 'ng-zorro-antd/icon';
 import {UploadService} from 'src/app/service/upload-service';
 import {DxButtonModule, DxDataGridModule, DxNumberBoxModule, DxTabPanelModule} from 'devextreme-angular';
 import { TopNotificationComponent } from './master-page/top-notification/top-notification.component';
+import { NotificationsComponent } from './pages/notifications/notifications.component';
 
 
 @NgModule({
@@ -63,6 +64,7 @@ import { TopNotificationComponent } from './master-page/top-notification/top-not
     UtilitRoomComponent,
     DataHotelsComponent,
     TopNotificationComponent,
+    NotificationsComponent,
   ],
   imports: [
     RouterModule.forChild([]),

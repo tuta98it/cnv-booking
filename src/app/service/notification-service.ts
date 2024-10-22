@@ -23,4 +23,12 @@ export class NotificationAPIService extends BaseService {
       "ids": ids,
     });
   }
+
+  getAllNotifications(): Observable<any> {
+    return this.post(`/api${UrlConstant.LIST_NOTIFY}/GetAllUserNotification`,{
+      "page": 1,
+      "pageSize": 1000,
+      "readed": null,
+    });
+  }
 }

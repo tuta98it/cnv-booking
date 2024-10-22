@@ -84,6 +84,11 @@ export class TopNotificationComponent implements OnInit {
     });
   }
 
+  public handleNavigatePageNotifications(){
+    this.router.navigate(['/notifications']);
+  }
+
+
   private readedNotificationByIds(idNotifications: number[]) {
     return new Promise((resolve, reject) => {
       this.notificationAPIService.readNotificationByIds(idNotifications).subscribe(
