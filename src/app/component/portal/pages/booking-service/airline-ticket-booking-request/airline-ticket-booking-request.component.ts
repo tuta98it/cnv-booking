@@ -1067,10 +1067,10 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
               isValidateFile = false;
             }
 
-            if (this.fileInvoiceList == null || this.fileInvoiceList == undefined || this.fileInvoiceList?.length == 0) {
-              this.msg.error("File hoá đơn không được để trống");
-              isValidateFile = false;
-            }
+            // if (this.fileInvoiceList == null || this.fileInvoiceList == undefined || this.fileInvoiceList?.length == 0) {
+            //   this.msg.error("File hoá đơn không được để trống");
+            //   isValidateFile = false;
+            // }
 
             if (!isValidateFile) {
               return;
