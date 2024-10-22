@@ -73,14 +73,17 @@ export class TopNotificationComponent implements OnInit {
     }).catch((error: any) => {
       // this.notificationService.showNotification(Constant.ERROR, 'Gửi email thông báo giữ phòng khách sạn tới khách hàng không thành công');
     });
-
-
-
   }
 
   public handleReadedAllNotifications() {
-
+    let notificationIds: number[] = this.topNotifications.map((topNotify: any) => topNotify.id);
+    this.readedNotificationByIds(notificationIds).then((result: any) => {
+      // this.notificationService.showNotification(Constant.SUCCESS, 'Đã gửi email thông báo giữ phòng khách sạn tới khách hàng');
+    }).catch((error: any) => {
+      // this.notificationService.showNotification(Constant.ERROR, 'Gửi email thông báo giữ phòng khách sạn tới khách hàng không thành công');
+    });
   }
+
   private readedNotificationByIds(idNotifications: number[]) {
     return new Promise((resolve, reject) => {
       this.notificationAPIService.readNotificationByIds(idNotifications).subscribe(

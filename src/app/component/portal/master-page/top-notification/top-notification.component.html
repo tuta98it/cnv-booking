@@ -1,15 +1,15 @@
 <nz-button-group style="margin-right: 1rem ;">
-  <button nz-button nzShape="circle" class="circle-button" nz-dropdown [nzDropdownMenu]="menuTopNotify" [nzClickHide]="false"
-    nzPlacement="bottomRight">
+  <button nz-button nzShape="circle" class="circle-button" nz-dropdown [nzDropdownMenu]="menuTopNotify"
+    [nzClickHide]="false" nzPlacement="bottomRight">
     <span nz-icon nzType="bell"></span>
   </button>
 </nz-button-group>
 
-<nz-dropdown-menu #menuTopNotify="nzDropdownMenu" class="menuTopNotifyCSS"  >
+<nz-dropdown-menu #menuTopNotify="nzDropdownMenu" class="menuTopNotifyCSS">
   <div class="dropdown-container">
     <div class="header">
       <div class="title">Thông báo</div>
-      <div class="mark-read">
+      <div class="mark-read" (click)="handleReadedAllNotifications()">
         <span class="fa fa-check-double fa-fw"></span>
         <span class="read-all">Đánh dấu đã đọc tất cả</span>
       </div>
@@ -28,7 +28,8 @@
               </div>
             </div>
             <div class="notification-status">
-              <span [style.color]="ColorStatusNotifications[topNotify.readed? NotificationVHLEnum.UNREAD : NotificationVHLEnum.READ]"
+              <span
+                [style.color]="ColorStatusNotifications[topNotify.readed? NotificationVHLEnum.UNREAD : NotificationVHLEnum.READ]"
                 class="font-size-dot-read fa fa-circle fa-fw"></span>
             </div>
           </div>
