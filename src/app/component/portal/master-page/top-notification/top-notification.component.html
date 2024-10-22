@@ -15,20 +15,21 @@
       </div>
     </div>
     <ul nz-menu class="notifications-list">
-      <ng-container *ngFor="let tn of topNotifications; let i = index">
-        <!-- (click)="readedNotifyById(tn.id)" -->
-        <li nz-menu-item class="notification-item" title="{{tn.contentNotification}}" >
+      <ng-container *ngFor="let topNotify of topNotifications; let i = index">
+        <li nz-menu-item class="notification-item" title="{{topNotify.contentNotification}}"
+          (click)="handleReadedNotify(topNotify)">
           <div class="center-box">
             <div class="notification-content">
               <div class="notification-text">
-                {{tn.contentNotification}}
+                {{topNotify.contentNotification}}
               </div>
               <div class="notification-date">
-                {{tn.datelog | dateFormat : Constant.DATE_FMT_HOUR }}
+                {{topNotify.datelog | dateFormat : Constant.DATE_FMT_HOUR }}
               </div>
             </div>
             <div class="notification-status">
-              <span class="font-size-dot-read fa fa-circle fa-fw"></span>
+              <span [style.color]="ColorStatusNotifications[topNotify.readed? 1 : 0]"
+                class="font-size-dot-read fa fa-circle fa-fw"></span>
             </div>
           </div>
         </li>
@@ -39,4 +40,3 @@
     </div>
   </div>
 </nz-dropdown-menu>
-
