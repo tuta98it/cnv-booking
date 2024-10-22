@@ -20,7 +20,7 @@ import { FileManagerService } from '../../../../service/file-manager.service';
 import { UserType } from 'src/app/enums/user-type.enum';
 import { MenuStateService } from 'src/app/shared/app-state/menu-state.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { ColorStatusNotifications } from 'src/app/enums/notification-vhl.enum';
+import { ColorStatusNotifications, NotificationVHLEnum } from 'src/app/enums/notification-vhl.enum';
 
 @Component({
   selector: 'app-top-notification',
@@ -32,6 +32,7 @@ export class TopNotificationComponent implements OnInit {
   topNotifications: any = null;
   totalTopNotifications: number = 0;
   ColorStatusNotifications = ColorStatusNotifications;
+  NotificationVHLEnum = NotificationVHLEnum;
   constructor(
     private notificationAPIService: NotificationAPIService,
     private router: Router,
@@ -63,6 +64,7 @@ export class TopNotificationComponent implements OnInit {
   }
 
   public handleReadedNotify(notifyItem: any) {
+
     let notificationIds: number[] = [
       notifyItem.id,
     ];
