@@ -579,8 +579,12 @@ export class GeneralService extends BaseService {
   }
 
 
-  accountBalanceInformationByPartner(partnerId: number): Observable<any> {
-    return this.post(UrlConstant.LIST_PARTNERS + `/AccountBalanceInformationByPartner`, { PartnerId: partnerId });
+  accountBalanceInformationByPartner(partnerId: number, startTime?: Date, endTime?: Date): Observable<any> {
+    return this.post(UrlConstant.LIST_PARTNERS + `/AccountBalanceInformationByPartner`, {
+      PartnerId: partnerId,
+      StartTime: startTime,
+      EndTime: endTime
+    });
   }
 
 

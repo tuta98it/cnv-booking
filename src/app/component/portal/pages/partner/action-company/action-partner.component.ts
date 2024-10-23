@@ -199,6 +199,7 @@ export class ActionPartnerComponent implements OnInit {
   allCheckedBalanceFluctuation: boolean;
   indeterminateBalanceFluctuation: boolean;
   listOfBalanceFluctuations: any[];
+  rangeDateBalanceFluctuation: Date[] = [];
   debtBearingSales: any;
   debtFreeRevenue: any;
 
@@ -487,7 +488,7 @@ export class ActionPartnerComponent implements OnInit {
         this.getEmployeesByPartnerId();
 
 
-        this.getBalanceFluctuationsByPartnerId(this.itemPartner?.id).then((result: any) => {
+        this.getBalanceFluctuationsByPartnerId(this.itemPartner?.id, this.rangeDateBalanceFluctuation[0] ?? null, this.rangeDateBalanceFluctuation[1] ?? null).then((result: any) => {
           this.debtBearingSales = result.debtBearingSales
           this.debtFreeRevenue = result.debtFreeRevenue
           this.listOfBalanceFluctuations = result.tableAccountBalancies;
@@ -558,7 +559,7 @@ export class ActionPartnerComponent implements OnInit {
         this.debtBearingSales = null;
         this.debtFreeRevenue = null;
       } else {
-        this.getBalanceFluctuationsByPartnerId(this.itemPartner?.id).then((result: any) => {
+        this.getBalanceFluctuationsByPartnerId(this.itemPartner?.id, this.rangeDateBalanceFluctuation[0] ?? null, this.rangeDateBalanceFluctuation[1] ?? null).then((result: any) => {
           this.debtBearingSales = result.debtBearingSales
           this.debtFreeRevenue = result.debtFreeRevenue
           this.listOfBalanceFluctuations = result.tableAccountBalancies;
@@ -917,10 +918,10 @@ export class ActionPartnerComponent implements OnInit {
 
   }
 
-  private getBalanceFluctuationsByPartnerId(idPartner: number): Promise<any> {
+  private getBalanceFluctuationsByPartnerId(idPartner: number, startTime?: Date, endTime?: Date): Promise<any> {
     return new Promise((resolve, reject) => {
       this.settingTableBalanceFluctuationValue.loading = true;
-      this.generalService.accountBalanceInformationByPartner(idPartner).subscribe((res: any) => {
+      this.generalService.accountBalanceInformationByPartner(idPartner, startTime, endTime).subscribe((res: any) => {
         if (res.isValid) {
 
           this.settingTableBalanceFluctuationValue.loading = false;
@@ -980,7 +981,7 @@ export class ActionPartnerComponent implements OnInit {
   }
 
   private updateBalanceFluctuationsBy() {
-    this.getBalanceFluctuationsByPartnerId(this.itemPartner?.id).then((result: any) => {
+    this.getBalanceFluctuationsByPartnerId(this.itemPartner?.id, this.rangeDateBalanceFluctuation[0] ?? null, this.rangeDateBalanceFluctuation[1] ?? null).then((result: any) => {
       this.debtBearingSales = result.debtBearingSales
       this.debtFreeRevenue = result.debtFreeRevenue
       this.listOfBalanceFluctuations = result.tableAccountBalancies;
@@ -1272,7 +1273,7 @@ export class ActionPartnerComponent implements OnInit {
         if (this.itemPartner?.id) {
           this.generalService.updateBaseInfoById(valueSave, this.itemPartner?.id).subscribe((res: any) => {
             if (res.isValid) {
-              if(isShowNotiySuccess){
+              if (isShowNotiySuccess) {
                 this.notificationService.showNotification(Constant.SUCCESS, `Cập nhật thông tin doanh nghiệp thành công`);
               }
               this.changeValueBaseBusinessContractReversal(true);
@@ -1424,7 +1425,7 @@ export class ActionPartnerComponent implements OnInit {
         if (this.itemPartner?.id) {
           this.generalService.updateContractInfoForPartner(this.itemPartner?.id, valueSave).subscribe((res: any) => {
             if (res.isValid) {
-              if(isShowNotiySuccess){
+              if (isShowNotiySuccess) {
                 this.notificationService.showNotification(Constant.SUCCESS, `Cập nhật thông tin hợp đồng doanh nghiệp thành công`);
               }
               this.changeValueBaseBusinessContractReversal();
@@ -2052,7 +2053,7 @@ export class ActionPartnerComponent implements OnInit {
 
       case this.MenuCreatePartner.AccountInfomation:
         if (this.itemPartner?.id) {
-          this.getBalanceFluctuationsByPartnerId(this.itemPartner?.id).then((result: any) => {
+          this.getBalanceFluctuationsByPartnerId(this.itemPartner?.id, this.rangeDateBalanceFluctuation[0] ?? null ?? null, this.rangeDateBalanceFluctuation[1] ?? null).then((result: any) => {
             this.debtBearingSales = result.debtBearingSales
             this.debtFreeRevenue = result.debtFreeRevenue
             this.listOfBalanceFluctuations = result.tableAccountBalancies;
@@ -2079,5 +2080,28 @@ export class ActionPartnerComponent implements OnInit {
         break;
     }
   }
+
+  onChangeBalanceFluctuation(result: Date[]): void {
+    // console.log('onChange: ', result);
+    // console.log('rangeDateBalanceFluctuation: ', this.rangeDateBalanceFluctuation);
+    // const startTime = result.length == 0 ? null : result[0] ?? null;
+    // const endTime = result.length == 0 ? null : result[1] ?? null;
+
+    if (this.itemPartner?.id) {
+      this.getBalanceFluctuationsByPartnerId(this.itemPartner?.id, this.rangeDateBalanceFluctuation[0] ?? null, this.rangeDateBalanceFluctuation[1] ?? null).then((result: any) => {
+        this.debtBearingSales = result.debtBearingSales
+        this.debtFreeRevenue = result.debtFreeRevenue
+        this.listOfBalanceFluctuations = result.tableAccountBalancies;
+        let stt = 0;
+        this.listOfBalanceFluctuations?.forEach(en => {
+          stt++;
+          en.stt = stt;
+        });
+      });
+    }
+
+
+  }
+
 
 }

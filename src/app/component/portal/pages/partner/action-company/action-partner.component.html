@@ -1005,7 +1005,8 @@
           </div>
           <div>
             <label>Khoảng thời gian</label>
-            <nz-range-picker style="margin-left: 1rem;" [nzShowTime]="true" nzFormat="dd/MM/yyyy HH:mm" [nzSize]="'small'"></nz-range-picker>
+            <nz-range-picker style="margin-left: 1rem;" [nzShowTime]="{ nzFormat: 'HH:mm' }" nzFormat="dd/MM/yyyy HH:mm"
+              [nzSize]="'small'" [(ngModel)]="rangeDateBalanceFluctuation" (ngModelChange)="onChangeBalanceFluctuation($event)"></nz-range-picker>
           </div>
           <div style="margin: 16px 0;"></div>
           <!-- Content lisst employees -->
