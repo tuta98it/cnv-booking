@@ -1,0 +1,47 @@
+<div class="action-button" style="clear: bottom; overflow: hidden;">
+  <div style="float: left">
+    <h1>Danh sách thông báo</h1>
+  </div>
+  <div style="float: right; display: flex; align-items: center;">
+    <button nz-button nzSize="default" nzType="default" nzShape="round" style="display: flex; align-items: center;" (click)="handleMaskAsReadNotifications()">
+      <span nz-icon nzType="check"></span>
+      Đánh dấu đã đọc
+    </button>
+  </div>
+</div>
+
+<dx-data-grid #gridContainer id="gridContainer" keyExpr="id" [dataSource]="listAllNotifications" #listNotifications
+  [showColumnLines]="true" [showRowLines]="true" [height]="dxGridHeight" [rowAlternationEnabled]="true"
+  [showBorders]="true" [allowColumnResizing]="true" columnResizingMode="widget" [columnMinWidth]="50"
+  [columnAutoWidth]="true">
+  <dxo-scrolling mode="virtual"></dxo-scrolling>
+  <dxo-sorting mode="multiple"></dxo-sorting>
+
+  <dxo-paging [pageSize]="20"> </dxo-paging>
+  <dxo-scrolling rowRenderingMode="virtual"> </dxo-scrolling>
+  <dxo-pager [visible]="true" [allowedPageSizes]="allowedPageSizes" [displayMode]="displayMode"
+    [showPageSizeSelector]="showPageSizeSelector" [showInfo]="showInfo"
+    [showNavigationButtons]="showNavButtons"></dxo-pager>
+
+  <dxo-selection [selectAllMode]="allMode" [showCheckBoxesMode]="checkBoxesMode" mode="multiple"></dxo-selection>
+  <dxo-header-filter [visible]="false"></dxo-header-filter>
+  <dxo-filter-row [visible]="true" [applyFilter]="currentFilter"></dxo-filter-row>
+
+  <dxi-column cssClass="text-center" caption="Thao tác" [fixed]="true" [width]="170" fixedPosition="right"
+    cellTemplate="cellBtnTemplate"></dxi-column>
+  <!-- <dxi-column cssClass="text-center" caption="STT" [width]="55" dataField="stt" [fixed]="true" [allowFiltering]="false"
+    [allowSorting]="false"></dxi-column>-->
+  <dxi-column caption="Thời gian thực hiện" dataField="datelog" [fixed]="true"
+    [format]="Constant.DATE_FULL_DATA_LOG"></dxi-column>
+  <dxi-column caption="Nội dung thông báo" dataField="contentNotification" [fixed]="true"></dxi-column>
+  <div *dxTemplate="let item of 'cellBtnTemplate'" style="display: flex; justify-content: space-evenly;">
+    <a nz-button nzType="link"
+      [style.color]="item.data.readed? ColorTextViewDetailNotifications[NotificationVHLEnum.READ] : ColorTextViewDetailNotifications[NotificationVHLEnum.UNREAD]">Xem
+      chi tiết
+    </a>
+  </div>
+  <dxo-summary>
+    <dxi-total-item column="datelog" displayFormat="Số bản ghi: {0}" summaryType="count">
+    </dxi-total-item>
+  </dxo-summary>
+</dx-data-grid>

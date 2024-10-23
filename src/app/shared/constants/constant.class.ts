@@ -6,6 +6,7 @@ export class Constant {
   public static readonly DATE_FMT_STR = 'ddMMyyyy';
   public static readonly DATE_FMT_YEAR = 'yyyy';
   public static readonly DATE_FMT_NOT_FULL = 'HH:mm dd/MM/yy';
+  public static readonly DATE_FULL_DATA_LOG = 'yy-MM-dd HH:mm:ss';
   public static readonly MESSAGE_DELETE_SUCCESS = 'Xóa thành công';
   public static readonly MESSAGE_ADD_SUCCESS = 'Tạo mới thành công';
   public static readonly MESSAGE_SERVICE_ERROR = 'Data error';
