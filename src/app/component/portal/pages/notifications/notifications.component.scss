@@ -2,6 +2,13 @@
 ::ng-deep dx-data-grid {
   &#gridContainer {
     // height: 100%;
-    height: calc(100% - 50px) !important;
+    height: calc(100%) !important;
+  }
+}
+
+::ng-deep a {
+  span.ng-star-inserted {
+    text-decoration: underline;
+
   }
 }

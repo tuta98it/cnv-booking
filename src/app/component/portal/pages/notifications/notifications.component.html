@@ -1,4 +1,4 @@
-<!-- <dx-data-grid id="gridContainer" [dataSource]="filteredDatas" #listNotifications [showColumnLines]="true"
+<dx-data-grid id="gridContainer" [dataSource]="listAllNotifications" #listNotifications [showColumnLines]="true"
   [showRowLines]="true" [height]="dxGridHeight" [rowAlternationEnabled]="true" [showBorders]="true"
   [allowColumnResizing]="true" columnResizingMode="widget" [columnMinWidth]="50" [columnAutoWidth]="true">
   <dxo-scrolling mode="virtual"></dxo-scrolling>
@@ -11,51 +11,22 @@
     [showNavigationButtons]="showNavButtons"></dxo-pager>
 
 
-  <dxo-header-filter [visible]="true"></dxo-header-filter>
+  <dxo-header-filter [visible]="false"></dxo-header-filter>
   <dxo-filter-row [visible]="true" [applyFilter]="currentFilter"></dxo-filter-row>
 
   <dxi-column cssClass="text-center" caption="Thao tác" [fixed]="true" [width]="170" fixedPosition="right"
     cellTemplate="cellBtnTemplate"></dxi-column>
   <dxi-column cssClass="text-center" caption="STT" [width]="55" dataField="stt" [fixed]="true" [allowFiltering]="false"
     [allowSorting]="false"></dxi-column>
-  <dxi-column caption="Mã người dùng" dataField="userCode" [fixed]="true"></dxi-column>
-  <dxi-column caption="Tên nhân viên" dataField="fullname" [fixed]="true"></dxi-column>
-  <dxi-column caption="Chức danh" dataField="position" [fixed]="true"></dxi-column>
-  <dxi-column caption="Email" dataField="email"></dxi-column>
-  <dxi-column caption="Số điện thoại" dataField="phoneNo"></dxi-column>
-  <dxi-column caption="Quản lý trực tiếp" dataField="directManagementUserName">
-  </dxi-column>
-  <dxi-column caption="Phòng ban" dataField="department"></dxi-column>
-  <dxi-column caption="Trạng thái" dataField="statusText" cellTemplate="status"></dxi-column>
-  <div *dxTemplate="let item of 'status'">
-    <span [style.color]="COLOR_USER_STATUS[item.data.status]">{{item.value}}</span>
-  </div>
-
+  <dxi-column caption="Thời gian thực hiện" dataField="datelog" [fixed]="true"
+    [format]="Constant.DATE_FULL_DATA_LOG"></dxi-column>
+  <dxi-column caption="Nội dung thông báo" dataField="contentNotification" [fixed]="true"></dxi-column>
   <div *dxTemplate="let item of 'cellBtnTemplate'" style="display: flex; justify-content: space-evenly;">
-
-    <button title="Chỉnh sửa thông tin tài khoản" nz-button nzSize="small" nzType="default"
-      (click)="showModalUpdate(item.data)" [disabled]="!item.data.status">
-      <span class="fa fa-edit fa-fw"></span>
-    </button>
-
-    <button title="Thiết lập lại mật khẩu mặc định" nz-button nzSize="small" nzType="default"
-      (click)="showResetPassword(item.data)" [disabled]="!item.data.status"
-      [nzLoading]="item.data.isLoadingResetPassword">
-      <span class="fa fa-key fa-fw"></span>
-    </button>
-
-    <button *ngIf="item?.data?.status != UserStatus.LOCKED" title="Khoá nhân viên" nz-button nzSize="small"
-      nzType="default" class="btn-right button-update ant-btn-red" (click)="handleLockEmployee(item.data)">
-      <span class="fa fa-lock fa-fw"></span>
-    </button>
-
-    <button *ngIf="item?.data?.status == UserStatus.LOCKED" title="Mở khoá nhân viên" nz-button nzSize="small"
-      nzType="default" class="btn-right button-update" (click)="handleUnLockEmployee(item.data)">
-      <span class="fa fa-unlock fa-fw"></span>
-    </button>
+    <a nz-button nzType="link" [style.color]="item.data.readed? ColorTextViewDetailNotifications[NotificationVHLEnum.READ] : ColorTextViewDetailNotifications[NotificationVHLEnum.UNREAD]">Xem chi tiết
+    </a>
   </div>
   <dxo-summary>
-    <dxi-total-item column="userCode" displayFormat="Số bản ghi: {0}" summaryType="count">
+    <dxi-total-item column="datelog" displayFormat="Số bản ghi: {0}" summaryType="count">
     </dxi-total-item>
   </dxo-summary>
-</dx-data-grid> -->
+</dx-data-grid>

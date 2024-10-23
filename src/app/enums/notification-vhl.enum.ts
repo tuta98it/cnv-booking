@@ -10,6 +10,12 @@ export enum NotificationVHLEnum {
 
 
 export const ColorStatusNotifications = {
-  [NotificationVHLEnum.READ]: "#188D47",
-  [NotificationVHLEnum.UNREAD]: "#00000040",
+  [NotificationVHLEnum.READ]: "#00000040",
+  [NotificationVHLEnum.UNREAD]: "#188D47",
+}
+
+
+export const ColorTextViewDetailNotifications = {
+  [NotificationVHLEnum.READ]: "#343A40",
+  [NotificationVHLEnum.UNREAD]: "#1890ff",
 }
