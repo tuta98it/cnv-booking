@@ -548,9 +548,9 @@ export class ActionPartnerComponent implements OnInit {
 
 
     this.settingTableListBalanceFluctuationForm.controls.fixHeader.valueChanges.subscribe(fixed => {
-      this.scrollYBalanceFluctuationValue = fixed ? '175px' : null;
+      this.scrollYBalanceFluctuationValue = fixed ? '115px' : null;
     });
-    this.scrollYBalanceFluctuationValue = this.settingTableListBalanceFluctuationForm.controls['fixHeader'].value ? '175px' : null;
+    this.scrollYBalanceFluctuationValue = this.settingTableListBalanceFluctuationForm.controls['fixHeader'].value ? '115px' : null;
 
 
     this.settingTableListBalanceFluctuationForm.controls.noResult.valueChanges.subscribe(async empty => {

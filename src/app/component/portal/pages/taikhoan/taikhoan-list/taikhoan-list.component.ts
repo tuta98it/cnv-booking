@@ -210,6 +210,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
               stt++;
               en.stt = stt;
               en.isLoadingActiveUser = false;
+              en.isLoadingResetPassword = false;
               en.roleStr = this.getQuyen(en.userroles);
             });
             this.filteredDatas = this.datas;
@@ -298,16 +299,16 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
         });
       }
 
-    }).add(() => { user.isLoadingActiveUser = false; });
+    }).add(() => {
+      this.cancelResetPassword(user);
+    });
   }
 
   private cancelResetPassword(user: any) {
     user.isLoadingResetPassword = false;
   }
 
-  private cancelActiveUserConfirm(user: any) {
-    user.isLoadingActiveUser = false;
-  }
+
 
   setStatusUser(user: any, changeIsActiveUser: boolean) {
     // Delete workspace here
@@ -702,66 +703,92 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
     return false;
   }
 
-  handleLockEmployee(employee: any) {
-    this.generalService.setStatusUser(employee?.id, false).subscribe({
-      next: (res) => {
-        if (res) {
-          if (res.ret && res.ret.length > 0) {
-            res.ret.forEach((el: any) => {
-              if (el.code === 0) {
-                this.notificationService.showNotification(Constant.SUCCESS, `Đã khoá nhân viên ${employee.fullname}`);
-                this.getListData();
-              } else {
-                this.notificationService.showNotification(Constant.ERROR, 'Đã có lỗi xảy ra');
-              }
-            });
-          }
-        } else {
-          this.notificationService.showNotification(Constant.ERROR, `Hệ thống gặp lỗi, khoá nhân viên thất bại`);
-        }
-      },
-      error: (error: any) => {
-        this.notificationService.showNotification(Constant.ERROR, 'Không thể khoá nhân viên do lỗi hệ thống');
-      },
 
-      complete: () => {
-      }
-    }).add(() => {
+  showLockAccountStaffConfirm(itemStaffVHL: any): void {
+    this.modalService.confirm({
+      nzTitle: `<b>Bạn có chắc muốn khoá tài khoản ${itemStaffVHL.username}?</b>`,
+      nzContent: 'Ấn đồng ý để tiếp tục',
+      nzOkDanger: true,
+      nzOkText: 'Đồng ý',
+      nzCancelText: 'Không',
+      nzOnOk: () => this.lockStaffVHLAccount(itemStaffVHL).then(r => this.cancelActiveUserConfirm(itemStaffVHL)),
+      nzOnCancel: () => this.cancelActiveUserConfirm(itemStaffVHL)
     });
   }
 
-  handleUnLockEmployee(employee: any) {
-    this.generalService.setStatusUser(employee?.id, true).subscribe({
-      next: (res) => {
-
-        if (res) {
-          if (res.ret && res.ret.length > 0) {
-            res.ret.forEach((el: any) => {
-              if (el.code === 0) {
-                this.notificationService.showNotification(Constant.SUCCESS, `Nhân viên ${employee.fullname} đã được mở khoá`);
-                this.getListData();
-              } else {
-                this.notificationService.showNotification(Constant.ERROR, 'Đã có lỗi xảy ra');
-              }
-            });
-          }
-        } else {
-          if (res.errors && res.errors.length > 0) {
-            res.errors.forEach((el: any) => {
-              this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
-            });
-          } else {
-            this.notificationService.showNotification(Constant.ERROR, 'Đã có lỗi xảy ra');
-          }
-        }
-      },
-      error: (error: any) => {
-        this.notificationService.showNotification(Constant.ERROR, 'Không thể mở khoá nhân viên do lỗi hệ thống');
-      },
-
-      complete: () => {
-      }
-    }).add(() => {
+  showUnlockAccountConfirm(itemStaffVHL: any): void {
+    this.modalService.confirm({
+      nzTitle: `<b>Bạn có chắc muốn mở khoá tài khoản ${itemStaffVHL.username}?</b>`,
+      nzContent: 'Ấn đồng ý để tiếp tục',
+      nzOkDanger: false,
+      nzOkText: 'Đồng ý',
+      nzCancelText: 'Không',
+      nzOnOk: () => this.unLockStaffVHLAccount(itemStaffVHL).then(r => this.cancelActiveUserConfirm(itemStaffVHL)),
+      nzOnCancel: () => this.cancelActiveUserConfirm(itemStaffVHL),
     });
+  }
+
+
+  private lockStaffVHLAccount(employee: any) {
+    return new Promise((resolve, reject) => {
+      this.generalService.setStatusUser(employee?.id, false).subscribe({
+        next: (res) => {
+          if (res.isValid) {
+            this.notificationService.showNotification(Constant.SUCCESS, `Đã khoá tài khoản nhân viên ${employee.fullname}`);
+            resolve(res.data);
+          } else {
+            if (res.errors && res.errors.length > 0) {
+              res.errors.forEach((el: any) => {
+                this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+              });
+            } else {
+              this.notificationService.showNotification(Constant.ERROR, `Không thể khoá tài khoản nhân viên ${employee.fullname}`);
+            }
+          }
+        },
+        error: (error: any) => {
+          reject(error)
+          this.notificationService.showNotification(Constant.ERROR, `Không thể khoá tài khoản nhân viên do lỗi hệ thống ${employee.fullname}`);
+        },
+        complete: () => {
+        }
+      }).add(() => {
+        this.getListData();
+      });
+    });
+  }
+
+  private unLockStaffVHLAccount(employee: any) {
+    return new Promise((resolve, reject) => {
+      this.generalService.setStatusUser(employee?.id, true).subscribe({
+        next: (res) => {
+          if (res.isValid) {
+            this.notificationService.showNotification(Constant.SUCCESS, `Đã mở khoá tài khoản nhân viên ${employee.fullname}`);
+            resolve(res.data);
+          } else {
+            if (res.errors && res.errors.length > 0) {
+              res.errors.forEach((el: any) => {
+                this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+              });
+            } else {
+              this.notificationService.showNotification(Constant.ERROR, `Không thể mở khoá tài khoản nhân viên ${employee.fullname}`);
+            }
+          }
+        },
+        error: (error: any) => {
+          reject(error)
+          this.notificationService.showNotification(Constant.ERROR, `Không thể mở khoá tài khoản nhân viên do lỗi hệ thống ${employee.fullname}`);
+        },
+        complete: () => {
+        }
+      }).add(() => {
+        this.getListData();
+      });
+    })
+
+  }
+
+  private cancelActiveUserConfirm(user: any) {
+    user.isLoadingActiveUser = false;
   }
 }

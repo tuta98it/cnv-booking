@@ -117,13 +117,15 @@
       <span class="fa fa-key fa-fw"></span>
     </button>
 
+
+
     <button *ngIf="item?.data?.status != UserStatus.LOCKED" title="Khoá nhân viên" nz-button nzSize="small"
-      nzType="default" class="btn-right button-update ant-btn-red" (click)="handleLockEmployee(item.data)">
+      nzType="default" class="btn-right button-update ant-btn-red" [nzLoading]="item.data.isLoadingActiveUser" (click)="showLockAccountStaffConfirm(item.data)">
       <span class="fa fa-lock fa-fw"></span>
     </button>
 
     <button *ngIf="item?.data?.status == UserStatus.LOCKED" title="Mở khoá nhân viên" nz-button nzSize="small"
-      nzType="default" class="btn-right button-update" (click)="handleUnLockEmployee(item.data)">
+      nzType="default" class="btn-right button-update" [nzLoading]="item.data.isLoadingActiveUser" (click)="showUnlockAccountConfirm(item.data)">
       <span class="fa fa-unlock fa-fw"></span>
     </button>
 
