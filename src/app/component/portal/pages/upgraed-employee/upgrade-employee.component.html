@@ -19,6 +19,16 @@
           </button>
         </div> -->
         <div>
+
+
+          <button nz-button nzType="default" nzShape="round"
+            style="margin-right: 8px;" (click)="backToPreviousPage()">
+            <div style="display: flex; justify-content: center; align-items: center;">
+              <span nz-icon nzType="left"></span>
+              <span style="margin-left: 4px; line-height: normal;">Quay lại</span>
+            </div>
+          </button>
+
           <!-- (click)="handleUnLockCompany()" *ngIf="itemPartner?.status == PartnerStatus.Locked"-->
           <button *ngIf="actionEmployeeVHL == ActionTypePageVHL.Update
                         && (itemEmployee == null ? actionEmployeeVHL  == ActionTypePageVHL.Create : itemEmployee?.status == EmployeeStatus.LOCKED)" nz-button nzType="default"

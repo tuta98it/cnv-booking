@@ -28,6 +28,7 @@ import { LockType } from 'src/app/enums/lock-type.enum';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { ColumnItem } from './../../../../../Interfaces/column-item.interface';
 import { DownloadFileService } from 'src/app/service/download-file.service';
+import { CommonService } from './../../../../../service/common.service';
 // interface ItemData {
 //   name: string;
 //   age: number | string;
@@ -228,8 +229,7 @@ export class ActionPartnerComponent implements OnInit {
     private datePipe: DatePipe,
     private modalService: NzModalService,
     private downloadFileService: DownloadFileService,
-
-
+    private commonService: CommonService,
   ) {
 
     this.formBaseInfoCreatePartner = this.formBuilder.group({
@@ -2102,6 +2102,7 @@ export class ActionPartnerComponent implements OnInit {
 
 
   }
-
-
+  public backToPreviousPage() {
+    this.commonService.backToPreviousPage();
+  }
 }

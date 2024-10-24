@@ -5,7 +5,15 @@
         <span style="font-weight: 500; font-size: 18px;">{{titleActionCompanyPage}}</span>
         <div>
 
-          <button *ngIf="itemPartner?.status == PartnerStatus.Active" nz-button nzType="text"
+          <button nz-button nzType="default" nzShape="round"
+            style="margin-right: 8px;" (click)="backToPreviousPage()">
+            <div style="display: flex; justify-content: center; align-items: center;">
+              <span nz-icon nzType="left"></span>
+              <span style="margin-left: 4px; line-height: normal;">Quay lại</span>
+            </div>
+          </button>
+
+          <button *ngIf="itemPartner?.status == PartnerStatus.Active" nz-button nzType="default"
             (click)="handleReturnToDraft()" style="margin-right: 8px;">
             <div style=" display: flex; align-items: center;">
               <span nz-icon nzType="edit"></span>
@@ -1006,7 +1014,8 @@
           <div>
             <label>Khoảng thời gian</label>
             <nz-range-picker style="margin-left: 1rem;" [nzShowTime]="{ nzFormat: 'HH:mm' }" nzFormat="dd/MM/yyyy HH:mm"
-              [nzSize]="'small'" [(ngModel)]="rangeDateBalanceFluctuation" (ngModelChange)="onChangeBalanceFluctuation($event)"></nz-range-picker>
+              [nzSize]="'small'" [(ngModel)]="rangeDateBalanceFluctuation"
+              (ngModelChange)="onChangeBalanceFluctuation($event)"></nz-range-picker>
           </div>
           <div style="margin: 16px 0;"></div>
           <!-- Content lisst employees -->

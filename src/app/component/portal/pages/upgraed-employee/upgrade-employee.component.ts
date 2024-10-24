@@ -26,6 +26,7 @@ import { TEXT_PARTNER_STATUS } from 'src/app/enums/partner-status.enum';
 import { Gender, GENDER_OPTIONS, TEXT_GENDER } from 'src/app/enums/gender.enum';
 import { Location } from '@angular/common';
 import { NzModalService } from 'ng-zorro-antd/modal';
+import { CommonService } from './../../../../service/common.service';
 type TableScroll = 'unset' | 'scroll' | 'fixed';
 
 @Component({
@@ -107,6 +108,8 @@ export class UpgradeEmployeeComponent implements OnInit {
     private router: Router,
     private location: Location,
     private modalService: NzModalService,
+    private commonService: CommonService,
+
   ) {
 
     this.formBaseInfoEmployee = this.formBuilder.group({
@@ -253,6 +256,9 @@ export class UpgradeEmployeeComponent implements OnInit {
     });
 
 
+  }
+  public backToPreviousPage() {
+    this.commonService.backToPreviousPage();
   }
 
   private async resetFormBaseInfoCreateEmployee(itemEmployee: any) {
