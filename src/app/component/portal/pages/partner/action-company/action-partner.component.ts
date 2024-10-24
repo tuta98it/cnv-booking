@@ -520,9 +520,9 @@ export class ActionPartnerComponent implements OnInit {
     this.fixedColumnEmployee = tableScrollValue === 'fixed';
     this.scrollXEmployeesValue = tableScrollValue === 'scroll' || tableScrollValue === 'fixed' ? '100vw' : null;
     this.settingTableListEmployeesForm.controls.fixHeader.valueChanges.subscribe(fixed => {
-      this.scrollYEmployeesValue = fixed ? '240px' : null;
+      this.scrollYEmployeesValue = fixed ? 'calc(100vh - 690px)' : null;
     });
-    this.scrollYEmployeesValue = this.settingTableListEmployeesForm.controls['fixHeader'].value ? '240px' : null;
+    this.scrollYEmployeesValue = this.settingTableListEmployeesForm.controls['fixHeader'].value ? 'calc(100vh - 690px)' : null;
     this.settingTableListEmployeesForm.controls.noResult.valueChanges.subscribe(async empty => {
       if (empty) {
         this.listOfEmployees = [];
@@ -548,9 +548,9 @@ export class ActionPartnerComponent implements OnInit {
 
 
     this.settingTableListBalanceFluctuationForm.controls.fixHeader.valueChanges.subscribe(fixed => {
-      this.scrollYBalanceFluctuationValue = fixed ? '115px' : null;
+      this.scrollYBalanceFluctuationValue = fixed ? 'calc(100vh - 800px)' : null;
     });
-    this.scrollYBalanceFluctuationValue = this.settingTableListBalanceFluctuationForm.controls['fixHeader'].value ? '115px' : null;
+    this.scrollYBalanceFluctuationValue = this.settingTableListBalanceFluctuationForm.controls['fixHeader'].value ? 'calc(100vh - 800px)' : null;
 
 
     this.settingTableListBalanceFluctuationForm.controls.noResult.valueChanges.subscribe(async empty => {
@@ -586,9 +586,9 @@ export class ActionPartnerComponent implements OnInit {
     this.fixedColumnBusinessUsageHistory = tableBusinessUsageHistoryScrollValue === 'fixed';
     this.scrollXBusinessUsageHistoriesValue = tableBusinessUsageHistoryScrollValue === 'scroll' || tableBusinessUsageHistoryScrollValue === 'fixed' ? '100vw' : null;
     this.settingTableBusinessUsageHistoriesForm.controls.fixHeader.valueChanges.subscribe(fixed => {
-      this.scrollYBusinessUsageHistoriesValue = fixed ? '240px' : null;
+      this.scrollYBusinessUsageHistoriesValue = fixed ? 'calc(100vh - 690px)' : null;
     });
-    this.scrollYBusinessUsageHistoriesValue = this.settingTableBusinessUsageHistoriesForm.controls['fixHeader'].value ? '240px' : null;
+    this.scrollYBusinessUsageHistoriesValue = this.settingTableBusinessUsageHistoriesForm.controls['fixHeader'].value ? 'calc(100vh - 690px)' : null;
     this.settingTableBusinessUsageHistoriesForm.controls.noResult.valueChanges.subscribe(async empty => {
       if (empty) {
         this.listOfBusinessUsageHistories = [];
