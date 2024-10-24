@@ -20,7 +20,7 @@ import { PaymentPeriod, PAYMENT_PERIOD_VHL_OPTIONS, PAYMENT_PERIOD_FULL_OPTIONS 
 import { Weekdays, WEEKDAYS_OPTIONS } from 'src/app/enums/weekdays.enum';
 import { DAYS_OF_MONTH_OPTIONS, DaysOfMonth } from 'src/app/enums/days-of-month.enum';
 import { MONTHS_OPTIONS, MonthsOfTheYear } from 'src/app/enums/months-of-the-year.enum';
-import { UserType } from 'src/app/enums/user-type.enum';
+import { TEXT_USER_TYPE, UserType, USES_TYPE_OPTIONS } from 'src/app/enums/user-type.enum';
 import { removeAccents } from 'src/app/shared/utils/filters/remove-accents';
 import { DatePipe } from '@angular/common';
 import { COLOR_USER_STATUS, TEXT_USER_STATUS, USER_STATUS_OPTIONS, UserStatus } from 'src/app/enums/user-status.enum';
@@ -29,6 +29,7 @@ import { NzModalService } from 'ng-zorro-antd/modal';
 import { ColumnItem } from './../../../../../Interfaces/column-item.interface';
 import { DownloadFileService } from 'src/app/service/download-file.service';
 import { CommonService } from './../../../../../service/common.service';
+import { Gender, TEXT_GENDER } from 'src/app/enums/gender.enum';
 // interface ItemData {
 //   name: string;
 //   age: number | string;
@@ -87,7 +88,7 @@ export class ActionPartnerComponent implements OnInit {
     {
       name: 'STT',
       align: 'center',
-      width: '100px',
+      width: '80px',
       sortOrder: null,
       sortFn: (a: any, b: any) => a.stt - b.stt,
       showFilter: false,
@@ -99,7 +100,7 @@ export class ActionPartnerComponent implements OnInit {
     {
       name: 'Thời gian giao dịch',
       align: 'left',
-      width: null,
+      width: '-',
       sortOrder: 'null',
       sortFn: (a: any, b: any) => a.transactionTime.localeCompare(b.transactionTime),
       sortDirections: ['ascend', 'descend', null],
@@ -110,7 +111,7 @@ export class ActionPartnerComponent implements OnInit {
     },
     {
       name: 'Người thực hiện',
-      width: null,
+      width: '-',
       align: 'left',
       sortOrder: null,
       sortDirections: ['ascend', 'descend', null],
@@ -122,7 +123,7 @@ export class ActionPartnerComponent implements OnInit {
     },
     {
       name: 'Số tiền phát sinh',
-      width: null,
+      width: '-',
       align: 'left',
       sortOrder: null,
       sortDirections: ['ascend', 'descend', null],
@@ -133,8 +134,8 @@ export class ActionPartnerComponent implements OnInit {
       filterFn: null,
     },
     {
-      name: 'Số tiền phát sinh',
-      width: null,
+      name: 'Nội dung giao dịch',
+      width: '-',
       align: 'left',
       sortOrder: null,
       sortDirections: ['ascend', 'descend', null],
@@ -158,6 +159,154 @@ export class ActionPartnerComponent implements OnInit {
   scrollXEmployeesValue: string | null = null;
   scrollYEmployeesValue: string | null = null;
   settingTableEmployeesValue: NZTableSettingCustoms;
+  //    <th *ngIf="settingTableEmployeesValue.checkbox" nzWidth="60px" [(nzChecked)]="allCheckedEmployee"
+  //   [nzLeft]="fixedColumnEmployee" [nzIndeterminate]="indeterminateEmployee"
+  //   (nzCheckedChange)="checkAllEmployees($event)">
+  // </th>
+  // <th nzWidth="40px" [nzLeft]="fixedColumnEmployee">STT</th>
+  // <th [nzLeft]="fixedColumnEmployee">Vai trò</th>
+  // <th [nzLeft]="fixedColumnEmployee">Mã người dùng</th>
+  // <th>Tên nhân viên</th>
+  // <th>Trạng thái</th>
+  // <th>Email</th>
+  // <th>Số điện thoại</th>
+  // <th>Giới tính</th>
+  // <th>Quản lý trực tiếp</th>
+  // <th>Mã thẻ thành viên</th>
+  // <th [nzRight]="fixedColumnEmployee" class="text-aligin-center">Thao tác</th>
+  listOfColumnEmployeesVHLs: ColumnItem[] = [
+    {
+      name: 'STT',
+      align: 'center',
+      width: '80px',
+      sortOrder: null,
+      sortFn: (a: any, b: any) => a.stt - b.stt,
+      showFilter: false,
+      sortDirections: ['ascend', 'descend', null],
+      filterMultiple: false,
+      listOfFilter: [],
+      filterFn: null
+    },
+    {
+      name: 'Vai trò',
+      align: 'left',
+      width: '-',
+      sortOrder: 'null',
+      sortFn: (a: any, b: any) => a.userType - b.userType,
+      sortDirections: ['ascend', 'descend', null],
+      showFilter: true,
+      listOfFilter: [
+        { text: TEXT_USER_TYPE[UserType.MasterAccount], value: UserType.MasterAccount, byDefault: true },
+        { text: TEXT_USER_TYPE[UserType.NormalAccount], value: UserType.NormalAccount, byDefault: true }
+      ],
+      filterFn: (list: any[], item: any) => list.some(valueUserType => valueUserType == item.userType),
+      filterMultiple: true
+    },
+    {
+      name: 'Mã người dùng',
+      align: 'left',
+      width: '-',
+      sortOrder: 'null',
+      sortFn: (a: any, b: any) => a.userCode.localeCompare(b.userCode),
+      sortDirections: ['ascend', 'descend', null],
+      showFilter: false,
+      listOfFilter: [],
+      filterFn: null,
+      filterMultiple: true
+    },
+    {
+      name: 'Tên nhân viên',
+      width: '-',
+      align: 'left',
+      sortOrder: null,
+      sortDirections: ['ascend', 'descend', null],
+      sortFn: (a: any, b: any) => a.fullname.localeCompare(b.fullname),
+      showFilter: false,
+      filterMultiple: false,
+      listOfFilter: [],
+      filterFn: null,
+    },
+    {
+      name: 'Trạng thái',
+      width: '-',
+      align: 'left',
+      sortOrder: null,
+      sortDirections: ['ascend', 'descend', null],
+      sortFn: (a: any, b: any) => a.status - b.status,
+      showFilter: true,
+      filterMultiple: true,
+      listOfFilter: [
+        { text: TEXT_USER_STATUS[UserStatus.ACTIVE], value: UserStatus.ACTIVE, byDefault: true },
+        { text: TEXT_USER_STATUS[UserStatus.LOCKED], value: UserStatus.LOCKED, byDefault: true }
+      ],
+      filterFn: (list: any[], item: any) => list.some(valueUserStatus => valueUserStatus == item.status),
+    },
+    {
+      name: 'Email',
+      width: '-',
+      align: 'left',
+      sortOrder: null,
+      sortDirections: ['ascend', 'descend', null],
+      sortFn: (a: any, b: any) => a.email.localeCompare(b.email),
+      showFilter: false,
+      filterMultiple: false,
+      listOfFilter: [],
+      filterFn: null,
+    },
+    {
+      name: 'Số điện thoại',
+      width: '-',
+      align: 'left',
+      sortOrder: null,
+      sortDirections: ['ascend', 'descend', null],
+      sortFn: (a: any, b: any) => a.phoneNo.localeCompare(b.phoneNo),
+      showFilter: false,
+      filterMultiple: false,
+      listOfFilter: [],
+      filterFn: null,
+    },
+    {
+      name: 'Giới tính',
+      width: '-',
+      align: 'left',
+      sortOrder: null,
+      sortDirections: ['ascend', 'descend', null],
+      sortFn: (a: any, b: any) => a.gender.localeCompare(b.gender),
+      showFilter: true,
+      filterMultiple: true,
+      listOfFilter: [
+        { text: TEXT_GENDER[Gender.MALE], value: Gender.MALE, byDefault: true },
+        { text: TEXT_GENDER[Gender.FEMALE], value: Gender.FEMALE, byDefault: true },
+        { text: TEXT_GENDER[Gender.OTHER], value: Gender.OTHER, byDefault: true }
+      ],
+      filterFn: (list: any[], item: any) => list.some(valueGender => valueGender == item.gender),
+    },
+    {
+      name: 'Quản lý trực tiếp',
+      width: '-',
+      align: 'left',
+      sortOrder: null,
+      sortDirections: ['ascend', 'descend', null],
+      sortFn: (a: any, b: any) => a.directManagementUserId.localeCompare(b.directManagementUserId),
+      showFilter: false,
+      filterMultiple: false,
+      listOfFilter: [],
+      filterFn: null,
+    },
+    {
+      name: 'Mã thẻ thành viên',
+      width: '-',
+      align: 'left',
+      sortOrder: null,
+      sortDirections: ['ascend', 'descend', null],
+      sortFn: (a: any, b: any) => a.membershipCode.localeCompare(b.membershipCode),
+      showFilter: false,
+      filterMultiple: false,
+      listOfFilter: [],
+      filterFn: null,
+    },
+  ];
+
 
   scrollXBusinessUsageHistoriesValue: string | null = null;
   scrollYBusinessUsageHistoriesValue: string | null = null;
@@ -215,7 +364,129 @@ export class ActionPartnerComponent implements OnInit {
   isLockPage: FormControl = new FormControl(false);
   isVisibleChangePassword: boolean = false;
   listOfBusinessUsageHistories: any[];
-
+  // <th nzWidth="40px" [nzLeft]="fixedColumnBusinessUsageHistory">STT</th>
+  // <th [nzLeft]="fixedColumnBusinessUsageHistory">Ngày</th>
+  // <th [nzLeft]="fixedColumnBusinessUsageHistory">Mã phê duyệt</th>
+  // <th>Mã người dùng</th>
+  // <th>Tên người đặt</th>
+  // <th>Tên người sử dụng</th>
+  // <th>Dịch vụ người dùng</th>
+  // <th>Nội dung sử dụng</th>
+  // <th>Tổng tiền</th>
+  listOfColumnBusinessUsageHistories: ColumnItem[] = [
+    {
+      name: 'STT',
+      align: 'center',
+      width: '80px',
+      sortOrder: null,
+      sortFn: (a: any, b: any) => a.stt - b.stt,
+      showFilter: false,
+      sortDirections: ['ascend', 'descend', null],
+      filterMultiple: false,
+      listOfFilter: [],
+      filterFn: null
+    },
+    {
+      name: 'Ngày',
+      align: 'left',
+      width: '-',
+      sortOrder: 'null',
+      sortFn: (a: any, b: any) => a.successfullBookingDate.localeCompare(b.successfullBookingDate),
+      sortDirections: ['ascend', 'descend', null],
+      showFilter: false,
+      listOfFilter: [],
+      filterFn: null,
+      filterMultiple: true
+    },
+    {
+      name: 'Mã phê duyệt',
+      align: 'left',
+      width: '-',
+      sortOrder: 'null',
+      sortFn: (a: any, b: any) => a.approvalCode.localeCompare(b.approvalCode),
+      sortDirections: ['ascend', 'descend', null],
+      showFilter: false,
+      listOfFilter: [],
+      filterFn: null,
+      filterMultiple: true
+    },
+    {
+      name: 'Mã người dùng',
+      width: '-',
+      align: 'left',
+      sortOrder: null,
+      sortDirections: ['ascend', 'descend', null],
+      sortFn: (a: any, b: any) => a.userCode.localeCompare(b.userCode),
+      showFilter: false,
+      filterMultiple: false,
+      listOfFilter: [],
+      filterFn: null,
+    },
+    {
+      name: 'Tên người đặt',
+      width: '-',
+      align: 'left',
+      sortOrder: null,
+      sortDirections: ['ascend', 'descend', null],
+      sortFn: (a: any, b: any) => a.fulnameNameUserBooking.localeCompare(b.fulnameNameUserBooking),
+      showFilter: false,
+      filterMultiple: true,
+      listOfFilter: [],
+      filterFn: null,
+    },
+    {
+      name: 'Tên người sử dụng',
+      width: '-',
+      align: 'left',
+      sortOrder: null,
+      sortDirections: ['ascend', 'descend', null],
+      sortFn: (a: any, b: any) => a.fullnamePassengers.join(", ").localeCompare(b.fullnamePassengers.join(", ")),
+      showFilter: false,
+      filterMultiple: false,
+      listOfFilter: [],
+      filterFn: null,
+    },
+    {
+      name: 'Dịch vụ người dùng',
+      width: '-',
+      align: 'left',
+      sortOrder: null,
+      sortDirections: ['ascend', 'descend', null],
+      sortFn: (a: any, b: any) => a.serviceUsedName.localeCompare(b.serviceUsedName),
+      showFilter: true,
+      filterMultiple: true,
+      listOfFilter: [
+        { text: "Dịch vụ vé máy bay", value: "Dịch vụ vé máy bay", byDefault: true },
+        { text: "Dịch vụ lưu trú", value: "Dịch vụ lưu trú", byDefault: true},
+      ],
+      filterFn: (list: any[], item: any) => list.some(value => value == item.serviceUsedName),
+    },
+    {
+      name: 'Nội dung sử dụng',
+      width: '-',
+      align: 'left',
+      sortOrder: null,
+      sortDirections: ['ascend', 'descend', null],
+      sortFn: (a: any, b: any) => a.usageContent.localeCompare(b.usageContent),
+      showFilter: true,
+      filterMultiple: true,
+      listOfFilter: [
+      ],
+      filterFn: (list: any[], item: any) => list.some(value => value == item.usageContent),
+    },
+    {
+      name: 'Tổng tiền',
+      width: '-',
+      align: 'left',
+      sortOrder: null,
+      sortDirections: ['ascend', 'descend', null],
+      sortFn: (a: any, b: any) => a.totalPice - b.totalPice,
+      showFilter: false,
+      filterMultiple: false,
+      listOfFilter: [],
+      filterFn: null,
+    },
+  ];
   isLoadingBalanceFluctuationStatement = false;
   listOfImolementers: any;
   constructor(

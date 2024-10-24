@@ -800,7 +800,7 @@
                     [nzLeft]="fixedColumnEmployee" [nzIndeterminate]="indeterminateEmployee"
                     (nzCheckedChange)="checkAllEmployees($event)">
                   </th>
-                  <th nzWidth="40px" [nzLeft]="fixedColumnEmployee">STT</th>
+                  <!-- <th nzWidth="40px" [nzLeft]="fixedColumnEmployee">STT</th>
                   <th [nzLeft]="fixedColumnEmployee">Vai trò</th>
                   <th [nzLeft]="fixedColumnEmployee">Mã người dùng</th>
                   <th>Tên nhân viên</th>
@@ -809,7 +809,14 @@
                   <th>Số điện thoại</th>
                   <th>Giới tính</th>
                   <th>Quản lý trực tiếp</th>
-                  <th>Mã thẻ thành viên</th>
+                  <th>Mã thẻ thành viên</th> -->
+                  <th *ngFor="let column of listOfColumnEmployeesVHLs" [nzWidth]="column.width"
+                    [nzAlign]="column.align" [nzSortOrder]="column.sortOrder" [nzSortFn]="column.sortFn"
+                    [nzSortDirections]="column.sortDirections" [nzShowFilter]="column.showFilter"
+                    [nzFilterMultiple]="column.filterMultiple" [nzFilters]="column.listOfFilter" [nzLeft]="fixedColumnEmployee"
+                    [nzFilterFn]="column.filterFn">
+                    {{ column.name }}
+                  </th>
                   <th [nzRight]="fixedColumnEmployee" class="text-aligin-center">Thao tác</th>
                 </tr>
               </thead>
@@ -819,7 +826,7 @@
                     <td [nzLeft]="fixedColumnEmployee" *ngIf="settingTableEmployeesValue.checkbox"
                       [(nzChecked)]="data.checked" (nzCheckedChange)="refreshStatusEmployee()"
                       [nzDisabled]="data.disabled"></td>
-                    <td [nzLeft]="fixedColumnEmployee">
+                    <td [nzLeft]="fixedColumnEmployee" [nzAlign]="'center'">
                       {{data.stt}}
                     </td>
                     <td [nzLeft]="fixedColumnEmployee" [nzDisabled]="data.disabled">{{ data.userType | userTypePipe }}
@@ -1058,7 +1065,7 @@
               <tbody>
                 <ng-container *ngFor="let data of tagBalanceFluctuation.data">
                   <tr>
-                    <td [nzLeft]="fixedColumnBalanceFluctuation" style="text-align: center; align-items: center;">
+                    <td [nzLeft]="fixedColumnBalanceFluctuation" [nzAlign]="'center'">
                       {{ data.stt }}
                     </td>
                     <td [nzLeft]="fixedColumnBalanceFluctuation" [nzDisabled]="data.disabled">{{ data.transactionTime |
@@ -1067,8 +1074,7 @@
 
                     <td [nzDisabled]="data.disabled" *ngIf="data.amount > 0">{{ (data.amount) | currencyFormat }} VNĐ
                     </td>
-                    <td [nzDisabled]="data.disabled" *ngIf="data.amount <= 0" style="color: #FF3B30;">({{ (0 -
-                      data.amount) | currencyFormat }}) VNĐ</td>
+                    <td [nzDisabled]="data.disabled" *ngIf="data.amount <= 0" style="color: #FF3B30;">({{ (0 -  data.amount) | currencyFormat }}) VNĐ</td>
 
                     <td [nzDisabled]="data.disabled">{{ data.transactionContent}}</td>
                   </tr>
@@ -1084,8 +1090,7 @@
             <span style="font-weight: 500; font-size: 16px;">Lịch sử sử dụng</span>
             <div style="display: flex; align-items: center;">
               <div>
-                <!-- <button [disabled]="!itemPartner?.id" nz-button nzType="primary"
-                  style="margin-right: 0.5rem;">
+                <!-- <button [disabled]="!itemPartner?.id" nz-button nzType="primary" style="margin-right: 0.5rem;">
                   <div style="display: flex; align-items: center;">
                     <span style="margin: 0 6px; line-height: normal;">Xem chi tiết</span>
                   </div>
@@ -1115,15 +1120,13 @@
               (nzCurrentPageDataChange)="currentPageDataChangeEmployee($event)">
               <thead>
                 <tr *ngIf="settingTableBusinessUsageHistoriesValue.header">
-                  <th nzWidth="40px" [nzLeft]="fixedColumnBusinessUsageHistory">STT</th>
-                  <th [nzLeft]="fixedColumnBusinessUsageHistory">Ngày</th>
-                  <th [nzLeft]="fixedColumnBusinessUsageHistory">Mã phê duyệt</th>
-                  <th>Mã người dùng</th>
-                  <th>Tên người đặt</th>
-                  <th>Tên người sử dụng</th>
-                  <th>Dịch vụ người dụng</th>
-                  <th>Nội dung sử dụng</th>
-                  <th>Tổng tiền</th>
+                  <th *ngFor="let column of listOfColumnBusinessUsageHistories" [nzWidth]="column.width"
+                    [nzAlign]="column.align" [nzSortOrder]="column.sortOrder" [nzSortFn]="column.sortFn"
+                    [nzSortDirections]="column.sortDirections" [nzShowFilter]="column.showFilter"
+                    [nzFilterMultiple]="column.filterMultiple" [nzFilters]="column.listOfFilter"
+                    [nzFilterFn]="column.filterFn">
+                    {{ column.name }}
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -1137,7 +1140,7 @@
                     <td>{{ data.approvalCode }}</td>
                     <td><a style="text-decoration: underline;" href="">{{ data.userCode }}</a></td>
                     <td>{{ data.fulnameNameUserBooking }}</td>
-                    <td>{{ data.fullnamePassengers}}</td>
+                    <td>{{ data.fullnamePassengers.join(", ")}}</td>
                     <td>{{ data.serviceUsedName}}</td>
                     <td>{{ data.usageContent }}</td>
                     <td>{{ data.totalPice | currencyFormat }} VNĐ</td>
