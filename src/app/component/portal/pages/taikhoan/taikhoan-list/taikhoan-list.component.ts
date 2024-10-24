@@ -705,6 +705,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
 
 
   showLockAccountStaffConfirm(itemStaffVHL: any): void {
+    itemStaffVHL.isLoadingActiveUser = true;
     this.modalService.confirm({
       nzTitle: `<b>Bạn có chắc muốn khoá tài khoản ${itemStaffVHL.username}?</b>`,
       nzContent: 'Ấn đồng ý để tiếp tục',
@@ -717,6 +718,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
   }
 
   showUnlockAccountConfirm(itemStaffVHL: any): void {
+    itemStaffVHL.isLoadingActiveUser = true;
     this.modalService.confirm({
       nzTitle: `<b>Bạn có chắc muốn mở khoá tài khoản ${itemStaffVHL.username}?</b>`,
       nzContent: 'Ấn đồng ý để tiếp tục',

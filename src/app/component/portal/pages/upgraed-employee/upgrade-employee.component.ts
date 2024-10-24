@@ -476,6 +476,7 @@ export class UpgradeEmployeeComponent implements OnInit {
   }
 
   showLockAccountConfirm(): void {
+    this.itemEmployee.isLoadingActiveUser = true;
     this.modalService.confirm({
       nzTitle: `<b>Bạn có chắc muốn khoá tài khoản ${this.itemEmployee.username}?</b>`,
       nzContent: 'Ấn đồng ý để tiếp tục',
@@ -488,6 +489,7 @@ export class UpgradeEmployeeComponent implements OnInit {
   }
 
   showUnlockAccountConfirm(): void {
+    this.itemEmployee.isLoadingActiveUser = true;
     this.modalService.confirm({
       nzTitle: `<b>Bạn có chắc muốn mở khoá tài khoản ${this.itemEmployee.username}?</b>`,
       nzContent: 'Ấn đồng ý để tiếp tục',
