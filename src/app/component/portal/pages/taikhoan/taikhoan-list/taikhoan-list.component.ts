@@ -736,7 +736,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
       this.generalService.setStatusUser(employee?.id, false).subscribe({
         next: (res) => {
           if (res.isValid) {
-            this.notificationService.showNotification(Constant.SUCCESS, `Đã khoá tài khoản nhân viên ${employee.fullname}`);
+            this.notificationService.showNotification(Constant.SUCCESS, `Đã khoá tài khoản nhân viên ${employee.username}`);
             resolve(res.data);
           } else {
             if (res.errors && res.errors.length > 0) {
@@ -744,13 +744,13 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
                 this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
               });
             } else {
-              this.notificationService.showNotification(Constant.ERROR, `Không thể khoá tài khoản nhân viên ${employee.fullname}`);
+              this.notificationService.showNotification(Constant.ERROR, `Không thể khoá tài khoản nhân viên ${employee.username}`);
             }
           }
         },
         error: (error: any) => {
           reject(error)
-          this.notificationService.showNotification(Constant.ERROR, `Không thể khoá tài khoản nhân viên do lỗi hệ thống ${employee.fullname}`);
+          this.notificationService.showNotification(Constant.ERROR, `Không thể khoá tài khoản nhân viên do lỗi hệ thống ${employee.username}`);
         },
         complete: () => {
         }
@@ -765,7 +765,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
       this.generalService.setStatusUser(employee?.id, true).subscribe({
         next: (res) => {
           if (res.isValid) {
-            this.notificationService.showNotification(Constant.SUCCESS, `Đã mở khoá tài khoản nhân viên ${employee.fullname}`);
+            this.notificationService.showNotification(Constant.SUCCESS, `Đã mở khoá tài khoản nhân viên ${employee.username}`);
             resolve(res.data);
           } else {
             if (res.errors && res.errors.length > 0) {
@@ -773,13 +773,13 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
                 this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
               });
             } else {
-              this.notificationService.showNotification(Constant.ERROR, `Không thể mở khoá tài khoản nhân viên ${employee.fullname}`);
+              this.notificationService.showNotification(Constant.ERROR, `Không thể mở khoá tài khoản nhân viên ${employee.username}`);
             }
           }
         },
         error: (error: any) => {
           reject(error)
-          this.notificationService.showNotification(Constant.ERROR, `Không thể mở khoá tài khoản nhân viên do lỗi hệ thống ${employee.fullname}`);
+          this.notificationService.showNotification(Constant.ERROR, `Không thể mở khoá tài khoản nhân viên do lỗi hệ thống ${employee.username}`);
         },
         complete: () => {
         }
