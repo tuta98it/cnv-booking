@@ -302,7 +302,7 @@
                       }} VNĐ
                     </span>
                     <span *ngIf="debtBearingSales?.amountIncurredDuringPeriod < 0" style="color: #900B09">
-                      ({{debtBearingSales?.amountIncurredDuringPeriod ? (debtBearingSales?.amountIncurredDuringPeriod |
+                      ({{debtBearingSales?.amountIncurredDuringPeriod ? (-debtBearingSales?.amountIncurredDuringPeriod |
                       currencyFormat) :
                       '-'
                       }} VNĐ)
@@ -925,8 +925,17 @@
             </div>
 
             <div>
-              Phát sinh trong kỳ {{debtBearingSales?.amountIncurredDuringPeriod?
-              (debtBearingSales.amountIncurredDuringPeriod | currencyFormat): '-' }} VNĐ
+              Phát sinh trong kỳ
+              <span *ngIf="debtBearingSales?.amountIncurredDuringPeriod >= 0">
+                {{debtBearingSales?.amountIncurredDuringPeriod ? (debtBearingSales.amountIncurredDuringPeriod | currencyFormat)
+                :
+                '-' }} VNĐ
+              </span>
+              <span *ngIf="debtBearingSales?.amountIncurredDuringPeriod < 0" style="color: #900B09;">
+                ({{debtBearingSales?.amountIncurredDuringPeriod ? ( -debtBearingSales.amountIncurredDuringPeriod | currencyFormat)
+                :
+                '-' }}) VNĐ
+              </span>
             </div>
 
             <div>
