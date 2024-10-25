@@ -8,6 +8,7 @@ import { DepositAccountComponent } from './action-company/deposit-account/deposi
 import { ChangePasswordComponent } from './action-company/change-password/change-password.component';
 
 import {DevExtremeModule} from 'devextreme-angular';
+import { EmployeePipe } from 'src/app/shared/pipe/employeePipe.pipe';
 @NgModule({
   declarations: [
     ActionPartnerComponent,
@@ -19,7 +20,7 @@ import {DevExtremeModule} from 'devextreme-angular';
     DevExtremeModule,
     PartnerRoutingModule
   ],
-  providers: [GeneralService],
+  providers: [GeneralService, EmployeePipe],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class PartnerModule { }

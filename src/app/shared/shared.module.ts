@@ -50,7 +50,7 @@ import { GenderPipe } from './pipe/gender.pipe';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { UserTypePipe } from './pipe/user-type.pipe';
 import { PartnerStatusPipe } from './pipe/partner-status.pipe';
-import { EmployeePipePipe } from './pipe/employeePipe.pipe';
+import { EmployeePipe } from './pipe/employeePipe.pipe';
 import { NzProgressModule } from 'ng-zorro-antd/progress';
 import {NzTabsModule} from 'ng-zorro-antd/tabs';
 import { HotelBookingPipe } from './pipe/hotel-booking.pipe';
@@ -146,7 +146,7 @@ import { FileNamePipe } from './pipe/file-name.pipe';
     GenderPipe,
     UserTypePipe,
     PartnerStatusPipe,
-    EmployeePipePipe,
+    EmployeePipe,
     NzRadioModule,
 
     NzRadioModule,
@@ -169,7 +169,7 @@ import { FileNamePipe } from './pipe/file-name.pipe';
     GenderPipe,
     UserTypePipe,
     PartnerStatusPipe,
-    EmployeePipePipe,
+    EmployeePipe,
     MViewPdfComponent,
     HotelBookingPipe,
     FileNamePipe

@@ -30,6 +30,7 @@ import { ColumnItem } from './../../../../../Interfaces/column-item.interface';
 import { DownloadFileService } from 'src/app/service/download-file.service';
 import { CommonService } from './../../../../../service/common.service';
 import { Gender, TEXT_GENDER } from 'src/app/enums/gender.enum';
+import { EmployeePipe } from 'src/app/shared/pipe/employeePipe.pipe';
 // interface ItemData {
 //   name: string;
 //   age: number | string;
@@ -271,7 +272,7 @@ export class ActionPartnerComponent implements OnInit {
       align: 'left',
       sortOrder: null,
       sortDirections: ['ascend', 'descend', null],
-      sortFn: (a: any, b: any) => a.gender.localeCompare(b.gender),
+      sortFn: (a: any, b: any) => a.gender - b.gender,
       showFilter: true,
       filterMultiple: true,
       listOfFilter: [
@@ -287,7 +288,7 @@ export class ActionPartnerComponent implements OnInit {
       align: 'left',
       sortOrder: null,
       sortDirections: ['ascend', 'descend', null],
-      sortFn: (a: any, b: any) => a.directManagementUserId.localeCompare(b.directManagementUserId),
+      sortFn: (a: any, b: any) => this.employeePipe.transform(a.directManagementUserId, this.listOfImolementers).localeCompare(this.employeePipe.transform(b.directManagementUserId, this.listOfImolementers)),
       showFilter: false,
       filterMultiple: false,
       listOfFilter: [],
@@ -299,7 +300,7 @@ export class ActionPartnerComponent implements OnInit {
       align: 'left',
       sortOrder: null,
       sortDirections: ['ascend', 'descend', null],
-      sortFn: (a: any, b: any) => a.membershipCode.localeCompare(b.membershipCode),
+      sortFn: (a: any, b: any) => (a.membershipCode ?? "").localeCompare(b.membershipCode ?? ""),
       showFilter: false,
       filterMultiple: false,
       listOfFilter: [],
@@ -457,7 +458,7 @@ export class ActionPartnerComponent implements OnInit {
       filterMultiple: true,
       listOfFilter: [
         { text: "Dịch vụ vé máy bay", value: "Dịch vụ vé máy bay", byDefault: true },
-        { text: "Dịch vụ lưu trú", value: "Dịch vụ lưu trú", byDefault: true},
+        { text: "Dịch vụ lưu trú", value: "Dịch vụ lưu trú", byDefault: true },
       ],
       filterFn: (list: any[], item: any) => list.some(value => value == item.serviceUsedName),
     },
@@ -501,6 +502,7 @@ export class ActionPartnerComponent implements OnInit {
     private modalService: NzModalService,
     private downloadFileService: DownloadFileService,
     private commonService: CommonService,
+    private employeePipe: EmployeePipe,
   ) {
 
     this.formBaseInfoCreatePartner = this.formBuilder.group({

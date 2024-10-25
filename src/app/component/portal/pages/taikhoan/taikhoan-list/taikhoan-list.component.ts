@@ -25,7 +25,7 @@ import { UserType } from 'src/app/enums/user-type.enum';
 import { ActionTypePageVHL } from 'src/app/enums/action-type-page-vhl.enum';
 import { Router } from '@angular/router';
 import { TEXT_USER_STATUS, UserStatus, COLOR_USER_STATUS } from 'src/app/enums/user-status.enum';
-import { EmployeePipePipe } from 'src/app/shared/pipe/employeePipe.pipe';
+import { EmployeePipe } from 'src/app/shared/pipe/employeePipe.pipe';
 import { GroupService } from 'src/app/service/group-service';
 import { UserService } from 'src/app/service/user-service';
 @Component({
