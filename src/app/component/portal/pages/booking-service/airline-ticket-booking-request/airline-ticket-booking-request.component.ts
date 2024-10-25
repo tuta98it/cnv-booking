@@ -498,7 +498,12 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
       passengers: requestPartnerValue.passengers,
 
       tripItineraryDeparture: `${this.flightUtils.toNameAirportByCode(this.airports, requestPartnerValue.startPoint)} - ${this.flightUtils.toNameAirportByCode(this.airports, requestPartnerValue.endPoint)}`,
-      flightTimeDeparture: [requestPartnerValue.startTime, requestPartnerValue.endTime],
+
+
+      flightTimeDeparture: [
+        requestPartnerValue.startTime ?? (requestPartnerValue.departureDay ? new Date(`${requestPartnerValue.departureDay}`).setHours(0, 0, 0, 0) : '-'),
+        requestPartnerValue.endTime ?? (requestPartnerValue.departureDay ? new Date(`${requestPartnerValue.departureDay}`).setHours(23, 59, 0, 0) : '-')
+      ],
       airlineCodeDeparture: requestPartnerValue.airlineCode,
       bookingCodeDeparture: requestPartnerValue.bookingCode,
       flightNumberDeparture: requestPartnerValue.flightNumber,
@@ -509,9 +514,9 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
       cancelFeeDeparture: requestPartnerValue.cancelFee,
       changeFeeDeparture: requestPartnerValue.changeFee,
       reservationCodeDeparture: requestPartnerValue.reservationCode,
-
-
-      flightTimeReturn: [requestPartnerValue.returnStartTime, requestPartnerValue.returnEndTime],
+      flightTimeReturn:[
+        requestPartnerValue.returnStartTime ?? (requestPartnerValue.returnDay ? new Date(`${requestPartnerValue.returnDay}`).setHours(0, 0, 0, 0) : '-'),
+        requestPartnerValue.returnEndTime ?? (requestPartnerValue.returnDay ? new Date(`${requestPartnerValue.returnDay}`).setHours(23, 59, 0, 0) : '-')],
       airlineCodeReturn: requestPartnerValue.returnAirlineCode,
       bookingCodeReturn: requestPartnerValue.returnBookingCode,
       flightNumberReturn: requestPartnerValue.returnFlightNumber,
@@ -673,7 +678,9 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
       passengers: itemData.passengers,
 
       tripItineraryDeparture: `${this.flightUtils.toNameAirportByCode(this.airports, itemData.startPoint)} - ${this.flightUtils.toNameAirportByCode(this.airports, itemData.endPoint)}`,
-      flightTimeDeparture: [itemData.startTime, itemData.endTime],
+      flightTimeDeparture: [
+        itemData.startTime ?? (itemData.departureDay ? new Date(`${itemData.departureDay}`).setHours(0, 0, 0, 0) : '-'),
+        itemData.endTime ?? (itemData.departureDay ? new Date(`${itemData.departureDay}`).setHours(23, 59, 0, 0) : '-')],
       airlineCodeDeparture: itemData.airlineCode,
       bookingCodeDeparture: itemData.bookingCode,
       flightNumberDeparture: itemData.flightNumber,
@@ -686,7 +693,9 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
       reservationCodeDeparture: itemData.reservationCode,
 
 
-      flightTimeReturn: [itemData.returnStartTime, itemData.returnEndTime],
+      flightTimeReturn: [
+        itemData.returnStartTime ?? (itemData.returnDay ? new Date(`${itemData.returnDay}`).setHours(0, 0, 0, 0) : '-'),
+        itemData.returnEndTime ?? (itemData.returnDay ? new Date(`${itemData.returnDay}`).setHours(23, 59, 0, 0) : '-')],
       airlineCodeReturn: itemData.returnAirlineCode,
       bookingCodeReturn: itemData.returnBookingCode,
       flightNumberReturn: itemData.returnFlightNumber,

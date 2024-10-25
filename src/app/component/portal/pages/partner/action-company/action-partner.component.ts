@@ -468,7 +468,7 @@ export class ActionPartnerComponent implements OnInit {
       sortOrder: null,
       sortDirections: ['ascend', 'descend', null],
       sortFn: (a: any, b: any) => a.usageContent.localeCompare(b.usageContent),
-      showFilter: true,
+      showFilter: false,
       filterMultiple: true,
       listOfFilter: [
       ],
