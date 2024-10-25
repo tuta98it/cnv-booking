@@ -27,6 +27,7 @@ import { Gender, GENDER_OPTIONS, TEXT_GENDER } from 'src/app/enums/gender.enum';
 import { Location } from '@angular/common';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { CommonService } from './../../../../service/common.service';
+import { ColumnItem } from 'src/app/Interfaces/column-item.interface';
 type TableScroll = 'unset' | 'scroll' | 'fixed';
 
 @Component({
@@ -91,6 +92,131 @@ export class UpgradeEmployeeComponent implements OnInit {
   scrollYEmployeeUsageHistoriesValue: string | null = null;
   settingTableEmployeeUsageHistoriesValue: NZTableSettingCustoms;
   listOfEmployeeUsageHistories: any[];
+
+  // <!-- <th nzWidth="40px" [nzLeft]="fixedColumnEmployeeUsageHistory">STT</th>
+  // <th [nzLeft]="fixedColumnEmployeeUsageHistory">Ngày</th>
+  // <th [nzLeft]="fixedColumnEmployeeUsageHistory">Mã phê duyệt</th>
+  // <th>Mã người dùng</th>
+  // <th>Tên người đặt</th>
+  // <th>Tên người sử dụng</th>
+  // <th>Dịch vụ người dụng</th>
+  // <th>Nội dung sử dụng</th>
+  // <th>Tổng tiền</th> -->
+  listOfColumnEmployeeUsageHistories: ColumnItem[] = [
+    {
+      name: 'STT',
+      align: 'center',
+      width: '80px',
+      sortOrder: null,
+      sortFn: (a: any, b: any) => a.stt - b.stt,
+      showFilter: false,
+      sortDirections: ['ascend', 'descend', null],
+      filterMultiple: false,
+      listOfFilter: [],
+      filterFn: null
+    },
+    {
+      name: 'Ngày',
+      align: 'left',
+      width: '-',
+      sortOrder: 'null',
+      sortFn: (a: any, b: any) => (a.successfullBookingDate ?? "").localeCompare(b.successfullBookingDate ?? ""),
+      sortDirections: ['ascend', 'descend', null],
+      showFilter: false,
+      listOfFilter: [],
+      filterFn: null,
+      filterMultiple: true
+    },
+    {
+      name: 'Mã phê duyệt',
+      align: 'left',
+      width: '-',
+      sortOrder: 'null',
+      sortFn: (a: any, b: any) => (a.approvalCode ?? "").localeCompare(b.approvalCode ?? ""),
+      sortDirections: ['ascend', 'descend', null],
+      showFilter: false,
+      listOfFilter: [],
+      filterFn: null,
+      filterMultiple: true
+    },
+    {
+      name: 'Mã người dùng',
+      width: '-',
+      align: 'left',
+      sortOrder: null,
+      sortDirections: ['ascend', 'descend', null],
+      sortFn: (a: any, b: any) => (a.userCode ?? "").localeCompare(b.userCode ?? ""),
+      showFilter: false,
+      filterMultiple: false,
+      listOfFilter: [],
+      filterFn: null,
+    },
+    {
+      name: 'Tên người đặt',
+      width: '-',
+      align: 'left',
+      sortOrder: null,
+      sortDirections: ['ascend', 'descend', null],
+      sortFn: (a: any, b: any) => (a.fulnameNameUserBooking ?? "").localeCompare(b.fulnameNameUserBooking ?? ""),
+      showFilter: false,
+      filterMultiple: true,
+      listOfFilter: [],
+      filterFn: null,
+    },
+    {
+      name: 'Tên người sử dụng',
+      width: '-',
+      align: 'left',
+      sortOrder: null,
+      sortDirections: ['ascend', 'descend', null],
+      sortFn: (a: any, b: any) => a.fullnamePassengers.join("(, ").localeCompare(b.fullnamePassengers.join(", ")),
+      showFilter: false,
+      filterMultiple: false,
+      listOfFilter: [],
+      filterFn: null,
+    },
+    {
+      name: 'Dịch vụ người dùng',
+      width: '-',
+      align: 'left',
+      sortOrder: null,
+      sortDirections: ['ascend', 'descend', null],
+      sortFn: (a: any, b: any) => (a.serviceUsedName ?? "").localeCompare(b.serviceUsedName ?? ""),
+      showFilter: true,
+      filterMultiple: true,
+      listOfFilter: [
+        { text: "Dịch vụ vé máy bay", value: "Dịch vụ vé máy bay", byDefault: true },
+        { text: "Dịch vụ lưu trú", value: "Dịch vụ lưu trú", byDefault: true },
+      ],
+      filterFn: (list: any[], item: any) => list.some(value => value == item.serviceUsedName),
+    },
+    {
+      name: 'Nội dung sử dụng',
+      width: '-',
+      align: 'left',
+      sortOrder: null,
+      sortDirections: ['ascend', 'descend', null],
+      sortFn: (a: any, b: any) => (a.usageContent ?? "").localeCompare(b.usageContent ?? ""),
+      showFilter: false,
+      filterMultiple: true,
+      listOfFilter: [
+      ],
+      filterFn: (list: any[], item: any) => list.some(value => value == item.usageContent),
+    },
+    {
+      name: 'Tổng tiền',
+      width: '-',
+      align: 'left',
+      sortOrder: null,
+      sortDirections: ['ascend', 'descend', null],
+      sortFn: (a: any, b: any) => a.totalPice - b.totalPice,
+      showFilter: false,
+      filterMultiple: false,
+      listOfFilter: [],
+      filterFn: null,
+    },
+  ];
+
   amountOfMoneyUsed: any;
   numberOfSuccessfulHotels: any;
   numberOfSuccessfulFlights: any;
@@ -232,9 +358,9 @@ export class UpgradeEmployeeComponent implements OnInit {
     this.fixedColumnEmployeeUsageHistory = tableBusinessUsageHistoryScrollValue === 'fixed';
     this.scrollXEmployeeUsageHistoriesValue = tableBusinessUsageHistoryScrollValue === 'scroll' || tableBusinessUsageHistoryScrollValue === 'fixed' ? '100vw' : null;
     this.settingTableBusinessUsageHistoriesForm.controls.fixHeader.valueChanges.subscribe(fixed => {
-      this.scrollYEmployeeUsageHistoriesValue = fixed ? '240px' : null;
+      this.scrollYEmployeeUsageHistoriesValue = fixed ? 'calc(100vh - 690px)' : null;
     });
-    this.scrollYEmployeeUsageHistoriesValue = this.settingTableBusinessUsageHistoriesForm.controls['fixHeader'].value ? '240px' : null;
+    this.scrollYEmployeeUsageHistoriesValue = this.settingTableBusinessUsageHistoriesForm.controls['fixHeader'].value ? 'calc(100vh - 690px)' : null;
     this.settingTableBusinessUsageHistoriesForm.controls.noResult.valueChanges.subscribe(async empty => {
       if (empty) {
         this.listOfEmployeeUsageHistories = [];

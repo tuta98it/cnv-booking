@@ -344,7 +344,7 @@
 
   <div nz-row [nzGutter]="[16, 24]">
     <div nz-col class="gutter-row" [nzSpan]="24">
-      <div class="inner-box">
+      <div class="inner-box" style="height: calc(100vh - 477px);">
         <ul nz-menu nzMode="horizontal">
           <li nz-menu-item [nzSelected]="selectedMenu == option.value"
             *ngFor="let option of MENU_UPGRADE_EMPLOYEE_OPTION; let i = index" (click)="selectedMenu = option.value">
@@ -567,7 +567,8 @@
               [nzSize]="settingTableEmployeeUsageHistoriesValue.size">
               <thead>
                 <tr *ngIf="settingTableEmployeeUsageHistoriesValue.header">
-                  <th nzWidth="40px" [nzLeft]="fixedColumnEmployeeUsageHistory">STT</th>
+
+                  <!-- <th nzWidth="40px" [nzLeft]="fixedColumnEmployeeUsageHistory">STT</th>
                   <th [nzLeft]="fixedColumnEmployeeUsageHistory">Ngày</th>
                   <th [nzLeft]="fixedColumnEmployeeUsageHistory">Mã phê duyệt</th>
                   <th>Mã người dùng</th>
@@ -575,7 +576,15 @@
                   <th>Tên người sử dụng</th>
                   <th>Dịch vụ người dụng</th>
                   <th>Nội dung sử dụng</th>
-                  <th>Tổng tiền</th>
+                  <th>Tổng tiền</th> -->
+
+                  <th *ngFor="let column of listOfColumnEmployeeUsageHistories" [nzWidth]="column.width"
+                    [nzAlign]="column.align" [nzSortOrder]="column.sortOrder" [nzSortFn]="column.sortFn"
+                    [nzSortDirections]="column.sortDirections" [nzShowFilter]="column.showFilter"
+                    [nzFilterMultiple]="column.filterMultiple" [nzFilters]="column.listOfFilter"
+                    [nzFilterFn]="column.filterFn">
+                    {{ column.name }}
+                  </th>
                 </tr>
               </thead>
               <tbody>
