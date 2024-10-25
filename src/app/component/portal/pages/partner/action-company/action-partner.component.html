@@ -367,7 +367,7 @@
                   <div nz-col class="gutter-row fs-xl" [nzSpan]="24"
                     style="display: flex; align-items: center; color: #900B09;">
                     ({{debtFreeRevenue?.decreaseInGeneration
-                    ? (debtFreeRevenue?.decreaseInGeneration | currencyFormat) : '-' }} VNĐ)
+                    ? (-debtFreeRevenue?.decreaseInGeneration | currencyFormat) : '-' }} VNĐ)
                   </div>
                 </div>
                 <!-- <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
@@ -976,7 +976,7 @@
             <div>
               Phát sinh giảm trong tháng
               <span style="color: #900B09;">
-                ({{debtFreeRevenue?.decreaseInGeneration ? (debtFreeRevenue.decreaseInGeneration |
+                ({{debtFreeRevenue?.decreaseInGeneration ? (-debtFreeRevenue.decreaseInGeneration |
                 currencyFormat) :
                 '-' }} VNĐ)
               </span>
