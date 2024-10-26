@@ -514,7 +514,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
       cancelFeeDeparture: requestPartnerValue.cancelFee,
       changeFeeDeparture: requestPartnerValue.changeFee,
       reservationCodeDeparture: requestPartnerValue.reservationCode,
-      flightTimeReturn:[
+      flightTimeReturn: [
         requestPartnerValue.returnStartTime ?? (requestPartnerValue.returnDay ? new Date(`${requestPartnerValue.returnDay}`).setHours(0, 0, 0, 0) : '-'),
         requestPartnerValue.returnEndTime ?? (requestPartnerValue.returnDay ? new Date(`${requestPartnerValue.returnDay}`).setHours(23, 59, 0, 0) : '-')],
       airlineCodeReturn: requestPartnerValue.returnAirlineCode,
@@ -935,8 +935,10 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
         passengers: formValue.passengers,
 
 
-        startTime: formValue.flightTimeDeparture[0] ?? new Date(),
-        endTime: formValue.flightTimeDeparture[1] ?? new Date(),
+        startTime: new Date(formValue.flightTimeDeparture[0]) ?? new Date(),
+        endTime: new Date(formValue.flightTimeDeparture[1]) ?? new Date(),
+
+
         bookingCode: formValue.bookingCodeDeparture,
         flightNumber: formValue.flightNumberDeparture,
         ticketPrice: formValue.ticketPriceDeparture,
@@ -947,8 +949,8 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
         ticketHoldExpiryDate: formValue.ticketHoldExpiryDateDeparture,
         reservationCode: formValue.reservationCodeDeparture,
 
-        returnStartTime: formValue.flightTimeReturn[0] ?? new Date(),
-        returnEndTime: formValue.flightTimeReturn[1] ?? new Date(),
+        returnStartTime: new Date(formValue.flightTimeReturn[0]) ?? new Date(),
+        returnEndTime: new Date(formValue.flightTimeReturn[1]) ?? new Date(),
         returnBookingCode: formValue.bookingCodeReturn,
         returnFlightNumber: formValue.flightNumberReturn,
         returnTicketPrice: formValue.ticketPriceReturn,
@@ -984,6 +986,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
                 // }
               } else {
               }
+
             }).catch((error) => {
               this.getListData();
             });
@@ -1094,6 +1097,8 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
         this.getListData();
         this.isVisibleAirlineTicketInfo = true;
         this.isSetSinalUpdateStatusRequestBooking = true;
+        this.isLoadingButtonSaveAirlineTicketInfo = false;
+
       });
 
     } else {
@@ -1147,6 +1152,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   }
 
   handleCancelArilineTicketPopup() {
+    this.isLoadingButtonSaveAirlineTicketInfo = false;
     this.isVisibleAirlineTicketInfo = false;
     this.getListData();
   }
