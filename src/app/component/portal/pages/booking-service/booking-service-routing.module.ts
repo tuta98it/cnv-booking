@@ -20,7 +20,9 @@ const routes: Routes = [
     }
   },
   {
-    path: 'airline-ticket-booking-request/confirm-reserve-seat', component: ConfirmReserveSeatComponent, canActivate: [AuthGuard], data: {
+    path: 'airline-ticket-booking-request/confirm-reserve-seat', component: ConfirmReserveSeatComponent,
+    // canActivate: [AuthGuard],
+    data: {
       pagename: 'Xác nhận giữ chỗ từ khách hàng',
       breadcrumb: 'Xác nhận giữ chỗ từ khách hàng'
     }

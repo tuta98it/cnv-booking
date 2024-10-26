@@ -9,7 +9,9 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
-    path: 'confirm-reserve-seat', component: ConfirmReserveSeatHotelComponent, canActivate: [AuthGuard], data: {
+    path: 'confirm-reserve-seat', component: ConfirmReserveSeatHotelComponent,
+    // canActivate: [AuthGuard],
+    data: {
       pagename: 'Xác nhận giữ chỗ khách sạn',
       breadcrumb: 'Xác nhận giữ chỗ khách sạn'
     }

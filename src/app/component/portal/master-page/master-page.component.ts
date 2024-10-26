@@ -147,7 +147,7 @@ export class MasterPageComponent implements OnInit, OnDestroy {
 
   ngAfterViewInit() {
     this.userInfo = JSON.parse(localStorage.getItem(Constant.USER_INFO));
-    this.menus = this.userInfo.menus;
+    this.menus = this.userInfo?.menus;
   }
 
   ngOnInit(): void {
@@ -163,7 +163,11 @@ export class MasterPageComponent implements OnInit, OnDestroy {
     if (!this.userInfo) {
       localStorage.removeItem(Constant.TOKEN);
       localStorage.removeItem(Constant.USER_INFO);
-      this.router.navigate(['/login']);
+      if (!Constant.PAGE_NOTIFY_CONFIG.some(path => this.router.url.includes(path))) {
+        this.router.navigate(['/login']);
+
+      }
+      return;
     }
     this.loginUserID = this.userInfo.id;
     this.username = this.userInfo.fullname;
@@ -174,11 +178,14 @@ export class MasterPageComponent implements OnInit, OnDestroy {
         this.pageName = this.translate.instant(pageName);
       });
     this.pageName = this.translate.instant(this.getPageInfo());
+
     this.authService.checkToken().subscribe(res => {
       if (res.ret && res.ret[0].code === 401) {
         localStorage.removeItem(Constant.TOKEN);
         localStorage.removeItem(Constant.USER_INFO);
-        this.router.navigate(['/login']);
+        if (!Constant.PAGE_NOTIFY_CONFIG.some(path => this.router.url.includes(path))) {
+          this.router.navigate(['/login']);
+        }
       }
     });
 

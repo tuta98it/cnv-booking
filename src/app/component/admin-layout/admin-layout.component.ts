@@ -1,24 +1,24 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
-import { Router, NavigationEnd, ActivatedRoute, NavigationStart} from '@angular/router';
-import {Constant} from '../../shared/constants/constant.class';
+import { Router, NavigationEnd, ActivatedRoute, NavigationStart } from '@angular/router';
+import { Constant } from '../../shared/constants/constant.class';
 import * as fromAuth from '../../component/auth/redux/auth.reducer';
 import * as actionAuth from '../../component/auth/redux/auth.action';
-import {ActionsSubject, select, Store} from '@ngrx/store';
-import {filter, map} from 'rxjs/operators';
-import {Subscription} from 'rxjs';
-import {MenuService} from '../../service/menu.service';
-import {Menu} from '../../model/menu.class';
-import {AuthService} from '../../service/auth.service';
-import {TranslateService} from '@ngx-translate/core';
-import {Cookie} from "ng2-cookies";
+import { ActionsSubject, select, Store } from '@ngrx/store';
+import { filter, map } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
+import { MenuService } from '../../service/menu.service';
+import { Menu } from '../../model/menu.class';
+import { AuthService } from '../../service/auth.service';
+import { TranslateService } from '@ngx-translate/core';
+import { Cookie } from "ng2-cookies";
 
 @Component({
   selector: 'app-admin-layout',
   templateUrl: './admin-layout.component.html',
   styleUrls: ['./admin-layout.component.scss']
 })
-export class AdminLayoutComponent implements OnInit , OnDestroy {
+export class AdminLayoutComponent implements OnInit, OnDestroy {
   static readonly ROUTE_DATA_PAGENAME = 'pagename';
 
   isCollapsed = false;
@@ -48,13 +48,13 @@ export class AdminLayoutComponent implements OnInit , OnDestroy {
   }
   ngOnInit(): void {
     const userInfo = JSON.parse(localStorage.getItem(Constant.USER_INFO));
-    this.username = userInfo.username; 
+    this.username = userInfo.username;
     this.menus = userInfo.menus; this.getGroupMenu();
     this.route.events.pipe(
       filter(event => event instanceof NavigationEnd),
       map(() => this.getPageInfo())).subscribe((pageName: string) => {
-      this.pageName = this.translate.instant(pageName);
-    });
+        this.pageName = this.translate.instant(pageName);
+      });
     this.pageName = this.translate.instant(this.getPageInfo());
     this.authService.checkToken().subscribe(res => {
       if (res.ret && res.ret.code === 401) {
@@ -102,10 +102,10 @@ export class AdminLayoutComponent implements OnInit , OnDestroy {
   private getPageInfo() {
     let child = this.activeRoute.firstChild;
     while (child.firstChild) {
-        child = child.firstChild;
+      child = child.firstChild;
     }
     if (child.snapshot.data[AdminLayoutComponent.ROUTE_DATA_PAGENAME]) {
-        return child.snapshot.data[AdminLayoutComponent.ROUTE_DATA_PAGENAME];
+      return child.snapshot.data[AdminLayoutComponent.ROUTE_DATA_PAGENAME];
     }
     return '';
   }
@@ -113,7 +113,7 @@ export class AdminLayoutComponent implements OnInit , OnDestroy {
     /*Cookie.delete(Constant.TOKEN);
     this.route.navigate(['/login']);
     return;*/
-   // this.store.dispatch(new actionAuth.Logout());
+    // this.store.dispatch(new actionAuth.Logout());
     this.sub = this.authService.logout().subscribe(res => {
       localStorage.removeItem(Constant.TOKEN);
       localStorage.removeItem(Constant.USER_INFO);
