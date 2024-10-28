@@ -165,9 +165,7 @@ export class MasterPageComponent implements OnInit, OnDestroy {
       localStorage.removeItem(Constant.USER_INFO);
       if (!Constant.PAGE_NOTIFY_CONFIG.some(path => this.router.url.includes(path))) {
         this.router.navigate(['/login']);
-
       }
-      return;
     }
     this.loginUserID = this.userInfo.id;
     this.username = this.userInfo.fullname;
