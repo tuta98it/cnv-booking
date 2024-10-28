@@ -580,6 +580,10 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
         // this.isSendEmailToPassengerToConfirmFlightTicket = false;
         this.isSendEmailToPassengerToConfirmSuccessIssuedTicket = true;
         break;
+
+      case this.BookingRequestStatusEnum.FailureTicket:
+        this.FailureTicketRequestBookingById(this.itemBookingRequest.id);
+        break
       default:
         break;
     }
@@ -1258,8 +1262,6 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
       });
     });
   }
-
-
   IssuedTicketRequestBookingById(id: number) {
     return new Promise((resolve, reject) => {
       this.generalService.updateStatusRequestBooking(id, this.BookingRequestStatusEnum.IssuedTicket).subscribe(
@@ -1281,6 +1283,38 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
           },
           error: (err: any) => {
             this.notificationService.showNotification(Constant.ERROR, 'Xuất vé thất bại do lỗi hệ thống');
+            reject(err);
+          },
+          complete: () => {
+          }
+        }
+      ).add(() => {
+      });
+    });
+
+  }
+
+  FailureTicketRequestBookingById(id: number) {
+    return new Promise((resolve, reject) => {
+      this.generalService.updateStatusRequestBooking(id, this.BookingRequestStatusEnum.FailureTicket).subscribe(
+        {
+          next: (res: any) => {
+            if (res.isValid) {
+              this.notificationService.showNotification(Constant.SUCCESS, `Đã chuyển trạng thái vé thành Xuất vé thất bại`);
+              resolve(true);
+            } else {
+              if (res.errors && res.errors.length > 0) {
+                res.errors.forEach((el: any) => {
+                  this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+                });
+              } else {
+                this.notificationService.showNotification(Constant.ERROR, 'Không thể trạng thái vé thành Xuất vé thất bại');
+              }
+              reject(false);
+            }
+          },
+          error: (err: any) => {
+            this.notificationService.showNotification(Constant.ERROR, 'Không thể trạng thái vé thành Xuất vé thất bại do lỗi hệ thống');
             reject(err);
           },
           complete: () => {
