@@ -78,8 +78,7 @@
 
       <nz-option [nzLabel]="'Giữ chỗ'" [nzValue]="BookingRequestStatusEnum.ReserveSeat" *ngIf="(
           status.value == BookingRequestStatusEnum.SubmitRequest ||
-          status.value == BookingRequestStatusEnum.ReserveSeat ||
-          status.value == BookingRequestStatusEnum.FailureTicket
+          status.value == BookingRequestStatusEnum.ReserveSeat
           )">
       </nz-option>
 
@@ -99,7 +98,9 @@
         status.value == BookingRequestStatusEnum.ReceivedTicket)"></nz-option>
 
       <nz-option [nzLabel]="'Xuất vé thất bại'" [nzValue]="BookingRequestStatusEnum.FailureTicket" *ngIf="(
-        status.value == BookingRequestStatusEnum.FailureTicket)" ></nz-option>
+        status.value == BookingRequestStatusEnum.FailureTicket  ||
+        status.value == BookingRequestStatusEnum.ReserveSeat
+        )" ></nz-option>
     </nz-select>
     <!-- <container-element [ngSwitch]="status.value">
       <some-element *ngSwitchCase="AirlineTicketBookingRequestStatusEnum.SubmitRequest">
