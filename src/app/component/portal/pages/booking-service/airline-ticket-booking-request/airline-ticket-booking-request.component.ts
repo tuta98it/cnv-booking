@@ -993,64 +993,18 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
             break;
 
           case this.BookingRequestStatusEnum.AdjustTicket:
-            this
             if (payload) {
               if (payload.typeTicket == TypeAirlineTicket.OneWay) {
-
-                var isValidateFile = true;
-                if (!payload?.refundFee) {
-                  this.msg.error("Phí hoàn vé không được để trống");
-                  isValidateFile = false;
-
-                }
-
-                if (!payload.cancelFee) {
-                  this.msg.error("Phí huỷ vé không được để trống");
-                  isValidateFile = false;
-                }
-
-                if (!payload.changeFee) {
-                  this.msg.error("Phí đổi vé không được để trống");
-                  isValidateFile = false;
-                }
-                if (!isValidateFile) {
+                if (!payload.baggageFee && !payload?.refundFee && !payload.cancelFee && !payload.changeFee) {
+                  this.msg.error("Phải nhập ít nhất một trong các phí hành lý/hoàn vé/huỷ vé/đổi vé chiều đi");
                   return;
                 }
               } else if (payload.typeTicket == TypeAirlineTicket.RoundTrip) {
-                var isValidateFile = true;
-                if (!payload?.refundFee) {
-                  this.msg.error("Phí hoàn vé chiều đi không được để trống");
-                  isValidateFile = false;
-
-                }
-
-                if (!payload?.cancelFee) {
-                  this.msg.error("Phí huỷ vé chiều đi  không được để trống");
-                  isValidateFile = false;
-                }
-
-                if (!payload?.changeFee) {
-                  this.msg.error("Phí đổi vé chiều đi không được để trống");
-                  isValidateFile = false;
-                }
-
-                if (!payload?.returnRefundFee) {
-                  this.msg.error("Phí hoàn vé chiều về không được để trống");
-                  isValidateFile = false;
-
-                }
-
-                if (!payload.returnCancelFee) {
-                  this.msg.error("Phí huỷ vé chiều về  không được để trống");
-                  isValidateFile = false;
-                }
-
-                if (!payload.returnChangeFee) {
-                  this.msg.error("Phí đổi vé chiều về không được để trống");
-                  isValidateFile = false;
-                }
-
-                if (!isValidateFile) {
+                if (!payload.baggageFee && !payload?.refundFee && !payload.cancelFee && !payload.changeFee) {
+                  this.msg.error("Phải nhập ít nhất một trong các phí hành lý/hoàn vé/huỷ vé/đổi vé chiều đi");
+                  if (!payload.returnBaggageFee && !payload?.returnRefundFee && !payload.returnCancelFee && !payload.returnChangeFee) {
+                    this.msg.error("Phải nhập ít nhất một trong các phí hành lý/hoàn vé/huỷ vé/đổi vé chiều vé");
+                  }
                   return;
                 }
               }
