@@ -97,8 +97,7 @@
         status.value == BookingRequestStatusEnum.ReceivedTicket)"></nz-option>
 
       <nz-option [nzLabel]="'Xuất vé thất bại'" [nzValue]="BookingRequestStatusEnum.FailureTicket" *ngIf="(
-        status.value == BookingRequestStatusEnum.FailureTicket ||
-        status.value == BookingRequestStatusEnum.IssuedTicket)" ></nz-option>
+        status.value == BookingRequestStatusEnum.FailureTicket)" ></nz-option>
     </nz-select>
     <!-- <container-element [ngSwitch]="status.value">
       <some-element *ngSwitchCase="AirlineTicketBookingRequestStatusEnum.SubmitRequest">
