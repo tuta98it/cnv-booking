@@ -232,9 +232,27 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   }
 
   ngOnInit(): void {
-    this.getListData();
+    this.getListData().then(result => {
+      if (this.router.url === '/booking-service/airline-ticket-booking-request') {
+        // cập nhất lại trạng thái quá hạn giữ chỗ
+        this.datas.forEach(requestBooking => {
+          if (this.isSetSinalUpdateStatusRequestBooking) {
+            if (requestBooking.status == this.BookingRequestStatusEnum.ReserveSeat || requestBooking.status == this.BookingRequestStatusEnum.AdjustTicket) {
+              const ticketHoldExpiryDate = requestBooking.ticketHoldExpiryDate != null ? new Date(requestBooking.ticketHoldExpiryDate) : new Date(0);
+              const now = new Date();
+              if (ticketHoldExpiryDate < now) {
+                this.updateStatusRequestBooking(requestBooking.id, this.BookingRequestStatusEnum.ExpiredTicket).then((r) => {
+                  this.getListData();
+                });
+              }
+            }
+          }
+        });
+      }
+    });
     this.getUserInfo();
     this.getAirport();
+
 
 
     this.intervalRequestBookingUpdateStatus = setInterval(() => {
@@ -243,7 +261,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
           // cập nhất lại trạng thái quá hạn giữ chỗ
           this.datas.forEach(requestBooking => {
             if (this.isSetSinalUpdateStatusRequestBooking) {
-              if (requestBooking.status == this.BookingRequestStatusEnum.ReserveSeat) {
+              if (requestBooking.status == this.BookingRequestStatusEnum.ReserveSeat || requestBooking.status == this.BookingRequestStatusEnum.AdjustTicket) {
                 const ticketHoldExpiryDate = requestBooking.ticketHoldExpiryDate != null ? new Date(requestBooking.ticketHoldExpiryDate) : new Date(0);
                 const now = new Date();
                 if (ticketHoldExpiryDate < now) {
@@ -253,7 +271,6 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
                 }
               }
             }
-
           });
         } else {
           clearInterval(this.intervalRequestBookingUpdateStatus);
