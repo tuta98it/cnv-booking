@@ -33,6 +33,7 @@ export class TopNotificationComponent implements OnInit {
   totalTopNotifications: number = 0;
   ColorStatusNotifications = ColorStatusNotifications;
   NotificationVHLEnum = NotificationVHLEnum;
+  totalUnRead: number;
   constructor(
     private notificationAPIService: NotificationAPIService,
     private router: Router,
@@ -56,6 +57,9 @@ export class TopNotificationComponent implements OnInit {
       if (res !== null) {
         this.topNotifications = res.data;
         this.totalTopNotifications = res.total;
+        this.totalUnRead = res.totalUnRead;
+
+
       }
     }, error => {
       this.topNotifications = [];
