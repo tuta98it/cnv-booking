@@ -179,7 +179,7 @@
               </select>
           </ng-template> -->
 
-          <nz-select class="select-action" nzShowSearch nzMode="multiple" nzPlaceHolder="" [nzMaxTagCount]="3"  formControlName="titleIds">
+          <nz-select class="select-action" style="font-size: small;" nzShowSearch nzMode="multiple" nzPlaceHolder="" [nzMaxTagCount]="3"  formControlName="titleIds">
             <nz-option *ngFor="let option of listPosition" [nzLabel]="option.name" [nzValue]="option.id"></nz-option>
           </nz-select>
         </div>
@@ -215,7 +215,7 @@
           <option *ngFor="let dir of listDirectiveManagement" [value]="dir.id" >{{ dir.fullname }}</option>
         </select>
         </ng-template> -->
-        <select formControlName="directManagementUserId" class="form-control">
+        <select formControlName="directManagementUserId" class="form-control" style="font-size: small;">
           <option value="" disabled hidden>Chọn quản lý trực tiếp của nhân viên</option>
           <option *ngFor="let dir of listDirectiveManagement" [value]="dir.id">
             {{ dir.fullname }}
