@@ -3,7 +3,8 @@
     <h1>Danh sách thông báo</h1>
   </div>
   <div style="float: right; display: flex; align-items: center;">
-    <button nz-button nzSize="default" nzType="default" nzShape="round" style="display: flex; align-items: center;" (click)="handleMaskAsReadNotifications()">
+    <button nz-button nzSize="default" nzType="default" nzShape="round" style="display: flex; align-items: center;"
+      (click)="handleMaskAsReadNotifications()">
       <span nz-icon nzType="check"></span>
       Đánh dấu đã đọc
     </button>
@@ -13,7 +14,7 @@
 <dx-data-grid #gridContainer id="gridContainer" keyExpr="id" [dataSource]="listAllNotifications" #listNotifications
   [showColumnLines]="true" [showRowLines]="true" [height]="dxGridHeight" [rowAlternationEnabled]="true"
   [showBorders]="true" [allowColumnResizing]="true" columnResizingMode="widget" [columnMinWidth]="50"
-  [columnAutoWidth]="true">
+  [columnAutoWidth]="true" (onCellPrepared)="onRowPrepared($event)">
   <dxo-scrolling mode="virtual"></dxo-scrolling>
   <dxo-sorting mode="multiple"></dxo-sorting>
 
@@ -35,7 +36,7 @@
     [format]="Constant.DATE_FULL_DATA_LOG"></dxi-column>
   <dxi-column caption="Nội dung thông báo" dataField="contentNotification" [fixed]="true"></dxi-column>
   <div *dxTemplate="let item of 'cellBtnTemplate'" style="display: flex; justify-content: space-evenly;">
-    <a nz-button nzType="link"
+    <a nz-button nzType="link" (click)="handleViewDetailNotify(item.data.id)"
       [style.color]="item.data.readed? ColorTextViewDetailNotifications[NotificationVHLEnum.READ] : ColorTextViewDetailNotifications[NotificationVHLEnum.UNREAD]">Xem
       chi tiết
     </a>

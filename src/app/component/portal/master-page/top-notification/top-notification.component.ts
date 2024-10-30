@@ -67,16 +67,24 @@ export class TopNotificationComponent implements OnInit {
     });
   }
 
-  public handleReadedNotify(notifyItem: any) {
 
+  handleClickToppNotify(notifyItem: any) {
+    this.handleNavigatePageNotifications(notifyItem.id);
+    this.readedNotify(notifyItem);
+  }
+
+  private readedNotify(notifyItem: any) {
     let notificationIds: number[] = [
       notifyItem.id,
     ];
-    this.readedNotificationByIds(notificationIds).then((result: any) => {
-      // this.notificationService.showNotification(Constant.SUCCESS, 'Đã gửi email thông báo giữ phòng khách sạn tới khách hàng');
-    }).catch((error: any) => {
-      // this.notificationService.showNotification(Constant.ERROR, 'Gửi email thông báo giữ phòng khách sạn tới khách hàng không thành công');
-    });
+    if (notifyItem.readed != true) {
+      this.readedNotificationByIds(notificationIds).then((result: any) => {
+        // this.notificationService.showNotification(Constant.SUCCESS, 'Đã gửi email thông báo giữ phòng khách sạn tới khách hàng');
+      }).catch((error: any) => {
+        // this.notificationService.showNotification(Constant.ERROR, 'Gửi email thông báo giữ phòng khách sạn tới khách hàng không thành công');
+      });
+    }
+
   }
 
   public handleReadedAllNotifications() {
@@ -88,8 +96,11 @@ export class TopNotificationComponent implements OnInit {
     });
   }
 
-  public handleNavigatePageNotifications(){
-    this.router.navigate(['/notifications']);
+
+
+
+  public handleNavigatePageNotifications(idNotify?: number) {
+    this.router.navigate(['/notifications'], { queryParams: { [Constant.ID] : idNotify } });
   }
 
 

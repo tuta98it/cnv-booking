@@ -26,7 +26,7 @@
     <ul nz-menu class="notifications-list">
       <ng-container *ngFor="let topNotify of topNotifications; let i = index">
         <li nz-menu-item class="notification-item" title="{{topNotify.contentNotification}}"
-          (click)="handleReadedNotify(topNotify)">
+          (click)="handleClickToppNotify(topNotify)">
           <div class="center-box">
             <div class="notification-content">
               <div class="notification-text">
