@@ -21,6 +21,7 @@ import { UserType } from 'src/app/enums/user-type.enum';
 import { MenuStateService } from 'src/app/shared/app-state/menu-state.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { ColorStatusNotifications, NotificationVHLEnum } from 'src/app/enums/notification-vhl.enum';
+import { NavigationService } from 'src/app/service/navigation.service';
 
 @Component({
   selector: 'app-top-notification',
@@ -45,6 +46,7 @@ export class TopNotificationComponent implements OnInit {
     private notificationService: NotificationService,
     private activeRoute: ActivatedRoute,
     private msg: NzMessageService,
+    private navigationService: NavigationService
   ) { }
 
 
@@ -100,7 +102,7 @@ export class TopNotificationComponent implements OnInit {
 
 
   public handleNavigatePageNotifications(idNotify?: number) {
-    this.router.navigate(['/notifications'], { queryParams: { [Constant.ID] : idNotify } });
+    this.navigationService.navigateToNotifications(idNotify);
   }
 
 

@@ -2,6 +2,7 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DxDataGridComponent } from 'devextreme-angular';
 import { ColorStatusNotifications, ColorTextViewDetailNotifications, NotificationVHLEnum } from 'src/app/enums/notification-vhl.enum';
+import { NavigationService } from 'src/app/service/navigation.service';
 import { NotificationAPIService } from 'src/app/service/notification-service';
 import { NotificationService } from 'src/app/service/notification.service';
 import { Constant } from 'src/app/shared/constants/constant.class';
@@ -36,6 +37,7 @@ export class NotificationsComponent implements OnInit, AfterViewInit {
     private notificationAPIService: NotificationAPIService,
     private notificationService: NotificationService,
     private activatedRoute: ActivatedRoute,
+    private navigationService: NavigationService,
     private router: Router,
   ) {
     this.allMode = 'page';
@@ -59,7 +61,7 @@ export class NotificationsComponent implements OnInit, AfterViewInit {
   onRowPrepared(e) {
     this.activatedRoute.queryParams.subscribe(async params => {
       this.idNotifyForecast = +params[Constant.ID]; // Lấy id từ query parameter
-      console.log(e);
+
       if (e.rowType === "data") {
         if (e.data.id == this.idNotifyForecast) {
           e.cellElement.style.cssText = "color: black; background-color: #ffffaa;";
@@ -159,12 +161,12 @@ export class NotificationsComponent implements OnInit, AfterViewInit {
     });
   }
 
-  private navigatePageNotifications(idNotify?: number) {
-    this.router.navigate(['/notifications'], { queryParams: { [Constant.ID] : idNotify } });
-  }
+  // private navigatePageNotifications(idNotify?: number) {
+  //   this.router.navigate(['/notifications'], { queryParams: { [Constant.ID] : idNotify } });
+  // }
 
   public handleViewDetailNotify(idNotify?: number){
-    this.navigatePageNotifications(idNotify);
+    this.navigationService.navigateToNotifications(idNotify);
   }
 
 }
