@@ -80,8 +80,7 @@
     padding: 8px;
   }
 
-  .add-item {
-  }
+  .add-item {}
 }
 
 
@@ -182,4 +181,53 @@
     }
   }
 
+}
+
+
+::ng-deep {
+  input.ant-input.ng-untouched.ng-pristine.ant-input-disabled {
+    background-color: #fff;
+    opacity: 1;
+    color: rgba(0, 0, 0, 1);
+  }
+
+  .ant-picker.ant-picker-disabled {
+    background-color: #fff;
+    opacity: 1;
+    color: rgba(0, 0, 0, 1);
+
+  }
+
+  .ant-picker-input>input-disabled,
+  .ant-picker-input>input[disabled] {
+    opacity: 1;
+    color: rgba(0, 0, 0, 1);
+  }
+
+  .ant-select-disabled.ant-select:not(.ant-select-customize-input) .ant-select-selector {
+    background-color: #fff;
+    opacity: 1;
+    color: rgba(0, 0, 0, 1);
+
+
+  }
+
+  .ant-select-multiple.ant-select-disabled.ant-select:not(.ant-select-customize-input) .ant-select-selector {
+    background: #fff;
+    opacity: 1;
+    color: rgba(0, 0, 0, 1);
+
+
+  }
+
+  .ant-select-disabled.ant-select-multiple .ant-select-selection-item {
+    opacity: 1;
+    color: rgba(0, 0, 0, 1);
+
+  }
+
+  .dx-state-disabled .dx-widget, .dx-state-disabled.dx-widget {
+    color: #000 !important;
+    opacity: 1;
+  }
 }
