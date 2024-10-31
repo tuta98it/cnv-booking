@@ -5,7 +5,7 @@ import { ColorStatusNotifications, ColorTextViewDetailNotifications, Notificatio
 import { NavigationService } from 'src/app/service/navigation.service';
 import { NotificationAPIService } from 'src/app/service/notification-service';
 import { NotificationService } from 'src/app/service/notification.service';
-import { Constant } from 'src/app/shared/constants/constant.class';
+import { Constant, NotificationConfig } from 'src/app/shared/constants/constant.class';
 
 @Component({
   selector: 'app-notifications',
@@ -33,6 +33,7 @@ export class NotificationsComponent implements OnInit, AfterViewInit {
   listAllNotifications: any[];
   Constant = Constant;
   idNotifyForecast: number;
+  intervalNotifications: NodeJS.Timeout;
   constructor(
     private notificationAPIService: NotificationAPIService,
     private notificationService: NotificationService,
@@ -49,6 +50,21 @@ export class NotificationsComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    this.intervalNotifications = setInterval(() => {
+      setTimeout(() => {
+        if (this.router.url.includes('/notifications')) {
+          // cập nhất lại trạng thái quá hạn giữ chỗ
+          this.getListNotifications().then((result: any) => {
+            this.listAllNotifications = result.data;
+            this.totalAllNotifications = result.total;
+          }).catch((error: any) => {
+
+          });
+        } else {
+          clearInterval(this.intervalNotifications);
+        }
+      }, 200);
+    }, NotificationConfig.TIME_UPDATE_DATAS);
   }
 
   ngAfterViewInit() {

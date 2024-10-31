@@ -126,6 +126,10 @@ export class RequestBookingConfig {
   public static readonly TIME_UPDATE_DATAS = 20000;
 }
 
+export class NotificationConfig {
+  public static readonly TIME_UPDATE_DATAS = 20000;
+}
+
 
 export class DepositConstant {
   public static DEPOSIT_CONTENT_DEFAULT = "Nạp tiền vào tài khoản";
