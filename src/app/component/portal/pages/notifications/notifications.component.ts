@@ -52,7 +52,7 @@ export class NotificationsComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.intervalNotifications = setInterval(() => {
       setTimeout(() => {
-        if (this.router.url.includes('/notifications')) {
+        if (this.router.url.includes(NotificationConfig.PATH_NOTIFICATION)) {
           // cập nhất lại trạng thái quá hạn giữ chỗ
           this.getListNotifications().then((result: any) => {
             this.listAllNotifications = result.data;

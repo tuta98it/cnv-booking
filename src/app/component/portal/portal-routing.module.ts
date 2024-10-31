@@ -8,6 +8,7 @@ import { UserRegisterComponent } from './pages/user-register/user-register.compo
 import { AdminTicketComponent } from './pages/admin-ticket/admin-ticket.component';
 import { AdminVoidTicketComponent } from './pages/admin-void-ticket/admin-void-ticket.component';
 import { AdminHistoryHoldingTicketComponent } from './pages/admin-history-holding-ticket/admin-history-holding-ticket.component';
+import { NotificationConfig } from 'src/app/shared/constants/constant.class';
 
 const routes: Routes = [
   {
@@ -192,7 +193,7 @@ const routes: Routes = [
         }
       },
       {
-        path: 'notifications',
+        path: NotificationConfig.PATH_NOTIFICATION,
         loadChildren: () => import('./pages/notifications/notifications.module').then(m => m.NotificationsModule),
         data: {
           pagename: 'Trang chủ',

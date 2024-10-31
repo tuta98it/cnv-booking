@@ -128,6 +128,7 @@ export class RequestBookingConfig {
 
 export class NotificationConfig {
   public static readonly TIME_UPDATE_DATAS = 20000;
+  public static readonly PATH_NOTIFICATION = "notifications";
 }
 
 
