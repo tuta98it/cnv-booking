@@ -353,7 +353,7 @@ export class TaikhoanListComponent extends TableSelectionAbstract implements OnI
       position: '',
       titleId: '',
       titleIds: [],
-      directManagementUserId: '',
+      directManagementUserId: null,
       directiveManagementUser: ''
 
       // partnerId: this.userInfor.id == 0 ? null : this.userInfor.partnerId
