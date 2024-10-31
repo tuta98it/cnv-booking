@@ -32,6 +32,7 @@ import { resolve } from 'path';
 import { TypeOfDocument } from 'src/app/enums/type-of-document.enum';
 import { DisabledTimeFn, DisabledTimePartial } from 'ng-zorro-antd/date-picker';
 import { differenceInCalendarDays, setHours } from 'date-fns';
+import { EmployeePipe } from 'src/app/shared/pipe/employeePipe.pipe';
 @Component({
   selector: 'airline-ticket-booking-request',
   templateUrl: './airline-ticket-booking-request.component.html',
@@ -80,7 +81,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   payloadAdminrequestbooking = {
     "page": 1,
     "pageSize": 500,
-    "status": AirlineTicketBookingRequestStatus.All
+    "status": AirlineTicketBookingRequestStatus.SubmitRequest
   }
   userInfor: any;
   titleFormPartner = '';
@@ -315,6 +316,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
           let stt = 0;
           this.datas.forEach(en => {
             en.stt = ++stt;
+            en.userCreatedName = en.userBooking?.fullname ?? "";
             en.statusOld = en.status;
             en.isLoadingRequestBookingHistory = false;
             en.ticketPriceTotal = en.ticketPrice + (en.typeTicket == TypeAirlineTicket.RoundTrip ? (en.returnTicketPrice ?? 0) : 0);

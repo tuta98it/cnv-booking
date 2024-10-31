@@ -49,23 +49,23 @@
     [showPageSizeSelector]="showPageSizeSelector" [showInfo]="showInfo"
     [showNavigationButtons]="showNavButtons"></dxo-pager>
 
+
   <dxi-column caption="STT" [width]="55" dataField="stt" [fixed]="true" [allowFiltering]="false" [allowSorting]="false"
     cssClass="text-center vertical-align-middle"></dxi-column>
 
-  <dxi-column caption="Mã yêu cầu" dataField="bookingCode" cssClass="text-left vertical-align-middle" [width]="150"
-    [fixed]="true"></dxi-column>
+  <dxi-column caption="Thời gian gửi yêu cầu" dataField="dateCreated" [fixed]="true" dataType="date"
+    format="dd/MM/yy HH:mm" cssClass="text-left" [width]="150"></dxi-column>
 
-  <dxi-column caption="Mã phê duyệt" dataField="approvalCode" cssClass="vertical-align-middle" [width]="150"
-    [fixed]="true"></dxi-column>
+  <dxi-column caption="Ngày đi" dataField="departureDay" [fixed]="true" dataType="date" format="dd/MM/yy"
+    cssClass="text-left" [width]="100"></dxi-column>
 
-  <dxi-column caption="Mã đặt chỗ" cssClass="vertical-align-middle" [width]="150" cellTemplate="cellReservationCode"
-    [fixed]="true"></dxi-column>
-  <div *dxTemplate="let item of 'cellReservationCode'">
-    {{item.data.reservationCode}}{{ item.data.returnReservationCode ? ", " + item.data.returnReservationCode : "" }}
-  </div>
+  <dxi-column caption="Ngày về" dataField="returnDay" [fixed]="true" dataType="date" format="dd/MM/yy"
+    cssClass="text-left" [width]="100"></dxi-column>
 
+  <dxi-column caption="Thông tin người đặt" dataField="userCreatedName" [fixed]="true" cssClass="text-left"
+    [width]="150"></dxi-column>
 
-  <dxi-column caption="Trạng thái" dataField="status" cssClass="text-left vertical-align-middle"
+  <dxi-column caption="Trạng thái" dataField="status" [fixed]="true" cssClass="text-left vertical-align-middle"
     cellTemplate="cellStatus"></dxi-column>
   <div *dxTemplate="let status of 'cellStatus'" style="display: flex;">
     <nz-select nzShowSearch nzMode="default" nzPlaceHolder="Trạng thái" style="width: 200px; margin-left: 0.5rem;"
@@ -129,6 +129,16 @@
       </some-element>
     </container-element> -->
   </div>
+
+  <dxi-column caption="Mã phê duyệt" dataField="approvalCode" cssClass="vertical-align-middle" [width]="150"></dxi-column>
+
+  <dxi-column caption="Mã đặt chỗ" cssClass="vertical-align-middle" [width]="150" cellTemplate="cellReservationCode"></dxi-column>
+  <div *dxTemplate="let item of 'cellReservationCode'">
+    {{item.data.reservationCode}}{{ item.data.returnReservationCode ? ", " + item.data.returnReservationCode : "" }}
+  </div>
+
+
+
 
   <dxi-column caption="Chi phí vé" [width]="150" dataField="ticketPriceTotal" [format]="formatCurrencyVND"
     cssClass="text-center  vertical-align-middle"></dxi-column>
