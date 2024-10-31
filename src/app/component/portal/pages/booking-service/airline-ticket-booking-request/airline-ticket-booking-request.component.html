@@ -67,9 +67,10 @@
 
   <dxi-column caption="Trạng thái" dataField="status" cssClass="text-left vertical-align-middle"
     cellTemplate="cellStatus"></dxi-column>
-  <div *dxTemplate="let status of 'cellStatus'" style="display: flex;" >
+  <div *dxTemplate="let status of 'cellStatus'" style="display: flex;">
     <nz-select nzShowSearch nzMode="default" nzPlaceHolder="Trạng thái" style="width: 200px; margin-left: 0.5rem;"
-      [(ngModel)]="status.value" (ngModelChange)="handleChangeStatusByItem(status)" [title]="status.data.notes ? status.data.notes : ''">
+      [(ngModel)]="status.value" (ngModelChange)="handleChangeStatusByItem(status)"
+      [title]="status.data.notes ? status.data.notes : ''">
 
       <nz-option [nzLabel]="'Gửi yêu cầu'" [nzValue]="BookingRequestStatusEnum.SubmitRequest" *ngIf="(
         status.value == BookingRequestStatusEnum.SubmitRequest ||
@@ -100,7 +101,7 @@
       <nz-option [nzLabel]="'Xuất vé thất bại'" [nzValue]="BookingRequestStatusEnum.FailureTicket" *ngIf="(
         status.value == BookingRequestStatusEnum.FailureTicket  ||
         status.value == BookingRequestStatusEnum.ReserveSeat
-        )" ></nz-option>
+        )"></nz-option>
     </nz-select>
     <!-- <container-element [ngSwitch]="status.value">
       <some-element *ngSwitchCase="AirlineTicketBookingRequestStatusEnum.SubmitRequest">
@@ -382,7 +383,8 @@
                 <!-- <input style="border-radius: 4px;" nz-input nzSize="default"
                   formControlName="ticketHoldExpiryDateDeparture"> -->
                 <nz-date-picker [nzShowTime]="true" formControlName="ticketHoldExpiryDateDeparture" nzSize="default"
-                  style="width: 100%;" nzFormat="dd/MM/yyyy HH:mm" placeholder="Hạn giữ vé" [nzNowText]="'Bây giờ'"
+                  style="width: 100%;" nzFormat="dd/MM/yyyy HH:mm" placeholder="Hạn giữ vé"
+                  [nzDisabledDate]="disabledHoldExpiryDateDepartureDate" [nzNowText]="'Bây giờ'"
                   [nzOkText]="'OK'"></nz-date-picker>
               </div>
             </div>
@@ -405,7 +407,7 @@
                     (ngModelChange)="onChangeInputAmount($event, 'ticketPriceDeparture')" (blur)="onBlurInputAmount('ticketPriceDeparture')">
                 </nz-input-group> -->
 
-                <dx-number-box  [min]="0" formControlName='ticketPriceDeparture' placeholder="Nhập giá vé"
+                <dx-number-box [min]="0" formControlName='ticketPriceDeparture' placeholder="Nhập giá vé"
                   format="#,##0 VNĐ"></dx-number-box>
 
               </div>
@@ -425,7 +427,7 @@
                     (click)="onClickInputAmount($event, 'baggageFeeDeparture')"
                     (ngModelChange)="onChangeInputAmount($event, 'baggageFeeDeparture')" (blur)="onBlurInputAmount('baggageFeeDeparture')">
                 </nz-input-group> -->
-                <dx-number-box  [min]="0" formControlName='baggageFeeDeparture' placeholder="Nhập phí hành lý"
+                <dx-number-box [min]="0" formControlName='baggageFeeDeparture' placeholder="Nhập phí hành lý"
                   format="#,##0 VNĐ"></dx-number-box>
 
               </div>
@@ -450,7 +452,7 @@
                     (ngModelChange)="onChangeInputAmount($event, 'refundFeeDeparture')" (blur)="onBlurInputAmount('refundFeeDeparture')">
                 </nz-input-group> -->
 
-                <dx-number-box  [min]="0" formControlName='refundFeeDeparture' placeholder="Nhập phí huỷ vé"
+                <dx-number-box [min]="0" formControlName='refundFeeDeparture' placeholder="Nhập phí huỷ vé"
                   format="#,##0 VNĐ"></dx-number-box>
 
               </div>
@@ -471,7 +473,7 @@
                     (ngModelChange)="onChangeInputAmount($event, 'cancelFeeDeparture')" (blur)="onBlurInputAmount('cancelFeeDeparture')">
                 </nz-input-group> -->
 
-                <dx-number-box  [min]="0" formControlName='cancelFeeDeparture' placeholder="Nhập phí huỷ vé"
+                <dx-number-box [min]="0" formControlName='cancelFeeDeparture' placeholder="Nhập phí huỷ vé"
                   format="#,##0 VNĐ"></dx-number-box>
 
               </div>
@@ -491,7 +493,7 @@
                     (ngModelChange)="onChangeInputAmount($event, 'changeFeeDeparture')" (blur)="onBlurInputAmount('changeFeeDeparture')">
                 </nz-input-group> -->
 
-                <dx-number-box  [min]="0" formControlName='changeFeeDeparture' placeholder="Nhập phí đổi vé"
+                <dx-number-box [min]="0" formControlName='changeFeeDeparture' placeholder="Nhập phí đổi vé"
                   format="#,##0 VNĐ"></dx-number-box>
 
               </div>
@@ -593,7 +595,7 @@
                     (ngModelChange)="onChangeInputAmount($event, 'ticketPriceReturn')" (blur)="onBlurInputAmount('ticketPriceReturn')">
                 </nz-input-group> -->
 
-                <dx-number-box  [min]="0" formControlName='ticketPriceReturn' placeholder="Nhập giá vé"
+                <dx-number-box [min]="0" formControlName='ticketPriceReturn' placeholder="Nhập giá vé"
                   format="#,##0 VNĐ"></dx-number-box>
 
               </div>
@@ -613,7 +615,7 @@
                     (ngModelChange)="onChangeInputAmount($event, 'baggageFeeReturn')" (blur)="onBlurInputAmount('baggageFeeReturn')">
                 </nz-input-group> -->
 
-                <dx-number-box  [min]="0" formControlName='baggageFeeReturn' placeholder="Nhập phí thêm hành lý"
+                <dx-number-box [min]="0" formControlName='baggageFeeReturn' placeholder="Nhập phí thêm hành lý"
                   format="#,##0 VNĐ"></dx-number-box>
 
               </div>
@@ -635,7 +637,7 @@
                     (ngModelChange)="onChangeInputAmount($event, 'refundFeeReturn')" (blur)="onBlurInputAmount('refundFeeReturn')">
                 </nz-input-group> -->
 
-                <dx-number-box  [min]="0" formControlName='refundFeeReturn' placeholder="Nhập phí hoàn vé"
+                <dx-number-box [min]="0" formControlName='refundFeeReturn' placeholder="Nhập phí hoàn vé"
                   format="#,##0 VNĐ"></dx-number-box>
 
               </div>
@@ -655,7 +657,7 @@
                     (ngModelChange)="onChangeInputAmount($event, 'cancelFeeReturn')" (blur)="onBlurInputAmount('cancelFeeReturn')">
                 </nz-input-group> -->
 
-                <dx-number-box  [min]="0" formControlName='cancelFeeReturn' placeholder="Nhập phí huỷ vé"
+                <dx-number-box [min]="0" formControlName='cancelFeeReturn' placeholder="Nhập phí huỷ vé"
                   format="#,##0 VNĐ"></dx-number-box>
 
               </div>
@@ -675,7 +677,7 @@
                     (ngModelChange)="onChangeInputAmount($event, 'changeFeeReturn')" (blur)="onBlurInputAmount('changeFeeReturn')">
                 </nz-input-group> -->
 
-                <dx-number-box  [min]="0" formControlName='changeFeeReturn' placeholder="Nhập phí đổi vé"
+                <dx-number-box [min]="0" formControlName='changeFeeReturn' placeholder="Nhập phí đổi vé"
                   format="#,##0 VNĐ"></dx-number-box>
 
               </div>

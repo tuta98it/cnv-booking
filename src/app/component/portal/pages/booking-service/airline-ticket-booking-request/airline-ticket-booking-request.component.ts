@@ -30,6 +30,8 @@ import { filter } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { resolve } from 'path';
 import { TypeOfDocument } from 'src/app/enums/type-of-document.enum';
+import { DisabledTimeFn, DisabledTimePartial } from 'ng-zorro-antd/date-picker';
+import { differenceInCalendarDays, setHours } from 'date-fns';
 @Component({
   selector: 'airline-ticket-booking-request',
   templateUrl: './airline-ticket-booking-request.component.html',
@@ -174,6 +176,10 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
       }
     }
   }
+
+  disabledHoldExpiryDateDepartureDate = (current: Date): boolean =>
+    differenceInCalendarDays(current, new Date()) < 0;
+
 
   onChangeInputAmount(value: string, controlName?: string): void {
     this.updateValueInputAmount(value);
