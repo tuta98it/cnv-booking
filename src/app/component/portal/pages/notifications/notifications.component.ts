@@ -49,13 +49,10 @@ export class NotificationsComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.handleGetListNotifications();
   }
 
   ngAfterViewInit() {
     this.handleGetListNotifications();
-
-    // Now the grid reference will be available
   }
 
   onRowPrepared(e) {
