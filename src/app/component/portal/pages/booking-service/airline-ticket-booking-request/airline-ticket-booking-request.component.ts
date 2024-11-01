@@ -194,12 +194,12 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
                   this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
                 });
               } else {
-                this.notificationService.showNotification(Constant.ERROR, 'Lấy thông lượt đặt vé theo yêu cầu không thành công');
+                this.notificationService.showNotification(Constant.ERROR, 'Lấy lượt đặt vé theo yêu cầu không thành công');
               }
             }
           },
           error: (err: any) => {
-            this.notificationService.showNotification(Constant.ERROR, 'Lấy thông lượt đặt vé theo yêu cầu thất bại do lỗi hệ thống');
+            this.notificationService.showNotification(Constant.ERROR, 'Lấy lượt đặt vé theo yêu cầu thất bại do lỗi hệ thống');
           },
         }
       ).add(() => {

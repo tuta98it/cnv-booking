@@ -183,10 +183,12 @@ export class NotificationsComponent implements OnInit, AfterViewInit {
     this.navigationService.navigateToNotifications(itemNotify.id);
     switch (itemNotify.notificationType) {
       case NotificationType.RequestBooking:
+        console.log(NotificationType.RequestBooking);
         this.navigationService.navigateToPageRequestBooking(itemNotify.otherId);
         break;
 
       case NotificationType.BookingHotel:
+        console.log(NotificationType.BookingHotel);
         this.navigationService.navigateToPageHotelBooking(itemNotify.otherId);
         break;
 

@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import {DatePipe} from '@angular/common';
 import {ActionsSubject, select, Store} from '@ngrx/store';
 import {NzModalService} from 'ng-zorro-antd/modal';
@@ -29,7 +29,7 @@ import {StringUtils} from 'src/app/shared/utils/string-utils.class';
 import {MoneyUtils} from 'src/app/shared/utils/money-utils.class';
 import {AngularEditorConfig} from '@kolkov/angular-editor';
 import {DataService} from 'src/app/service/data.service';
-import {Router} from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import {BookingHotelStatusPipe} from 'src/app/shared/pipe/booking-hotel-status.pipe';
 import {HotelBookingStatusEnum, HOTEL_BOOKING_STATUS_LIST} from 'src/app/enums/hotel-booking-status.enum';
 import {UploadService} from 'src/app/service/upload-service';
@@ -44,7 +44,7 @@ import {Attachment} from 'src/app/model/attachment';
   templateUrl: './booking-hotel.component.html',
   styleUrls: ['./booking-hotel.component.scss']
 })
-export class BookingHotelComponent extends TableSelectionAbstract implements OnInit, OnDestroy {
+export class BookingHotelComponent extends TableSelectionAbstract implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('ListBookingHotels') dataGridDetail: DxDataGridComponent;
   datas: any[] = [];
   data: any;
@@ -166,6 +166,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   pageSize: any;
   defaultPageSize: any;
   payload = {};
+  idBookingHotel: number;
   constructor(
     private router: Router,
     private modalService: NzModalService,
@@ -181,6 +182,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
     private datePipe: DatePipe,
     public phoneUtils: PhoneUtils,
     private uploadService: UploadService,
+    private activatedRoute: ActivatedRoute,
   ) {
     super('id');
     this.formAddHotel = this.fb.group({
@@ -289,6 +291,16 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
       }
     }
   }
+
+  ngAfterViewInit(): void {
+    this.activatedRoute.queryParams.subscribe(async params => {
+      this.idBookingHotel = +params[Constant.ID];
+      if (this.idBookingHotel) {
+        this.showDetailBookingHotel(this.idBookingHotel, 'add')
+      }
+    });
+  }
+
 
   ngOnDestroy(): void {
 
@@ -2228,21 +2240,21 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   };
   updateCheckinDate() {
     const checkinDate = this.detailBookingRoomForm.value.checkinDate;
-  
+
     if (checkinDate) {
       const checkin = new Date(checkinDate);
       const nextDay = new Date(checkin);
       nextDay.setDate(checkin.getDate() + 1);
-  
+
       this.detailBookingRoomForm.patchValue({
-        checkoutDate: nextDay,  
+        checkoutDate: nextDay,
         numberOfNights: 1
       });
     }
   }
   updateNumberOfNights() {
     const {checkinDate, checkoutDate} = this.detailBookingRoomForm.value;
-  
+
     if (checkinDate && checkoutDate) {
       const checkin = new Date(checkinDate);
       const checkout = new Date(checkoutDate);

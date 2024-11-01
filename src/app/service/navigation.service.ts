@@ -1,7 +1,7 @@
 // navigation.service.ts
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Constant, NotificationConfig, RequestBookingConfig } from '../shared/constants/constant.class';
+import { Constant, HotelBookingConfig, NotificationConfig, RequestBookingConfig } from '../shared/constants/constant.class';
 
 @Injectable({
   providedIn: 'root',
@@ -18,6 +18,6 @@ export class NavigationService {
   }
 
   navigateToPageHotelBooking(idHotelBooking?: number) {
-    this.router.navigate([`/${RequestBookingConfig.PATH_REQUEST_BOOKING}`], { queryParams: { [Constant.ID]: idHotelBooking } });
+    this.router.navigate([`/${HotelBookingConfig.PATH_HOTEL_BOOKING}`], { queryParams: { [Constant.ID]: idHotelBooking } });
   }
 }

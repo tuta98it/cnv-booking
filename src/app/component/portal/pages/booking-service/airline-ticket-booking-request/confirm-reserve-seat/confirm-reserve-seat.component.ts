@@ -91,7 +91,7 @@ export class ConfirmReserveSeatComponent implements OnInit {
   //           }
   //         },
   //         error: (err: any) => {
-  //           this.notificationService.showNotification(Constant.ERROR, 'Lấy thông lượt đặt vé theo yêu cầu thất bại do lỗi hệ thống');
+  //           this.notificationService.showNotification(Constant.ERROR, 'Lấy lượt đặt vé theo yêu cầu thất bại do lỗi hệ thống');
   //         },
   //       }
   //     ).add(() => {
