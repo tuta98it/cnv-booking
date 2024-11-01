@@ -60,8 +60,6 @@ export class TopNotificationComponent implements OnInit {
         this.topNotifications = res.data;
         this.totalTopNotifications = res.total;
         this.totalUnRead = res.totalUnRead;
-
-
       }
     }, error => {
       this.topNotifications = [];
@@ -106,7 +104,7 @@ export class TopNotificationComponent implements OnInit {
   }
 
 
-  private readedAllNotifications() {
+  private readedAllNotifications(){
     return new Promise((resolve, reject) => {
       this.notificationAPIService.readedAllNotifications().subscribe(
         {
