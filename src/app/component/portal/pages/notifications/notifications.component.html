@@ -36,7 +36,7 @@
     [format]="Constant.DATE_FULL_DATA_LOG"></dxi-column>
   <dxi-column caption="Nội dung thông báo" dataField="contentNotification" [fixed]="true"></dxi-column>
   <div *dxTemplate="let item of 'cellBtnTemplate'" style="display: flex; justify-content: space-evenly;">
-    <a nz-button nzType="link" (click)="handleViewDetailNotify(item.data.id)"
+    <a nz-button nzType="link" (click)="handleViewDetailNotify(item.data)"
       [style.color]="item.data.readed? ColorTextViewDetailNotifications[NotificationVHLEnum.READ] : ColorTextViewDetailNotifications[NotificationVHLEnum.UNREAD]">Xem
       chi tiết
     </a>

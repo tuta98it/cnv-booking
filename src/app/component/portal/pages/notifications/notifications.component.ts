@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DxDataGridComponent } from 'devextreme-angular';
+import { NotificationType } from 'src/app/enums/notification-type.enum';
 import { ColorStatusNotifications, ColorTextViewDetailNotifications, NotificationVHLEnum } from 'src/app/enums/notification-vhl.enum';
 import { NavigationService } from 'src/app/service/navigation.service';
 import { NotificationAPIService } from 'src/app/service/notification-service';
@@ -178,8 +179,20 @@ export class NotificationsComponent implements OnInit, AfterViewInit {
   //   this.router.navigate(['/notifications'], { queryParams: { [Constant.ID] : idNotify } });
   // }
 
-  public handleViewDetailNotify(idNotify?: number){
-    this.navigationService.navigateToNotifications(idNotify);
+  public handleViewDetailNotify(itemNotify?: any) {
+    this.navigationService.navigateToNotifications(itemNotify.id);
+    switch (itemNotify.notificationType) {
+      case NotificationType.RequestBooking:
+        this.navigationService.navigateToPageRequestBooking(itemNotify.otherId);
+        break;
+
+      case NotificationType.BookingHotel:
+        this.navigationService.navigateToPageHotelBooking(itemNotify.otherId);
+        break;
+
+      default:
+        break;
+    }
   }
 
 }

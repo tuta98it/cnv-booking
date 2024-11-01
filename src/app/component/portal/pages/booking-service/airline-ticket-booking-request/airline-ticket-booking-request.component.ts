@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { GeneralService } from 'src/app/service/general-service';
 import { TableSelectionAbstract } from 'src/app/shared/component/table/table-selection.abstract';
@@ -27,18 +27,18 @@ import { FlightUtils } from 'src/app/shared/utils/flight-utils.class';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { HttpClient, HttpHeaders, HttpRequest, HttpResponse } from '@angular/common/http';
 import { filter } from 'rxjs/operators';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { resolve } from 'path';
 import { TypeOfDocument } from 'src/app/enums/type-of-document.enum';
 import { DisabledTimeFn, DisabledTimePartial } from 'ng-zorro-antd/date-picker';
-import { differenceInCalendarDays, setHours } from 'date-fns';
+import { differenceInCalendarDays, isThisSecond, setHours } from 'date-fns';
 import { EmployeePipe } from 'src/app/shared/pipe/employeePipe.pipe';
 @Component({
   selector: 'airline-ticket-booking-request',
   templateUrl: './airline-ticket-booking-request.component.html',
   styleUrls: ['./airline-ticket-booking-request.component.scss']
 })
-export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract implements OnInit, OnDestroy {
+export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract implements OnInit, AfterViewInit, OnDestroy {
 
 
   @ViewChild("ListAccount") dataGridDetail: DxDataGridComponent;
@@ -117,6 +117,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   @ViewChild('inputElementAmount', { static: false }) inputElementAmount?: ElementRef
 
   isLoadingButtonSaveAirlineTicketInfo: boolean = false;
+  idRequestBooking: number;
   constructor(
     public translate: TranslateService,
     private notificationService: NotificationService,
@@ -127,7 +128,8 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     public flightUtils: FlightUtils,
     private http: HttpClient,
     private msg: NzMessageService,
-    private router: Router
+    private router: Router,
+    private activatedRoute: ActivatedRoute
   ) {
     super('id');
     this.uploadHeader = {
@@ -165,8 +167,46 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
       changeFeeReturn: new FormControl({ value: null, disabled: false }),
     });
 
+
+  }
+  ngAfterViewInit(): void {
+    this.activatedRoute.queryParams.subscribe(async params => {
+      this.idRequestBooking = +params[Constant.ID];
+      if (this.idRequestBooking) {
+        this.getRequestBookingByID(this.idRequestBooking).then((result: any) => {
+          this.showPopupViewRequestBookingTicket(result);
+        });
+      }
+    });
   }
 
+
+  private getRequestBookingByID(requestBookingId: number) {
+    return new Promise((resolve, reject) => {
+      this.generalService.getRequestBookingByID(requestBookingId).subscribe(
+        {
+          next: (res: any) => {
+            if (res.isValid) {
+              return resolve(res.data);
+            } else {
+              if (res.errors && res.errors.length > 0) {
+                res.errors.forEach((el: any) => {
+                  this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+                });
+              } else {
+                this.notificationService.showNotification(Constant.ERROR, 'Lấy thông lượt đặt vé theo yêu cầu không thành công');
+              }
+            }
+          },
+          error: (err: any) => {
+            this.notificationService.showNotification(Constant.ERROR, 'Lấy thông lượt đặt vé theo yêu cầu thất bại do lỗi hệ thống');
+          },
+        }
+      ).add(() => {
+      });
+    });
+
+  }
 
   onRowPrepared(e) {
     if (e.rowType === "data") {
@@ -740,7 +780,6 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     });
 
     this.ticketRoundTrip = itemData.typeTicket == TypeAirlineTicket.RoundTrip
-    // console.log("this.formAirlineTicketPopup : ", this.formAirlineTicketPopup.value);
     this.listFileIds = [];
     this.fileFlightTicketList = [];
     for (const file of itemData.files) {

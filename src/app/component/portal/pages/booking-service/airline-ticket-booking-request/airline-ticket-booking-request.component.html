@@ -861,7 +861,7 @@
               <div class="inner-box">
                 <label for="" style="font-weight: 600;">Mã người dùng</label>
                 <div>
-                  <span>{{ itemBookingRequest.userBooking.userCode }}</span>
+                  <span>{{ itemBookingRequest?.userBooking?.userCode }}</span>
                 </div>
               </div>
             </div>
@@ -869,7 +869,7 @@
               <div class="inner-box">
                 <label for="" style="font-weight: 600;">Tên người dùng</label>
                 <div>
-                  <span>{{ itemBookingRequest.userBooking.fullname }}</span>
+                  <span>{{ itemBookingRequest?.userBooking?.fullname }}</span>
                 </div>
               </div>
             </div>
@@ -877,7 +877,7 @@
               <div class="inner-box">
                 <label for="" style="font-weight: 600;">Công ty</label>
                 <div>
-                  <span>{{ itemBookingRequest.userBooking.companyName }}</span>
+                  <span>{{ itemBookingRequest?.userBooking?.companyName }}</span>
                 </div>
               </div>
             </div>
@@ -903,7 +903,7 @@
                   <span style="color: tomato; margin-left: 4px;">(*)</span>
                 </label>
                 <div>
-                  <span>{{ itemBookingRequest.approvalCode }}</span>
+                  <span>{{ itemBookingRequest?.approvalCode }}</span>
                 </div>
               </div>
             </div>
@@ -913,7 +913,7 @@
                   <span style="color: tomato; margin-left: 4px;">(*)</span>
                 </label>
                 <div>
-                  <span>{{ itemBookingRequest.typeTicket | typeTicketPipe}} </span>
+                  <span>{{ itemBookingRequest?.typeTicket | typeTicketPipe}} </span>
                 </div>
               </div>
             </div>
@@ -923,18 +923,18 @@
                   <span style="color: tomato; margin-left: 4px;">(*)</span>
                 </label>
                 <div>
-                  <span>{{ itemBookingRequest.departureDay | dateFormat}}</span>
+                  <span>{{ itemBookingRequest?.departureDay | dateFormat}}</span>
                 </div>
               </div>
             </div>
             <div nz-col class="gutter-row" nzSpan="5"
-              *ngIf="itemBookingRequest.typeTicket == TypeAirlineTicketEnum.RoundTrip">
+              *ngIf="itemBookingRequest?.typeTicket == TypeAirlineTicketEnum.RoundTrip">
               <div class="inner-box">
                 <label for="" style="font-weight: 600;">Ngày về
                   <span style="color: tomato; margin-left: 4px;">(*)</span>
                 </label>
                 <div>
-                  <span>{{ itemBookingRequest.returnDay | dateFormat}}</span>
+                  <span>{{ itemBookingRequest?.returnDay | dateFormat}}</span>
                 </div>
               </div>
             </div>
@@ -947,7 +947,7 @@
                   <span style="color: tomato; margin-left: 4px;">(*)</span>
                 </label>
                 <div>
-                  <span>{{ itemBookingRequest.startPoint | airlinePipe : airports}}</span>
+                  <span>{{ itemBookingRequest?.startPoint | airlinePipe : airports}}</span>
                 </div>
               </div>
             </div>
@@ -957,7 +957,7 @@
                   <span style="color: tomato; margin-left: 4px;">(*)</span>
                 </label>
                 <div>
-                  <span>{{ itemBookingRequest.endPoint | airlinePipe : airports }}</span>
+                  <span>{{ itemBookingRequest?.endPoint | airlinePipe : airports }}</span>
                 </div>
               </div>
             </div>
@@ -967,7 +967,7 @@
                   <span style="color: tomato; margin-left: 4px;">(*)</span>
                 </label>
                 <div>
-                  <span>{{ itemBookingRequest.airlineCode | airportPipe }}</span>
+                  <span>{{ itemBookingRequest?.airlineCode | airportPipe }}</span>
                 </div>
               </div>
             </div>
@@ -977,7 +977,7 @@
                   <span style="color: tomato; margin-left: 4px;">(*)</span>
                 </label>
                 <div>
-                  <span>{{ itemBookingRequest.fareClass }}</span>
+                  <span>{{ itemBookingRequest?.fareClass }}</span>
                 </div>
               </div>
             </div>
@@ -990,7 +990,7 @@
                   <span style="color: tomato; margin-left: 4px;">(*)</span>
                 </label>
                 <div>
-                  <span>{{ itemBookingRequest.adt }}</span>
+                  <span>{{ itemBookingRequest?.adt }}</span>
                 </div>
               </div>
             </div>
@@ -999,7 +999,7 @@
                 <label for="" style="font-weight: 600;">Số lượng trẻ em 2 - 11
                   tuổi</label>
                 <div>
-                  <span>{{ itemBookingRequest.chd }}</span>
+                  <span>{{ itemBookingRequest?.chd }}</span>
                 </div>
               </div>
             </div>
@@ -1007,7 +1007,7 @@
               <div class="inner-box">
                 <label for="" style="font-weight: 600;">Số lượng em bé < 24 tháng </label>
                     <div>
-                      <span>{{ itemBookingRequest.inf }}</span>
+                      <span>{{ itemBookingRequest?.inf }}</span>
                     </div>
               </div>
             </div>
@@ -1017,7 +1017,7 @@
                   <span style="color: tomato; margin-left: 4px;">(*)</span>
                 </label>
                 <div>
-                  <span>{{ itemBookingRequest.baggage }}</span>
+                  <span>{{ itemBookingRequest?.baggage }}</span>
                 </div>
               </div>
             </div>
@@ -1036,7 +1036,7 @@
             </div>
           </div>
           <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
-            *ngFor="let passenger of itemBookingRequest.passengers;let i = index;">
+            *ngFor="let passenger of itemBookingRequest?.passengers;let i = index;">
             <div nz-col class="gutter-row" nzSpan="5">
               <div class="inner-box">
                 <label for="" style="font-weight: 600;">1. Họ và tên
