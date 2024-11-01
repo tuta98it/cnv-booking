@@ -4,7 +4,7 @@ import { Constant } from '../constants/constant.class';
 @Pipe({
   name: 'employeePipe'
 })
-export class EmployeePipePipe implements PipeTransform {
+export class EmployeePipe implements PipeTransform {
   transform(employeeId: number, employees : any[]): any {
     if (employeeId >= 1) {
       let findEmployee = employees.find((objEmployee: any) => objEmployee.id === employeeId);

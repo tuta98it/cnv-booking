@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { GeneralService } from 'src/app/service/general-service';
 import { TableSelectionAbstract } from 'src/app/shared/component/table/table-selection.abstract';
@@ -27,15 +27,18 @@ import { FlightUtils } from 'src/app/shared/utils/flight-utils.class';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { HttpClient, HttpHeaders, HttpRequest, HttpResponse } from '@angular/common/http';
 import { filter } from 'rxjs/operators';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { resolve } from 'path';
 import { TypeOfDocument } from 'src/app/enums/type-of-document.enum';
+import { DisabledTimeFn, DisabledTimePartial } from 'ng-zorro-antd/date-picker';
+import { differenceInCalendarDays, isThisSecond, setHours } from 'date-fns';
+import { EmployeePipe } from 'src/app/shared/pipe/employeePipe.pipe';
 @Component({
   selector: 'airline-ticket-booking-request',
   templateUrl: './airline-ticket-booking-request.component.html',
   styleUrls: ['./airline-ticket-booking-request.component.scss']
 })
-export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract implements OnInit, OnDestroy {
+export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract implements OnInit, AfterViewInit, OnDestroy {
 
 
   @ViewChild("ListAccount") dataGridDetail: DxDataGridComponent;
@@ -78,7 +81,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   payloadAdminrequestbooking = {
     "page": 1,
     "pageSize": 500,
-    "status": AirlineTicketBookingRequestStatus.All
+    "status": AirlineTicketBookingRequestStatus.SubmitRequest
   }
   userInfor: any;
   titleFormPartner = '';
@@ -114,6 +117,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   @ViewChild('inputElementAmount', { static: false }) inputElementAmount?: ElementRef
 
   isLoadingButtonSaveAirlineTicketInfo: boolean = false;
+  idRequestBooking: number;
   constructor(
     public translate: TranslateService,
     private notificationService: NotificationService,
@@ -124,7 +128,8 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     public flightUtils: FlightUtils,
     private http: HttpClient,
     private msg: NzMessageService,
-    private router: Router
+    private router: Router,
+    private activatedRoute: ActivatedRoute
   ) {
     super('id');
     this.uploadHeader = {
@@ -162,8 +167,46 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
       changeFeeReturn: new FormControl({ value: null, disabled: false }),
     });
 
+
+  }
+  ngAfterViewInit(): void {
+    this.activatedRoute.queryParams.subscribe(async params => {
+      this.idRequestBooking = +params[Constant.ID];
+      if (this.idRequestBooking) {
+        this.getRequestBookingByID(this.idRequestBooking).then((result: any) => {
+          this.showPopupViewRequestBookingTicket(result);
+        });
+      }
+    });
   }
 
+
+  private getRequestBookingByID(requestBookingId: number) {
+    return new Promise((resolve, reject) => {
+      this.generalService.getRequestBookingByID(requestBookingId).subscribe(
+        {
+          next: (res: any) => {
+            if (res.isValid) {
+              return resolve(res.data);
+            } else {
+              if (res.errors && res.errors.length > 0) {
+                res.errors.forEach((el: any) => {
+                  this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+                });
+              } else {
+                this.notificationService.showNotification(Constant.ERROR, 'Lấy lượt đặt vé theo yêu cầu không thành công');
+              }
+            }
+          },
+          error: (err: any) => {
+            this.notificationService.showNotification(Constant.ERROR, 'Lấy lượt đặt vé theo yêu cầu thất bại do lỗi hệ thống');
+          },
+        }
+      ).add(() => {
+      });
+    });
+
+  }
 
   onRowPrepared(e) {
     if (e.rowType === "data") {
@@ -174,6 +217,10 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
       }
     }
   }
+
+  disabledHoldExpiryDateDepartureDate = (current: Date): boolean =>
+    differenceInCalendarDays(current, new Date()) < 0;
+
 
   onChangeInputAmount(value: string, controlName?: string): void {
     this.updateValueInputAmount(value);
@@ -232,9 +279,27 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   }
 
   ngOnInit(): void {
-    this.getListData();
+    this.getListData().then(result => {
+      if (this.router.url === '/booking-service/airline-ticket-booking-request') {
+        // cập nhất lại trạng thái quá hạn giữ chỗ
+        this.datas.forEach(requestBooking => {
+          if (this.isSetSinalUpdateStatusRequestBooking) {
+            if (requestBooking.status == this.BookingRequestStatusEnum.ReserveSeat || requestBooking.status == this.BookingRequestStatusEnum.AdjustTicket) {
+              const ticketHoldExpiryDate = requestBooking.ticketHoldExpiryDate != null ? new Date(requestBooking.ticketHoldExpiryDate) : new Date(0);
+              const now = new Date();
+              if (ticketHoldExpiryDate < now) {
+                this.updateStatusRequestBooking(requestBooking.id, this.BookingRequestStatusEnum.ExpiredTicket).then((r) => {
+                  this.getListData();
+                });
+              }
+            }
+          }
+        });
+      }
+    });
     this.getUserInfo();
     this.getAirport();
+
 
 
     this.intervalRequestBookingUpdateStatus = setInterval(() => {
@@ -243,7 +308,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
           // cập nhất lại trạng thái quá hạn giữ chỗ
           this.datas.forEach(requestBooking => {
             if (this.isSetSinalUpdateStatusRequestBooking) {
-              if (requestBooking.status == this.BookingRequestStatusEnum.ReserveSeat) {
+              if (requestBooking.status == this.BookingRequestStatusEnum.ReserveSeat || requestBooking.status == this.BookingRequestStatusEnum.AdjustTicket) {
                 const ticketHoldExpiryDate = requestBooking.ticketHoldExpiryDate != null ? new Date(requestBooking.ticketHoldExpiryDate) : new Date(0);
                 const now = new Date();
                 if (ticketHoldExpiryDate < now) {
@@ -253,7 +318,6 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
                 }
               }
             }
-
           });
         } else {
           clearInterval(this.intervalRequestBookingUpdateStatus);
@@ -292,6 +356,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
           let stt = 0;
           this.datas.forEach(en => {
             en.stt = ++stt;
+            en.userCreatedName = en.userBooking?.fullname ?? "";
             en.statusOld = en.status;
             en.isLoadingRequestBookingHistory = false;
             en.ticketPriceTotal = en.ticketPrice + (en.typeTicket == TypeAirlineTicket.RoundTrip ? (en.returnTicketPrice ?? 0) : 0);
@@ -514,7 +579,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
       cancelFeeDeparture: requestPartnerValue.cancelFee,
       changeFeeDeparture: requestPartnerValue.changeFee,
       reservationCodeDeparture: requestPartnerValue.reservationCode,
-      flightTimeReturn:[
+      flightTimeReturn: [
         requestPartnerValue.returnStartTime ?? (requestPartnerValue.returnDay ? new Date(`${requestPartnerValue.returnDay}`).setHours(0, 0, 0, 0) : '-'),
         requestPartnerValue.returnEndTime ?? (requestPartnerValue.returnDay ? new Date(`${requestPartnerValue.returnDay}`).setHours(23, 59, 0, 0) : '-')],
       airlineCodeReturn: requestPartnerValue.returnAirlineCode,
@@ -580,6 +645,10 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
         // this.isSendEmailToPassengerToConfirmFlightTicket = false;
         this.isSendEmailToPassengerToConfirmSuccessIssuedTicket = true;
         break;
+
+      case this.BookingRequestStatusEnum.FailureTicket:
+        this.FailureTicketRequestBookingById(this.itemBookingRequest.id);
+        break
       default:
         break;
     }
@@ -711,7 +780,6 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     });
 
     this.ticketRoundTrip = itemData.typeTicket == TypeAirlineTicket.RoundTrip
-    // console.log("this.formAirlineTicketPopup : ", this.formAirlineTicketPopup.value);
     this.listFileIds = [];
     this.fileFlightTicketList = [];
     for (const file of itemData.files) {
@@ -935,8 +1003,10 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
         passengers: formValue.passengers,
 
 
-        startTime: formValue.flightTimeDeparture[0] ?? new Date(),
-        endTime: formValue.flightTimeDeparture[1] ?? new Date(),
+        startTime: new Date(formValue.flightTimeDeparture[0]) ?? new Date(),
+        endTime: new Date(formValue.flightTimeDeparture[1]) ?? new Date(),
+
+
         bookingCode: formValue.bookingCodeDeparture,
         flightNumber: formValue.flightNumberDeparture,
         ticketPrice: formValue.ticketPriceDeparture,
@@ -947,8 +1017,8 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
         ticketHoldExpiryDate: formValue.ticketHoldExpiryDateDeparture,
         reservationCode: formValue.reservationCodeDeparture,
 
-        returnStartTime: formValue.flightTimeReturn[0] ?? new Date(),
-        returnEndTime: formValue.flightTimeReturn[1] ?? new Date(),
+        returnStartTime: new Date(formValue.flightTimeReturn[0]) ?? new Date(),
+        returnEndTime: new Date(formValue.flightTimeReturn[1]) ?? new Date(),
         returnBookingCode: formValue.bookingCodeReturn,
         returnFlightNumber: formValue.flightNumberReturn,
         returnTicketPrice: formValue.ticketPriceReturn,
@@ -984,70 +1054,25 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
                 // }
               } else {
               }
+
             }).catch((error) => {
               this.getListData();
             });
             break;
 
           case this.BookingRequestStatusEnum.AdjustTicket:
-            this
             if (payload) {
               if (payload.typeTicket == TypeAirlineTicket.OneWay) {
-
-                var isValidateFile = true;
-                if (!payload?.refundFee) {
-                  this.msg.error("Phí hoàn vé không được để trống");
-                  isValidateFile = false;
-
-                }
-
-                if (!payload.cancelFee) {
-                  this.msg.error("Phí huỷ vé không được để trống");
-                  isValidateFile = false;
-                }
-
-                if (!payload.changeFee) {
-                  this.msg.error("Phí đổi vé không được để trống");
-                  isValidateFile = false;
-                }
-                if (!isValidateFile) {
+                if (!payload.baggageFee && !payload?.refundFee && !payload.cancelFee && !payload.changeFee) {
+                  this.msg.error("Phải nhập ít nhất một trong các phí hành lý/hoàn vé/huỷ vé/đổi vé chiều đi");
                   return;
                 }
               } else if (payload.typeTicket == TypeAirlineTicket.RoundTrip) {
-                var isValidateFile = true;
-                if (!payload?.refundFee) {
-                  this.msg.error("Phí hoàn vé chiều đi không được để trống");
-                  isValidateFile = false;
-
-                }
-
-                if (!payload?.cancelFee) {
-                  this.msg.error("Phí huỷ vé chiều đi  không được để trống");
-                  isValidateFile = false;
-                }
-
-                if (!payload?.changeFee) {
-                  this.msg.error("Phí đổi vé chiều đi không được để trống");
-                  isValidateFile = false;
-                }
-
-                if (!payload?.returnRefundFee) {
-                  this.msg.error("Phí hoàn vé chiều về không được để trống");
-                  isValidateFile = false;
-
-                }
-
-                if (!payload.returnCancelFee) {
-                  this.msg.error("Phí huỷ vé chiều về  không được để trống");
-                  isValidateFile = false;
-                }
-
-                if (!payload.returnChangeFee) {
-                  this.msg.error("Phí đổi vé chiều về không được để trống");
-                  isValidateFile = false;
-                }
-
-                if (!isValidateFile) {
+                if (!payload.baggageFee && !payload?.refundFee && !payload.cancelFee && !payload.changeFee) {
+                  this.msg.error("Phải nhập ít nhất một trong các phí hành lý/hoàn vé/huỷ vé/đổi vé chiều đi");
+                  if (!payload.returnBaggageFee && !payload?.returnRefundFee && !payload.returnCancelFee && !payload.returnChangeFee) {
+                    this.msg.error("Phải nhập ít nhất một trong các phí hành lý/hoàn vé/huỷ vé/đổi vé chiều vé");
+                  }
                   return;
                 }
               }
@@ -1094,6 +1119,8 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
         this.getListData();
         this.isVisibleAirlineTicketInfo = true;
         this.isSetSinalUpdateStatusRequestBooking = true;
+        this.isLoadingButtonSaveAirlineTicketInfo = false;
+
       });
 
     } else {
@@ -1147,6 +1174,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   }
 
   handleCancelArilineTicketPopup() {
+    this.isLoadingButtonSaveAirlineTicketInfo = false;
     this.isVisibleAirlineTicketInfo = false;
     this.getListData();
   }
@@ -1298,8 +1326,6 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
       });
     });
   }
-
-
   IssuedTicketRequestBookingById(id: number) {
     return new Promise((resolve, reject) => {
       this.generalService.updateStatusRequestBooking(id, this.BookingRequestStatusEnum.IssuedTicket).subscribe(
@@ -1321,6 +1347,38 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
           },
           error: (err: any) => {
             this.notificationService.showNotification(Constant.ERROR, 'Xuất vé thất bại do lỗi hệ thống');
+            reject(err);
+          },
+          complete: () => {
+          }
+        }
+      ).add(() => {
+      });
+    });
+
+  }
+
+  FailureTicketRequestBookingById(id: number) {
+    return new Promise((resolve, reject) => {
+      this.generalService.updateStatusRequestBooking(id, this.BookingRequestStatusEnum.FailureTicket).subscribe(
+        {
+          next: (res: any) => {
+            if (res.isValid) {
+              this.notificationService.showNotification(Constant.SUCCESS, `Đã chuyển trạng thái vé thành Xuất vé thất bại`);
+              resolve(true);
+            } else {
+              if (res.errors && res.errors.length > 0) {
+                res.errors.forEach((el: any) => {
+                  this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+                });
+              } else {
+                this.notificationService.showNotification(Constant.ERROR, 'Không thể trạng thái vé thành Xuất vé thất bại');
+              }
+              reject(false);
+            }
+          },
+          error: (err: any) => {
+            this.notificationService.showNotification(Constant.ERROR, 'Không thể trạng thái vé thành Xuất vé thất bại do lỗi hệ thống');
             reject(err);
           },
           complete: () => {

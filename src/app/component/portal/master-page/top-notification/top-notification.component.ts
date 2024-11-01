@@ -4,7 +4,7 @@ import { Component, isDevMode, OnDestroy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { GeneralService } from '../../../../service/general-service';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NotificationService } from '../../../../service/notification.service';
 import { DatePipe } from '@angular/common';
 import { filter, map } from 'rxjs/operators';
@@ -21,6 +21,7 @@ import { UserType } from 'src/app/enums/user-type.enum';
 import { MenuStateService } from 'src/app/shared/app-state/menu-state.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { ColorStatusNotifications, NotificationVHLEnum } from 'src/app/enums/notification-vhl.enum';
+import { NavigationService } from 'src/app/service/navigation.service';
 
 @Component({
   selector: 'app-top-notification',
@@ -33,6 +34,7 @@ export class TopNotificationComponent implements OnInit {
   totalTopNotifications: number = 0;
   ColorStatusNotifications = ColorStatusNotifications;
   NotificationVHLEnum = NotificationVHLEnum;
+  totalUnRead: number;
   constructor(
     private notificationAPIService: NotificationAPIService,
     private router: Router,
@@ -44,6 +46,7 @@ export class TopNotificationComponent implements OnInit {
     private notificationService: NotificationService,
     private activeRoute: ActivatedRoute,
     private msg: NzMessageService,
+    private navigationService: NavigationService
   ) { }
 
 
@@ -51,11 +54,14 @@ export class TopNotificationComponent implements OnInit {
     this.getTopNotifications();
   }
 
-  private getTopNotifications() {
+  public getTopNotifications() {
     this.notificationAPIService.getTopNotifications().subscribe(res => {
       if (res !== null) {
         this.topNotifications = res.data;
         this.totalTopNotifications = res.total;
+        this.totalUnRead = res.totalUnRead;
+
+
       }
     }, error => {
       this.topNotifications = [];
@@ -63,16 +69,21 @@ export class TopNotificationComponent implements OnInit {
     });
   }
 
-  public handleReadedNotify(notifyItem: any) {
 
-    let notificationIds: number[] = [
-      notifyItem.id,
-    ];
-    this.readedNotificationByIds(notificationIds).then((result: any) => {
-      // this.notificationService.showNotification(Constant.SUCCESS, 'Đã gửi email thông báo giữ phòng khách sạn tới khách hàng');
-    }).catch((error: any) => {
-      // this.notificationService.showNotification(Constant.ERROR, 'Gửi email thông báo giữ phòng khách sạn tới khách hàng không thành công');
-    });
+  handleClickItemTopNotify(notifyItem: any) {
+      this.handleNavigatePageNotifications(notifyItem.id);
+    this.readedNotify(notifyItem);
+  }
+
+  private readedNotify(notifyItem: any) {
+      let notificationIds: number[] = [
+        notifyItem.id,
+      ];
+      if (notifyItem.readed != true) {
+        this.readedNotificationByIds(notificationIds).then((result: any) => {
+        }).catch((error: any) => {
+        });
+      }
   }
 
   public handleReadedAllNotifications() {
@@ -84,8 +95,11 @@ export class TopNotificationComponent implements OnInit {
     });
   }
 
-  public handleNavigatePageNotifications(){
-    this.router.navigate(['/notifications']);
+
+
+
+  public handleNavigatePageNotifications(idNotify?: number) {
+    this.navigationService.navigateToNotifications(idNotify);
   }
 
 
@@ -95,7 +109,7 @@ export class TopNotificationComponent implements OnInit {
         {
           next: (res: any) => {
             if (res.isValid) {
-              resolve(true);
+              resolve(res.data);
             } else {
               if (res.errors && res.errors.length > 0) {
                 res.errors.forEach((el: any) => {

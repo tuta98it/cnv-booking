@@ -1,8 +1,61 @@
-
-.circle-button {
-  border-radius: 100% !important;
-}
 ::ng-deep {
+  .circle-button {
+    position: relative;
+    border-radius: 100% !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  @keyframes shake {
+
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+
+    20%,
+    60% {
+      transform: translateX(-2px);
+    }
+
+    40%,
+    80% {
+      transform: translateX(2px);
+    }
+  }
+
+  .unread-badge-common {
+    position: absolute;
+    background-color: red;
+    color: white;
+    border-radius: 100%;
+    padding: 0.2rem 0.4rem;
+    font-size: x-small;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Sử dụng khi tổng số chưa đọc <= 99 */
+  .unread-badge {
+    top: -8px;
+    right: -8px;
+  }
+
+  /* Sử dụng khi tổng số chưa đọc > 99 */
+  .unread-badge-99 {
+    top: -9px;
+    right: -15px;
+  }
+
+  .circle-button:hover .unread-badge-common {
+    animation: shake 0.5s ease-in-out 1;
+    animation-fill-mode: forwards;
+  }
+
+
   .font-size-dot-read {
     font-size: 0.5rem !important;
   }
@@ -10,7 +63,8 @@
   .dropdown-container {
     border-radius: 1rem;
     background-color: #ffffff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Áp dụng bóng đổ */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* Áp dụng bóng đổ */
   }
 
   .header {

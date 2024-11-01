@@ -1,7 +1,16 @@
 <nz-button-group style="margin-right: 1rem ;">
-  <button nz-button nzShape="circle" class="circle-button" nz-dropdown [nzDropdownMenu]="menuTopNotify"
+  <button nz-button nzShape="circle" class="circle-button" nz-dropdown nzTrigger="click" [nzDropdownMenu]="menuTopNotify" (click)="getTopNotifications()"
     [nzClickHide]="false" nzPlacement="bottomRight">
     <span nz-icon nzType="bell"></span>
+    <div *ngIf="totalUnRead <= 9" class="unread-badge-common unread-badge">{{ totalUnRead }}</div>
+
+    <ng-container *ngIf="totalUnRead >= 10 && totalUnRead <= 99; else moreThan99">
+      <div class="unread-badge-common unread-badge">{{ totalUnRead }}</div>
+    </ng-container>
+
+    <ng-template #moreThan99>
+      <div class="unread-badge-common unread-badge-99">99+</div>
+    </ng-template>
   </button>
 </nz-button-group>
 
@@ -17,7 +26,7 @@
     <ul nz-menu class="notifications-list">
       <ng-container *ngFor="let topNotify of topNotifications; let i = index">
         <li nz-menu-item class="notification-item" title="{{topNotify.contentNotification}}"
-          (click)="handleReadedNotify(topNotify)">
+          (click)="handleClickItemTopNotify(topNotify)">
           <div class="center-box">
             <div class="notification-content">
               <div class="notification-text">
