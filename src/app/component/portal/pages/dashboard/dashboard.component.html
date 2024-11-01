@@ -1,235 +1,213 @@
-<section class="bg-light">
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-12 mb-4 mb-sm-5">
-        <div class="card card-style1 border-0">
-          <div class="card-body p-1-9 p-sm-2-3 p-md-6 p-lg-7">
-            <div class="row align-items-center">
-              <div class="col-lg-4 mb-4 mb-lg-0">
-                <!-- <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="..."> -->
-                <img style="scale: 120%;"
-                  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAIAAADdvvtQAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyFpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDE0IDc5LjE1MTQ4MSwgMjAxMy8wMy8xMy0xMjowOToxNSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChXaW5kb3dzKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpDOTcwMTNFRkEyQjAxMUU0OEY5RUI0RkU3QjRCMjRCQSIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDpDOTcwMTNGMEEyQjAxMUU0OEY5RUI0RkU3QjRCMjRCQSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkM5NzAxM0VEQTJCMDExRTQ4RjlFQjRGRTdCNEIyNEJBIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOkM5NzAxM0VFQTJCMDExRTQ4RjlFQjRGRTdCNEIyNEJBIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+MYrKwQAACC1JREFUeNrsnQlz2kgQ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"
-                  alt="...">
-              </div>
-              <div class="col-lg-8 px-xl-10">
-                <div class="bg-secondary d-lg-inline-block py-1-9 px-1-9 px-sm-6 mb-1-9 rounded">
-                  <h3 class="h2 text-white mb-0">{{userInfo.fullname}}</h3>
-                  <span class="text-primary">{{userInfo.username}}</span>
-                </div>
-                <ul class="list-unstyled mb-1-9">
-                  <li class="mb-2 mb-xl-3 display-28" *ngIf="userInfo.staffCode"><span
-                      class="display-26 text-secondary me-2 font-weight-600">Mã khách hàng:</span>
-                    {{userInfo.staffCode}}</li>
-                  <li class="mb-2 mb-xl-3 display-28" *ngIf="userInfo.address"><span
-                      class="display-26 text-secondary me-2 font-weight-600">Địa chị:</span> {{userInfo.address}}</li>
-                  <li class="mb-2 mb-xl-3 display-28" *ngIf="userInfo.email"><span
-                      class="display-26 text-secondary me-2 font-weight-600">Email:</span> {{userInfo.email}}</li>
-                  <li class="mb-2 mb-xl-3 display-28" *ngIf="userInfo.website"><span
-                      class="display-26 text-secondary me-2 font-weight-600">Website:</span> {{userInfo.website}}</li>
-                  <li class="mb-2 mb-xl-3 display-28" *ngIf="userInfo.facebook"><span
-                      class="display-26 text-secondary me-2 font-weight-600">Facebook:</span> {{userInfo.facebook}}</li>
-                  <li class="mb-2 mb-xl-3 display-28" *ngIf="userInfo.zalo"><span
-                      class="display-26 text-secondary me-2 font-weight-600">Zalo:</span> {{userInfo.zalo}}</li>
-                  <li class="mb-2 mb-xl-3 display-28" *ngIf="userInfo.telegram"><span
-                      class="display-26 text-secondary me-2 font-weight-600">Telegram:</span> {{userInfo.telegram}}</li>
-                  <li class="mb-2 mb-xl-3 display-28" *ngIf="userInfo.twitter"><span
-                      class="display-26 text-secondary me-2 font-weight-600">Twitter:</span> {{userInfo.twitter}}</li>
-                  <li class="display-28" *ngIf="userInfo.phoneNo"><span
-                      class="display-26 text-secondary me-2 font-weight-600">Phone:</span> {{userInfo.phoneNo}}</li>
-                </ul>
-                <div style="display: flex;">
-                  <div>
-                    <a href="{{userInfo.facebook}}"><img
-                        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAADYUlEQVR4nO2ZzU4TURTHeYHSe2c6idG9r2BYu5GYYOnM9JMCYeXGxBWJaxcVsNAWKi2lgIDAyp1bwiPIA5jwYQyYGCRojBE95k5n2unMnZnOvQPpYk7y33T1+92cO+dMZ2AgrLDCCqsvKzK18zgyufs5MrkHg5O7enZgcMLIOz3bEB03smXKJkTzJG+1IC0bgMaMrOtZA5RrBeeanWRXtaBM4xRn68P+BSb2TiNtcJ/weX/w2AEeZxtaUHblxL9An8DjbAOEzAr4FggMfowfXmAX6A94gU3ACu4Ev+kBb4Cv65e1CTizAihVBaRWIKqUACllPRVAyaoFvq7Fv8BNwGcacC9fgxfrB3BweAxfvl3BxdUvLSdfL+Hw0zlE5QUbPKOAP3jUA/yD51twfH4JboUS8zZ4IV3jEQgAPteEu2PLcHT23RW+I9ANzyHgNqDM8Bsu8GuAMzWYXt2HXgolijZ4Ib3MIhAQfK6pXdj9j0c22LOLH/BwehuwPK+dPIHH2h3ohhdZBIKC1wTUCpxf/LQJPC1/ACFV7e75tB2eUSAYeJKoXILff65tAvenapZ+p8OLqTc8AnzwZDgRAVqJit4uXS1jgk+14NkF8sFslOTZ7nph0+7wYqrKIMCxlKHkknbqrSxANFGkC4zOARp9bcocCGrZBs8hwLbXOLWMV73cOgBRXbTBi0kmAfaljFVgvPAexOSSDZ78xiTgPl2t8KuePe9VQ8+aLWALfIxFgBWebJIsAtd//8EdtUiFjyUXGQR6hW+Dm14ByWqc6ExXcjlpheMzgOOz7QhykQrPIeAfnrbLEwm6wCz1wlrhYyqTgPeAssKb36DME5Y8It0Fqjr8EhU+plY4BDjhyXByF6h6wrML8MCb9hq3OyD2AB9TywwCAcGT1QC7CSQNcGd4ZoEg4Mleg+MOAk9e9QQvKQwCfv7y8NooSa/TSmgLGPAVKryklDgEOOHJU8ZdYNETnl0gAPiWwIyDQKEneElZYBBggO+8QXWvw44CI4We4DkEnKerM7wB3hlQQnxOu7CkZcipaxkpgEhayAZfssFLMpNAMPBOqwH95EtUeEmeZxe4DXhJcYdnEiBfRvoFXpKL/j9w4FR9GKfrpzcDX3aGl83gLXhptPjIt0BYYYUV1sBt1H9ja3+JK6NR4QAAAABJRU5ErkJggg=="></a>
-                  </div>
-                  <div>
-                    <a href="{{userInfo.zalo}}"><img
-                        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAEbElEQVR4nO2Yj2sbZRjHr/qXTJi9q7K6OkU7XEXBCYIKm+jQjdxt1s0yp2UwGXTdSkfRDjcV3UCxyBTqj+HEMrC1ndPZHxuiXR1NOzvX1nZtmve9ND+bn195bk16SXNpLtckBfPAF8LlyeX7ufd53/e5VxBKUYpS/P8CQJnL5XqQc97IGLvIOR/hnHs558hSlDtMv2WMHVNVtaowzl/A3Rtexc6Oyx7VhNlsZXc6ndvp4eTF+717sE6Ucen0ef9qG0eK+lRVXbeq5itseEKS4d57MgTG8moeJMbYHOe8ZlXMl9uwVZKx8HBdDGMTrryb50sQQcsQkg3rRQWqpACf/OArmHmuG4ncy6kRd4kK+sl8TX0UM47CmudL6s1pYlfIkMk86aPv8j5xkUlOp3ObaQBRwXUyv6EWGJtQiwrAOR82ZV5SsCX+9He1hIptHiRVVTeaAWhZK+XDF8UYO5p9+ci4FAfouuJeKwDdZgAm4wCjtwq39vPMspspIX8cIN3y+fLxsPadkQZHVoamvBPtATMAHjMACTOOueU3a7vgw/GzgSQ9/XZEy2/4bCGR1zXgxgfn/Pii04vxKRWdAx4M3XAZAnQt5tP90618OQFMTK+8hF7o9eD+PYD8bghzTo5ZB8e+U8GkUaFWRG9a/3k2Tf6j+2P4ccBjHeDGeOZy6B+aR9XeGJ45HEnAtrYHULEbOH3eh4kpFVf+msdzDRFDgFaD/Oo3qP9SrQFcGzUGoAlObcZjb0Zhv7mUt/lAFNS56nMHhuYNATZnyKdysgTQd20+rfmpGRXPNkTwwGsx9A4mL7WVtUBj29JcINEcMAKozJBPc8ISwLcXvcvMOxlH7Xsh3Lcb+P6X5Dol7WgO4/H6qFYO8Wu0IRoB7MiQ/9NVtzWA1vblOzGtNPTd80ci2hPS66turzYvqIciU0faFjRYqnEjgH6D/Lr3g9YncepNaI3PtAfsOxlMmKInW1kbw5MHo9qDeGR/LGFa/5kn5QNb3oriRLt/2RKeE8BTh6JmNpu8SsgFINuddW0ByHDrAWg4i22ec+4zAzCiB6CaTNdSFFKMsVtmAHpSy+jTDl+xAXqyB1BwLBWg+kAM/0wW79WSMdaUNYBoQ1W6JbL+42AxAaqzBhAElEky7KkAtPP+e7vwo8AYGxTMRoWM7akA1DLPOIpSRq+YBlgchT49wM6WcMHND99U/875xJpOpCUZc2SeWoLUrnNsXMUf9vTdqlVNTqv48JwvcPhMaJNgJUQZNaKC4MEzQXRfdaPjNw9OfePHS81hbU4Q3NZDEdCxO7XAVkzPOrj2FkbN4kN10QCdilsyr4eIj0QmUSP2YlMYTZ8H8HWPFz//7sbQqEsDuz17B44OCegti67/+qcbX3Z60Xw2AKU1hE2v33ntFGXwVTOfUk69K0FYlozL62XcI+QnUFauYJukYHi1jYsKrosydtF/CIUIScFGScZRUUE3AYkyPCYMByQZ0/RbUcE75TZUF8x4KUpRCmFNxX8QRqbiSsmKAQAAAABJRU5ErkJggg=="></a>
-                  </div>
-                </div>
-                <!-- <ul class="social-icon-style1 list-unstyled mb-0 ps-0">
-                   <li><a href="#!"><span nz-icon nzType="twitter" nzTheme="outline"></span></a></li>
-                  <li><a href="#!"><span nz-icon nzType="instagram" nzTheme="outline"></span></a></li>
-                  <li><a href="https://www.facebook.com/"><span nz-icon nzType="facebook" nzTheme="outline"></span></a>
-                  </li>
-                  <li><a href="https://www.zalo.com/"><img
-                        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAEbElEQVR4nO2Yj2sbZRjHr/qXTJi9q7K6OkU7XEXBCYIKm+jQjdxt1s0yp2UwGXTdSkfRDjcV3UCxyBTqj+HEMrC1ndPZHxuiXR1NOzvX1nZtmve9ND+bn195bk16SXNpLtckBfPAF8LlyeX7ufd53/e5VxBKUYpS/P8CQJnL5XqQc97IGLvIOR/hnHs558hSlDtMv2WMHVNVtaowzl/A3Rtexc6Oyx7VhNlsZXc6ndvp4eTF+717sE6Ucen0ef9qG0eK+lRVXbeq5itseEKS4d57MgTG8moeJMbYHOe8ZlXMl9uwVZKx8HBdDGMTrryb50sQQcsQkg3rRQWqpACf/OArmHmuG4ncy6kRd4kK+sl8TX0UM47CmudL6s1pYlfIkMk86aPv8j5xkUlOp3ObaQBRwXUyv6EWGJtQiwrAOR82ZV5SsCX+9He1hIptHiRVVTeaAWhZK+XDF8UYO5p9+ci4FAfouuJeKwDdZgAm4wCjtwq39vPMspspIX8cIN3y+fLxsPadkQZHVoamvBPtATMAHjMACTOOueU3a7vgw/GzgSQ9/XZEy2/4bCGR1zXgxgfn/Pii04vxKRWdAx4M3XAZAnQt5tP90618OQFMTK+8hF7o9eD+PYD8bghzTo5ZB8e+U8GkUaFWRG9a/3k2Tf6j+2P4ccBjHeDGeOZy6B+aR9XeGJ45HEnAtrYHULEbOH3eh4kpFVf+msdzDRFDgFaD/Oo3qP9SrQFcGzUGoAlObcZjb0Zhv7mUt/lAFNS56nMHhuYNATZnyKdysgTQd20+rfmpGRXPNkTwwGsx9A4mL7WVtUBj29JcINEcMAKozJBPc8ISwLcXvcvMOxlH7Xsh3Lcb+P6X5Dol7WgO4/H6qFYO8Wu0IRoB7MiQ/9NVtzWA1vblOzGtNPTd80ci2hPS66turzYvqIciU0faFjRYqnEjgH6D/Lr3g9YncepNaI3PtAfsOxlMmKInW1kbw5MHo9qDeGR/LGFa/5kn5QNb3oriRLt/2RKeE8BTh6JmNpu8SsgFINuddW0ByHDrAWg4i22ec+4zAzCiB6CaTNdSFFKMsVtmAHpSy+jTDl+xAXqyB1BwLBWg+kAM/0wW79WSMdaUNYBoQ1W6JbL+42AxAaqzBhAElEky7KkAtPP+e7vwo8AYGxTMRoWM7akA1DLPOIpSRq+YBlgchT49wM6WcMHND99U/875xJpOpCUZc2SeWoLUrnNsXMUf9vTdqlVNTqv48JwvcPhMaJNgJUQZNaKC4MEzQXRfdaPjNw9OfePHS81hbU4Q3NZDEdCxO7XAVkzPOrj2FkbN4kN10QCdilsyr4eIj0QmUSP2YlMYTZ8H8HWPFz//7sbQqEsDuz17B44OCegti67/+qcbX3Z60Xw2AKU1hE2v33ntFGXwVTOfUk69K0FYlozL62XcI+QnUFauYJukYHi1jYsKrosydtF/CIUIScFGScZRUUE3AYkyPCYMByQZ0/RbUcE75TZUF8x4KUpRCmFNxX8QRqbiSsmKAQAAAABJRU5ErkJggg=="></a>
-                  </li>
-                </ul> -->
-              </div>
-            </div>
-          </div>
-        </div>
+<div class="main-wapper">
+  <div class="toolbar">
+    <div class="before">
+      <h2 class="toolbar-title">Dashboard</h2>
+    </div>
+    <div class="after">
+      <div class="buttons">
+        <nz-select style="width: 200px; margin-right: 10px;" [(ngModel)]="search.type" (ngModelChange)="doSearch()">
+          <nz-option *ngFor="let option of TIME_RANGE_FILTER" [nzValue]="option.value"
+                     [nzLabel]="option.label"></nz-option>
+        </nz-select>
+        <ng-container *ngIf="search.type == 10">
+          <nz-date-picker style="margin-right: 10px;" [(ngModel)]="search.fromDate" (ngModelChange)="doSearch()"
+                          nzPlaceHolder="Từ ngày" nzFormat="dd/MM/yyyy"></nz-date-picker>
+          <nz-date-picker [(ngModel)]="search.toDate" (ngModelChange)="doSearch()" nzPlaceHolder="Đến ngày"
+                          nzFormat="dd/MM/yyyy"></nz-date-picker>
+        </ng-container>
       </div>
-      <!-- <div class="col-lg-12 mb-4 mb-sm-5">
-        <div>
-          <span class="section-title text-primary mb-3 mb-sm-4">About Me</span>
-          <p>Edith is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
-            standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to
-            make a type specimen book.</p>
-          <p class="mb-0">It is a long established fact that a reader will be distracted by the readable content of a
-            page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal
-            distribution of letters, as opposed.</p>
-        </div>
-      </div> -->
-      <!-- <div class="col-lg-12">
-        <div class="row">
-          <div class="col-lg-12 mb-4 mb-sm-5">
-            <div class="mb-4 mb-sm-5">
-              <span class="section-title text-primary mb-3 mb-sm-4">Skill</span>
-              <div class="progress-text">
-                <div class="row">
-                  <div class="col-6">Driving range</div>
-                  <div class="col-6 text-end">80%</div>
-                </div>
-              </div>
-              <div class="custom-progress progress progress-medium mb-3" style="height: 4px;">
-                <div class="animated custom-bar progress-bar slideInLeft bg-secondary" style="width:80%"
-                  aria-valuemax="100" aria-valuemin="0" aria-valuenow="10" role="progressbar"></div>
-              </div>
-              <div class="progress-text">
-                <div class="row">
-                  <div class="col-6">Short Game</div>
-                  <div class="col-6 text-end">90%</div>
-                </div>
-              </div>
-              <div class="custom-progress progress progress-medium mb-3" style="height: 4px;">
-                <div class="animated custom-bar progress-bar slideInLeft bg-secondary" style="width:90%"
-                  aria-valuemax="100" aria-valuemin="0" aria-valuenow="70" role="progressbar"></div>
-              </div>
-              <div class="progress-text">
-                <div class="row">
-                  <div class="col-6">Side Bets</div>
-                  <div class="col-6 text-end">50%</div>
-                </div>
-              </div>
-              <div class="custom-progress progress progress-medium mb-3" style="height: 4px;">
-                <div class="animated custom-bar progress-bar slideInLeft bg-secondary" style="width:50%"
-                  aria-valuemax="100" aria-valuemin="0" aria-valuenow="70" role="progressbar"></div>
-              </div>
-              <div class="progress-text">
-                <div class="row">
-                  <div class="col-6">Putting</div>
-                  <div class="col-6 text-end">60%</div>
-                </div>
-              </div>
-              <div class="custom-progress progress progress-medium" style="height: 4px;">
-                <div class="animated custom-bar progress-bar slideInLeft bg-secondary" style="width:60%"
-                  aria-valuemax="100" aria-valuemin="0" aria-valuenow="70" role="progressbar"></div>
-              </div>
-            </div>
-            <div>
-              <span class="section-title text-primary mb-3 mb-sm-4">Education</span>
-              <p>Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text,
-                and a search for 'lorem ipsum' will uncover many web sites still in their infancy.</p>
-              <p class="mb-1-9">There are many variations of passages of Lorem Ipsum available, but the majority have
-                suffered alteration in some form, by injected humour.</p>
-
-            </div>
-          </div>
-        </div>
-      </div> -->
-      <div class="col-lg-12">
-        <div class="col-md-12" style="margin-bottom: 10px;">
-          <nz-select style="width: 200px; margin-right: 10px;" [(ngModel)]="search.type" (ngModelChange)="doSearch()">
-            <nz-option *ngFor="let option of TIME_RANGE_FILTER" [nzValue]="option.value"
-              [nzLabel]="option.label"></nz-option>
-          </nz-select>
-          <ng-container *ngIf="search.type == 10">
-            <nz-date-picker style="margin-right: 10px;" [(ngModel)]="search.fromDate" (ngModelChange)="doSearch()"
-              nzPlaceHolder="Từ ngày" nzFormat="dd/MM/yyyy"></nz-date-picker>
-            <nz-date-picker [(ngModel)]="search.toDate" (ngModelChange)="doSearch()" nzPlaceHolder="Đến ngày"
-              nzFormat="dd/MM/yyyy"></nz-date-picker>
-          </ng-container>
-        </div>
-        <div>
-          <div class="row">
-            <div class="col-md-12">
-              <div class="card">
-                <!-- <div class="card-header border-0 pt-5">
-                 <h3 class="card-title align-items-start flex-column">
-                   <span class="card-label fw-bold fs-3 mb-1">Tổng hợp doanh thu</span>
-                 </h3>
-               </div>-->
-                <div class="card-body line1">
-                  <div nz-row>
-                    <div nz-col [nzSpan]="4">
-                      <div class="box-revenue-text">
-                        <ul>
-                          <li class="d-flex">
-                            <img src="/assets/image/money-tag.png">
-                            <div>
-                              <label>{{objRevenue.totalSales | number:'1.0-2'}}</label>
-                              <span>Tổng doanh thu</span>
-                            </div>
-                          </li>
-                          <!-- <li class="d-flex">
-                          <img src="/assets/image/profit.png">
-                          <div>
-                            <label>{{424432351| number:'1.0-2'}}</label>
-                            <span>Thực thu</span>
-                          </div>
-                        </li>
-                        <li class="d-flex">
-                          <img src="/assets/image/tag.png">
-                          <div>
-                            <label>{{5125543523 | number:'1.0-2'}}</label>
-                            <span>Chiết khấu</span>
-                          </div>
-                        </li>
-                        <li class="d-flex">
-                          <span class="fa fa-fw fa-file"></span>
-                          <div>
-                            <label>{{523452345 | number:'1.0-2'}}</label>
-                            <span>Số phiếu</span>
-                          </div>
-                        </li>
-                        <li class="d-flex">
-                          <span class="fa fa-fw fa-file-alt"></span>
-                          <div>
-                            <label>{{634363636 | number:'1.0-2'}}</label>
-                            <span>Số chỉ định</span>
-                          </div>
-                        </li> -->
-                        </ul>
-                      </div>
-                    </div>
-                    <div nz-col [nzSpan]="20">
-                      <div id="pieChart">
-                        <apx-chart *ngIf="barChartSaleOptions" [series]="barChartSaleOptions.series"
-                          [chart]="barChartSaleOptions.chart" [dataLabels]="barChartSaleOptions.dataLabels"
-                          [plotOptions]="barChartSaleOptions.plotOptions" [responsive]="barChartSaleOptions.responsive"
-                          [xaxis]="barChartSaleOptions.xaxis" [yaxis]="barChartSaleOptions.yaxis"
-                          [legend]="barChartSaleOptions.legend" [fill]="barChartSaleOptions.fill"
-                          [title]="barChartSaleOptions.title"></apx-chart>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <br />
-          <div class="row">
-            <div class="col-md-12">
-              <div class="card">
-                <div class="card-body line1">
-                  <div id="lineChart">
-                    <apx-chart *ngIf="lineChartOptions" [series]="lineChartOptions.series"
-                      [chart]="lineChartOptions.chart" [xaxis]="lineChartOptions.xaxis"
-                      [stroke]="lineChartOptions.stroke" [colors]="lineChartOptions.colors"
-                      [dataLabels]="lineChartOptions.dataLabels" [legend]="lineChartOptions.legend"
-                      [markers]="lineChartOptions.markers" [grid]="lineChartOptions.grid"
-                      [yaxis]="lineChartOptions.yaxis" [title]="lineChartOptions.title"
-                      [fill]="lineChartOptions.fill"></apx-chart>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
     </div>
   </div>
-</section>
+  <div class="card border-0 pt-3">
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <div class="d-flex align-items-center p-2 border rounded bg-light shadow-sm" style="gap: 12px">
+          <div class="icon">
+            <span class="fa fa-fw fa-plane"></span>
+          </div>
+          <div class="form-group" *ngIf="avgItem">
+            <label>Trung bình thời gian yêu cầu được xử lý thành công: (Dịch vụ vé máy bay)</label>
+            <div class="d-flex align-items-center">
+              <strong class="h3 mr-2">{{avgItem.averageTimePlaneSuccess}} (giờ)</strong>
+              <small *ngIf="avgItem.averageTimePlaneSuccessPercentSamePeriod < 0"
+                     class="font-weight-normal text-danger">(Giảm {{avgItem.averageTimePlaneSuccessPercentSamePeriod}}%
+                so với cùng kỳ)</small>
+              <small *ngIf="avgItem.averageTimePlaneSuccessPercentSamePeriod >= 0"
+                     class="font-weight-normal text-success">(Tăng {{avgItem.averageTimePlaneSuccessPercentSamePeriod}}%
+                so với cùng kỳ)</small>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="d-flex align-items-center p-2 border rounded bg-light shadow-sm" style="gap: 12px">
+          <div class="icon">
+            <span class="fa fa-fw fa-exclamation-triangle"></span>
+          </div>
+          <div class="form-group" *ngIf="avgItem">
+            <label>Tỷ lệ lỗi phát sinh trên hệ thống: (Dịch vụ vé máy bay)</label>
+            <div class="d-flex align-items-center">
+              <strong class="h3 mr-2">{{avgItem.percentPlaneError}}%</strong>
+              <small *ngIf="avgItem.percentPlaneErrorPercentSamePeriod < 0"
+                     class="font-weight-normal text-danger">(Giảm {{avgItem.percentPlaneErrorPercentSamePeriod}}% so với
+                cùng kỳ)</small>
+              <small *ngIf="avgItem.percentPlaneErrorPercentSamePeriod >= 0"
+                     class="font-weight-normal text-success">(Tăng {{avgItem.percentPlaneErrorPercentSamePeriod}}% so
+                với cùng kỳ)</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <div class="d-flex align-items-center p-2 border rounded bg-light shadow-sm" style="gap: 12px">
+          <div class="icon">
+            <span class="fa fa-fw fa-bed"></span>
+          </div>
+          <div class="form-group" *ngIf="avgItem">
+            <label>Trung bình thời gian yêu cầu được xử lý thành công: (Dịch vụ lưu trú)</label>
+            <div class="d-flex align-items-center">
+              <strong class="h3 mr-2">{{avgItem.averageTimeHotelSuccess}} (giờ)</strong>
+              <small *ngIf="avgItem.averageTimeHotelSuccessPercentSamePeriod < 0"
+                     class="font-weight-normal text-danger">(Giảm {{avgItem.averageTimeHotelSuccessPercentSamePeriod}}%
+                so với cùng kỳ)</small>
+              <small *ngIf="avgItem.averageTimeHotelSuccessPercentSamePeriod >= 0"
+                     class="font-weight-normal text-success">(Tăng {{avgItem.averageTimeHotelSuccessPercentSamePeriod}}%
+                so với cùng kỳ)</small>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="d-flex align-items-center p-2 border rounded bg-light shadow-sm" style="gap: 12px">
+          <div class="icon">
+            <span class="fa fa-fw fa-exclamation-triangle"></span>
+          </div>
+          <div class="form-group" *ngIf="avgItem">
+            <label>Tỷ lệ lỗi phát sinh trên hệ thống: (Dịch vụ lưu trú)</label>
+            <div class="d-flex align-items-center">
+              <strong class="h3 mr-2">{{avgItem.percentHotelError}}%</strong>
+              <small *ngIf="avgItem.percentHotelErrorPercentSamePeriod < 0"
+                     class="font-weight-normal text-danger">(Giảm {{avgItem.percentHotelErrorPercentSamePeriod}}% so với
+                cùng kỳ)</small>
+              <small *ngIf="avgItem.percentHotelErrorPercentSamePeriod >= 0"
+                     class="font-weight-normal text-success">(Tăng {{avgItem.percentHotelErrorPercentSamePeriod}}% so
+                với cùng kỳ)</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-4">
+        <div class="div-chart">
+          <div class="text-center">
+            Tài khoản người dùng
+          </div>
+          <apx-chart *ngIf="pieChartUserOptions"
+                     [series]="pieChartUserOptions.series"
+                     [chart]="pieChartUserOptions.chart"
+                     [labels]="pieChartUserOptions.labels"
+                     [responsive]="pieChartUserOptions.responsive"
+          ></apx-chart>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="div-chart">
+          <div class="text-center">
+            Phân bổ lợi nhuận
+          </div>
+          <apx-chart *ngIf="pieChartProfitOptions"
+                     [series]="pieChartProfitOptions.series"
+                     [chart]="pieChartProfitOptions.chart"
+                     [labels]="pieChartProfitOptions.labels"
+                     [responsive]="pieChartProfitOptions.responsive"
+          ></apx-chart>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="div-chart">
+          <div class="text-center">
+            Yêu cầu dịch vụ
+          </div>
+          <apx-chart *ngIf="pieChartServiceOptions"
+                     [series]="pieChartServiceOptions.series"
+                     [chart]="pieChartServiceOptions.chart"
+                     [labels]="pieChartServiceOptions.labels"
+                     [responsive]="pieChartServiceOptions.responsive"
+          ></apx-chart>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-4">
+        <div class="div-chart">
+          <div class="text-center">
+            Chỉ số NPS
+          </div>
+          <apx-chart *ngIf="pieChartRatingOptions"
+                     [series]="pieChartRatingOptions.series"
+                     [chart]="pieChartRatingOptions.chart"
+                     [labels]="pieChartRatingOptions.labels"
+                     [responsive]="pieChartRatingOptions.responsive"
+          ></apx-chart>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="div-chart">
+          <div class="text-center">
+            Chỉ số đặt gấp
+          </div>
+          <apx-chart *ngIf="pieChartBookingUrgentOptions"
+                     [series]="pieChartBookingUrgentOptions.series"
+                     [chart]="pieChartBookingUrgentOptions.chart"
+                     [labels]="pieChartBookingUrgentOptions.labels"
+                     [responsive]="pieChartBookingUrgentOptions.responsive"
+          ></apx-chart>
+        </div>
+      </div>
+      <div class="col-md-4">
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-md-12">
+        <div class="div-chart">
+          <div class="text-center">
+            Yêu cầu dịch vụ
+          </div>
+          <apx-chart *ngIf="chartOptions"
+            [series]="chartOptions.series"
+            [chart]="chartOptions.chart"
+            [dataLabels]="chartOptions.dataLabels"
+            [plotOptions]="chartOptions.plotOptions"
+            [xaxis]="chartOptions.xaxis"
+            [stroke]="chartOptions.stroke"
+          ></apx-chart>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-12">
+        <div class="div-chart">
+          <div class="text-center">
+            Doanh thu theo doanh nghiệp
+          </div>
+          <apx-chart *ngIf="chartRevenueOptions"
+            [series]="chartRevenueOptions.series"
+            [chart]="chartRevenueOptions.chart"
+            [dataLabels]="chartRevenueOptions.dataLabels"
+            [plotOptions]="chartRevenueOptions.plotOptions"
+            [xaxis]="chartRevenueOptions.xaxis"
+            [stroke]="chartRevenueOptions.stroke"
+          ></apx-chart>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

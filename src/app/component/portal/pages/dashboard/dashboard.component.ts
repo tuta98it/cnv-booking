@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import * as FileSaver from 'file-saver';
 import {
   ApexAxisChartSeries,
@@ -18,15 +18,15 @@ import {
   ApexMarkers,
   ApexGrid
 } from 'ng-apexcharts';
-import { Constant } from 'src/app/shared/constants/constant.class';
-import { ActivatedRoute } from '@angular/router';
-import { FileManagerService } from '../../../../service/file-manager.service';
-import { NotificationService } from '../../../../service/notification.service';
-import { TableSelectionAbstract } from '../../../../shared/component/table/table-selection.abstract';
-import { AppConfigService } from '../../../../../app-config.service';
-import { NzIconService } from 'ng-zorro-antd/icon';
-import { GeneralService } from 'src/app/service/general-service';
-import { DateFormatPipe } from 'src/app/shared/pipe/format-date.pipe';
+import {Constant} from 'src/app/shared/constants/constant.class';
+import {ActivatedRoute} from '@angular/router';
+import {FileManagerService} from '../../../../service/file-manager.service';
+import {NotificationService} from '../../../../service/notification.service';
+import {TableSelectionAbstract} from '../../../../shared/component/table/table-selection.abstract';
+import {AppConfigService} from '../../../../../app-config.service';
+import {NzIconService} from 'ng-zorro-antd/icon';
+import {GeneralService} from 'src/app/service/general-service';
+import {DateFormatPipe} from 'src/app/shared/pipe/format-date.pipe';
 
 export interface ChartOptions1 {
 
@@ -43,13 +43,12 @@ export interface ChartOptions1 {
 }
 
 export interface ChartOptions {
-  series: ApexNonAxisChartSeries;
+  series: ApexAxisChartSeries;
   chart: ApexChart;
-  responsive: ApexResponsive[];
-  labels: any;
-  fill: ApexFill;
-  legend: ApexLegend;
   dataLabels: ApexDataLabels;
+  plotOptions: ApexPlotOptions;
+  xaxis: ApexXAxis;
+  stroke: ApexStroke;
 }
 
 export interface ChartOptionsLine {
@@ -65,7 +64,7 @@ export interface ChartOptionsLine {
   legend: ApexLegend;
 }
 
-export type PieChartOptions = {
+export interface PieChartOptions {
   series: ApexNonAxisChartSeries;
   chart: ApexChart;
   responsive: ApexResponsive[];
@@ -73,10 +72,10 @@ export type PieChartOptions = {
   dataLabels: ApexDataLabels;
   tooltip: ApexTooltip;
   title: ApexTitleSubtitle;
-};
+}
 
 
-export type BarChartOptions = {
+export interface BarChartOptions {
   series: ApexAxisChartSeries;
   chart: ApexChart;
   dataLabels: ApexDataLabels;
@@ -87,9 +86,9 @@ export type BarChartOptions = {
   legend: ApexLegend;
   fill: ApexFill;
   title: ApexTitleSubtitle;
-};
+}
 
-export type LineChartOptions = {
+export interface LineChartOptions {
   series: ApexAxisChartSeries;
   chart: ApexChart;
   xaxis: ApexXAxis;
@@ -102,7 +101,7 @@ export type LineChartOptions = {
   legend: ApexLegend;
   title: ApexTitleSubtitle;
   fill: ApexFill;
-};
+}
 
 @Component({
   selector: 'app-dashboard',
@@ -110,17 +109,17 @@ export type LineChartOptions = {
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent extends TableSelectionAbstract implements OnInit {
-  @ViewChild("pieChart") pieChart: ChartComponent;
-  public pieChartOptions: Partial<PieChartOptions>;
+  @ViewChild('pieChartUser') pieChartUser: ChartComponent;
+  public pieChartUserOptions: Partial<PieChartOptions>;
 
-  @ViewChild("barChart") barChart: ChartComponent;
-  public barChartOptions: Partial<BarChartOptions>;
+  @ViewChild('pieChartProfit') pieChartProfit: ChartComponent;
+  public pieChartProfitOptions: Partial<PieChartOptions>;
 
-  @ViewChild("chartSale") barChartSale: ChartComponent;
-  public barChartSaleOptions: Partial<BarChartOptions>;
+  public pieChartServiceOptions: Partial<PieChartOptions>;
+  public pieChartRatingOptions: Partial<PieChartOptions>;
+  public pieChartBookingUrgentOptions: Partial<PieChartOptions>;
 
-  @ViewChild("lineChart") lineChart: ChartComponent;
-  public lineChartOptions: Partial<LineChartOptions>;
+  public chartRevenueOptions: Partial<ChartOptions>;
 
   userInfo: any;
   TIME_RANGE_FILTER = Constant.TIME_RANGE_FILTER;
@@ -133,8 +132,7 @@ export class DashboardComponent extends TableSelectionAbstract implements OnInit
   objRevenue: any = {
     totalSales: 0,
   };
-
-
+  avgItem: any;
 
   @ViewChild('chart') chart: ChartComponent;
   public chartOptions: Partial<ChartOptions>;
@@ -150,9 +148,9 @@ export class DashboardComponent extends TableSelectionAbstract implements OnInit
   total: number;
   pageSize: number;
   professions: any[] = [
-    { id: 0, name: '' },
-    { id: 1, name: 'FC' },
-    { id: 2, name: 'CC' },
+    {id: 0, name: ''},
+    {id: 1, name: 'FC'},
+    {id: 2, name: 'CC'},
   ];
   charFilter: any;
   selectedTinhThanhId: any;
@@ -167,7 +165,6 @@ export class DashboardComponent extends TableSelectionAbstract implements OnInit
     private iconService: NzIconService,
     private generalService: GeneralService,
     private dateFormatPipe: DateFormatPipe,
-
   ) {
     super('id');
     this.pageIndex = 1;
@@ -191,108 +188,6 @@ export class DashboardComponent extends TableSelectionAbstract implements OnInit
       sender: '',
       reader: ''
     };
-
-    this.chartOptions = {
-      series: [],
-      labels: [],
-      chart: {
-        width: 450,
-        type: 'donut'
-      },
-      dataLabels: {
-        enabled: false
-      },
-      fill: {
-        type: 'gradient'
-      },
-      legend: {
-        // tslint:disable-next-line:only-arrow-functions
-        formatter(val, opts) {
-          return val + ' - ' + opts.w.globals.series[opts.seriesIndex];
-        }
-      },
-      responsive: [
-        {
-          breakpoint: 480,
-          options: {
-            chart: {
-              width: 200
-            },
-            legend: {
-              position: 'bottom'
-            }
-          }
-        }
-      ]
-    };
-    // chart1
-    // @ts-ignore
-    // @ts-ignore
-    this.chartOptions1 = {
-      series: [
-        {
-          name: 'Đã kiểm định',
-          data: [44, 55, 57, 56, 61, 58, 63]
-        },
-        {
-          name: 'Chưa kiểm định',
-          data: [76, 85, 101, 98, 87, 105, 91]
-        }
-      ],
-      chart: {
-        type: 'bar',
-        height: 450
-      },
-      plotOptions: {
-        bar: {
-          horizontal: false,
-          columnWidth: '55%',
-          // endingShape: 'rounded'
-        }
-      },
-      dataLabels: {
-        enabled: false
-      },
-      stroke: {
-        show: true,
-        width: 2,
-        colors: ['transparent']
-      },
-      xaxis: {
-        categories: [
-          'Feb',
-          'Mar',
-          'Apr',
-          'May',
-          'Jun',
-          'Jul',
-          'Aug',
-        ]
-      },
-      yaxis: {
-        title: {
-          text: 'Số lượng phương tiện'
-        }
-      },
-      fill: {
-        opacity: 1
-      },
-      tooltip: {
-        y: {
-          // tslint:disable-next-line:only-arrow-functions
-          formatter(val) {
-            return val + ' TB';
-          }
-        }
-      }
-    };
-    this.objNotification = {
-      totalCanhBao: 0,
-      totalQuaHan: 0
-    };
-    this.iconService.fetchFromIconfont({
-      scriptUrl: 'https://at.alicdn.com/t/font_8d5l8fzk5b87iudi.js'
-    });
   }
 
   ngOnInit(): void {
@@ -308,8 +203,228 @@ export class DashboardComponent extends TableSelectionAbstract implements OnInit
   }
 
   private getDataSalesReport() {
-    let payloadSalesReport = { ...this.search };
-    this.generalService.salesReport(payloadSalesReport).subscribe((res) => {
+    const payloadSalesReport = {...this.search};
+
+    // Tài khoản người dùng
+    this.generalService.reportAverageTime(payloadSalesReport).subscribe((res) => {
+      this.avgItem = res;
+    });
+
+    this.generalService.reportUser(payloadSalesReport).subscribe((res) => {
+      this.pieChartUserOptions = {
+        series: [res.newUserActive, res.oldUserActive, res.newUserDeActive, res.oldUserDeActive],
+        title: {
+          text: 'Tài khoản người dùng',
+          align: 'center',
+        },
+        chart: {
+          type: 'donut'
+        },
+        labels: ['Người dùng mới active', 'Người dùng mới deactive', 'Người dùng cũ active', 'Người dùng cũ deactive'],
+        responsive: [
+          {
+            breakpoint: 480,
+            options: {
+              chart: {
+                width: 200,
+              },
+              legend: {
+                position: 'top',
+              },
+            },
+          },
+        ]
+      };
+    });
+
+    // Phân bổ lợi nhuận
+    this.generalService.reportProfit(payloadSalesReport).subscribe((res) => {
+      this.pieChartProfitOptions = {
+        series: [res.expense, res.profit],
+        title: {
+          text: 'Tài khoản người dùng',
+          align: 'center',
+        },
+        chart: {
+          type: 'donut'
+        },
+        labels: ['Chi phí lưu trú', 'Lợi luận gộp'],
+        responsive: [
+          {
+            breakpoint: 480,
+            options: {
+              chart: {
+                width: 200,
+              },
+              legend: {
+                position: 'top',
+              },
+            },
+          },
+        ]
+      };
+    });
+
+    // Yêu cầu dịch vụ
+    this.generalService.reportService(payloadSalesReport).subscribe((res) => {
+      this.pieChartServiceOptions = {
+        series: [res.totalAirlinetTickets, res.totalHotelRequests],
+        chart: {
+          type: 'donut'
+        },
+        labels: ['Dịch vụ vé máy bay', 'Dịch vụ lưu trú'],
+        responsive: [
+          {
+            breakpoint: 480,
+            options: {
+              chart: {
+                width: 200,
+              },
+              legend: {
+                position: 'top',
+              },
+            },
+          },
+        ]
+      };
+    });
+
+    // Chỉ số NPS
+    this.generalService.reportRating(payloadSalesReport).subscribe((res) => {
+      this.pieChartRatingOptions = {
+        series: [res.rateFiveStar, res.rateFourStar, res.rateThreeStar, res.rateTwoStar, res.totalRate + res.rateOneStar],
+        chart: {
+          type: 'donut'
+        },
+        labels: ['Khách hàng rất hài lòng', 'Khách hàng đánh giá tốt', 'Trải nghiệm ở mức trung bình', 'Trải nghiệm tệ/rất tệ'],
+        responsive: [
+          {
+            breakpoint: 480,
+            options: {
+              chart: {
+                width: 200,
+              },
+              legend: {
+                position: 'top',
+              },
+            },
+          },
+        ]
+      };
+    });
+
+    // Chỉ số đặt gấp
+    this.generalService.reportBookingUrgent(payloadSalesReport).subscribe((res) => {
+      this.pieChartBookingUrgentOptions = {
+        series: [res.totalAirlinetTickets, res.totalHotelRequests],
+        chart: {
+          type: 'donut'
+        },
+        labels: ['Dịch vụ vé máy bay', 'Dịch vụ lưu trú'],
+        responsive: [
+          {
+            breakpoint: 480,
+            options: {
+              chart: {
+                width: 200,
+              },
+              legend: {
+                position: 'top',
+              },
+            },
+          },
+        ]
+      };
+    });
+
+    // Trạng thái các yêu cầu
+    this.generalService.reportStatusService(payloadSalesReport).subscribe((res) => {
+      this.chartOptions = {
+        series: [{
+          name: 'Dịch vụ vé máy bay thành công',
+          data: res.data.map(en => en.totalAirlinetTicketSuccess)
+        },
+          {
+            name: 'Dịch vụ vé máy bay thất bại',
+            data: res.data.map(en => en.totalAirlinetTicketError)
+          },
+          {
+            name: 'Dịch vụ lưu trú thành công',
+            data: res.data.map(en => en.totalHotelRequestsSuccess)
+          },
+          {
+            name: 'Dịch vụ lưu trú thất bại',
+            data: res.data.map(en => en.totalHotelRequestsError)
+          }
+        ],
+        chart: {
+          type: 'bar',
+          height: 430
+        },
+        plotOptions: {
+          bar: {
+            horizontal: false,
+          }
+        },
+        dataLabels: {
+          enabled: false,
+          offsetX: -6,
+          style: {
+            fontSize: '12px',
+            colors: ['#fff']
+          }
+        },
+        stroke: {
+          show: true,
+          width: 1,
+          colors: ['#fff']
+        },
+        xaxis: {
+          categories: res.data.map(en => en.dateStr)
+        }
+      };
+    });
+
+    // Doanh thu theo doanh nghiệp
+    this.generalService.reportRevenueByPartner(payloadSalesReport).subscribe((res) => {
+      this.chartRevenueOptions = {
+        series: [{
+          name: 'Doanh thu kỳ này',
+          data: res.data.map(en => en.revenue)
+        },
+          {
+            name: 'Doanh thu kỳ trước',
+            data: res.data.map(en => en.previousRevenue)
+          }
+        ],
+        chart: {
+          type: 'bar',
+          height: 430
+        },
+        plotOptions: {
+          bar: {
+            horizontal: false,
+          }
+        },
+        dataLabels: {
+          enabled: false,
+          offsetX: -6,
+          style: {
+            fontSize: '12px',
+            colors: ['#fff']
+          }
+        },
+        stroke: {
+          show: true,
+          width: 1,
+          colors: ['#fff']
+        },
+        xaxis: {
+          categories: res.data.map(en => en.partnerName)
+        }
+      };
+    });
+    /*this.generalService.salesReport(payloadSalesReport).subscribe((res) => {
       if (res) {
         this.objRevenue.totalSales = res.tongDoanhSo;
 
@@ -317,12 +432,12 @@ export class DashboardComponent extends TableSelectionAbstract implements OnInit
         const top10Seller = res.data.slice(0, 10);
         for (let i = 0; i < top10Seller.length; i++) {
           const seller = res.data[i];
-          dataSales.push({ x: [seller.code, seller.name], y: seller.doanhSo });
+          dataSales.push({x: [seller.code, seller.name], y: seller.doanhSo});
         }
         let sales = {
-          name: "Tổng doanh thu",
+          name: 'Tổng doanh thu',
           data: dataSales,
-        }
+        };
 
         let series = [];
         series.push(sales);
@@ -330,12 +445,12 @@ export class DashboardComponent extends TableSelectionAbstract implements OnInit
         this.barChartSaleOptions = {
           series: series,
           chart: {
-            type: "bar",
+            type: 'bar',
             height: 350,
           },
           title: {
-            text: "Top Sale có doanh thu cao nhất",
-            align: "left",
+            text: 'Top Sale có doanh thu cao nhất',
+            align: 'left',
           },
           plotOptions: {
             bar: {
@@ -350,7 +465,7 @@ export class DashboardComponent extends TableSelectionAbstract implements OnInit
               formatter(value) {
                 const item = value
                   .toString()
-                  .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+                  .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',');
                 return item;
               },
             },
@@ -365,118 +480,17 @@ export class DashboardComponent extends TableSelectionAbstract implements OnInit
         };
 
       }
-    });
+    });*/
   }
 
-  private getDataSalesReportByDay() {
-    let payloadSalesReportByDay = { ...this.search };
-    payloadSalesReportByDay.type = (payloadSalesReportByDay.type === 1 || payloadSalesReportByDay.type === 2) ? 5 : payloadSalesReportByDay.type;
-    this.generalService.salesReportByDay(payloadSalesReportByDay).subscribe((res) => {
-      if (res) {
-
-        let dataSales = [];
-        let xCategories = []
-        res.forEach((objSalesDay: any) => {
-          dataSales.push(objSalesDay.doanhSo);
-          xCategories.push(this.dateFormatPipe.transform(objSalesDay.ngay, "YYYY-MM-dd"));
-        });
-        const series = [];
-        let sales = {
-          name: "Doanh số",
-          data: dataSales,
-        }
-        series.push(sales);
-        this.lineChartOptions = {
-          series,
-          chart: {
-            height: 350,
-            type: "area",
-            stacked: false,
-            dropShadow: {
-              enabled: true,
-              color: "#000",
-              top: 18,
-              left: 7,
-              blur: 10,
-              opacity: 0.2,
-            },
-            toolbar: {
-              show: false,
-            },
-          },
-          // colors: ['#77B6EA', '#545454'],
-          dataLabels: {
-            enabled: false,
-          },
-          stroke: {
-            curve: "smooth",
-          },
-          title: {
-            text: "Thống kê doanh thu theo ngày",
-            align: "left",
-          },
-          grid: {
-            borderColor: "#e7e7e7",
-            row: {
-              colors: ["#f3f3f3", "transparent"], // takes an array which will be repeated on columns
-              opacity: 0.5,
-            },
-          },
-          markers: {
-            size: 1,
-          },
-          xaxis: {
-            categories: xCategories,
-            type: "datetime",
-          },
-          fill: {
-            type: "gradient",
-            gradient: {
-              shadeIntensity: 1,
-              inverseColors: false,
-              opacityFrom: 0.5,
-              opacityTo: 0,
-              stops: [0, 90, 100],
-            },
-          },
-          yaxis: {
-            labels: {
-              formatter(val) {
-                const item = val
-                  .toString()
-                  .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
-                return item;
-              },
-            },
-            title: {
-              text: "Số tiền",
-            },
-            /*min: 5,
-            max: 40*/
-          },
-          legend: {
-            position: "top",
-            horizontalAlign: "right",
-            floating: true,
-            offsetY: -25,
-            offsetX: -5,
-          },
-        };
-      }
-    });
-  }
   doSearch() {
     this.getDataSalesReport();
-    this.getDataSalesReportByDay();
+    this.loadReport();
   }
 
-
-  showNotification() {
-    const payload = {
-      tinhThanhId: this.selectedTinhThanhId
-    };
-    this.fileManagerService.queryCanhBao(payload).subscribe(res => {
-      this.objNotification = res;
+  loadReport() {
+    const payload = {type: this.search.type};
+    this.generalService.reportAverageTime(payload).subscribe(res => {
     }, error => {
 
     });
@@ -521,7 +535,6 @@ export class DashboardComponent extends TableSelectionAbstract implements OnInit
           en.stt = stt;
         });
         this.searchPieChart();
-        this.searchLineChart();
       }
     }, error => {
 
@@ -567,73 +580,6 @@ export class DashboardComponent extends TableSelectionAbstract implements OnInit
     });
   }
 
-  searchLineChart() {
-    this.chartOptions1 = {
-      series: [
-        {
-          name: 'Đã kiểm định',
-          data: [this.datas[0].totalHD_DKD, this.datas[1].totalHD_DKD, this.datas[2].totalHD_DKD]
-        },
-        {
-          name: 'Chưa kiểm định',
-          data: [this.datas[0].totalHD_CKD, this.datas[1].totalHD_CKD, this.datas[2].totalHD_CKD]
-        },
-        {
-          name: 'Hư hỏng',
-          data: [this.datas[0].totalHH, this.datas[1].totalHH, this.datas[2].totalHH]
-        },
-        {
-          name: 'Sửa chữa',
-          data: [this.datas[0].totalSC_CKD + this.datas[0].totalSC_HKD, this.datas[1].totalSC_CKD + this.datas[1].totalSC_HKD, this.datas[2].totalSC_CKD + this.datas[2].totalSC_HKD]
-        },
-        {
-          name: 'Thanh lý',
-          data: [this.datas[0].totalTL, this.datas[1].totalTL, this.datas[2].totalTL]
-        }
-      ],
-      chart: {
-        type: 'bar',
-        height: 450
-      },
-      plotOptions: {
-        bar: {
-          horizontal: false,
-          columnWidth: '55%',
-          // endingShape: 'rounded'
-        }
-      },
-      dataLabels: {
-        enabled: false
-      },
-      stroke: {
-        show: true,
-        width: 2,
-        colors: ['transparent']
-      },
-      xaxis: {
-        categories: [
-          this.datas[0].name, this.datas[1].name, this.datas[2].name
-        ]
-      },
-      yaxis: {
-        title: {
-          text: 'Số lượng phương tiện'
-        }
-      },
-      fill: {
-        opacity: 1
-      },
-      tooltip: {
-        y: {
-          // tslint:disable-next-line:only-arrow-functions
-          formatter(val) {
-            return val + ' TB';
-          }
-        }
-      }
-    };
-  }
-
   searchPieChart() {
     let fromDate = null;
     let toDate = null;
@@ -645,43 +591,6 @@ export class DashboardComponent extends TableSelectionAbstract implements OnInit
       const newDate = new Date(this.charFilter.to);
       toDate = new Date(newDate.getFullYear(), newDate.getMonth(), newDate.getDate(), 23, 59, 0, 0);
     }
-
-    const seriesS = [this.datas[0].total, this.datas[1].total, this.datas[2].total];
-    // seriesS.splice(3, 1);
-    const labelS = [this.datas[0].name, this.datas[1].name, this.datas[2].name];
-    // labelS.splice(3, 1);
-    this.chartOptions = {
-      series: seriesS,
-      labels: labelS,
-      chart: {
-        type: 'donut'
-      },
-      dataLabels: {
-        enabled: true
-      },
-      fill: {
-        type: 'gradient'
-      },
-      legend: {
-        // tslint:disable-next-line:only-arrow-functions
-        formatter(val, opts) {
-          return val + ' - ' + opts.w.globals.series[opts.seriesIndex];
-        }
-      },
-      responsive: [
-        {
-          breakpoint: 480,
-          options: {
-            chart: {
-              width: 200
-            },
-            legend: {
-              position: 'bottom'
-            }
-          }
-        }
-      ]
-    };
   }
 
   exportTkData() {

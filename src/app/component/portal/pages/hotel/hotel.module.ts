@@ -11,6 +11,7 @@ import { HotelEditComponent } from './hotel-edit/hotel-edit.component';
 import {NzTagModule} from 'ng-zorro-antd/tag';
 import {NzTabsModule} from 'ng-zorro-antd/tabs';
 import { RoomEditComponent } from './room-edit/room-edit.component';
+import {NzSpinModule} from 'ng-zorro-antd/spin';
 @NgModule({
   declarations: [EditHotelComponent, HotelListComponent, HotelEditComponent, RoomEditComponent],
   imports: [
@@ -18,6 +19,7 @@ import { RoomEditComponent } from './room-edit/room-edit.component';
     SharedModule,
     DevExtremeModule,
     NzTabsModule,
+    NzSpinModule,
   ],
   providers: [GeneralService],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

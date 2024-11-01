@@ -702,6 +702,8 @@ export class GeneralService extends BaseService {
     return this.post(`/api${UrlConstant.BOOKING}/BaoCaoDoanhSoTheoNgay`, payload);
   }
 
+  //Admin dashboard
+
 
 
   //TestResult
@@ -997,4 +999,41 @@ export class GeneralService extends BaseService {
   depositAccount(payloadDeposit: any): Observable<any> {
     return this.post(`/api${UrlConstant.ACCOUNT_DEPOSIT_HISTORIES}/DepositAccount`, payloadDeposit);
   }
+
+  // Admin dashboard
+  reportAverageTime(payload: any): Observable<any> {
+    return this.post(`/api/AdminDashboard/ReportAverageTime`, payload);
+  }
+  reportUser(payload: any): Observable<any> {
+    return this.post(`/api/AdminDashboard/ReportUser`, payload);
+  }
+
+  reportProfit(payload: any): Observable<any> {
+    return this.post(`/api/AdminDashboard/ReportProfit`, payload);
+  }
+
+  reportService(payload: any): Observable<any> {
+    return this.post(`/api/AdminDashboard/ReportService`, payload);
+  }
+  reportRating(payload: any): Observable<any> {
+    return this.post(`/api/AdminDashboard/ReportRating`, payload);
+  }
+  reportBookingUrgent(payload: any): Observable<any> {
+    return this.post(`/api/AdminDashboard/ReportBookingUrgent`, payload);
+  }
+
+  reportTopLocation(payload: any): Observable<any> {
+    return this.post(`/api/AdminDashboard/ReportTopLocation`, payload);
+  }
+  reportStatusService(payload: any): Observable<any> {
+    return this.post(`/api/AdminDashboard/ReportStatusService`, payload);
+  }
+  reportRevenueByPartner(payload: any): Observable<any> {
+    return this.post(`/api/AdminDashboard/ReportRevenueByPartner`, payload);
+  }
+  reportTopAirline(payload: any): Observable<any> {
+    return this.post(`/api/AdminDashboard/ReportTopAirline`, payload);
+  }
+
+
 }

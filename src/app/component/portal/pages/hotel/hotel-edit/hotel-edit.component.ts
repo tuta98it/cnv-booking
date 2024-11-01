@@ -93,6 +93,7 @@ export class HotelEditComponent implements OnInit {
   paymentItem: any;
   userInfo: any;
   now: any;
+  loading = true;
 
   constructor(private fb: FormBuilder,
               private router: Router,
@@ -191,6 +192,7 @@ export class HotelEditComponent implements OnInit {
   getUserInfo() {
     this.userInfo = JSON.parse(localStorage.getItem(Constant.USER_INFO));
   }
+
   searchRoomByName() {
     if (!this.searchRoomName || this.searchRoomName.trim() === '') {
       return this.roomHotels = this.tmpRoomHotels;
@@ -290,7 +292,7 @@ export class HotelEditComponent implements OnInit {
       }
       console.log(this.fileContractList);
     });
-
+    this.loading = false;
 
   }
 
