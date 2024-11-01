@@ -20,17 +20,6 @@
       <div class="before">
         <h2 class="toolbar-title">Thông tin cơ bản</h2>
       </div>
-      <!-- <div class="after">
-        <div class="buttons">
-          <button [disabled]="!formAddHotel.valid" (click)="triggerSubmit()" nz-button nzType="primary"
-                  class="ant-btn-primary" type="button">
-            <em class="fas fa-save fa-fw" style="margin-right: 4px;"></em> Lưu lại
-          </button>
-          <button (click)="goListHotel()" nz-button nzType="default" class="ant-btn-primary" type="button">
-            <em class="fas fa-times fa-fw" style="margin-right: 4px;"></em> Hủy bỏ
-          </button>
-        </div>
-      </div> -->
     </div>
     <div class="card-body p-2">
       <form [formGroup]="formAddHotel" class="container" (ngSubmit)="saveHotel()" #myForm="ngForm">
@@ -97,7 +86,8 @@
             <div>
               <div>
                 <label class="mr-2">Tiện ích</label>
-                <label nz-checkbox formControlName="amenityCheckAll" (change)="onUserInteraction($event)">&nbsp;</label>
+                <label nz-checkbox formControlName="amenityCheckAll"
+                       (change)="onUserInteraction($event)">&nbsp;</label>
               </div>
               <div class="border p-1">
                 <nz-checkbox-group class="grid-3" formControlName="amenities"></nz-checkbox-group>
@@ -348,7 +338,8 @@
           <dxi-column cssClass="text-center" caption="Trạng thái" [width]="100" cellTemplate="cellActive"
                       dataField="isActive"></dxi-column>
 
-          <dxi-column cssClass="text-center" caption="Người lớn" [width]="100" dataField="numberOfPeople"></dxi-column>
+          <dxi-column cssClass="text-center" caption="Người lớn" [width]="100"
+                      dataField="numberOfPeople"></dxi-column>
           <dxi-column cssClass="text-center" caption="Trẻ em" [width]="100" dataField="childNumber"></dxi-column>
           <!-- <dxi-column cssClass="text-center" caption="Diện tích phòng" [width]="150" dataField="roomArea"
                        [format]="areaUtils.areaNumberFormat"></dxi-column>-->
@@ -358,7 +349,8 @@
                       cellTemplate="cellPrice"></dxi-column>
           <dxi-column caption="Hình ảnh phòng" cssClass="text-center" [width]="200" dataField="roomFiles"
                       cellTemplate="cellImages"></dxi-column>
-          <dxi-column caption="Còn phòng?" [visible]="true" dataField="isAvailable" cssClass="text-center" [width]="200"
+          <dxi-column caption="Còn phòng?" [visible]="true" dataField="isAvailable" cssClass="text-center"
+                      [width]="200"
                       cellTemplate="cellIsRoom"></dxi-column>
           <dxi-column cssClass="text-center" caption="Action" [visible]="true" [width]="100"
                       cellTemplate="cellBtnDetailTemplate"></dxi-column>
@@ -459,7 +451,8 @@
           [dataSource]="transactionItem.data">
           <dxi-column cssClass="text-center" caption="STT" [width]="60" dataField="stt"
                       [allowFiltering]="false" [allowSorting]="false"></dxi-column>
-          <dxi-column caption="Thời gian giao dịch" format="HH:mm dd/MM/yyyy" [width]="200" dataField="transactionTime"
+          <dxi-column caption="Thời gian giao dịch" format="HH:mm dd/MM/yyyy" [width]="200"
+                      dataField="transactionTime"
                       dataType="date"></dxi-column>
           <dxi-column caption="Số tiền phát sinh" dataType="number" format="#,##0 đ" [width]="200"
                       dataField="amount"></dxi-column>
@@ -469,7 +462,6 @@
     </nz-tabset>
   </div>
 </div>
-
 <nz-modal [(nzVisible)]="isShowPopupPayment" nzClosable="false" [nzTitle]="title" nzMaskClosable="false">
   <ng-template #title>
     Thanh toán dịch vụ

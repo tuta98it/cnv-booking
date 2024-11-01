@@ -80,7 +80,6 @@ export class Constant {
   public static readonly QUANHUYEN = 'selectedQuanHuyenId';
 
 
-
   // public static readonly STATUS_BOOKING_HOTEL = [
   //   { label: 'Mới tạo, chưa xử lý', value: 0 },
   //   { label: 'Đã xử lý', value: 1 },
@@ -88,27 +87,21 @@ export class Constant {
   // ]
 
   public static readonly PASSENGER_TYPE = [
-    { label: 'Cá nhân', value: 0 },
-    { label: 'Công ty', value: 1 },
-    { label: 'Nhân viên', value: 2 },
-  ]
+    {label: 'Cá nhân', value: 0},
+    {label: 'Công ty', value: 1},
+    {label: 'Nhân viên', value: 2},
+  ];
   public static readonly TIME_RANGE_FILTER = [
     // { label: '--Tất Cả--', value: '0' },
-    { label: 'Hôm nay', value: 1 },
-    { label: 'Hôm qua', value: 2 },
-    { label: '7 ngày qua', value: 3 },
-    { label: '14 ngày qua', value: 4 },
-    { label: '30 ngày qua', value: 5 },
-    { label: 'Tuần này', value: 6 },
-    { label: 'Tuần trước', value: 7 },
-    { label: 'Tháng này', value: 8 },
-    { label: 'Tháng trước', value: 9 },
-    { label: 'Từ ngày đến ngày', value: 10 },
+    {label: 'Hôm nay', value: 0},
+    {label: 'Trong tuần', value: 1},
+    {label: 'Trong tháng', value: 2},
+    {label: 'Trong năm', value: 3},
   ];
 
   public static readonly PAGE_NOTIFY_CONFIG = [
-    "/booking-service/airline-ticket-booking-request/confirm-reserve-seat",
-    "/booking-hotel/confirm-reserve-seat"
+    '/booking-service/airline-ticket-booking-request/confirm-reserve-seat',
+    '/booking-hotel/confirm-reserve-seat'
   ];
 
 
@@ -127,5 +120,5 @@ export class RequestBookingConfig {
 
 
 export class DepositConstant {
-  public static DEPOSIT_CONTENT_DEFAULT = "Nạp tiền vào tài khoản";
+  public static DEPOSIT_CONTENT_DEFAULT = 'Nạp tiền vào tài khoản';
 }
