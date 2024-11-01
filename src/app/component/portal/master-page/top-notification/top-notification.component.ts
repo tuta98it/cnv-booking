@@ -71,19 +71,24 @@ export class TopNotificationComponent implements OnInit {
 
 
   handleClickItemTopNotify(notifyItem: any) {
-      this.handleNavigatePageNotifications(notifyItem.id);
+    // this.handleNavigatePageNotifications(notifyItem.id);
+    this.handleViewDetailNotify(notifyItem);
     this.readedNotify(notifyItem);
   }
 
+  private handleViewDetailNotify(itemNotify?: any) {
+    this.notificationService.handleViewDetailNotify(itemNotify);
+  }
+
   private readedNotify(notifyItem: any) {
-      let notificationIds: number[] = [
-        notifyItem.id,
-      ];
-      if (notifyItem.readed != true) {
-        this.readedNotificationByIds(notificationIds).then((result: any) => {
-        }).catch((error: any) => {
-        });
-      }
+    let notificationIds: number[] = [
+      notifyItem.id,
+    ];
+    if (notifyItem.readed != true) {
+      this.readedNotificationByIds(notificationIds).then((result: any) => {
+      }).catch((error: any) => {
+      });
+    }
   }
 
   public handleReadedAllNotifications() {
@@ -131,4 +136,6 @@ export class TopNotificationComponent implements OnInit {
       });
     });
   }
+
+
 }
