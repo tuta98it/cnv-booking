@@ -2,13 +2,14 @@
   <button nz-button nzShape="circle" class="circle-button" nz-dropdown nzTrigger="click" [nzDropdownMenu]="menuTopNotify" (click)="getTopNotifications()"
     [nzClickHide]="false" nzPlacement="bottomRight">
     <span nz-icon nzType="bell"></span>
-    <div *ngIf="totalUnRead <= 9" class="unread-badge-common unread-badge">{{ totalUnRead }}</div>
 
-    <ng-container *ngIf="totalUnRead >= 10 && totalUnRead <= 99; else moreThan99">
+    <div *ngIf="totalUnRead >= 1 && totalUnRead <= 9" class="unread-badge-common unread-badge">{{ totalUnRead }}</div>
+
+    <ng-container *ngIf="totalUnRead >= 10 && totalUnRead <= 99;">
       <div class="unread-badge-common unread-badge">{{ totalUnRead }}</div>
     </ng-container>
 
-    <ng-template #moreThan99>
+    <ng-template *ngIf="totalUnRead > 99;">
       <div class="unread-badge-common unread-badge-99">99+</div>
     </ng-template>
   </button>
