@@ -188,8 +188,11 @@ export class NotificationsComponent implements OnInit, AfterViewInit {
         break;
 
       case NotificationType.BookingHotel:
-        console.log(NotificationType.BookingHotel);
         this.navigationService.navigateToPageHotelBooking(itemNotify.otherId);
+        break;
+
+      case NotificationType.BusinessDetail:
+        this.navigationService.navigateToPageCompanyUpdate(itemNotify.otherId);
         break;
 
       default:
