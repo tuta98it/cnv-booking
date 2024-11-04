@@ -3,11 +3,17 @@
 // are not available in the service worker.
 importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js');
 importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js');
-firebase.initializeApp({
-  FireBase.firebaseConfig
-
-
-});
+firebase.initializeApp(
+  {
+    apiKey: "AIzaSyDDgwJ4FeJ1wW8kzBDGub4J76ZNLBuT_mc",
+    authDomain: "vhl-notification.firebaseapp.com",
+    projectId: "vhl-notification",
+    storageBucket: "vhl-notification.firebasestorage.app",
+    messagingSenderId: "664705952523",
+    appId: "1:664705952523:web:bb53e1806608ac7799500e",
+    measurementId: "G-7WF2VJ24RK"
+  }
+);
 
 // Retrieve an instance of Firebase Messaging so that it can handle background
 // messages.
