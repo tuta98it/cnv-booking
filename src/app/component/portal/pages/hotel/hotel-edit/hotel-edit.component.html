@@ -408,8 +408,11 @@
           </div>
           <div class="col-md-3">
             <strong>Số tiền dịch vụ đã thanh toán</strong>
-            <span>
-              ({{transactionItem.paidMoney | currencyFormat}}) đ
+            <span *ngIf="transactionItem.paidMoney >= 0">
+              {{transactionItem.paidMoney | currencyFormat}} đ
+            </span>
+            <span style="color: red" *ngIf="transactionItem.paidMoney < 0">
+              ({{-transactionItem.paidMoney | currencyFormat}}) đ
             </span>
           </div>
           <div class="col-md-3">
