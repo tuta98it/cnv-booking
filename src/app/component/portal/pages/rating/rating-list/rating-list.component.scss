@@ -1,0 +1,18 @@
+.radio-group{
+  display: grid;
+  grid-template-columns: 20% 20% 20% 20% 20%;
+
+}
+.form-rating .item{
+  margin-bottom: 10px;
+}
+.radio-group label{
+  border: solid 1px #EEE;
+  padding-top: 10px;
+  text-align: center;
+  border-right: none;
+  padding-bottom: 6px;
+}
+.radio-group label:last-child{
+  border-right: solid 1px #EEE;
+}

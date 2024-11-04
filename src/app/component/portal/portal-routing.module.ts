@@ -50,6 +50,17 @@ const routes: Routes = [
         },
       },
       {
+        path: 'rating',
+        loadChildren: () =>
+          import('./pages/rating/rating.module').then(
+            (m) => m.RatingModule
+          ),
+        data: {
+          pagename: 'Quản lý đánh giá',
+          breadcrumb: 'Quán lý đánh giá',
+        },
+      },
+      {
         path: 'group-management',
         loadChildren: () =>
           import('./pages/nhomtaikhoan/nhomtaikhoan.module').then(

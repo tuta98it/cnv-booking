@@ -1035,5 +1035,7 @@ export class GeneralService extends BaseService {
     return this.post(`/api/AdminDashboard/ReportTopAirline`, payload);
   }
 
-
+  getListRating(payload: any): any {
+    return this.post(`/api/Rating/QueryRating`, payload);
+  }
 }
