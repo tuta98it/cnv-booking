@@ -13,8 +13,7 @@
 <dx-data-grid id="gridContainer" [dataSource]="filteredDatas" #ListBookingHotels [showColumnLines]="true"
   [showRowLines]="true" [height]="dxGridHeight" [rowAlternationEnabled]="true" [showBorders]="true"
   [allowColumnResizing]="true" columnResizingMode="widget" [columnMinWidth]="50" [columnAutoWidth]="true"
-  [paging]="{ enabled: false }"
-  (onExporting)="onExporting($event)" (onCellPrepared)="onRowPrepared($event)">
+  [paging]="{ enabled: false }" (onExporting)="onExporting($event)" (onCellPrepared)="onRowPrepared($event)">
   <dxo-scrolling rowRenderingMode="virtual"></dxo-scrolling>
   <dxo-sorting mode="multiple"></dxo-sorting>
   <dxo-header-filter [visible]="true"></dxo-header-filter>
@@ -45,7 +44,8 @@
   <!-- Khẩn cấp -->
   <dxi-column caption="Khẩn cấp" [width]="120" dataField="isUrgent" cellTemplate="cellIsUrgent"></dxi-column>
   <!-- Tổng giá dịch vụ -->
-  <dxi-column caption="Tổng giá dịch vụ" [width]="180" dataField="totalPrice" cellTemplate="cellTotalPrice" [format]="formatCurrencyVND" alignment="center"></dxi-column>
+  <dxi-column caption="Tổng giá dịch vụ" [width]="180" dataField="totalPrice" cellTemplate="cellTotalPrice"
+    [format]="formatCurrencyVND" alignment="center"></dxi-column>
   <!-- Action -->
   <dxi-column cssClass="text-center" caption="Action" [fixed]="true" [width]="175" fixedPosition="right" [fixed]="true"
     cellTemplate="cellBtnTemplate"></dxi-column>
@@ -91,13 +91,15 @@
         </nz-select>
       </div>
       <div *ngSwitchCase="STATUS_LIST[3].value" class="select-container">
-        <nz-select  [(ngModel)]="status.data.bookingStatus">
-          <nz-option [nzLabel]="(status.data.bookingStatus | hotelBookingPipe)[0].name" [nzValue]="status.data.bookingStatus"></nz-option>
+        <nz-select [(ngModel)]="status.data.bookingStatus">
+          <nz-option [nzLabel]="(status.data.bookingStatus | hotelBookingPipe)[0].name"
+            [nzValue]="status.data.bookingStatus"></nz-option>
         </nz-select>
       </div>
       <div *ngSwitchCase="STATUS_LIST[4].value" class="select-container">
-        <nz-select  [(ngModel)]="status.data.bookingStatus">
-          <nz-option [nzLabel]="(status.data.bookingStatus | hotelBookingPipe)[0].name" [nzValue]="status.data.bookingStatus"></nz-option>
+        <nz-select [(ngModel)]="status.data.bookingStatus">
+          <nz-option [nzLabel]="(status.data.bookingStatus | hotelBookingPipe)[0].name"
+            [nzValue]="status.data.bookingStatus"></nz-option>
         </nz-select>
       </div>
 
@@ -247,17 +249,18 @@
   </dxo-summary>-->
 </dx-data-grid>
 <div class="grid-footer">
-  <nz-pagination [nzPageSizeOptions]="[20,40, 100]" nzShowSizeChanger="true" [nzPageSize]="defaultPageSize" (nzPageSizeChange)="pageSizeChange($event)"
-                 (nzPageIndexChange)="pageIndexChange($event)" [nzPageIndex]="1" [nzTotal]="total"></nz-pagination>
+  <nz-pagination [nzPageSizeOptions]="[20,40, 100]" nzShowSizeChanger="true" [nzPageSize]="defaultPageSize"
+    (nzPageSizeChange)="pageSizeChange($event)" (nzPageIndexChange)="pageIndexChange($event)" [nzPageIndex]="1"
+    [nzTotal]="total"></nz-pagination>
   <div class="clearfix"></div>
 </div>
 
 <nz-modal [(nzVisible)]="isVisibleDetailBookingHotelPassengers" nzTitle="Thông tin chi tiết khách hàng"
   [nzContent]="contentDetail" nzWidth="1500px" (nzOnCancel)="handleCancel()">
   <ng-template #contentDetail>
-    <dx-data-grid [dataSource]="listBookingHotelPassengers" [showColumnLines]="true"
-      [showRowLines]="true" [height]="dxGridHeight" [rowAlternationEnabled]="true" [showBorders]="true"
-      [allowColumnResizing]="true" columnResizingMode="widget" [columnMinWidth]="50" [columnAutoWidth]="true">
+    <dx-data-grid [dataSource]="listBookingHotelPassengers" [showColumnLines]="true" [showRowLines]="true"
+      [height]="dxGridHeight" [rowAlternationEnabled]="true" [showBorders]="true" [allowColumnResizing]="true"
+      columnResizingMode="widget" [columnMinWidth]="50" [columnAutoWidth]="true">
 
 
       <dxo-load-panel [enabled]="true"></dxo-load-panel>`
@@ -421,8 +424,7 @@
 </nz-modal>
 
 <!-- HÓa đơn  -->
-<nz-modal [(nzVisible)]="isVisibleViewInVoice" nzOkDanger="true" nzCancelText="Đóng"
-  (nzOnCancel)="closeViewInVoice()">
+<nz-modal [(nzVisible)]="isVisibleViewInVoice" nzOkDanger="true" nzCancelText="Đóng" (nzOnCancel)="closeViewInVoice()">
   <div *nzModalTitle style="display: flex; align-items: baseline;">
     <div>Hóa đơn</div>
   </div>
@@ -437,9 +439,8 @@
                 <span *ngIf="!orderForm.value.pdfFile">{{'Chưa tải lên hóa đơn'}}</span>
                 <a *ngIf="orderForm.value.pdfFile" (click)="viewOrderFilePdf()">{{selectedOrderPdfFile?.name}}</a>
                 <input nz-input type="text" formControlName="pdfFile" style="display: none;">
-                <input nz-input type="file" #fileInputOrderPdf
-                  (change)="onOrderPdfFileSelected($event)" style="display: none;"
-                  accept=":not(.exe)">
+                <input nz-input type="file" #fileInputOrderPdf (change)="onOrderPdfFileSelected($event)"
+                  style="display: none;" accept=":not(.exe)">
               </div>
               <!-- vì chưa có nghiệp vụ xóa nên ẩn đi -->
               <!-- <div *ngIf="orderForm.value.pdfFile" nz-icon nzType="close" nzTheme="outline" class="customise-close-icon"
@@ -460,9 +461,8 @@
                 <span *ngIf="!orderForm.value.xmlFile">{{'Chưa tải lên hóa đơn'}}</span>
                 <a *ngIf="orderForm.value.xmlFile" (click)="viewOrderFileXml()">{{selectedOrderXmlFile?.name}}</a>
                 <input nz-input type="text" formControlName="xmlFile" style="display: none;">
-                <input nz-input type="file" #fileInputOrderXml
-                  (change)="onOrderXmlFileSelected($event)" style="display: none;"
-                  accept=":not(.exe)">
+                <input nz-input type="file" #fileInputOrderXml (change)="onOrderXmlFileSelected($event)"
+                  style="display: none;" accept=":not(.exe)">
               </div>
               <!-- vì chưa có nghiệp vụ xóa nên ẩn đi -->
               <!-- <div *ngIf="orderForm.value.xmlFile" nz-icon nzType="close" nzTheme="outline" class="customise-close-icon"
@@ -585,10 +585,8 @@
                   <span *ngIf="this.modeViewEditStatus === 0">
                     {{ detailBookingRoomForm.value.checkinDate | date: 'dd/MM/yyyy' }}
                   </span>
-                  <nz-date-picker *ngIf="this.modeViewEditStatus === 1"
-                                  formControlName="checkinDate"
-                                  (ngModelChange)="updateCheckinDate()"
-                                  [nzDisabledDate]="disabledStartDate">
+                  <nz-date-picker *ngIf="this.modeViewEditStatus === 1" formControlName="checkinDate"
+                    (ngModelChange)="updateCheckinDate()" [nzDisabledDate]="disabledStartDate">
                   </nz-date-picker>
                 </nz-form-control>
               </div>
@@ -601,10 +599,8 @@
                   <span *ngIf="this.modeViewEditStatus === 0">
                     {{ detailBookingRoomForm.value.checkoutDate | date: 'dd/MM/yyyy' }}
                   </span>
-                  <nz-date-picker *ngIf="this.modeViewEditStatus === 1"
-                                  formControlName="checkoutDate"
-                                  (ngModelChange)="updateNumberOfNights()"
-                                  [nzDisabledDate]="disabledEndDate">
+                  <nz-date-picker *ngIf="this.modeViewEditStatus === 1" formControlName="checkoutDate"
+                    (ngModelChange)="updateNumberOfNights()" [nzDisabledDate]="disabledEndDate">
                   </nz-date-picker>
                 </nz-form-control>
               </div>
@@ -616,8 +612,8 @@
                   <span *ngIf="this.modeViewEditStatus === 0">
                     {{ detailBookingRoomForm.value.numberOfNights }}
                   </span>
-                  <nz-input-number *ngIf="this.modeViewEditStatus === 1"
-                                   [nzMin]="0" [nzStep]="1" formControlName="numberOfNights">
+                  <nz-input-number *ngIf="this.modeViewEditStatus === 1" [nzMin]="0" [nzStep]="1"
+                    formControlName="numberOfNights">
                   </nz-input-number>
                 </nz-form-control>
               </div>
@@ -641,7 +637,8 @@
             </div>
             <div nz-col class="gutter-row" nzSpan="8">
               <div class="inner-box">
-                <nz-form-label>Số lượng phòng đăng ký <span style="color: tomato; margin-left: 4px;">(*)</span></nz-form-label>
+                <nz-form-label>Số lượng phòng đăng ký <span
+                    style="color: tomato; margin-left: 4px;">(*)</span></nz-form-label>
                 <nz-form-control nzErrorTip="Không được để trống">
                   <span *ngIf="this.modeViewEditStatus === 0">{{ detailBookingRoomForm.value.amount }}</span>
                   <nz-input-number *ngIf="this.modeViewEditStatus === 1" [nzMin]="1" [nzStep]="1"
@@ -651,7 +648,8 @@
             </div>
             <div nz-col class="gutter-row" nzSpan="8">
               <div class="inner-box">
-                <nz-form-label>Số lượng người lớn >= 12 tuổi <span style="color: tomato; margin-left: 4px;">(*)</span></nz-form-label>
+                <nz-form-label>Số lượng người lớn >= 12 tuổi <span
+                    style="color: tomato; margin-left: 4px;">(*)</span></nz-form-label>
                 <nz-form-control nzErrorTip="Không được để trống">
                   <span *ngIf="this.modeViewEditStatus === 0">{{ detailBookingRoomForm.value.adt }}</span>
                   <nz-input-number *ngIf="this.modeViewEditStatus === 1" [nzMin]="1" [nzStep]="1"
@@ -836,7 +834,7 @@
 <!-- lịch sử  -->
 <nz-modal [(nzVisible)]="isVisibleRequestBookingHistory" nzTitle="Lịch sử thay đổi trạng thái đặt phòng"
   [nzContent]="contentRequestBookingHistory" [nzFooter]="footer" nzWidth="750px" [nzStyle]="{ top: '20px' }"
-  (nzOnCancel)="handleCancelPopupRequestBookingHistory()" >
+  (nzOnCancel)="handleCancelPopupRequestBookingHistory()">
   <ng-template #contentRequestBookingHistory>
 
     <dx-data-grid id="gridRequestBookingHistory" [dataSource]="listRequestBookingHistories"
@@ -867,12 +865,12 @@
   <ng-template #footer> </ng-template>
 </nz-modal>
 <!-- Xác nhận mã đặt phòng -->
-<nz-modal [(nzVisible)]="isVisibleConfirmRoomId" nzTitle="Thêm thông tin mã đặt phòng" (nzOnCancel)="handleCancel()" >
+<nz-modal [(nzVisible)]="isVisibleConfirmRoomId" nzTitle="Thêm thông tin mã đặt phòng" (nzOnCancel)="handleCancel()">
   <div *nzModalContent>
     <div class="input-wrap">
       <label class="title-detail" style="width: 40%;">Mã đặt phòng<em class="fa fa-asterisk required"></em></label>
       <input nz-input placeholder="Nhập mã đặt phòng" [(ngModel)]="bookingRoomId" maxlength="10" />
-  </div>
+    </div>
   </div>
   <div *nzModalFooter>
     <button nz-button nzType="default" (click)="handleCancel()">Hủy</button>

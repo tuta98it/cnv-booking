@@ -10,15 +10,44 @@ export class NavigationService {
   constructor(private router: Router) {}
 
   navigateToNotifications(idNotify?: number) {
+
     this.router.navigate([`/${NotificationConfig.PATH_NOTIFICATION}`], { queryParams: { [Constant.ID]: idNotify } });
   }
 
   navigateToPageRequestBooking(idRequestBooking?: number) {
-    this.router.navigate([`/${RequestBookingConfig.PATH_REQUEST_BOOKING}`], { queryParams: { [Constant.ID]: idRequestBooking } });
+
+    const url = `/${RequestBookingConfig.PATH_REQUEST_BOOKING}`;
+
+    console.log(this.router.url);
+
+    if (this.router.url.includes(RequestBookingConfig.PATH_REQUEST_BOOKING)) {
+      // Navigate to a temporary URL and then back to the notifications URL to force a reload
+      this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+        this.router.navigate([url], { queryParams: { [Constant.ID]: idRequestBooking } });
+      });
+    } else {
+      this.router.navigate([url], { queryParams: { [Constant.ID]: idRequestBooking } });
+    }
+
+    // this.router.navigate([`/${RequestBookingConfig.PATH_REQUEST_BOOKING}`], { queryParams: { [Constant.ID]: idRequestBooking } });
   }
 
   navigateToPageHotelBooking(idHotelBooking?: number) {
-    this.router.navigate([`/${HotelBookingConfig.PATH_HOTEL_BOOKING}`], { queryParams: { [Constant.ID]: idHotelBooking } });
+
+    const url = `/${HotelBookingConfig.PATH_HOTEL_BOOKING}`;
+
+    console.log(this.router.url);
+
+    if (this.router.url.includes(HotelBookingConfig.PATH_HOTEL_BOOKING)) {
+      // Navigate to a temporary URL and then back to the notifications URL to force a reload
+      this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+        this.router.navigate([url], { queryParams: { [Constant.ID]: idHotelBooking } });
+      });
+    } else {
+      this.router.navigate([url], { queryParams: { [Constant.ID]: idHotelBooking } });
+    }
+
+    // this.router.navigate([`/${HotelBookingConfig.PATH_HOTEL_BOOKING}`], { queryParams: { [Constant.ID]: idHotelBooking } });
   }
 
   navigateToPageCompanyUpdate(idPartner?: number) {

@@ -296,7 +296,5 @@ export class MasterPageComponent implements OnInit, OnDestroy {
     });
   }
 
-  // readedNotifyById(tn.id) {
 
-  // }
 }

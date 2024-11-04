@@ -284,11 +284,11 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
 
   onRowPrepared(e) {
     if (e.rowType === 'data') {
-      if (e.data.bookingStatus == HotelBookingStatusEnum.SendRequest) {
-        e.cellElement.style.cssText = 'color: black; background-color: #ffffaa';
-        // or
+      // if (e.data.bookingStatus == HotelBookingStatusEnum.SendRequest) {
+      //   e.cellElement.style.cssText = 'color: black; background-color: #ffffaa';
+      //   // or
 
-      }
+      // }
     }
   }
 

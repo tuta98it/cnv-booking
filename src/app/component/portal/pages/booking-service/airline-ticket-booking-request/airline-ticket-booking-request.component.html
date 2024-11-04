@@ -129,15 +129,15 @@
     </container-element> -->
   </div>
 
+  <dxi-column caption="Mã yêu cầu" dataField="bookingCode" cssClass="text-left vertical-align-middle" [width]="150"
+    [fixed]="true"></dxi-column>
+
   <dxi-column caption="Mã phê duyệt" dataField="approvalCode" cssClass="vertical-align-middle" [width]="150"></dxi-column>
 
   <dxi-column caption="Mã đặt chỗ" cssClass="vertical-align-middle" [width]="150" cellTemplate="cellReservationCode"></dxi-column>
   <div *dxTemplate="let item of 'cellReservationCode'">
     {{item.data.reservationCode}}{{ item.data.returnReservationCode ? ", " + item.data.returnReservationCode : "" }}
   </div>
-
-
-
 
   <dxi-column caption="Chi phí vé" [width]="150" dataField="ticketPriceTotal" [format]="formatCurrencyVND"
     cssClass="text-center  vertical-align-middle"></dxi-column>
@@ -846,6 +846,7 @@
   </div>
   <ng-template #contentpViewRequestBookingTicket>
     <div>
+      <label><strong>Mã yêu cầu: </strong>{{itemBookingRequest?.bookingCode}}</label>
       <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
         <div nz-col class="gutter-row" nzSpan="24">
           <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">

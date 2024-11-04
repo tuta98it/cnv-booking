@@ -210,11 +210,9 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
 
   onRowPrepared(e) {
     if (e.rowType === "data") {
-      if (e.data.status == AirlineTicketBookingRequestStatus.SubmitRequest) {
-        e.cellElement.style.cssText = "color: black; background-color: #ffffaa";
-        // or
-
-      }
+      // if (e.data.status == AirlineTicketBookingRequestStatus.SubmitRequest) {
+      //   e.cellElement.style.cssText = "color: black; background-color: #ffffaa";
+      // }
     }
   }
 

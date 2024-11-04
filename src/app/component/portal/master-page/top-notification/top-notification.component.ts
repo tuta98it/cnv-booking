@@ -60,8 +60,6 @@ export class TopNotificationComponent implements OnInit {
         this.topNotifications = res.data;
         this.totalTopNotifications = res.total;
         this.totalUnRead = res.totalUnRead;
-
-
       }
     }, error => {
       this.topNotifications = [];
@@ -71,31 +69,69 @@ export class TopNotificationComponent implements OnInit {
 
 
   handleClickItemTopNotify(notifyItem: any) {
-      this.handleNavigatePageNotifications(notifyItem.id);
+    // this.handleNavigatePageNotifications(notifyItem.id);
+    this.handleViewDetailNotify(notifyItem);
     this.readedNotify(notifyItem);
   }
 
+  private handleViewDetailNotify(itemNotify?: any) {
+    this.notificationService.handleViewDetailNotify(itemNotify);
+  }
+
   private readedNotify(notifyItem: any) {
-      let notificationIds: number[] = [
-        notifyItem.id,
-      ];
-      if (notifyItem.readed != true) {
-        this.readedNotificationByIds(notificationIds).then((result: any) => {
-        }).catch((error: any) => {
-        });
-      }
+    let notificationIds: number[] = [
+      notifyItem.id,
+    ];
+    if (notifyItem.readed != true) {
+      this.readedNotificationByIds(notificationIds).then((result: any) => {
+      }).catch((error: any) => {
+      });
+    }
   }
 
   public handleReadedAllNotifications() {
-    let notificationIds: number[] = this.topNotifications.map((topNotify: any) => topNotify.id);
-    this.readedNotificationByIds(notificationIds).then((result: any) => {
-      // this.notificationService.showNotification(Constant.SUCCESS, 'Đã gửi email thông báo giữ phòng khách sạn tới khách hàng');
+    // let notificationIds: number[] = this.topNotifications.map((topNotify: any) => topNotify.id);
+    // this.readedNotificationByIds(notificationIds).then((result: any) => {
+    //   // this.notificationService.showNotification(Constant.SUCCESS, 'Đã gửi email thông báo giữ phòng khách sạn tới khách hàng');
+    // }).catch((error: any) => {
+    //   // this.notificationService.showNotification(Constant.ERROR, 'Gửi email thông báo giữ phòng khách sạn tới khách hàng không thành công');
+    // });
+    this.readedAllNotifications().then((result: any) => {
+      this.getTopNotifications();
     }).catch((error: any) => {
-      // this.notificationService.showNotification(Constant.ERROR, 'Gửi email thông báo giữ phòng khách sạn tới khách hàng không thành công');
     });
+
   }
 
 
+  private readedAllNotifications(){
+    return new Promise((resolve, reject) => {
+      this.notificationAPIService.readedAllNotifications().subscribe(
+        {
+          next: (res: any) => {
+            if (res.isValid) {
+              resolve(true);
+            } else {
+              if (res.errors && res.errors.length > 0) {
+                res.errors.forEach((el: any) => {
+                  this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+                });
+              } else {
+              }
+              reject(res.errors);
+            }
+          },
+          error: (err: any) => {
+            reject(err);
+          },
+          complete: () => {
+          }
+        }
+      ).add(() => {
+        this.getTopNotifications();
+      });
+    });
+  }
 
 
   public handleNavigatePageNotifications(idNotify?: number) {
@@ -131,4 +167,6 @@ export class TopNotificationComponent implements OnInit {
       });
     });
   }
+
+
 }
