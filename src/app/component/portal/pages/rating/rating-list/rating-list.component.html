@@ -1,0 +1,128 @@
+<div class="main-wapper">
+  <div class="toolbar">
+    <div class="before">
+      <h2 class="toolbar-title">
+        Danh sách đánh giá</h2>
+    </div>
+    <div class="after">
+      <div class="buttons">
+        <!--<button nz-button nzType="primary" class="ant-btn-primary" type="button" (click)="routingPageHotelAdd()">
+          <em class="fas fa-plus fa-fw" style="margin-right: 4px;"></em> Thêm khách sạn
+        </button>-->
+      </div>
+    </div>
+  </div>
+  <dx-data-grid
+    class="grid theme-dependent"
+    columnResizingMode="widget"
+    (onCellPrepared)="onCellPrepared($event)"
+    [dataSource]="datas"
+    [height]="dxGridHeight"
+    [allowColumnReordering]="true"
+    [showBorders]="true"
+    [showColumnLines]="true"
+    [showRowLines]="true"
+    [columnMinWidth]="50"
+    [columnAutoWidth]="true"
+    [columnResizingMode]="'nextColumn'"
+    [allowColumnResizing]="true"
+  >
+    <dxo-scrolling mode="virtual" rowRenderingMode="virtual"></dxo-scrolling>
+    <dxo-load-panel [showPane]="true" [enabled]="true"></dxo-load-panel>
+    <dxo-sorting mode="multiple"></dxo-sorting>
+    <dxo-header-filter [visible]="true"></dxo-header-filter>
+    <dxo-column-chooser [enabled]="false"></dxo-column-chooser>
+    <dxo-export
+      [enabled]="false"
+      [allowExportSelectedData]="true"
+      [formats]="['xlsx', 'pdf']"
+    >
+    </dxo-export>
+    <dxi-column
+      fixedPosition="left"
+      alignment="center" [allowSorting]="false" [allowFiltering]="false" [width]="60" caption="STT"
+    ></dxi-column>
+    <dxi-column caption="Thời gian" dataField="datelog" dataType="date" format="HH:mm dd/MM/yyyy"
+                [width]="140"></dxi-column>
+    <dxi-column caption="Mã yêu cầu" dataField="code" [width]="120"></dxi-column>
+    <dxi-column caption="Loại dịch vụ" dataField="serviceTypeName"></dxi-column>
+    <dxi-column caption="Người đánh giá" [width]="150" dataField="fullName"></dxi-column>
+
+    <dxi-column cssClass="text-center" caption="Thao tác" [fixed]="true" [width]="120" fixedPosition="right"
+                cellTemplate="cellBtnTemplate"></dxi-column>
+
+    <div *dxTemplate="let cellInfo of 'cellStatus'">
+      <span class="text-success" *ngIf="cellInfo.data.isActive">Đang hoạt động</span>
+      <span class="text-danger" *ngIf="!cellInfo.data.isActive">Khóa</span>
+    </div>
+    <div *dxTemplate="let item of 'cellBtnTemplate'" style="display: flex; justify-content: space-evenly;">
+      <button title="Xem chi tiết đánh giá" nz-button nzSize="small" nzType="default"
+              (click)="showModalView(item.data)">
+        <span class="fa fa-eye fa-fw"></span>
+      </button>
+    </div>
+  </dx-data-grid>
+</div>
+
+
+<nz-modal [(nzVisible)]="isShowPopupDetail" nzClosable="false" nzWidth="1000px" [nzTitle]="title"
+          nzMaskClosable="false">
+  <ng-template #title>
+    {{dataItem.serviceTypeName}}
+    <div class="pull-right icon-close">
+      <em (click)="handleCancel()" nz-icon nzType="close" nzTheme="outline"></em>
+    </div>
+  </ng-template>
+  <div class="form-rating">
+    <div class="item d-flex align-items-center justify-content-between">
+      <div class="form-group">
+        <div>Mã người dùng</div>
+        <span>{{dataItem.code}}</span>
+      </div>
+      <div class="form-group">
+        <div>Tên người dùng</div>
+        <span>{{dataItem.fullName}}</span>
+      </div>
+      <div class="form-group">
+        <div>Email</div>
+        <span>{{dataItem.email}}</span>
+      </div>
+      <div class="form-group">
+        <div>Doanh nghiệp</div>
+        <span>{{dataItem.partnerName}}</span>
+      </div>
+    </div>
+    <div class="item" *ngFor="let item of dataItem.questionRating; let stt = index">
+      <label>{{stt + 1}}. {{item.questionName}}</label>
+      <div class="radio-group" *ngIf="stt !== (dataItem.questionRating.length - 1)">
+        <label class="radio-inline">
+          <input type="radio" [disabled]="item.ratingStar !== 1" [name]="'radio' + stt" [checked]="item.ratingStar === 1"/>
+          Rất không hài lòng
+        </label>
+        <label class="radio-inline">
+          <input type="radio" [disabled]="item.ratingStar !== 2" [name]="'radio' + stt" [checked]="item.ratingStar === 2"/>
+          Không hài lòng
+        </label>
+        <label class="radio-inline">
+          <input type="radio" [disabled]="item.ratingStar !== 3" [name]="'radio' + stt" [checked]="item.ratingStar === 3"/>
+          Bình thường
+        </label>
+        <label class="radio-inline">
+          <input type="radio" [disabled]="item.ratingStar !== 4" [name]="'radio' + stt" [checked]="item.ratingStar === 4"/>
+          Hài lòng
+        </label>
+        <label class="radio-inline">
+          <input type="radio" [disabled]="item.ratingStar !== 5" [name]="'radio' + stt" [checked]="item.ratingStar === 5"/>
+          Rất hài lòng
+        </label>
+      </div>
+      <div *ngIf="item.comment">
+        <strong>{{item.comment}}</strong>
+      </div>
+    </div>
+  </div>
+  <!-- Footer -->
+  <div *nzModalFooter>
+    <button nz-button (click)="handleCancel()">{{'cancel' | translate }}</button>
+  </div>
+</nz-modal>
