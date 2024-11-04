@@ -18,7 +18,7 @@ export interface PushNotification {
   vibrate?: number[];
 }
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class PushNotificationService {
   public permission: Permission;
   constructor() {
