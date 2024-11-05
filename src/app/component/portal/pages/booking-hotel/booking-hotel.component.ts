@@ -1,43 +1,43 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild, AfterViewInit } from '@angular/core';
-import {DatePipe} from '@angular/common';
-import {ActionsSubject, select, Store} from '@ngrx/store';
-import {NzModalService} from 'ng-zorro-antd/modal';
-import {GeneralService} from 'src/app/service/general-service';
-import {TableSelectionAbstract} from 'src/app/shared/component/table/table-selection.abstract';
-import {AbstractControl, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {Constant} from 'src/app/shared/constants/constant.class';
-import {PhoneUtils} from 'src/app/shared/utils/phone-utils.class';
-import {AppConfigService} from 'src/app-config.service';
-import {NotificationService} from 'src/app/service/notification.service';
-import {Workbook} from 'exceljs';
-import {DateFormatPipe} from 'src/app/shared/pipe/format-date.pipe';
-import {exportDataGrid} from 'devextreme/excel_exporter';
-import {saveAs} from 'file-saver-es';
-import {NzImageService} from 'ng-zorro-antd/image';
-import {combineLatest} from 'rxjs';
+import { DatePipe } from '@angular/common';
+import { ActionsSubject, select, Store } from '@ngrx/store';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { GeneralService } from 'src/app/service/general-service';
+import { TableSelectionAbstract } from 'src/app/shared/component/table/table-selection.abstract';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Constant } from 'src/app/shared/constants/constant.class';
+import { PhoneUtils } from 'src/app/shared/utils/phone-utils.class';
+import { AppConfigService } from 'src/app-config.service';
+import { NotificationService } from 'src/app/service/notification.service';
+import { Workbook } from 'exceljs';
+import { DateFormatPipe } from 'src/app/shared/pipe/format-date.pipe';
+import { exportDataGrid } from 'devextreme/excel_exporter';
+import { saveAs } from 'file-saver-es';
+import { NzImageService } from 'ng-zorro-antd/image';
+import { combineLatest } from 'rxjs';
 // import { removeAccents } from ;
-import {removeAccents} from 'src/app/shared/utils/filters/remove-accents';
+import { removeAccents } from 'src/app/shared/utils/filters/remove-accents';
 
 import {
   DxDataGridComponent,
 } from 'devextreme-angular';
 
-import {NzMessageService} from 'ng-zorro-antd/message';
-import {NzUploadChangeParam} from 'ng-zorro-antd/upload';
-import {NzUploadFile} from 'ng-zorro-antd/upload';
-import {StringUtils} from 'src/app/shared/utils/string-utils.class';
-import {MoneyUtils} from 'src/app/shared/utils/money-utils.class';
-import {AngularEditorConfig} from '@kolkov/angular-editor';
-import {DataService} from 'src/app/service/data.service';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzUploadChangeParam } from 'ng-zorro-antd/upload';
+import { NzUploadFile } from 'ng-zorro-antd/upload';
+import { StringUtils } from 'src/app/shared/utils/string-utils.class';
+import { MoneyUtils } from 'src/app/shared/utils/money-utils.class';
+import { AngularEditorConfig } from '@kolkov/angular-editor';
+import { DataService } from 'src/app/service/data.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import {BookingHotelStatusPipe} from 'src/app/shared/pipe/booking-hotel-status.pipe';
-import {HotelBookingStatusEnum, HOTEL_BOOKING_STATUS_LIST} from 'src/app/enums/hotel-booking-status.enum';
-import {UploadService} from 'src/app/service/upload-service';
-import {ObjectValidator} from 'src/app/shared/custom-validator/objectValidator';
-import {MinNumberValidator} from 'src/app/shared/custom-validator/minValueValidator';
-import {WhiteSpaceValidator} from 'src/app/shared/custom-validator/whiteSpaceValidator';
-import {CheckValidatorForm} from 'src/app/shared/custom-validator/checkValidatorForm';
-import {Attachment} from 'src/app/model/attachment';
+import { BookingHotelStatusPipe } from 'src/app/shared/pipe/booking-hotel-status.pipe';
+import { HotelBookingStatusEnum, HOTEL_BOOKING_STATUS_LIST } from 'src/app/enums/hotel-booking-status.enum';
+import { UploadService } from 'src/app/service/upload-service';
+import { ObjectValidator } from 'src/app/shared/custom-validator/objectValidator';
+import { MinNumberValidator } from 'src/app/shared/custom-validator/minValueValidator';
+import { WhiteSpaceValidator } from 'src/app/shared/custom-validator/whiteSpaceValidator';
+import { CheckValidatorForm } from 'src/app/shared/custom-validator/checkValidatorForm';
+import { Attachment } from 'src/app/model/attachment';
 
 @Component({
   selector: 'app-hotel',
@@ -122,10 +122,10 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
     defaultFontName: '',
     defaultFontSize: '',
     fonts: [
-      {class: 'arial', name: 'Arial'},
-      {class: 'times-new-roman', name: 'Times New Roman'},
-      {class: 'calibri', name: 'Calibri'},
-      {class: 'comic-sans-ms', name: 'Comic Sans MS'}
+      { class: 'arial', name: 'Arial' },
+      { class: 'times-new-roman', name: 'Times New Roman' },
+      { class: 'calibri', name: 'Calibri' },
+      { class: 'comic-sans-ms', name: 'Comic Sans MS' }
     ],
     customClasses: [
       {
@@ -284,13 +284,17 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
 
 
   onRowPrepared(e) {
-    if (e.rowType === 'data') {
-      // if (e.data.bookingStatus == HotelBookingStatusEnum.SendRequest) {
-      //   e.cellElement.style.cssText = 'color: black; background-color: #ffffaa';
-      //   // or
+    this.activatedRoute.queryParams.subscribe(async params => {
+      this.idBookingHotel = +params[Constant.ID];
+      if (e.rowType === 'data') {
+        if (e.data.id == this.idBookingHotel) {
+          e.cellElement.style.cssText = 'color: black; background-color: #ffffaa';
+        } else {
+          e.cellElement.style.cssText = '';
+        }
+      }
+    });
 
-      // }
-    }
   }
 
   ngAfterViewInit(): void {
@@ -724,15 +728,15 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
                                   <td style="width:10.42%; border: 1pt solid #000; padding: 0in 5.4pt;">
                                       <p style="text-align: center; line-height: 150%;">
                                           <span>${patchDataBookingHotel.bookingHotelDetails[0].checkinDate ?
-        this.datePipe.transform(patchDataBookingHotel.bookingHotelDetails[0].checkinDate,
-          'dd/MM/yyyy') : ''}</span>
+          this.datePipe.transform(patchDataBookingHotel.bookingHotelDetails[0].checkinDate,
+            'dd/MM/yyyy') : ''}</span>
                                       </p>
                                   </td>
                                   <td style="width:10.42%; border: 1pt solid #000; padding: 0in 5.4pt;">
                                       <p style="text-align: center; line-height: 150%;">
                                           <span>${patchDataBookingHotel.bookingHotelDetails[0].checkoutDate ?
-        this.datePipe.transform(patchDataBookingHotel.bookingHotelDetails[0].checkoutDate,
-          'dd/MM/yyyy') : ''}</span>
+          this.datePipe.transform(patchDataBookingHotel.bookingHotelDetails[0].checkoutDate,
+            'dd/MM/yyyy') : ''}</span>
                                       </p>
                                   </td>
                                   <td colspan="2" style="width:8.1%; border: 1pt solid #000; padding: 0in 5.4pt;">
@@ -1058,7 +1062,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
       autoFilterEnabled: true,
     }).then(() => {
       workbook.xlsx.writeBuffer().then((buffer) => {
-        saveAs(new Blob([buffer], {type: 'application/octet-stream'}), fileName + '.xlsx');
+        saveAs(new Blob([buffer], { type: 'application/octet-stream' }), fileName + '.xlsx');
       });
     });
     e.cancel = true;
@@ -1216,10 +1220,10 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
         arrImage.push(objImageView);
       });
     }
-    this.nzImageService.preview(arrImage, {nzZoom: 1.5, nzRotate: 0});
+    this.nzImageService.preview(arrImage, { nzZoom: 1.5, nzRotate: 0 });
   }
 
-  handleChangeImages({file, fileList}: NzUploadChangeParam, form: any): void {
+  handleChangeImages({ file, fileList }: NzUploadChangeParam, form: any): void {
     const status = file.status;
     if (status === 'done') {
       this.msg.success(`file ${file.name} tải lên thành công.`);
@@ -1258,7 +1262,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
 
   // switchValueIsAvaliable = false;
   clickSwitchIsAvaliable(isAvaliableUpdate: boolean, roomID: any): void {
-    this.generalService.SetAvailableRoom({roomId: roomID, isAvailable: isAvaliableUpdate}).subscribe(
+    this.generalService.SetAvailableRoom({ roomId: roomID, isAvailable: isAvaliableUpdate }).subscribe(
       {
         next: (res) => {
           if (res.ret && res.ret[0].code !== 0) {
@@ -1334,7 +1338,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   handleOkRefuse() {
     this.isRefuseLoading = true;
     this.generalService
-      .refuseBooking({id: this.item.id, note: this.textValueNoteRefuse})
+      .refuseBooking({ id: this.item.id, note: this.textValueNoteRefuse })
       .subscribe({
         next: (res) => {
           if (res.isValid) {
@@ -1438,7 +1442,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
       this.notificationService.showNotification(Constant.ERROR, 'Nội dung ghi chú không được để trống');
       return;
     }
-    let payload = {noteSystemCancelled: noteSystemCancelled};
+    let payload = { noteSystemCancelled: noteSystemCancelled };
     this.generalService.markCanceledSystemBookingHotelExport(idBookingTicketFlightExp, payload).subscribe({
       next: (res) => {
         if (res.ret && res.ret[0].code !== 0) {
@@ -1490,10 +1494,10 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
 
 
   //#region hóa đơn
-  @ViewChild('fileInputOrderPdf', {static: false}) orderPdfFileInput!: ElementRef<HTMLInputElement>;
-  @ViewChild('fileInputOrderXml', {static: false}) orderXmlFileInput!: ElementRef<HTMLInputElement>;
-  selectedOrderPdfFile: Attachment = {name: '', path: '', file: null};
-  selectedOrderXmlFile: Attachment = {name: '', path: '', file: null};
+  @ViewChild('fileInputOrderPdf', { static: false }) orderPdfFileInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('fileInputOrderXml', { static: false }) orderXmlFileInput!: ElementRef<HTMLInputElement>;
+  selectedOrderPdfFile: Attachment = { name: '', path: '', file: null };
+  selectedOrderXmlFile: Attachment = { name: '', path: '', file: null };
 
   closeViewInVoice() {
     this.isVisibleViewInVoice = false;
@@ -1519,7 +1523,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
         this.selectedOrderPdfFile.path = null;
       } else {
         // this.orderForm.controls['pdfFile'].reset();
-        this.selectedOrderPdfFile = {name: '', path: '', file: null};
+        this.selectedOrderPdfFile = { name: '', path: '', file: null };
         this.notificationService.showNotification(Constant.ERROR, 'Chỉ nhận file pdf');
       }
     }
@@ -1537,7 +1541,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
         this.selectedOrderXmlFile.path = null;
       } else {
         // this.orderForm.controls['xmlFile'].reset();
-        this.selectedOrderXmlFile = {name: '', path: '', file: null};
+        this.selectedOrderXmlFile = { name: '', path: '', file: null };
         this.notificationService.showNotification(Constant.ERROR, 'Chỉ nhận file xml');
       }
     }
@@ -1615,7 +1619,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
         this.orderForm.clearValidators();
         this.orderPdfFileInput.nativeElement.value = null;
         this.orderForm.controls['pdfFile'].setValue(null);
-        this.selectedOrderPdfFile = {name: '', path: '', file: null};
+        this.selectedOrderPdfFile = { name: '', path: '', file: null };
       },
       error: (error) => {
         this.notificationService.showNotification(Constant.ERROR, 'Xóa hóa đơn không thành công');
@@ -1632,7 +1636,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
         this.notificationService.showNotification(Constant.SUCCESS, 'Xóa hóa đơn thành công');
         this.orderXmlFileInput.nativeElement.value = null;
         this.orderForm.controls['xmlFile'].setValue(null);
-        this.selectedOrderXmlFile = {name: '', path: '', file: null};
+        this.selectedOrderXmlFile = { name: '', path: '', file: null };
       },
       error: (error) => {
         this.notificationService.showNotification(Constant.ERROR, 'Xóa hóa đơn không thành công');
@@ -1648,13 +1652,13 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
     this.isVisibleViewInVoice = true;
     this.orderForm.reset();
     if (this.item.pdfFile) {
-      this.selectedOrderPdfFile = {name: this.item.pdfFile.split('/').pop(), path: this.item.pdfFile, file: null};
+      this.selectedOrderPdfFile = { name: this.item.pdfFile.split('/').pop(), path: this.item.pdfFile, file: null };
       this.orderForm.controls['pdfFile'].setValue(this.item.pdfFile.split('/').pop());
     } else {
       this.orderForm.controls['pdfFile'].setValue(null);
     }
     if (this.item.xmlFile) {
-      this.selectedOrderXmlFile = {name: this.item.xmlFile.split('/').pop(), path: this.item.xmlFile, file: null};
+      this.selectedOrderXmlFile = { name: this.item.xmlFile.split('/').pop(), path: this.item.xmlFile, file: null };
       this.orderForm.controls['xmlFile'].setValue(this.item.xmlFile.split('/').pop());
     } else {
       this.orderForm.controls['xmlFile'].setValue(null);
@@ -1670,7 +1674,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
 
   async handleChangeStatusByItem(oldValue: number, newValue: number, dataFocus: any, dataItem = null) {
     if (newValue === HotelBookingStatusEnum.Successful && dataItem) {
-      const res = await this.generalService.preCheckMoneyForConfirmBooking({id: dataItem.id}).toPromise();
+      const res = await this.generalService.preCheckMoneyForConfirmBooking({ id: dataItem.id }).toPromise();
       if (!res.success) {
         this.notificationService.showNotification(Constant.ERROR, res.message);
         dataItem.bookingStatus = oldValue;
@@ -2154,7 +2158,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   }
 
   addBookingRoomCodeId(booking: any, bookingRoomId: any) {
-    this.generalService.confirmBooking({id: booking.id, reservationCode: bookingRoomId}).subscribe({
+    this.generalService.confirmBooking({ id: booking.id, reservationCode: bookingRoomId }).subscribe({
       next: (res) => {
         if (res.isValid) {
           this.updateBookingHotelStatus(this.dataEmail.id, HotelBookingStatusEnum.Successful);
@@ -2210,7 +2214,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
       this.notificationService.showNotification(Constant.ERROR, 'Vui lòng nhập đầy đủ thông tin');
       return;
     }
-    this.generalService.confirmBooking({id: this.item.data.id, reservationCode: this.bookingRoomCodeForm.value.reservationCode}).subscribe({
+    this.generalService.confirmBooking({ id: this.item.data.id, reservationCode: this.bookingRoomCodeForm.value.reservationCode }).subscribe({
       next: (res) => {
         console.log('confirmBooking addBookingRoomCode', res);
         if (res.isValid) {
@@ -2255,7 +2259,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
     }
   }
   updateNumberOfNights() {
-    const {checkinDate, checkoutDate} = this.detailBookingRoomForm.value;
+    const { checkinDate, checkoutDate } = this.detailBookingRoomForm.value;
 
     if (checkinDate && checkoutDate) {
       const checkin = new Date(checkinDate);

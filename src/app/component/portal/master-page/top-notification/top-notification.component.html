@@ -1,6 +1,6 @@
 <nz-button-group style="margin-right: 1rem ;">
   <button nz-button nzShape="circle" class="circle-button" nz-dropdown nzTrigger="click" [nzDropdownMenu]="menuTopNotify" (click)="getTopNotifications()"
-    [nzClickHide]="false" nzPlacement="bottomRight">
+    [nzClickHide]="true" nzPlacement="bottomRight">
     <span nz-icon nzType="bell"></span>
 
     <div *ngIf="totalUnRead >= 1 && totalUnRead <= 9" class="unread-badge-common unread-badge">{{ totalUnRead }}</div>

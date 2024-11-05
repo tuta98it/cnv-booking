@@ -209,11 +209,16 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   }
 
   onRowPrepared(e) {
-    if (e.rowType === "data") {
-      // if (e.data.status == AirlineTicketBookingRequestStatus.SubmitRequest) {
-      //   e.cellElement.style.cssText = "color: black; background-color: #ffffaa";
-      // }
-    }
+    this.activatedRoute.queryParams.subscribe(async params => {
+      this.idRequestBooking = +params[Constant.ID]; // Lấy id từ query parameter
+      if (e.rowType === "data") {
+        if (e.data.id == this.idRequestBooking) {
+          e.cellElement.style.cssText = "color: black; background-color: #ffffaa;";
+        } else {
+          e.cellElement.style.cssText = "";
+        }
+      }
+    });
   }
 
   disabledHoldExpiryDateDepartureDate = (current: Date): boolean =>
