@@ -18,7 +18,7 @@ export class NavigationService {
 
     const url = `/${RequestBookingConfig.PATH_REQUEST_BOOKING}`;
 
-    console.log(this.router.url);
+
 
     if (this.router.url.includes(RequestBookingConfig.PATH_REQUEST_BOOKING)) {
       // Navigate to a temporary URL and then back to the notifications URL to force a reload
@@ -36,7 +36,7 @@ export class NavigationService {
 
     const url = `/${HotelBookingConfig.PATH_HOTEL_BOOKING}`;
 
-    console.log(this.router.url);
+
 
     if (this.router.url.includes(HotelBookingConfig.PATH_HOTEL_BOOKING)) {
       // Navigate to a temporary URL and then back to the notifications URL to force a reload

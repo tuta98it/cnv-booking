@@ -24,7 +24,6 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
-import { UserNotificationService } from 'src/app/service/user-notification.service';
 import { NotificationPageStateService } from 'src/app/app-state/notification-page-state.service';
 import { NotificationBellStateService } from 'src/app/app-state/notification-bell-state.service';
 import { PushNotificationService } from 'src/app/service/push-notification.service';
@@ -147,11 +146,11 @@ export class MasterPageComponent implements OnInit, OnDestroy {
     private translate: TranslateService,
     private menuState: MenuStateService,
     private deviceService: DeviceDetectorService,
-    private userNotificationService: UserNotificationService,
     private notificationAPIService: NotificationAPIService,
     private pushNotificationService: PushNotificationService,
     private notificationPageStateService: NotificationPageStateService,
     private notificationBellStateService: NotificationBellStateService,
+
 
   ) {
     this._menuSubscription = this.menuState.subscribe((m: boolean) => {
@@ -246,24 +245,24 @@ export class MasterPageComponent implements OnInit, OnDestroy {
         // console.log('idDeviceGenerate: ', idDeviceGenerate);
         if (idDeviceStorage !== idDeviceGenerate) {
           let typeDevice: number = Constant.DEVICE.UNKNOWN.deviceType;
-          let fcmToken: string = localStorage.getItem(Constant.KEY_FIREBASE_TOKEN) ?? '';
+          let tokenFCM: string = localStorage.getItem(Constant.KEY_FIREBASE_TOKEN) ?? '';
           typeDevice = this.identifyDeviceType();
 
           getToken(this.messaging, { vapidKey: 'BNkSGw-jMSFtSoWzPgcI1L_EGwTTACfmGgK_n_gWko8O2Ib-KcTdZnfQM7DqtVnSnZFXhGyJHMmFbNfi436VZ48' }).then((currentToken) => {
             if (currentToken) {
-              fcmToken = currentToken;
-              // console.log('FCM Token:', currentToken);
+              tokenFCM = currentToken;
+              console.log('FCM Token:', currentToken);
               // Send the token to your server and update the UI if necessary
               // ...
               let payload = {
-                token: fcmToken,
+                tokenFCM: tokenFCM,
                 deviceType: typeDevice,
                 deviceId: idDeviceGenerate
               }
 
-              this.userNotificationService.devicereGistration(payload).subscribe({
+              this.notificationAPIService.deviceRegistration(payload).subscribe({
                 next: (resDevicereGistration: any) => {
-                  // console.log('resDevicereGistration: ', resDevicereGistration);
+                  // console.log('resDevicereGistration.data: ', resDevicereGistration.data);
                 },
 
                 error: (err) => {
@@ -274,7 +273,7 @@ export class MasterPageComponent implements OnInit, OnDestroy {
                   // console.log('complete: ');
                   // console.log('this.deviceInfo: ', idDeviceGenerate);
                   localStorage.setItem(Constant.KEY_DEVICE_INFO, idDeviceGenerate);
-                  localStorage.setItem(Constant.KEY_FIREBASE_TOKEN, fcmToken);
+                  localStorage.setItem(Constant.KEY_FIREBASE_TOKEN, tokenFCM);
                 }
               })
 
