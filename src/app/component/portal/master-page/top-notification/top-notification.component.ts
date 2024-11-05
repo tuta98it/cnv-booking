@@ -22,6 +22,8 @@ import { MenuStateService } from 'src/app/shared/app-state/menu-state.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { ColorStatusNotifications, NotificationVHLEnum } from 'src/app/enums/notification-vhl.enum';
 import { NavigationService } from 'src/app/service/navigation.service';
+import { NotificationBellStateService } from 'src/app/app-state/notification-bell-state.service';
+import { NotificationPageStateService } from 'src/app/app-state/notification-page-state.service';
 
 @Component({
   selector: 'app-top-notification',
@@ -46,10 +48,33 @@ export class TopNotificationComponent implements OnInit {
     private notificationService: NotificationService,
     private activeRoute: ActivatedRoute,
     private msg: NzMessageService,
-    private navigationService: NavigationService
-  ) { }
+    private navigationService: NavigationService,
+    private notificationBellStateService: NotificationBellStateService,
+    private notificationPageStateService: NotificationPageStateService
+  ) { this.getNotificationsChange(); }
 
+  private getNotificationsChange() {
+    this.notificationBellStateService.receiveStatus().subscribe({
+      next: (statusNotify: any) => {
+        // if (notifications) {
+        //   this.bellNotifications = notifications;
+        //   this.totalCountBellNotify = notifications.length;
+        //   // Set lại số lượng thông báo chưa đọc
+        //   this.resetNumberStatusNew();
+        // }
 
+        if (statusNotify.isNewData) {
+          this.getTopNotifications();
+        }
+      },
+      error: (err: any) => {
+        // Hiện thị là đã lỗi hệ thống mạng
+      },
+      complete: () => {
+
+      }
+    });
+  }
   ngOnInit(): void {
     this.getTopNotifications();
   }
@@ -84,6 +109,7 @@ export class TopNotificationComponent implements OnInit {
     ];
     if (notifyItem.readed != true) {
       this.readedNotificationByIds(notificationIds).then((result: any) => {
+        this.notificationPageStateService.sendStatus({ isNewData: true });
       }).catch((error: any) => {
       });
     }
@@ -104,7 +130,7 @@ export class TopNotificationComponent implements OnInit {
   }
 
 
-  private readedAllNotifications(){
+  private readedAllNotifications() {
     return new Promise((resolve, reject) => {
       this.notificationAPIService.readedAllNotifications().subscribe(
         {
