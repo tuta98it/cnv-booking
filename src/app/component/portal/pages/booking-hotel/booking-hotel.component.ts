@@ -247,7 +247,8 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
     this.detailBookingGeneralForm = this.fb.group({
       id: [null],
       isUrgent: [false],
-      otherRequirements: [null]
+      otherRequirements: [null],
+      bookingCode: [null]
     });
     this.detailHotelPassengerAdtForm = [];
     this.detailHotelPassengerChdForm = [];
@@ -1884,6 +1885,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
 
     // set thông tin chung
     this.detailBookingGeneralForm.controls['id'].setValue(data?.id);
+    this.detailBookingGeneralForm.controls['bookingCode'].setValue(data?.bookingCode);
     this.detailBookingGeneralForm.controls['otherRequirements'].setValue(data?.otherRequirements);
     this.detailBookingGeneralForm.controls['isUrgent'].setValue(data?.isUrgent);
 
