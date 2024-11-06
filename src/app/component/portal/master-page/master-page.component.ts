@@ -211,6 +211,8 @@ export class MasterPageComponent implements OnInit, OnDestroy {
 
   private generateDeviceId(): string {
     let deviceInfo = this.deviceService.getDeviceInfo();
+    // console.log('deviceInfo:', deviceInfo);
+
     // Lấy thông tin về trình duyệt và thiết bị
     const userAgent = deviceInfo.userAgent;
     const deviceType = deviceInfo.deviceType;
