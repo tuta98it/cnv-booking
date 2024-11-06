@@ -402,8 +402,12 @@
         <div class="row">
           <div class="col-md-3" *ngIf="transactionItem">
             <strong>Số tiền dịch vụ phát sinh</strong>
-            <span style="color: red" *ngIf="transactionItem.totalMoney">
+            <span style="color: red" *ngIf="transactionItem.totalMoney < 0">
               ({{-transactionItem.totalMoney | currencyFormat}}) đ
+            </span>
+
+            <span style="color: red" *ngIf="transactionItem.totalMoney >= 0">
+              {{transactionItem.totalMoney | currencyFormat}} đ
             </span>
           </div>
           <div class="col-md-3">
@@ -417,14 +421,20 @@
           </div>
           <div class="col-md-3">
             <strong>Số tiền dư hiện tại</strong>
-            <span>
-              ({{transactionItem.balance | currencyFormat}}) đ
+            <span *ngIf="transactionItem.balance >= 0">
+              {{transactionItem.balance | currencyFormat}} đ
+            </span>
+            <span style="color: red" *ngIf="transactionItem.balance < 0">
+              ({{-transactionItem.balance | currencyFormat}}) đ
             </span>
           </div>
           <div class="col-md-3">
             <strong>Số tiền cần thanh toán</strong>
-            <span>
-              ({{transactionItem.needPayment | currencyFormat}}) đ
+            <span *ngIf="transactionItem.needPayment >= 0">
+              {{transactionItem.needPayment | currencyFormat}} đ
+            </span>
+            <span style="color: red" *ngIf="transactionItem.needPayment < 0">
+              ({{-transactionItem.needPayment | currencyFormat}}) đ
             </span>
           </div>
         </div>
