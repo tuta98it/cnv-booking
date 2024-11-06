@@ -426,6 +426,10 @@ export class MasterPageComponent implements OnInit, OnDestroy {
       localStorage.removeItem(Constant.USER_INFO);
       localStorage.removeItem(Constant.TINHTHANH);
       localStorage.removeItem(Constant.QUANHUYEN);
+      localStorage.removeItem(Constant.QUANHUYEN);
+      localStorage.removeItem(Constant.KEY_DEVICE_ID);
+      localStorage.removeItem(Constant.KEY_DEVICE_INFO);
+      localStorage.removeItem(Constant.KEY_FIREBASE_TOKEN);
       this.router.navigate(['/login']);
     });
   }
