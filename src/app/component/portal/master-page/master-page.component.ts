@@ -27,6 +27,7 @@ import { getMessaging, getToken, onMessage } from "firebase/messaging";
 import { NotificationPageStateService } from 'src/app/app-state/notification-page-state.service';
 import { NotificationBellStateService } from 'src/app/app-state/notification-bell-state.service';
 import { PushNotificationService } from 'src/app/service/push-notification.service';
+import FingerprintJS from '@fingerprintjs/fingerprintjs';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -210,18 +211,20 @@ export class MasterPageComponent implements OnInit, OnDestroy {
   }
 
   private generateDeviceId(): string {
-    let deviceInfo = this.deviceService.getDeviceInfo();
-    // console.log('deviceInfo:', deviceInfo);
 
     // Lấy thông tin về trình duyệt và thiết bị
+    // Lấy thông tin thiết bị để tạo fingerprint
+    const deviceInfo = this.deviceService.getDeviceInfo();
     const userAgent = deviceInfo.userAgent;
-    const deviceType = deviceInfo.deviceType;
+    const platform = navigator.platform;
+    const language = navigator.language;
+    const screenResolution = `${window.screen.width}x${window.screen.height}`;
 
-    // Kết hợp thông tin và sử dụng một hàm băm để tạo ID
-    const combinedInfo = `${userAgent}${deviceType}`;
-    const hashedId = this.hashString(combinedInfo);
+    // Kết hợp UUID với fingerprint để tạo deviceId duy nhất
+    const combinedInfo = `${userAgent}|${platform}|${language}|${screenResolution}`;
+    const deviceId = this.hashString(combinedInfo);
 
-    return hashedId;
+    return deviceId;
   }
 
   private hashString(input: string): string {
@@ -237,13 +240,21 @@ export class MasterPageComponent implements OnInit, OnDestroy {
     return hash.toString();
   }
 
+
+
+  private async getDeviceFingerprint() {
+    const fp = await FingerprintJS.load();
+    const result = await fp.get();
+    return result.visitorId; // Đây là ID duy nhất cho thiết bị.
+  }
+
   private requestPermission() {
     // console.log('Requesting permission...');
-    Notification.requestPermission().then((permission) => {
+    Notification.requestPermission().then(async (permission) => {
       if (permission === 'granted') {
         // console.log('Notification permission granted.');
         let idDeviceStorage = localStorage.getItem(Constant.KEY_DEVICE_ID);
-        let idDeviceGenerate = this.generateDeviceId();
+        const idDeviceGenerate = await this.getDeviceFingerprint();
         // console.log('idDeviceGenerate: ', idDeviceGenerate);
         if (idDeviceStorage !== idDeviceGenerate) {
           let typeDevice: number = Constant.DEVICE.UNKNOWN.deviceType;
