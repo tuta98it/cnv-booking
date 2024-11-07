@@ -26,9 +26,9 @@ export class AuthService {
     token = 'Bearer ' + localStorage.getItem(Constant.TOKEN);
 
 
-    const KEY_FIREBASE_TOKEN = localStorage.getItem(Constant.KEY_FIREBASE_TOKEN);
+    const KEY_DEVICE_ID = localStorage.getItem(Constant.KEY_DEVICE_ID);
     return this.httpClient.post(this.configService.getConfig().api.baseUrl + '/Login/LogoutAdminPortal', {
-      "tokenFCM": KEY_FIREBASE_TOKEN
+      "deviceId": KEY_DEVICE_ID
     }, { headers });
   }
   checkToken(): any {
