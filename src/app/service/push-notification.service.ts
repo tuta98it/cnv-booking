@@ -42,12 +42,12 @@ export class PushNotificationService {
         console.log('Notifications are not available in this environment');
         obs.complete();
       }
-      if (self.permission !== 'granted') {
-        console.log(
-          "The user hasn't granted you permission to send push notifications"
-        );
-        obs.complete();
-      }
+      // if (self.permission !== 'granted') {
+      //   console.log(
+      //     "The user hasn't granted you permission to send push notifications"
+      //   );
+      //   obs.complete();
+      // }
       let _notify = new Notification(title, options);
       _notify.onshow = function (e) {
         return obs.next({

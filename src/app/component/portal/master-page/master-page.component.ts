@@ -306,7 +306,7 @@ export class MasterPageComponent implements OnInit, OnDestroy {
         }
       } else {
         // this.notification.warn('Quyền thông báo của trình duyệt bị từ chối');
-        // console.warn('Notification permission denied.');
+        console.warn('Notification permission denied.');
       }
     });
   }
@@ -319,6 +319,11 @@ export class MasterPageComponent implements OnInit, OnDestroy {
     this.notificationBellStateService.sendStatus({ isNewData: true });
     this.notificationPageStateService.sendStatus({ isNewData: true });
   }
+
+  private handleViewDetailNotify(itemNotify?: any) {
+    this.notificationService.handleViewDetailNotify(itemNotify);
+  }
+
   ngOnInit(): void {
 
     if (Constant.PAGE_NOTIFY_CONFIG.some(path => this.router.url.includes(path))) {
@@ -335,17 +340,26 @@ export class MasterPageComponent implements OnInit, OnDestroy {
     onMessage(this.messaging, (payloadNotity) => {
       this.setUpdateNewNotification();
       const notification = payloadNotity.notification;
+      console.log("notification 1: ", notification);
+
       this.pushNotificationService.create(notification?.title ?? '', { body: notification?.body, icon: notification?.image }).subscribe({
         next: (resNotity: any) => {
           var event = resNotity.event;
           var notification = resNotity.notification;
+          var data = resNotity.notification.data;
           switch (event.type) {
             case 'show':
               // console.log('actioned: ', 'show');
               break;
 
             case 'click':
+              var itemNotify = {
+                notificationType :  +data.NotificationType,
+                otherId: +data.OtherId
+              }
+              this.handleViewDetailNotify(itemNotify);
               // console.log('actioned: ', 'click');
+
               break;
 
             case 'error':
