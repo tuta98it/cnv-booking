@@ -284,7 +284,7 @@ export class MasterPageComponent implements OnInit, OnDestroy {
                 complete: () => {
                   // console.log('complete: ');
                   // console.log('this.deviceInfo: ', idDeviceGenerate);
-                  localStorage.setItem(Constant.KEY_DEVICE_INFO, idDeviceGenerate);
+                  localStorage.setItem(Constant.KEY_DEVICE_ID, idDeviceGenerate);
                   localStorage.setItem(Constant.KEY_FIREBASE_TOKEN, tokenFCM);
                 }
               })
