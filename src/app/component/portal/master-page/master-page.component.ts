@@ -255,6 +255,8 @@ export class MasterPageComponent implements OnInit, OnDestroy {
         // console.log('Notification permission granted.');
         let idDeviceStorage = localStorage.getItem(Constant.KEY_DEVICE_ID);
         const idDeviceGenerate = await this.getDeviceFingerprint();
+        console.log('idDeviceGenerate:', idDeviceGenerate);
+
         if (idDeviceStorage !== idDeviceGenerate) {
           let typeDevice: number = Constant.DEVICE.UNKNOWN.deviceType;
           let tokenFCM: string = localStorage.getItem(Constant.KEY_FIREBASE_TOKEN) ?? '';
