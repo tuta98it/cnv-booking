@@ -212,7 +212,7 @@ export class DashboardComponent extends TableSelectionAbstract implements OnInit
 
     this.generalService.reportUser(payloadSalesReport).subscribe((res) => {
       this.pieChartUserOptions = {
-        series: [res.newUserActive, res.oldUserActive, res.newUserDeActive, res.oldUserDeActive],
+        series: [res.newUserActive, res.newUserDeActive, res.oldUserActive,  res.oldUserDeActive],
         title: {
           text: 'Tài khoản người dùng',
           align: 'center',

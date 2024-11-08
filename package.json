@@ -41,7 +41,6 @@
     "exceljs": "^4.3.0",
     "file-saver": "^2.0.5",
     "file-saver-es": "^2.0.5",
-    "firebase": "^11.0.1",
     "jquery": "^3.5.0",
     "ng-apexcharts": "^1.5.12",
     "ng-zorro-antd": "^11.0.1",
