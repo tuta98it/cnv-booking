@@ -7,6 +7,8 @@ import { NavigationService } from 'src/app/service/navigation.service';
 import { NotificationAPIService } from 'src/app/service/notification-service';
 import { NotificationService } from 'src/app/service/notification.service';
 import { Constant, NotificationConfig } from 'src/app/shared/constants/constant.class';
+import { NotificationPageStateService } from './../../../../app-state/notification-page-state.service';
+import { NotificationBellStateService } from 'src/app/app-state/notification-bell-state.service';
 
 @Component({
   selector: 'app-notifications',
@@ -41,6 +43,8 @@ export class NotificationsComponent implements OnInit, AfterViewInit {
     private activatedRoute: ActivatedRoute,
     private navigationService: NavigationService,
     private router: Router,
+    private notificationPageStateService: NotificationPageStateService,
+    private notificationBellStateService: NotificationBellStateService
   ) {
     this.allMode = 'page';
     this.checkBoxesMode = 'always';
@@ -48,6 +52,7 @@ export class NotificationsComponent implements OnInit, AfterViewInit {
     this.activatedRoute.queryParams.subscribe(async params => {
       this.idNotifyForecast = +params['id']; // Lấy id từ query parameter
     });
+    this.getChangeNotifications();
   }
 
   ngOnInit(): void {
@@ -87,6 +92,23 @@ export class NotificationsComponent implements OnInit, AfterViewInit {
     });
 
   }
+
+  private getChangeNotifications() {
+    this.notificationPageStateService.receiveStatus().subscribe({
+      next: (statusNotify: any) => {
+        if (statusNotify.isNewData) {
+          this.getListNotifications();
+        }
+      },
+      error: (err: any) => {
+        // Hiện thị là đã lỗi hệ thống mạng
+      },
+      complete: () => {
+
+      }
+    });
+  }
+
   private handleGetListNotifications() {
     this.getListNotifications().then((result: any) => {
       this.listAllNotifications = result.data;
@@ -147,6 +169,29 @@ export class NotificationsComponent implements OnInit, AfterViewInit {
     });
   }
 
+
+  // private navigatePageNotifications(idNotify?: number) {
+  //   this.router.navigate(['/notifications'], { queryParams: { [Constant.ID] : idNotify } });
+  // }
+
+  public handleViewDetailNotify(itemNotify?: any) {
+    this.notificationService.handleViewDetailNotify(itemNotify);
+    this.readedNotify(itemNotify);
+  }
+
+
+  private readedNotify(notifyItem: any) {
+    let notificationIds: number[] = [
+      notifyItem.id,
+    ];
+    if (notifyItem.readed != true) {
+      this.readedNotificationByIds(notificationIds).then((result: any) => {
+        this.notificationBellStateService.sendStatus({ isNewData: true });
+      }).catch((error: any) => {
+      });
+    }
+  }
+
   private readedNotificationByIds(idNotifications: number[]) {
     return new Promise((resolve, reject) => {
       this.notificationAPIService.readNotificationByIds(idNotifications).subscribe(
@@ -173,14 +218,6 @@ export class NotificationsComponent implements OnInit, AfterViewInit {
       ).add(() => {
       });
     });
-  }
-
-  // private navigatePageNotifications(idNotify?: number) {
-  //   this.router.navigate(['/notifications'], { queryParams: { [Constant.ID] : idNotify } });
-  // }
-
-  public handleViewDetailNotify(itemNotify?: any) {
-    this.notificationService.handleViewDetailNotify(itemNotify);
   }
 
 }

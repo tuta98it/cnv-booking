@@ -2,6 +2,8 @@ import { NzTableFilterFn, NzTableFilterList, NzTableSortFn, NzTableSortOrder } f
 
 export interface ColumnItem {
   name: string;
+  fixedLeft?: boolean | false;
+  fixedRight?: boolean | false;
   width: string;
   align: 'left' | 'right' | 'center';
   sortOrder: NzTableSortOrder | null;

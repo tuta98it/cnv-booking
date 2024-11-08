@@ -3,7 +3,7 @@ import { Title } from '@angular/platform-browser';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { GeneralService } from '../../../service/general-service';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { Constant } from '../../../shared/constants/constant.class';
+import { Constant, FireBase } from 'src/app/shared/constants/constant.class';
 import { NotificationService } from '../../../service/notification.service';
 import { DatePipe } from '@angular/common';
 import { filter, map } from 'rxjs/operators';
@@ -19,6 +19,29 @@ import { FileManagerService } from '../../../service/file-manager.service';
 import { UserType } from 'src/app/enums/user-type.enum';
 import { MenuStateService } from 'src/app/shared/app-state/menu-state.service';
 import { NotificationAPIService } from 'src/app/service/notification-service';
+import { DeviceDetectorService } from 'ngx-device-detector';
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+import { getMessaging, getToken, onMessage } from "firebase/messaging";
+import { NotificationPageStateService } from 'src/app/app-state/notification-page-state.service';
+import { NotificationBellStateService } from 'src/app/app-state/notification-bell-state.service';
+import { PushNotificationService } from 'src/app/service/push-notification.service';
+import FingerprintJS from '@fingerprintjs/fingerprintjs';
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyDDgwJ4FeJ1wW8kzBDGub4J76ZNLBuT_mc",
+  authDomain: "vhl-notification.firebaseapp.com",
+  projectId: "vhl-notification",
+  storageBucket: "vhl-notification.firebasestorage.app",
+  messagingSenderId: "664705952523",
+  appId: "1:664705952523:web:bb53e1806608ac7799500e",
+  measurementId: "G-7WF2VJ24RK"
+};
 
 @Component({
   selector: 'app-master-page',
@@ -105,6 +128,8 @@ export class MasterPageComponent implements OnInit, OnDestroy {
   QUAN_LY_DANH_MUC: boolean;
   tinhThanhs = [];
   isCollapsed = false;
+  app: any;
+  messaging: any;
 
   constructor(
     private router: Router,
@@ -114,7 +139,6 @@ export class MasterPageComponent implements OnInit, OnDestroy {
     private generalService: GeneralService,
     private fileManagerService: FileManagerService,
     private notificationService: NotificationService,
-    private notificationAPIService: NotificationAPIService,
     private activeRoute: ActivatedRoute,
     private store: Store<fromAuth.AppState>,
     private actionsSubject$: ActionsSubject,
@@ -122,6 +146,13 @@ export class MasterPageComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private translate: TranslateService,
     private menuState: MenuStateService,
+    private deviceService: DeviceDetectorService,
+    private notificationAPIService: NotificationAPIService,
+    private pushNotificationService: PushNotificationService,
+    private notificationPageStateService: NotificationPageStateService,
+    private notificationBellStateService: NotificationBellStateService,
+
+
   ) {
     this._menuSubscription = this.menuState.subscribe((m: boolean) => {
       this.isShowMenu = m;
@@ -143,11 +174,154 @@ export class MasterPageComponent implements OnInit, OnDestroy {
         // alert(this.url);
       });
     // this.getTinhThanh();
+
+    // Initialize Firebase
+    this.app = initializeApp(firebaseConfig);
+    this.messaging = getMessaging(this.app);
+  }
+  private identifyDeviceType(): number {
+    let deviceInfo = this.deviceService.getDeviceInfo();
+    // Kiểm tra loại thiết bị và trả về mã loại tương ứng
+    const isDesktopDevice = this.deviceService.isDesktop();
+    if (isDesktopDevice) {
+      return Constant.DEVICE.WEB.deviceType;
+    }
+
+    const isMobile = this.deviceService.isMobile();
+    if (isMobile) {
+      if (deviceInfo.os === 'IOS') {
+        return Constant.DEVICE.IOS.deviceType;
+      } else if (deviceInfo.os === 'Android') {
+        return Constant.DEVICE.ANDROID.deviceType;
+      } else {
+        return Constant.DEVICE.UNKNOWN.deviceType;
+      }
+    }
+    const isTablet = this.deviceService.isTablet();
+    if (isTablet) {
+      if (deviceInfo.os === 'IOS') {
+        return Constant.DEVICE.IOS.deviceType;
+      } else if (deviceInfo.os === 'Android') {
+        return Constant.DEVICE.ANDROID.deviceType;
+      } else {
+        return Constant.DEVICE.UNKNOWN.deviceType;
+      }
+    }
+    return Constant.DEVICE.UNKNOWN.deviceType;
+  }
+
+  private generateDeviceId(): string {
+
+    // Lấy thông tin về trình duyệt và thiết bị
+    // Lấy thông tin thiết bị để tạo fingerprint
+    const deviceInfo = this.deviceService.getDeviceInfo();
+    const userAgent = deviceInfo.userAgent;
+    const platform = navigator.platform;
+    const language = navigator.language;
+    const screenResolution = `${window.screen.width}x${window.screen.height}`;
+
+    // Kết hợp UUID với fingerprint để tạo deviceId duy nhất
+    const combinedInfo = `${userAgent}|${platform}|${language}|${screenResolution}`;
+    const deviceId = this.hashString(combinedInfo);
+
+    return deviceId;
+  }
+
+  private hashString(input: string): string {
+    // Hàm băm có thể là một hàm băm như SHA-256
+    // Đây chỉ là một ví dụ đơn giản, bạn có thể sử dụng thư viện băm phổ biến.
+    let hash = 0;
+    if (input.length === 0) return hash.toString();
+    for (let i = 0; i < input.length; i++) {
+      const char = input.charCodeAt(i);
+      hash = (hash << 5) - hash + char;
+      hash = hash & hash; // Convert to 32bit integer
+    }
+    return hash.toString();
+  }
+
+
+
+  private async getDeviceFingerprint() {
+    const fp = await FingerprintJS.load();
+    const result = await fp.get();
+    return result.visitorId; // Đây là ID duy nhất cho thiết bị.
+  }
+
+  private requestPermission() {
+    // console.log('Requesting permission...');
+    Notification.requestPermission().then(async (permission) => {
+      if (permission === 'granted') {
+        // console.log('Notification permission granted.');
+        let idDeviceStorage = localStorage.getItem(Constant.KEY_DEVICE_ID);
+        const idDeviceGenerate = await this.getDeviceFingerprint();
+        if (idDeviceStorage !== idDeviceGenerate) {
+          let typeDevice: number = Constant.DEVICE.UNKNOWN.deviceType;
+          let tokenFCM: string = localStorage.getItem(Constant.KEY_FIREBASE_TOKEN) ?? '';
+          typeDevice = this.identifyDeviceType();
+
+          getToken(this.messaging, { vapidKey: 'BNkSGw-jMSFtSoWzPgcI1L_EGwTTACfmGgK_n_gWko8O2Ib-KcTdZnfQM7DqtVnSnZFXhGyJHMmFbNfi436VZ48' }).then((currentToken) => {
+            if (currentToken) {
+              tokenFCM = currentToken;
+              console.log('FCM Token:', currentToken);
+              // Send the token to your server and update the UI if necessary
+              // ...
+              let payload = {
+                tokenFCM: tokenFCM,
+                deviceType: typeDevice,
+                deviceId: idDeviceGenerate
+              }
+
+              this.notificationAPIService.deviceRegistration(payload).subscribe({
+                next: (resDevicereGistration: any) => {
+                  // console.log('resDevicereGistration.data: ', resDevicereGistration.data);
+                },
+
+                error: (err) => {
+                  console.log('err: ', err);
+                },
+
+                complete: () => {
+                  // console.log('complete: ');
+                  // console.log('this.deviceInfo: ', idDeviceGenerate);
+                  localStorage.setItem(Constant.KEY_DEVICE_ID, idDeviceGenerate);
+                  localStorage.setItem(Constant.KEY_FIREBASE_TOKEN, tokenFCM);
+                }
+              })
+
+            } else {
+              // Show permission request UI
+              // this.notification.error('Không có sẵn mã tokenn thông báo đăng ký . Cần yêu cầu quyền để tạo mã.');
+              // console.log('No registration token available. Request permission to generate one.');
+              // ...
+            }
+          }).catch((err: any) => {
+            // this.notification.error('Đã xảy ra lỗi khi truy xuất mã thông báo');
+            // console.error('Đã xảy ra lỗi khi truy xuất mã thông báo');
+            console.error('An error occurred while retrieving token:', err);
+            localStorage.removeItem(Constant.KEY_DEVICE_INFO);
+            localStorage.removeItem(Constant.KEY_FIREBASE_TOKEN);
+            // Restart lại trang web
+          });
+        }
+      } else {
+        // this.notification.warn('Quyền thông báo của trình duyệt bị từ chối');
+        console.warn('Notification permission denied.');
+      }
+    });
   }
 
   ngAfterViewInit() {
     this.userInfo = JSON.parse(localStorage.getItem(Constant.USER_INFO));
     this.menus = this.userInfo?.menus;
+  }
+  setUpdateNewNotification() {
+    this.notificationBellStateService.sendStatus({ isNewData: true });
+    this.notificationPageStateService.sendStatus({ isNewData: true });
+  }
+
+  private handleViewDetailNotify(itemNotify?: any) {
+    this.notificationService.handleViewDetailNotify(itemNotify);
   }
 
   ngOnInit(): void {
@@ -157,6 +331,59 @@ export class MasterPageComponent implements OnInit, OnDestroy {
     } else {
       this.menuState.dispatch(true);
     }
+
+
+
+    // Start push-notification
+    this.requestPermission();
+    // Handle incoming messages (push notifications)
+    onMessage(this.messaging, (resNotity) => {
+      this.setUpdateNewNotification();
+      const notification = resNotity.notification;
+      var data = resNotity.data;
+      this.pushNotificationService.create(notification?.title ?? '', { body: notification?.body, icon: notification?.image }).subscribe({
+        next: (resNotity: any) => {
+          var event = resNotity.event;
+          var notification = resNotity.notification;
+          switch (event.type) {
+            case 'show':
+              // console.log('actioned: ', 'show');
+              break;
+            case 'click':
+              if (data) {
+                var itemNotify = {
+                  notificationType: +data.NotificationType,
+                  otherId: +data.OtherId
+                }
+                this.handleViewDetailNotify(itemNotify);
+              }
+
+              // console.log('actioned: ', 'click');
+
+              break;
+
+            case 'error':
+              // console.log('actioned: ', 'error');
+              break;
+
+            case 'close':
+              // console.log('res: ', 'close');
+              break;
+
+            default:
+              break;
+          }
+        },
+        error: (err: any) => {
+
+        },
+        complete: () => { }
+      });
+      // ...
+    });
+
+
+
 
     this.selectionPassword = {};
     this.userInfo = JSON.parse(localStorage.getItem(Constant.USER_INFO));
@@ -225,6 +452,10 @@ export class MasterPageComponent implements OnInit, OnDestroy {
       localStorage.removeItem(Constant.USER_INFO);
       localStorage.removeItem(Constant.TINHTHANH);
       localStorage.removeItem(Constant.QUANHUYEN);
+      localStorage.removeItem(Constant.QUANHUYEN);
+      localStorage.removeItem(Constant.KEY_DEVICE_ID);
+      localStorage.removeItem(Constant.KEY_DEVICE_INFO);
+      localStorage.removeItem(Constant.KEY_FIREBASE_TOKEN);
       this.router.navigate(['/login']);
     });
   }

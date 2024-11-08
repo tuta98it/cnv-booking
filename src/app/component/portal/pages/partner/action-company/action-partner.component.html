@@ -796,13 +796,13 @@
               (nzCurrentPageDataChange)="currentPageDataChangeEmployee($event)">
               <thead>
                 <tr *ngIf="settingTableEmployeesValue.header">
-                  <th *ngIf="settingTableEmployeesValue.checkbox" nzWidth="60px" [(nzChecked)]="allCheckedEmployee"
-                    [nzLeft]="fixedColumnEmployee" [nzIndeterminate]="indeterminateEmployee"
+                  <th *ngIf="settingTableEmployeesValue.checkbox" nzLeft nzWidth="60px" [(nzChecked)]="allCheckedEmployee"
+                    [nzIndeterminate]="indeterminateEmployee"
                     (nzCheckedChange)="checkAllEmployees($event)">
                   </th>
-                  <!-- <th nzWidth="40px" [nzLeft]="fixedColumnEmployee">STT</th>
-                  <th [nzLeft]="fixedColumnEmployee">Vai trò</th>
-                  <th [nzLeft]="fixedColumnEmployee">Mã người dùng</th>
+                  <!-- <th nzWidth="40px">STT</th>
+                  <th>Vai trò</th>
+                  <th>Mã người dùng</th>
                   <th>Tên nhân viên</th>
                   <th>Trạng thái</th>
                   <th>Email</th>
@@ -813,23 +813,23 @@
                   <th *ngFor="let column of listOfColumnEmployeesVHLs" [nzWidth]="column.width"
                     [nzAlign]="column.align" [nzSortOrder]="column.sortOrder" [nzSortFn]="column.sortFn"
                     [nzSortDirections]="column.sortDirections" [nzShowFilter]="column.showFilter"
-                    [nzFilterMultiple]="column.filterMultiple" [nzFilters]="column.listOfFilter" [nzLeft]="fixedColumnEmployee"
+                    [nzFilterMultiple]="column.filterMultiple" [nzFilters]="column.listOfFilter"
                     [nzFilterFn]="column.filterFn">
                     {{ column.name }}
                   </th>
-                  <th [nzRight]="fixedColumnEmployee" class="text-aligin-center">Thao tác</th>
+                  <th nzRight class="text-aligin-center">Thao tác</th>
                 </tr>
               </thead>
               <tbody>
                 <ng-container *ngFor="let data of tagEmployeeTable.data">
                   <tr>
-                    <td [nzLeft]="fixedColumnEmployee" *ngIf="settingTableEmployeesValue.checkbox"
+                    <td nzLeft *ngIf="settingTableEmployeesValue.checkbox"
                       [(nzChecked)]="data.checked" (nzCheckedChange)="refreshStatusEmployee()"
                       [nzDisabled]="data.disabled"></td>
-                    <td [nzLeft]="fixedColumnEmployee" [nzAlign]="'center'">
+                    <td [nzAlign]="'center'">
                       {{data.stt}}
                     </td>
-                    <td [nzLeft]="fixedColumnEmployee" [nzDisabled]="data.disabled">{{ data.userType | userTypePipe }}
+                    <td [nzDisabled]="data.disabled">{{ data.userType | userTypePipe }}
                     </td>
                     <td [nzDisabled]="data.disabled"><a style="text-decoration: underline; color: #3B82F6"
                         (click)="navigatePage('companies/employee-action/view', ActionTypePageVHL.View, data.id)">{{
@@ -842,7 +842,7 @@
                     <td [nzDisabled]="data.disabled">{{ data.gender | genderPipe }}</td>
                     <td [nzDisabled]="data.disabled">{{ data.directManagementUserId | employeePipe : employees }}</td>
                     <td [nzDisabled]="data.disabled">{{ data.membershipCode }}</td>
-                    <td [nzRight]="fixedColumnEmployee" [nzEllipsis]="settingTableEmployeesValue.ellipsis"
+                    <td nzRight [nzEllipsis]="settingTableEmployeesValue.ellipsis"
                       class="text-aligin-center">
                       <button title="Sửa thông tin thông tin nhân viên" nz-button nzSize="small" nzType="default"
                         class="button-update"

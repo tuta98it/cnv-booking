@@ -35,4 +35,8 @@ export class NotificationAPIService extends BaseService {
       "readed": null,
     });
   }
+
+  deviceRegistration(data: any): Observable<any> {
+    return this.post(`/api${UrlConstant.LIST_NOTIFY}/DeviceRegistration`,data);
+  }
 }

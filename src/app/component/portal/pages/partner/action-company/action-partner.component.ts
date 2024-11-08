@@ -153,7 +153,6 @@ export class ActionPartnerComponent implements OnInit {
   indeterminateEmployee = false;
   allUnCheckedEmployee = false;
 
-  fixedColumnEmployee = false;
   fixedColumnBalanceFluctuation = false;
   fixedColumnBusinessUsageHistory = false;
 
@@ -186,7 +185,7 @@ export class ActionPartnerComponent implements OnInit {
       sortDirections: ['ascend', 'descend', null],
       filterMultiple: false,
       listOfFilter: [],
-      filterFn: null
+      filterFn: null,
     },
     {
       name: 'Vai trò',
@@ -786,11 +785,9 @@ export class ActionPartnerComponent implements OnInit {
       this.settingTableEmployeesValue = value as NZTableSettingCustoms;
     });
     this.settingTableListEmployeesForm.controls.tableScroll.valueChanges.subscribe(scroll => {
-      this.fixedColumnEmployee = scroll === 'fixed';
       this.scrollXEmployeesValue = scroll === 'scroll' || scroll === 'fixed' ? '100vw' : null;
     });
     let tableScrollValue = this.settingTableListEmployeesForm.controls['tableScroll'].value;
-    this.fixedColumnEmployee = tableScrollValue === 'fixed';
     this.scrollXEmployeesValue = tableScrollValue === 'scroll' || tableScrollValue === 'fixed' ? '100vw' : null;
     this.settingTableListEmployeesForm.controls.fixHeader.valueChanges.subscribe(fixed => {
       this.scrollYEmployeesValue = fixed ? 'calc(100vh - 690px)' : null;
