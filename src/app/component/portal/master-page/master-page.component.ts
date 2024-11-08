@@ -337,27 +337,27 @@ export class MasterPageComponent implements OnInit, OnDestroy {
     // Start push-notification
     this.requestPermission();
     // Handle incoming messages (push notifications)
-    onMessage(this.messaging, (payloadNotity) => {
+    onMessage(this.messaging, (resNotity) => {
       this.setUpdateNewNotification();
-      const notification = payloadNotity.notification;
-      console.log("notification 1: ", notification);
-
+      const notification = resNotity.notification;
+      var data = resNotity.data;
       this.pushNotificationService.create(notification?.title ?? '', { body: notification?.body, icon: notification?.image }).subscribe({
         next: (resNotity: any) => {
           var event = resNotity.event;
           var notification = resNotity.notification;
-          var data = resNotity.notification.data;
           switch (event.type) {
             case 'show':
               // console.log('actioned: ', 'show');
               break;
-
             case 'click':
-              var itemNotify = {
-                notificationType :  +data.NotificationType,
-                otherId: +data.OtherId
+              if (data) {
+                var itemNotify = {
+                  notificationType: +data.NotificationType,
+                  otherId: +data.OtherId
+                }
+                this.handleViewDetailNotify(itemNotify);
               }
-              this.handleViewDetailNotify(itemNotify);
+
               // console.log('actioned: ', 'click');
 
               break;
