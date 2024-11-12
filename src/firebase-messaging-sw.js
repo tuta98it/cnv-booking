@@ -1,6 +1,8 @@
-importScripts('https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js');
-importScripts('https://www.gstatic.com/firebasejs/9.6.1/firebase-messaging.js');
-
+// Give the service worker access to Firebase Messaging.
+// Note that you can only use Firebase Messaging here. Other Firebase libraries
+// are not available in the service worker.
+importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js');
+importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js');
 firebase.initializeApp({
   apiKey: "AIzaSyDDgwJ4FeJ1wW8kzBDGub4J76ZNLBuT_mc",
   authDomain: "vhl-notification.firebaseapp.com",
@@ -11,17 +13,25 @@ firebase.initializeApp({
   measurementId: "G-7WF2VJ24RK"
 });
 
+// Retrieve an instance of Firebase Messaging so that it can handle background
+// messages.
 const messaging = firebase.messaging();
-
 messaging.onBackgroundMessage((payload) => {
-  console.log('Received background message ', payload);
+  console.log(
+    '[firebase-messaging-sw.js] Received background message ',
+    payload
+  );
 
   // Customize notification here
-  const notificationTitle = payload.notification.title;
+  const notification = otification.notification;
+  const notificationTitle = notification.title ?? '';
   const notificationOptions = {
-    body: payload.notification.body,
-    icon: payload.notification.icon,
+    body: notification.body ?? '',
+    icon: notification.icon ?? '',
+    data: notification.data ?? '',
+
   };
 
-  self.registration.showNotification(notificationTitle, notificationOptions);
+  // self.registration.showNotification(notificationTitle, notificationOptions);
 });
+

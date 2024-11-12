@@ -20,28 +20,13 @@ import { UserType } from 'src/app/enums/user-type.enum';
 import { MenuStateService } from 'src/app/shared/app-state/menu-state.service';
 import { NotificationAPIService } from 'src/app/service/notification-service';
 import { DeviceDetectorService } from 'ngx-device-detector';
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-import { getMessaging, getToken, onMessage } from "firebase/messaging";
 import { NotificationPageStateService } from 'src/app/app-state/notification-page-state.service';
 import { NotificationBellStateService } from 'src/app/app-state/notification-bell-state.service';
 import { PushNotificationService } from 'src/app/service/push-notification.service';
+import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 import FingerprintJS from '@fingerprintjs/fingerprintjs';
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { initializeApp } from 'firebase/app';
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyDDgwJ4FeJ1wW8kzBDGub4J76ZNLBuT_mc",
-  authDomain: "vhl-notification.firebaseapp.com",
-  projectId: "vhl-notification",
-  storageBucket: "vhl-notification.firebasestorage.app",
-  messagingSenderId: "664705952523",
-  appId: "1:664705952523:web:bb53e1806608ac7799500e",
-  measurementId: "G-7WF2VJ24RK"
-};
 
 @Component({
   selector: 'app-master-page',
@@ -176,7 +161,7 @@ export class MasterPageComponent implements OnInit, OnDestroy {
     // this.getTinhThanh();
 
     // Initialize Firebase
-    this.app = initializeApp(firebaseConfig);
+    this.app = initializeApp(FireBase.firebaseConfig);
     this.messaging = getMessaging(this.app);
   }
   private identifyDeviceType(): number {
@@ -240,8 +225,6 @@ export class MasterPageComponent implements OnInit, OnDestroy {
     return hash.toString();
   }
 
-
-
   private async getDeviceFingerprint() {
     const fp = await FingerprintJS.load();
     const result = await fp.get();
@@ -253,59 +236,47 @@ export class MasterPageComponent implements OnInit, OnDestroy {
     Notification.requestPermission().then(async (permission) => {
       if (permission === 'granted') {
         // console.log('Notification permission granted.');
-        let idDeviceStorage = localStorage.getItem(Constant.KEY_DEVICE_ID);
+
+
         const idDeviceGenerate = await this.getDeviceFingerprint();
-        console.log('idDeviceGenerate:', idDeviceGenerate);
-
-        if (idDeviceStorage !== idDeviceGenerate) {
-          let typeDevice: number = Constant.DEVICE.UNKNOWN.deviceType;
-          let tokenFCM: string = localStorage.getItem(Constant.KEY_FIREBASE_TOKEN) ?? '';
-          typeDevice = this.identifyDeviceType();
-
           getToken(this.messaging, { vapidKey: 'BNkSGw-jMSFtSoWzPgcI1L_EGwTTACfmGgK_n_gWko8O2Ib-KcTdZnfQM7DqtVnSnZFXhGyJHMmFbNfi436VZ48' }).then((currentToken) => {
-            if (currentToken) {
-              tokenFCM = currentToken;
+            let typeDevice: number = Constant.DEVICE.UNKNOWN.deviceType;
+            typeDevice = this.identifyDeviceType();
+            let fcmTokenStorage: string = localStorage.getItem(Constant.KEY_FIREBASE_TOKEN) ?? '';
+            if (currentToken != fcmTokenStorage) {
+
               console.log('FCM Token:', currentToken);
               // Send the token to your server and update the UI if necessary
               // ...
               let payload = {
-                tokenFCM: tokenFCM,
+                tokenFCM: currentToken,
                 deviceType: typeDevice,
                 deviceId: idDeviceGenerate
               }
 
               this.notificationAPIService.deviceRegistration(payload).subscribe({
                 next: (resDevicereGistration: any) => {
-                  // console.log('resDevicereGistration.data: ', resDevicereGistration.data);
+                  localStorage.setItem(Constant.KEY_DEVICE_ID, idDeviceGenerate);
+                  localStorage.setItem(Constant.KEY_FIREBASE_TOKEN, currentToken);
                 },
 
                 error: (err) => {
-                  console.log('err: ', err);
+                  localStorage.removeItem(Constant.KEY_DEVICE_ID);
+                  localStorage.removeItem(Constant.KEY_FIREBASE_TOKEN);
                 },
 
                 complete: () => {
-                  // console.log('complete: ');
-                  // console.log('this.deviceInfo: ', idDeviceGenerate);
-                  localStorage.setItem(Constant.KEY_DEVICE_ID, idDeviceGenerate);
-                  localStorage.setItem(Constant.KEY_FIREBASE_TOKEN, tokenFCM);
                 }
               })
-
-            } else {
-              // Show permission request UI
-              // this.notification.error('Không có sẵn mã tokenn thông báo đăng ký . Cần yêu cầu quyền để tạo mã.');
-              // console.log('No registration token available. Request permission to generate one.');
-              // ...
             }
           }).catch((err: any) => {
             // this.notification.error('Đã xảy ra lỗi khi truy xuất mã thông báo');
             // console.error('Đã xảy ra lỗi khi truy xuất mã thông báo');
             console.error('An error occurred while retrieving token:', err);
-            localStorage.removeItem(Constant.KEY_DEVICE_INFO);
+            localStorage.removeItem(Constant.KEY_DEVICE_ID);
             localStorage.removeItem(Constant.KEY_FIREBASE_TOKEN);
             // Restart lại trang web
           });
-        }
       } else {
         // this.notification.warn('Quyền thông báo của trình duyệt bị từ chối');
         console.warn('Notification permission denied.');
@@ -333,11 +304,6 @@ export class MasterPageComponent implements OnInit, OnDestroy {
     } else {
       this.menuState.dispatch(true);
     }
-
-
-
-    // Start push-notification
-    this.requestPermission();
     // Handle incoming messages (push notifications)
     onMessage(this.messaging, (resNotity) => {
       this.setUpdateNewNotification();
@@ -407,13 +373,20 @@ export class MasterPageComponent implements OnInit, OnDestroy {
     this.pageName = this.translate.instant(this.getPageInfo());
 
     this.authService.checkToken().subscribe(res => {
-      if (res.ret && res.ret[0].code === 401) {
-        localStorage.removeItem(Constant.TOKEN);
-        localStorage.removeItem(Constant.USER_INFO);
-        if (!Constant.PAGE_NOTIFY_CONFIG.some(path => this.router.url.includes(path))) {
-          this.router.navigate(['/login']);
+      if (res.ret && res.ret[0].code === 0) {
+        this.requestPermission();
+      } else {
+        if (res.ret && res.ret[0].code === 401) {
+          localStorage.removeItem(Constant.TOKEN);
+          localStorage.removeItem(Constant.USER_INFO);
+          if (!Constant.PAGE_NOTIFY_CONFIG.some(path => this.router.url.includes(path))) {
+            this.router.navigate(['/login']);
+          }
         }
+        localStorage.removeItem(Constant.KEY_FIREBASE_TOKEN);
+        localStorage.removeItem(Constant.KEY_DEVICE_ID);
       }
+
     });
 
     this.DANH_MUC_TB = this.checkPermission(Constant.DANH_MUC_TB);

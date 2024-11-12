@@ -100,7 +100,8 @@
               "src/machine.ico",
               "src/assets",
               "src/assets/i84n/",
-              "src/assets/image/"
+              "src/assets/image/",
+              "src/firebase-messaging-sw.js"
             ],
             "styles": [
               "src/styles.scss"

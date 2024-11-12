@@ -13,7 +13,28 @@ import { Router } from '@angular/router';
 export class AppComponent implements OnInit, AfterViewChecked {
   action: Action;
   isLoading: Subject<boolean> = this.loaderService.isLoading;
-  constructor(private loaderService: LoaderService, private cdRef: ChangeDetectorRef, private menuStateService: MenuStateService, private router: Router) { }
+  constructor(private loaderService: LoaderService, private cdRef: ChangeDetectorRef, private menuStateService: MenuStateService, private router: Router,
+  ) {
+    const registerServiceWorker = async () => {
+      if ("serviceWorker" in navigator) {
+        try {
+          const registration = await navigator.serviceWorker.register("/firebase-messaging-sw.js", {
+            scope: "/",
+          });
+          if (registration.installing) {
+            console.log("Service worker installing");
+          } else if (registration.waiting) {
+            console.log("Service worker installed");
+          } else if (registration.active) {
+            console.log("Service worker active");
+          }
+        } catch (error) {
+          console.error(`Registration failed with ${error}`);
+        }
+      }
+    };
+    registerServiceWorker();
+  }
 
   ngAfterViewChecked() {
     this.cdRef.detectChanges();
