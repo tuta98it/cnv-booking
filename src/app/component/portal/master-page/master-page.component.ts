@@ -23,7 +23,7 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { NotificationPageStateService } from 'src/app/app-state/notification-page-state.service';
 import { NotificationBellStateService } from 'src/app/app-state/notification-bell-state.service';
 import { PushNotificationService } from 'src/app/service/push-notification.service';
-import { getMessaging, getToken, onMessage } from 'firebase/messaging';
+import { getMessaging, getToken, onMessage, isSupported } from 'firebase/messaging';
 import FingerprintJS from '@fingerprintjs/fingerprintjs';
 import { initializeApp } from 'firebase/app';
 
@@ -236,47 +236,67 @@ export class MasterPageComponent implements OnInit, OnDestroy {
     Notification.requestPermission().then(async (permission) => {
       if (permission === 'granted') {
         // console.log('Notification permission granted.');
-
-
         const idDeviceGenerate = await this.getDeviceFingerprint();
-          getToken(this.messaging, { vapidKey: 'BNkSGw-jMSFtSoWzPgcI1L_EGwTTACfmGgK_n_gWko8O2Ib-KcTdZnfQM7DqtVnSnZFXhGyJHMmFbNfi436VZ48' }).then((currentToken) => {
-            let typeDevice: number = Constant.DEVICE.UNKNOWN.deviceType;
-            typeDevice = this.identifyDeviceType();
-            let fcmTokenStorage: string = localStorage.getItem(Constant.KEY_FIREBASE_TOKEN) ?? '';
-            if (currentToken != fcmTokenStorage) {
+        console.log('idDeviceGenerate: ', idDeviceGenerate);
+        const registerServiceWorker = async () => {
+          if ("serviceWorker" in navigator) {
+            try {
+              const registration = await navigator.serviceWorker.register("/firebase-messaging-sw.js", {
+                scope: "/",
+              });
+              if (registration.installing) {
+                console.log("Service worker installing");
+              } else if (registration.waiting) {
+                console.log("Service worker installed");
+              } else if (registration.active) {
+                console.log("Service worker active");
+                getToken(this.messaging, { vapidKey: 'BNkSGw-jMSFtSoWzPgcI1L_EGwTTACfmGgK_n_gWko8O2Ib-KcTdZnfQM7DqtVnSnZFXhGyJHMmFbNfi436VZ48' }).then((currentToken) => {
+                  let typeDevice: number = Constant.DEVICE.UNKNOWN.deviceType;
+                  typeDevice = this.identifyDeviceType();
+                  let fcmTokenStorage: string = localStorage.getItem(Constant.KEY_FIREBASE_TOKEN) ?? '';
+                  if (currentToken != fcmTokenStorage) {
 
-              console.log('FCM Token:', currentToken);
-              // Send the token to your server and update the UI if necessary
-              // ...
-              let payload = {
-                tokenFCM: currentToken,
-                deviceType: typeDevice,
-                deviceId: idDeviceGenerate
-              }
+                    console.log('FCM Token:', currentToken);
+                    // Send the token to your server and update the UI if necessary
+                    // ...
+                    let payload = {
+                      tokenFCM: currentToken,
+                      deviceType: typeDevice,
+                      deviceId: idDeviceGenerate
+                    }
 
-              this.notificationAPIService.deviceRegistration(payload).subscribe({
-                next: (resDevicereGistration: any) => {
-                  localStorage.setItem(Constant.KEY_DEVICE_ID, idDeviceGenerate);
-                  localStorage.setItem(Constant.KEY_FIREBASE_TOKEN, currentToken);
-                },
+                    this.notificationAPIService.deviceRegistration(payload).subscribe({
+                      next: (resDevicereGistration: any) => {
+                        localStorage.setItem(Constant.KEY_DEVICE_ID, idDeviceGenerate);
+                        localStorage.setItem(Constant.KEY_FIREBASE_TOKEN, currentToken);
+                      },
 
-                error: (err) => {
+                      error: (err) => {
+                        localStorage.removeItem(Constant.KEY_DEVICE_ID);
+                        localStorage.removeItem(Constant.KEY_FIREBASE_TOKEN);
+                      },
+
+                      complete: () => {
+                      }
+                    })
+                  }
+                }).catch((err: any) => {
+                  // this.notification.error('Đã xảy ra lỗi khi truy xuất mã thông báo');
+                  // console.error('Đã xảy ra lỗi khi truy xuất mã thông báo');
+                  console.log('An error occurred while retrieving token:', err);
+                  console.error('An error occurred while retrieving token:', err);
                   localStorage.removeItem(Constant.KEY_DEVICE_ID);
                   localStorage.removeItem(Constant.KEY_FIREBASE_TOKEN);
-                },
-
-                complete: () => {
-                }
-              })
+                  // Restart lại trang web
+                });
+              }
+            } catch (error) {
+              console.error(`Registration failed with ${error}`);
             }
-          }).catch((err: any) => {
-            // this.notification.error('Đã xảy ra lỗi khi truy xuất mã thông báo');
-            // console.error('Đã xảy ra lỗi khi truy xuất mã thông báo');
-            console.error('An error occurred while retrieving token:', err);
-            localStorage.removeItem(Constant.KEY_DEVICE_ID);
-            localStorage.removeItem(Constant.KEY_FIREBASE_TOKEN);
-            // Restart lại trang web
-          });
+          }
+        };
+        registerServiceWorker();
+
       } else {
         // this.notification.warn('Quyền thông báo của trình duyệt bị từ chối');
         console.warn('Notification permission denied.');
