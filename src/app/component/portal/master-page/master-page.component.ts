@@ -238,64 +238,45 @@ export class MasterPageComponent implements OnInit, OnDestroy {
         // console.log('Notification permission granted.');
         const idDeviceGenerate = await this.getDeviceFingerprint();
         console.log('idDeviceGenerate: ', idDeviceGenerate);
-        const registerServiceWorker = async () => {
-          if ("serviceWorker" in navigator) {
-            try {
-              const registration = await navigator.serviceWorker.register("/firebase-messaging-sw.js", {
-                scope: "/",
-              });
-              if (registration.installing) {
-                console.log("Service worker installing");
-              } else if (registration.waiting) {
-                console.log("Service worker installed");
-              } else if (registration.active) {
-                console.log("Service worker active");
-                getToken(this.messaging, { vapidKey: 'BNkSGw-jMSFtSoWzPgcI1L_EGwTTACfmGgK_n_gWko8O2Ib-KcTdZnfQM7DqtVnSnZFXhGyJHMmFbNfi436VZ48' }).then((currentToken) => {
-                  let typeDevice: number = Constant.DEVICE.UNKNOWN.deviceType;
-                  typeDevice = this.identifyDeviceType();
-                  let fcmTokenStorage: string = localStorage.getItem(Constant.KEY_FIREBASE_TOKEN) ?? '';
-                  if (currentToken != fcmTokenStorage) {
+        getToken(this.messaging, { vapidKey: 'BNkSGw-jMSFtSoWzPgcI1L_EGwTTACfmGgK_n_gWko8O2Ib-KcTdZnfQM7DqtVnSnZFXhGyJHMmFbNfi436VZ48' }).then((currentToken) => {
+          let typeDevice: number = Constant.DEVICE.UNKNOWN.deviceType;
+          typeDevice = this.identifyDeviceType();
+          let fcmTokenStorage: string = localStorage.getItem(Constant.KEY_FIREBASE_TOKEN) ?? '';
+          if (currentToken != fcmTokenStorage) {
 
-                    console.log('FCM Token:', currentToken);
-                    // Send the token to your server and update the UI if necessary
-                    // ...
-                    let payload = {
-                      tokenFCM: currentToken,
-                      deviceType: typeDevice,
-                      deviceId: idDeviceGenerate
-                    }
-
-                    this.notificationAPIService.deviceRegistration(payload).subscribe({
-                      next: (resDevicereGistration: any) => {
-                        localStorage.setItem(Constant.KEY_DEVICE_ID, idDeviceGenerate);
-                        localStorage.setItem(Constant.KEY_FIREBASE_TOKEN, currentToken);
-                      },
-
-                      error: (err) => {
-                        localStorage.removeItem(Constant.KEY_DEVICE_ID);
-                        localStorage.removeItem(Constant.KEY_FIREBASE_TOKEN);
-                      },
-
-                      complete: () => {
-                      }
-                    })
-                  }
-                }).catch((err: any) => {
-                  // this.notification.error('Đã xảy ra lỗi khi truy xuất mã thông báo');
-                  // console.error('Đã xảy ra lỗi khi truy xuất mã thông báo');
-                  console.log('An error occurred while retrieving token:', err);
-                  console.error('An error occurred while retrieving token:', err);
-                  localStorage.removeItem(Constant.KEY_DEVICE_ID);
-                  localStorage.removeItem(Constant.KEY_FIREBASE_TOKEN);
-                  // Restart lại trang web
-                });
-              }
-            } catch (error) {
-              console.error(`Registration failed with ${error}`);
+            console.log('FCM Token:', currentToken);
+            // Send the token to your server and update the UI if necessary
+            // ...
+            let payload = {
+              tokenFCM: currentToken,
+              deviceType: typeDevice,
+              deviceId: idDeviceGenerate
             }
+
+            this.notificationAPIService.deviceRegistration(payload).subscribe({
+              next: (resDevicereGistration: any) => {
+                localStorage.setItem(Constant.KEY_DEVICE_ID, idDeviceGenerate);
+                localStorage.setItem(Constant.KEY_FIREBASE_TOKEN, currentToken);
+              },
+
+              error: (err) => {
+                localStorage.removeItem(Constant.KEY_DEVICE_ID);
+                localStorage.removeItem(Constant.KEY_FIREBASE_TOKEN);
+              },
+
+              complete: () => {
+              }
+            })
           }
-        };
-        registerServiceWorker();
+        }).catch((err: any) => {
+          // this.notification.error('Đã xảy ra lỗi khi truy xuất mã thông báo');
+          // console.error('Đã xảy ra lỗi khi truy xuất mã thông báo');
+          console.log('An error occurred while retrieving token:', err);
+          console.error('An error occurred while retrieving token:', err);
+          localStorage.removeItem(Constant.KEY_DEVICE_ID);
+          localStorage.removeItem(Constant.KEY_FIREBASE_TOKEN);
+          // Restart lại trang web
+        });
 
       } else {
         // this.notification.warn('Quyền thông báo của trình duyệt bị từ chối');

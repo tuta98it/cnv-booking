@@ -744,6 +744,9 @@ export class GeneralService extends BaseService {
   getHotels(): Observable<any> {
     return this.get(`/api${UrlConstant.HOTEL}`);
   }
+  getInfoActiveHotels(): Observable<any> {
+    return this.post(`/api${UrlConstant.HOTEL}/InfoActiveHotels`, "");
+  }
   getHotelById(hotelId): Observable<any> {
     return this.get(`/api/Hotel/GetHotelV2/${hotelId}`);
   }

@@ -222,6 +222,8 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
       /// Thông tin đặt phòng
       id: [null], // ngày nhận phòng *
       hotelId: [null],
+      hotelCode: [null],
+      hotelName: [null],
       inf: [null],
       price: [null],
       adultSurcharge: [null],
@@ -1489,8 +1491,27 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
       }
     });
   }
+  //#endregion
+
+  //#region Hotel
+  listActiveHotels: any[] = [];
+
+  getAllHotelActive() {
+    this.generalService.getInfoActiveHotels().subscribe({
+      next: (res) => {
+        this.listActiveHotels = res;
+      },
+      error: (error) => {
+        this.notificationService.showNotification(Constant.ERROR, 'Có lỗi xảy ra');
+      },
+      complete: () => {
+        // this.getListData();
+      }
+    });
+  }
 
   //#endregion
+
 
 
   //#region hóa đơn
@@ -1855,6 +1876,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
           } else {
             this.showEditBookingHotel(res?.data);
             this.getRoomsByIdHotel(res?.data.bookingHotelDetails[0].hotelId);
+            this.getAllHotelActive();
           }
 
         } else {
@@ -1902,6 +1924,8 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
 
     this.detailBookingRoomForm.controls['id'].setValue(data?.bookingHotelDetails[0]?.id);
     this.detailBookingRoomForm.controls['hotelId'].setValue(data?.bookingHotelDetails[0]?.hotelId);
+    this.detailBookingRoomForm.controls['hotelCode'].setValue(data?.bookingHotelDetails[0]?.hotelCode);
+    this.detailBookingRoomForm.controls['hotelName'].setValue(data?.bookingHotelDetails[0]?.hotelName);
     this.detailBookingRoomForm.controls['inf'].setValue(data?.bookingHotelDetails[0]?.inf);
     this.detailBookingRoomForm.controls['price'].setValue(data?.bookingHotelDetails[0]?.price);
     this.detailBookingRoomForm.controls['adultSurcharge'].setValue(data?.bookingHotelDetails[0]?.adultSurcharge);
@@ -2196,6 +2220,26 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
   }
 
   //#endregion chi tiết lưu trú
+
+  //#region khách sạn
+  changeHotelInfo(event: any) {
+    var hotel = this.listActiveHotels.find(hotel => hotel.id == event);
+    if (hotel) {
+      this.detailBookingRoomForm.controls['hotelId'].setValue(hotel.id);
+      this.detailBookingRoomForm.controls['hotelCode'].setValue(hotel.code);
+      this.detailBookingRoomForm.controls['hotelName'].setValue(hotel.name);
+      this.detailBookingRoomForm.controls['room'].setValue(null);
+      this.getRoomsByIdHotel(hotel.id);
+    } else {
+      this.detailBookingRoomForm.controls['hotelId'].setValue(null);
+      this.detailBookingRoomForm.controls['hotelCode'].setValue(null);
+      this.detailBookingRoomForm.controls['hotelName'].setValue(null);
+      this.detailBookingRoomForm.controls['room'].setValue(null);
+      this.listRoomType = [];
+    }
+  }
+
+  //#endregion khách sạn
 
 
   //#region thêm mã đặt phòng
