@@ -1,12 +1,12 @@
 import { Injectable, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
-import { Constant, HotelBookingConfig, NotificationConfig, PartnerConfig, RequestBookingConfig } from '../shared/constants/constant.class';
+import { Constant, HotelBookingConfig, HotelConfig, NotificationConfig, PartnerConfig, RequestBookingConfig } from '../shared/constants/constant.class';
 
 @Injectable({
   providedIn: 'root',
 })
 export class NavigationService {
-  constructor(private router: Router, private ngZone: NgZone) {}
+  constructor(private router: Router, private ngZone: NgZone) { }
 
   navigateToNotifications(idNotify?: number) {
     this.ngZone.run(() => {
@@ -44,5 +44,9 @@ export class NavigationService {
     this.ngZone.run(() => {
       this.router.navigate([`/${PartnerConfig.PATH_PARTNER}`], { queryParams: { [Constant.ID]: idPartner } });
     });
+  }
+
+  navigateToPageHotelDetail(idHotel?: number) {
+    this.router.navigate([`/${HotelConfig.PATH_HOTEL_VIEWEDIT}/${idHotel}`]);
   }
 }

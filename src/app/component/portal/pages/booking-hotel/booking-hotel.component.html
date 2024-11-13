@@ -584,7 +584,7 @@
                 <nz-form-label>Mã khách sạn<span style="color: tomato; margin-left: 4px;">(*)</span></nz-form-label>
                 <nz-form-control nzErrorTip="Không được để trống">
                   <span *ngIf="this.modeViewEditStatus === 0">
-                    {{ detailBookingRoomForm.value.hotelCode }}
+                    <a style="text-decoration: underline; color: #007bff;"  (click)="handleNavigationPageHotelDetail(detailBookingRoomForm.value?.hotelId)">{{ detailBookingRoomForm.value.hotelCode }}</a>
                   </span>
                   <nz-select *ngIf="this.modeViewEditStatus === 1" nzShowSearch nzAllowClear
                     nzPlaceHolder="Chọn mã khách sạn" ngModel="{{detailBookingRoomForm.value?.hotelId}}" [ngModelOptions]="{standalone: true}" (ngModelChange)="changeHotelInfo($event)" >

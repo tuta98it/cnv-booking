@@ -5,7 +5,7 @@ import { NzModalService } from 'ng-zorro-antd/modal';
 import { GeneralService } from 'src/app/service/general-service';
 import { TableSelectionAbstract } from 'src/app/shared/component/table/table-selection.abstract';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Constant } from 'src/app/shared/constants/constant.class';
+import { Constant, HotelConfig } from 'src/app/shared/constants/constant.class';
 import { PhoneUtils } from 'src/app/shared/utils/phone-utils.class';
 import { AppConfigService } from 'src/app-config.service';
 import { NotificationService } from 'src/app/service/notification.service';
@@ -38,6 +38,7 @@ import { MinNumberValidator } from 'src/app/shared/custom-validator/minValueVali
 import { WhiteSpaceValidator } from 'src/app/shared/custom-validator/whiteSpaceValidator';
 import { CheckValidatorForm } from 'src/app/shared/custom-validator/checkValidatorForm';
 import { Attachment } from 'src/app/model/attachment';
+import { NavigationService } from 'src/app/service/navigation.service';
 
 @Component({
   selector: 'app-hotel',
@@ -183,6 +184,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
     public phoneUtils: PhoneUtils,
     private uploadService: UploadService,
     private activatedRoute: ActivatedRoute,
+    private navigationService: NavigationService,
   ) {
     super('id');
     this.formAddHotel = this.fb.group({
@@ -2369,5 +2371,9 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
     this.defaultPageSize = $event;
     this.pageIndex = 1;
     this.getListData();
+  }
+
+  handleNavigationPageHotelDetail(hotelId: number) {
+    this.navigationService.navigateToPageHotelDetail(hotelId)
   }
 }
