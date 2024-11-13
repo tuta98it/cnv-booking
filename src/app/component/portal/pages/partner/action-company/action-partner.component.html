@@ -1152,7 +1152,7 @@
                     <td>{{ data.fullnamePassengers.join(", ")}}</td>
                     <td>{{ data.serviceUsedName}}</td>
                     <td>{{ data.usageContent }}</td>
-                    <td>{{ data.totalPice | currencyFormat }} VNĐ</td>
+                    <td>{{ data.totalPrice | currencyFormat }} VNĐ</td>
                   </tr>
                   <tr *ngIf="settingTableBusinessUsageHistoriesValue.expandable" [nzExpand]="data.expand">
                     <span>{{ data.description }}</span>

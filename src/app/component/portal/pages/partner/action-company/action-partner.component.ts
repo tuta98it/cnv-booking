@@ -480,7 +480,7 @@ export class ActionPartnerComponent implements OnInit {
       align: 'left',
       sortOrder: null,
       sortDirections: ['ascend', 'descend', null],
-      sortFn: (a: any, b: any) => a.totalPice - b.totalPice,
+      sortFn: (a: any, b: any) => a.totalPrice - b.totalPrice,
       showFilter: false,
       filterMultiple: false,
       listOfFilter: [],
