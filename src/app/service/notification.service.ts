@@ -39,6 +39,12 @@ export class NotificationService {
         this.navigationService.navigateToPageCompanyUpdate(itemNotify.otherId);
         break;
 
+      case NotificationType.RatingBookingAirline:
+      case NotificationType.RatingBookingHotel:
+      case NotificationType.RatingRequestBooking:
+        this.navigationService.navigateToPageRating(itemNotify.otherId);
+
+        break;
       default:
         break;
     }

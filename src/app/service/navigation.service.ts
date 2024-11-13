@@ -1,6 +1,6 @@
 import { Injectable, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
-import { Constant, HotelBookingConfig, HotelConfig, NotificationConfig, PartnerConfig, RequestBookingConfig } from '../shared/constants/constant.class';
+import { Constant, HotelBookingConfig, HotelConfig, NotificationConfig, PartnerConfig, RattingConfig, RequestBookingConfig } from '../shared/constants/constant.class';
 
 @Injectable({
   providedIn: 'root',
@@ -48,5 +48,18 @@ export class NavigationService {
 
   navigateToPageHotelDetail(idHotel?: number) {
     this.router.navigate([`/${HotelConfig.PATH_HOTEL_VIEWEDIT}/${idHotel}`]);
+  }
+
+  navigateToPageRating(idRating?: number) {
+    const url = `/${RattingConfig.PATH_RATING}`;
+    this.ngZone.run(() => {
+      if (this.router.url.includes(RattingConfig.PATH_RATING)) {
+        this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+          this.router.navigate([url], { queryParams: { [Constant.ID]: idRating } });
+        });
+      } else {
+        this.router.navigate([url], { queryParams: { [Constant.ID]: idRating } });
+      }
+    });
   }
 }

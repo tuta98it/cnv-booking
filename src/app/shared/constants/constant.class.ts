@@ -164,6 +164,11 @@ export class DepositConstant {
   public static DEPOSIT_CONTENT_DEFAULT = 'Nạp tiền vào tài khoản';
 }
 
+export class RattingConfig {
+  public static readonly TIME_UPDATE_DATAS = 20000;
+  public static readonly PATH_RATING = "rating/rating-mngt";
+
+}
 
 
 export class FireBase {
