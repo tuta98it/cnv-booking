@@ -49,8 +49,10 @@ export class RatingListComponent extends TableSelectionAbstract implements OnIni
   }
 
   ngAfterViewInit() {
-    this.activatedRoute.params.subscribe(async params => {
+    this.activatedRoute.queryParams.subscribe(async params => {
       this.idRatingCurrent = +params[Constant.ID];
+      console.log(this.idRatingCurrent );
+
       if (this.idRatingCurrent) {
         this.generalService.getRatingItemById(this.idRatingCurrent).subscribe(
           {
@@ -112,7 +114,6 @@ export class RatingListComponent extends TableSelectionAbstract implements OnIni
   }
 
   showModalView(data: any) {
-    console.log(data);
     this.isShowPopupDetail = true;
     this.dataItem = data;
   }
