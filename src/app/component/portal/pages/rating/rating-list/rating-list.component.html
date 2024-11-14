@@ -27,7 +27,6 @@
     [columnResizingMode]="'nextColumn'"
     [allowColumnResizing]="true"
   >
-    <dxo-scrolling mode="virtual" rowRenderingMode="virtual"></dxo-scrolling>
     <dxo-load-panel [showPane]="true" [enabled]="true"></dxo-load-panel>
     <dxo-sorting mode="multiple"></dxo-sorting>
     <dxo-header-filter [visible]="true"></dxo-header-filter>
@@ -94,28 +93,59 @@
     </div>
     <div class="item" *ngFor="let item of dataItem.questionRating; let stt = index">
       <label>{{stt + 1}}. {{item.questionName}}</label>
-      <div class="radio-group" *ngIf="stt !== (dataItem.questionRating.length - 1)">
-        <label class="radio-inline">
-          <input type="radio" [disabled]="item.ratingStar !== 1" [name]="'radio' + stt" [checked]="item.ratingStar === 1"/>
-          Rất không hài lòng
-        </label>
-        <label class="radio-inline">
-          <input type="radio" [disabled]="item.ratingStar !== 2" [name]="'radio' + stt" [checked]="item.ratingStar === 2"/>
-          Không hài lòng
-        </label>
-        <label class="radio-inline">
-          <input type="radio" [disabled]="item.ratingStar !== 3" [name]="'radio' + stt" [checked]="item.ratingStar === 3"/>
-          Bình thường
-        </label>
-        <label class="radio-inline">
-          <input type="radio" [disabled]="item.ratingStar !== 4" [name]="'radio' + stt" [checked]="item.ratingStar === 4"/>
-          Hài lòng
-        </label>
-        <label class="radio-inline">
-          <input type="radio" [disabled]="item.ratingStar !== 5" [name]="'radio' + stt" [checked]="item.ratingStar === 5"/>
-          Rất hài lòng
-        </label>
-      </div>
+
+      <ng-container class="radio-group d-flex" *ngIf="item.questionType === 1">
+        <div class="radio-group" style="width: 200px;">
+          <label class="radio-inline">
+            <input type="radio" [disabled]="item.ratingStar !== 1" [name]="'rate'+ item.ratingType"
+                   [checked]="+item.ratingStar === 1"/>
+            Có
+          </label>
+          <label class="radio-inline">
+            <input type="radio" [disabled]="item.ratingStar !== 0" [name]="'rate'+ item.ratingType"
+                   [checked]="+item.ratingStar === 0"/>
+            Không
+          </label>
+        </div>
+      </ng-container>
+      <ng-container class="radio-group d-flex" *ngIf="item.questionType === 2">
+        <div class="radio-group justify-content-between">
+          <label class="radio-inline">
+            <input type="radio" [disabled]="item.ratingStar !== 1" [name]="'rate'+ item.ratingType"
+                   [checked]="item.ratingStar === 1"/>
+            Rất không hài lòng
+          </label>
+          <label class="radio-inline">
+            <input type="radio" [disabled]="item.ratingStar !== 2" [name]="'rate'+ item.ratingType"
+                   [checked]="item.ratingStar === 2"/>
+            Không hài lòng
+          </label>
+          <label class="radio-inline">
+            <input type="radio" [disabled]="item.ratingStar !== 3" [name]="'rate'+ item.ratingType"
+                   [checked]="item.ratingStar === 3"/>
+            Bình thường
+          </label>
+          <label class="radio-inline">
+            <input type="radio" [disabled]="item.ratingStar !== 4" [name]="'rate'+ item.ratingType"
+                   [checked]="item.ratingStar === 4"/>
+            Hài lòng
+          </label>
+          <label class="radio-inline">
+            <input type="radio" [disabled]="item.ratingStar !== 5" [name]="'rate'+ item.ratingType"
+                   [checked]="item.ratingStar === 5"/>
+            Rất hài lòng
+          </label>
+        </div>
+      </ng-container>
+      <ng-container class="radio-group d-flex" *ngIf="item.questionType === 3">
+        <div class="radio-group justify-content-between">
+          <label class="radio-inline" *ngFor="let val of toArray(10); let stt = index">
+            <input type="radio" [disabled]="item.ratingStar !== val" [name]="'rate'+ item.ratingType"
+                   [checked]="item.ratingStar === val"/>
+            {{val}}
+          </label>
+        </div>
+      </ng-container>
       <div *ngIf="item.comment">
         <strong>{{item.comment}}</strong>
       </div>
@@ -123,6 +153,6 @@
   </div>
   <!-- Footer -->
   <div *nzModalFooter>
-    <button nz-button (click)="handleCancel()">{{'cancel' | translate }}</button>
+    <button nz-button (click)="handleCancel()">Đóng</button>
   </div>
 </nz-modal>

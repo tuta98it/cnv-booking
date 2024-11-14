@@ -1041,4 +1041,8 @@ export class GeneralService extends BaseService {
   getListRating(payload: any): any {
     return this.post(`/api/Rating/QueryRating`, payload);
   }
+
+  adminReportRating(payload: any): Observable<any[]> {
+    return this.post(`/api/Rating/ReportRating`, payload);
+  }
 }
