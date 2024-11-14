@@ -25,7 +25,6 @@ export class NotificationService {
   }
 
   public handleViewDetailNotify(itemNotify?: any) {
-    this.navigationService.navigateToNotifications(itemNotify.id);
     switch (itemNotify.notificationType) {
       case NotificationType.RequestBooking:
         this.navigationService.navigateToPageRequestBooking(itemNotify.otherId);
@@ -39,6 +38,11 @@ export class NotificationService {
         this.navigationService.navigateToPageCompanyUpdate(itemNotify.otherId);
         break;
 
+      case NotificationType.AccountDepositHistory:
+        this.navigationService.navigateToPageCompanyUpdateAccountInfo(itemNotify.otherId);
+        break;
+
+      case NotificationType.WhenCustomerRate:
       case NotificationType.RatingBookingAirline:
       case NotificationType.RatingBookingHotel:
       case NotificationType.RatingRequestBooking:
@@ -46,6 +50,7 @@ export class NotificationService {
 
         break;
       default:
+        this.navigationService.navigateToNotifications(itemNotify.id);
         break;
     }
   }

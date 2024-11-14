@@ -12,7 +12,7 @@ import { PARTNER_STATUS_OPTIONS, PartnerStatus } from 'src/app/enums/partner-sta
 import { UploadFileSetting } from 'src/app/Interfaces/upload-file-setting.interface';
 import { AppConfigService } from 'src/app-config.service';
 import { TypeOfDocument } from 'src/app/enums/type-of-document.enum';
-import { Constant } from 'src/app/shared/constants/constant.class';
+import { Constant, PartnerConfig } from 'src/app/shared/constants/constant.class';
 import { GeneralService } from './../../../../../service/general-service';
 import { NotificationService } from 'src/app/service/notification.service';
 import { BusinessServiceType } from 'src/app/enums/business-service-type';
@@ -504,6 +504,10 @@ export class ActionPartnerComponent implements OnInit {
     private employeePipe: EmployeePipe,
   ) {
 
+    if (this.router.url.includes(PartnerConfig.PATH_PARTNER_UPDATE_ACCINFO)) {
+      this.selectedMenu = MenuUpgradePartner.AccountInfomation;
+    }
+
     this.formBaseInfoCreatePartner = this.formBuilder.group({
       id: [null],
       status: new FormControl({ value: PartnerStatus.CreatingProfile, disabled: this.actionPartnerVHL == ActionTypePageVHL.Create }, Validators.required),
@@ -626,6 +630,9 @@ export class ActionPartnerComponent implements OnInit {
     this.listUploadBusinessLicenseFile = [];
     this.listUploadContractFile = [];
     this.listUploadEmployeeForPartnerFile = [];
+
+
+
     if (this.actionPartnerVHL == ActionTypePageVHL.Create) {
       //this.isActiveEditBaseInfo.setValue(true);
       this.titleActionCompanyPage = "Thêm mới doanh nghiệp";
@@ -777,6 +784,8 @@ export class ActionPartnerComponent implements OnInit {
 
       });
     }
+
+
   }
 
   ngOnInit(): void {

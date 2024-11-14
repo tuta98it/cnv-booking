@@ -4,6 +4,7 @@ import { AuthGuard } from 'src/app/shared/guards/guards.class';
 import { PartnerComponent } from './partner.component';
 import { ActionPartnerComponent as ActionPartnerComponent } from './action-company/action-partner.component';
 import { ActionTypePageVHL } from 'src/app/enums/action-type-page-vhl.enum';
+import { PartnerConfig } from 'src/app/shared/constants/constant.class';
 
 const routes: Routes = [
   {
@@ -22,7 +23,13 @@ const routes: Routes = [
       breadcrumb: 'Cập nhật',
       type: ActionTypePageVHL.Update
     }
-
+  },
+  {
+    path: PartnerConfig.PATH_PARTNER_UPDATE_ACCINFO, component: ActionPartnerComponent, canActivate: [AuthGuard], data: {
+      pagename: 'Danh sách doanh nghiệp',
+      breadcrumb: 'Cập nhật',
+      type: ActionTypePageVHL.Update
+    }
   },
   {
     path: 'employee-action',
@@ -32,7 +39,6 @@ const routes: Routes = [
       ),
   },
 ]
-
 @NgModule({
   imports: [RouterModule.forChild(routes)],
 exports: [RouterModule]

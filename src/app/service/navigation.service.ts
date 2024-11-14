@@ -46,6 +46,12 @@ export class NavigationService {
     });
   }
 
+  navigateToPageCompanyUpdateAccountInfo(idPartner?: number) {
+    this.ngZone.run(() => {
+      this.router.navigate([`/${PartnerConfig.PATH_PARTNER_UPDATE_ACCINFO}`], { queryParams: { [Constant.ID]: idPartner } });
+    });
+  }
+
   navigateToPageHotelDetail(idHotel?: number) {
     this.router.navigate([`/${HotelConfig.PATH_HOTEL_VIEWEDIT}/${idHotel}`]);
   }
