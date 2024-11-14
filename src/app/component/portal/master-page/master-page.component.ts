@@ -365,7 +365,7 @@ export class MasterPageComponent implements OnInit, OnDestroy {
     }
     this.loginUserID = this.userInfo?.id;
     this.username = this.userInfo?.fullname;
-    this.roleIds = this.userInfo.roles;
+    this.roleIds = this.userInfo?.roles;
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd),
       map(() => this.getPageInfo())).subscribe((pageName: string) => {
