@@ -1,20 +1,22 @@
-import { Component, OnInit } from '@angular/core';
-import {TranslateService} from '@ngx-translate/core';
-import {NzModalService} from 'ng-zorro-antd/modal';
-import {NotificationService} from '../../../../../service/notification.service';
-import {GeneralService} from '../../../../../service/general-service';
-import {AppConfigService} from '../../../../../../app-config.service';
-import {FormBuilder} from '@angular/forms';
-import {Router} from '@angular/router';
-import {DateFormatPipe} from '../../../../../shared/pipe/format-date.pipe';
-import {TableSelectionAbstract} from '../../../../../shared/component/table/table-selection.abstract';
+import { AfterViewInit, Component, OnInit, AfterViewChecked } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { NotificationService } from '../../../../../service/notification.service';
+import { GeneralService } from '../../../../../service/general-service';
+import { AppConfigService } from '../../../../../../app-config.service';
+import { FormBuilder } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
+import { DateFormatPipe } from '../../../../../shared/pipe/format-date.pipe';
+import { TableSelectionAbstract } from '../../../../../shared/component/table/table-selection.abstract';
+import { Constant } from 'src/app/shared/constants/constant.class';
+import { NavigationService } from 'src/app/service/navigation.service';
 
 @Component({
   selector: 'app-rating-list',
   templateUrl: './rating-list.component.html',
   styleUrls: ['./rating-list.component.scss']
 })
-export class RatingListComponent extends TableSelectionAbstract implements OnInit {
+export class RatingListComponent extends TableSelectionAbstract implements OnInit, AfterViewInit {
   datas = [];
   pageSize: any;
   page: any;
@@ -22,14 +24,18 @@ export class RatingListComponent extends TableSelectionAbstract implements OnIni
   dataSource: any;
   isShowPopupDetail: boolean;
   dataItem: any;
+  idRatingCurrent: number;
   constructor(public translate: TranslateService,
-              private modalService: NzModalService,
-              private notificationService: NotificationService,
-              private generalService: GeneralService,
-              private configService: AppConfigService,
-              private fb: FormBuilder,
-              private router: Router,
-              private dateFormatPipe: DateFormatPipe) {
+    private modalService: NzModalService,
+    private notificationService: NotificationService,
+    private generalService: GeneralService,
+    private configService: AppConfigService,
+    private fb: FormBuilder,
+    private router: Router,
+    private dateFormatPipe: DateFormatPipe,
+    private activatedRoute: ActivatedRoute,
+    private navigationService: NavigationService
+  ) {
     super('id');
     this.dataItem = {};
   }
@@ -42,6 +48,35 @@ export class RatingListComponent extends TableSelectionAbstract implements OnIni
     this.loadGrid();
   }
 
+  ngAfterViewInit() {
+    this.activatedRoute.queryParams.subscribe(async params => {
+      this.idRatingCurrent = +params[Constant.ID];
+      console.log(this.idRatingCurrent );
+
+      if (this.idRatingCurrent) {
+        this.generalService.getRatingItemById(this.idRatingCurrent).subscribe(
+          {
+            next: (res: any) => {
+              if (res.isValid) {
+                this.showModalView(res.data);
+              } else {
+
+              }
+            },
+
+            error: (error) => {
+              console.log(error);
+            },
+
+            compile: () => {
+
+            }
+          }
+        );
+      }
+    });
+  }
+
   getRowIndex(rowData: any, rowIndex: number): number {
     return rowData.name;  // Hiển thị STT bắt đầu từ 1
   }
@@ -50,7 +85,19 @@ export class RatingListComponent extends TableSelectionAbstract implements OnIni
     if (e.rowType === 'data' && e.column.caption === 'STT') {
       e.cellElement.innerText = e.rowIndex + 1; // Hiển thị index từ 1
     }
+
+    this.activatedRoute.queryParams.subscribe(async (params: any) => {
+      this.idRatingCurrent = +params[Constant.ID];
+      if (e.rowType === "data") {
+        if (e.data.id === this.idRatingCurrent) {
+          e.cellElement.style.cssText = "color: black; background-color: #ffffaa;";
+        } else {
+          e.cellElement.style.cssText = "";
+        }
+      }
+    })
   }
+
 
   loadGrid() {
     const payload = {
@@ -69,9 +116,8 @@ export class RatingListComponent extends TableSelectionAbstract implements OnIni
     return Array.from({ length: size }, (_, i) => i + 1);
   }
   showModalView(data: any) {
-    console.log(data);
     this.isShowPopupDetail = true;
-    this.dataItem =  data;
+    this.dataItem = data;
   }
 
   handleCancel() {

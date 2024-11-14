@@ -1045,4 +1045,8 @@ export class GeneralService extends BaseService {
   adminReportRating(payload: any): Observable<any[]> {
     return this.post(`/api/Rating/ReportRating`, payload);
   }
+
+  getRatingItemById(id: number): any {
+    return this.get(`/api/Rating/GetById/${id}`);
+  }
 }
