@@ -58,6 +58,3 @@ messaging.onBackgroundMessage((payload) => {
 
   // self.registration.showNotification(notificationTitle, notificationOptions);
 });
-
-
-// tôi muốn kiểu
