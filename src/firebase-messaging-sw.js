@@ -1,27 +1,27 @@
 
 
-self.addEventListener('notificationclick', function(event) {
-  event.notification.close();
-  // Link cần mở được lấy từ dữ liệu đính kèm trong thông báo
-  const openUrl = event.notification.data?.link;
+// self.addEventListener('notificationclick', function(event) {
+//   event.notification.close();
+//   // Link cần mở được lấy từ dữ liệu đính kèm trong thông báo
+//   const openUrl = event.notification.data?.link || `https://cmscnv.pmr.vn/notifications`;
 
-  event.waitUntil(
-      clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clientList => {
-          // Kiểm tra nếu một tab với URL mở đã tồn tại
-          // for (let i = 0; i < clientList.length; i++) {
-          //     const client = clientList[i];
-          //     if (client.url === openUrl && 'focus' in client) {
-          //         return client.focus();
-          //     }
-          // }
+//   event.waitUntil(
+//       clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clientList => {
+//           // Kiểm tra nếu một tab với URL mở đã tồn tại
+//           for (let i = 0; i < clientList.length; i++) {
+//               const client = clientList[i];
+//               if (client.url === openUrl && 'focus' in client) {
+//                   return client.focus();
+//               }
+//           }
 
-          // Nếu không có tab nào mở sẵn, tạo một tab mới
-          if (clients.openWindow) {
-              return clients.openWindow(openUrl);
-          }
-      })
-  );
-});
+//           // Nếu không có tab nào mở sẵn, tạo một tab mới
+//           if (clients.openWindow) {
+//               return clients.openWindow(openUrl);
+//           }
+//       })
+//   );
+// });
 
 // Give the service worker access to Firebase Messaging.
 // Note that you can only use Firebase Messaging here. Other Firebase libraries
@@ -56,5 +56,8 @@ messaging.onBackgroundMessage((payload) => {
     data: payload.data ?? '',
   };
 
-  self.registration.showNotification(notificationTitle, notificationOptions);
+  // self.registration.showNotification(notificationTitle, notificationOptions);
 });
+
+
+// tôi muốn kiểu
