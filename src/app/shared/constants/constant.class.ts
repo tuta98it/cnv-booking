@@ -136,7 +136,7 @@ export class HotelConfig {
 export class PartnerConfig {
   public static readonly TIME_UPDATE_DATAS = 20000;
   public static readonly PATH_PARTNER = "companies/update";
-
+  public static readonly PATH_PARTNER_UPDATE_ACCINFO = "companies/update-account-info";
 }
 export class UserRegisterConfig {
   public static readonly TIME_UPDATE_DATAS = 15000;

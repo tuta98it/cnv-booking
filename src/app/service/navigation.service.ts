@@ -9,57 +9,75 @@ export class NavigationService {
   constructor(private router: Router, private ngZone: NgZone) { }
 
   navigateToNotifications(idNotify?: number) {
+    const url = `/${NotificationConfig.PATH_NOTIFICATION}`;
+    const fullUrl = this.router.serializeUrl(
+      this.router.createUrlTree([url], { queryParams: { [Constant.ID]: idNotify } })
+    );
     this.ngZone.run(() => {
-      this.router.navigate([`/${NotificationConfig.PATH_NOTIFICATION}`], { queryParams: { [Constant.ID]: idNotify } });
+      window.open(fullUrl, '_blank');
     });
   }
 
   navigateToPageRequestBooking(idRequestBooking?: number) {
     const url = `/${RequestBookingConfig.PATH_REQUEST_BOOKING}`;
+    const fullUrl = this.router.serializeUrl(
+      this.router.createUrlTree([url], { queryParams: { [Constant.ID]: idRequestBooking } })
+    );
+
     this.ngZone.run(() => {
-      if (this.router.url.includes(RequestBookingConfig.PATH_REQUEST_BOOKING)) {
-        this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-          this.router.navigate([url], { queryParams: { [Constant.ID]: idRequestBooking } });
-        });
-      } else {
-        this.router.navigate([url], { queryParams: { [Constant.ID]: idRequestBooking } });
-      }
+      window.open(fullUrl, '_blank');
     });
   }
 
   navigateToPageHotelBooking(idHotelBooking?: number) {
     const url = `/${HotelBookingConfig.PATH_HOTEL_BOOKING}`;
+    const fullUrl = this.router.serializeUrl(
+      this.router.createUrlTree([url], { queryParams: { [Constant.ID]: idHotelBooking } })
+    );
     this.ngZone.run(() => {
-      if (this.router.url.includes(HotelBookingConfig.PATH_HOTEL_BOOKING)) {
-        this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-          this.router.navigate([url], { queryParams: { [Constant.ID]: idHotelBooking } });
-        });
-      } else {
-        this.router.navigate([url], { queryParams: { [Constant.ID]: idHotelBooking } });
-      }
+      window.open(fullUrl, '_blank');  // Mở URL trong một tab mới
     });
   }
 
   navigateToPageCompanyUpdate(idPartner?: number) {
+
+    const url = `/${PartnerConfig.PATH_PARTNER}`;
+    const fullUrl = this.router.serializeUrl(
+      this.router.createUrlTree([url], { queryParams: { [Constant.ID]: idPartner } })
+    );
     this.ngZone.run(() => {
-      this.router.navigate([`/${PartnerConfig.PATH_PARTNER}`], { queryParams: { [Constant.ID]: idPartner } });
+      window.open(fullUrl, '_blank');  // Mở URL trong một tab mới
     });
+
+  }
+
+  navigateToPageCompanyUpdateAccountInfo(idPartner?: number) {
+
+    const url = `/${PartnerConfig.PATH_PARTNER_UPDATE_ACCINFO}`;
+    const fullUrl = this.router.serializeUrl(
+      this.router.createUrlTree([url], { queryParams: { [Constant.ID]: idPartner } })
+    );
+    this.ngZone.run(() => {
+      window.open(fullUrl, '_blank');  // Mở URL trong một tab mới
+    });
+
+
   }
 
   navigateToPageHotelDetail(idHotel?: number) {
-    this.router.navigate([`/${HotelConfig.PATH_HOTEL_VIEWEDIT}/${idHotel}`]);
+    const fullUrl =`/${HotelConfig.PATH_HOTEL_VIEWEDIT}/${idHotel}`
+    this.ngZone.run(() => {
+      window.open(fullUrl, '_blank');  // Mở URL trong một tab mới
+    });
   }
 
   navigateToPageRating(idRating?: number) {
     const url = `/${RattingConfig.PATH_RATING}`;
+    const fullUrl = this.router.serializeUrl(
+      this.router.createUrlTree([url], { queryParams: { [Constant.ID]: idRating } })
+    );
     this.ngZone.run(() => {
-      if (this.router.url.includes(RattingConfig.PATH_RATING)) {
-        this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-          this.router.navigate([url], { queryParams: { [Constant.ID]: idRating } });
-        });
-      } else {
-        this.router.navigate([url], { queryParams: { [Constant.ID]: idRating } });
-      }
+      window.open(fullUrl, '_blank');  // Mở URL trong một tab mới
     });
   }
 }
