@@ -112,7 +112,9 @@ export class RatingListComponent extends TableSelectionAbstract implements OnIni
       this.datas = res.details;
     });
   }
-
+  toArray(size) {
+    return Array.from({ length: size }, (_, i) => i + 1);
+  }
   showModalView(data: any) {
     this.isShowPopupDetail = true;
     this.dataItem = data;

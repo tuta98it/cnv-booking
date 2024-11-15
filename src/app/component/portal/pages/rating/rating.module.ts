@@ -6,10 +6,12 @@ import {SharedModule} from '../../../../shared/shared.module';
 import {DevExtremeModule} from 'devextreme-angular';
 import {NzTabsModule} from 'ng-zorro-antd/tabs';
 import {NzSpinModule} from 'ng-zorro-antd/spin';
+import { RatingReportComponent } from './rating-report/rating-report.component';
+import {NgApexchartsModule} from 'ng-apexcharts';
 
 
 @NgModule({
-  declarations: [RatingListComponent],
+  declarations: [RatingListComponent, RatingReportComponent],
   imports: [
     CommonModule,
     RatingRoutingModule,
@@ -17,6 +19,7 @@ import {NzSpinModule} from 'ng-zorro-antd/spin';
     DevExtremeModule,
     NzTabsModule,
     NzSpinModule,
+    NgApexchartsModule,
   ]
 })
 export class RatingModule { }

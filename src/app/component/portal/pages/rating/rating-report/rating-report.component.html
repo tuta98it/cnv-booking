@@ -1,0 +1,185 @@
+<div class="main-wapper">
+  <div class="toolbar">
+    <div class="before">
+      <h2 class="toolbar-title">Thống kê đánh giá</h2>
+    </div>
+    <div class="after">
+      <div class="buttons">
+        <nz-select style="width: 200px; margin-right: 10px;" [(ngModel)]="search.type" (ngModelChange)="doSearch()">
+          <nz-option *ngFor="let option of TIME_RANGE_FILTER" [nzValue]="option.value"
+                     [nzLabel]="option.label"></nz-option>
+        </nz-select>
+        <ng-container *ngIf="search.type == 10">
+          <nz-date-picker style="margin-right: 10px;" [(ngModel)]="search.fromDate" (ngModelChange)="doSearch()"
+                          nzPlaceHolder="Từ ngày" nzFormat="dd/MM/yyyy"></nz-date-picker>
+          <nz-date-picker [(ngModel)]="search.toDate" (ngModelChange)="doSearch()" nzPlaceHolder="Đến ngày"
+                          nzFormat="dd/MM/yyyy"></nz-date-picker>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+  <div class="card border-0 pt-3">
+    <nz-tabset nzType="card" [(nzSelectedIndex)]="selectedIndex"
+               (nzSelectChange)="tabChange($event)">
+      <nz-tab nzTitle="Dịch vụ đặt vé">
+        <div class="row mb-3">
+          <div class="col-md-12" *ngIf="!pieChartTicketOptions.length">
+            <div class="alert alert-info">Không thống kê đánh giá nào trong khoảng thời gian được chọn !</div>
+          </div>
+          <div class="col-md-4 mb-3" *ngFor="let option of pieChartTicketOptions">
+            <div class="div-chart border">
+              <div class="text-center">
+                {{chartTitles[option.ratingType - 1]}}
+              </div>
+              <div>
+                <apx-chart
+                  [series]="option.series"
+                  [chart]="option.chart"
+                  [labels]="option.labels"
+                  [responsive]="option.responsive"
+                ></apx-chart>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12" *ngIf="tableTicket">
+            <nz-table
+                #basicTableTicket
+                [nzData]="tableTicket.data"
+                [nzBordered]="true"
+                [nzSize]="'middle'"
+                [nzPaginationPosition]="'bottom'"
+                [nzPageSize]="10">
+              <thead>
+              <tr>
+                <th class="text-center">STT</th>
+                <th>Mã người dùng</th>
+                <th>Người góp ý</th>
+                <th>Doanh nghiệp</th>
+                <th>Góp ý</th>
+                <th>Thời gian góp ý</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let data of basicTableTicket.data; let i = index">
+                <td class="text-center">{{ i + 1 }}</td>
+                <td>{{ data.userCode }}</td>
+                <td>{{ data.userFullName }}</td>
+                <td>{{ data.companyName }}</td>
+                <td>{{ data.comment || 'Không có ý kiến' }}</td>
+                <td>{{ data.datelog | date: 'dd/MM/yyyy HH:mm' }}</td>
+              </tr>
+              </tbody>
+            </nz-table>
+          </div>
+
+        </div>
+      </nz-tab>
+      <nz-tab nzTitle="Dịch vụ đặt lưu trú">
+        <div class="row mb-3">
+          <div class="col-md-12" *ngIf="!pieChartHotelOptions.length">
+            <div class="alert alert-info">Không thống kê đánh giá nào trong khoảng thời gian được chọn !</div>
+          </div>
+          <div class="col-md-4 mb-3" *ngFor="let option of pieChartHotelOptions">
+            <div class="div-chart border">
+              <div class="text-center">
+                {{chartTitles[option.ratingType - 1]}}
+              </div>
+              <div>
+                <apx-chart
+                  [series]="option.series"
+                  [chart]="option.chart"
+                  [labels]="option.labels"
+                  [responsive]="option.responsive"
+                ></apx-chart>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12" *ngIf="tableHotel">
+            <nz-table
+                #basicTableHotel
+                [nzData]="tableHotel.data"
+                [nzBordered]="true"
+                [nzSize]="'middle'"
+                [nzPaginationPosition]="'bottom'"
+                [nzPageSize]="10">
+              <thead>
+              <tr>
+                <th class="text-center">STT</th>
+                <th>Mã người dùng</th>
+                <th>Người góp ý</th>
+                <th>Doanh nghiệp</th>
+                <th>Góp ý</th>
+                <th>Thời gian góp ý</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let data of basicTableHotel.data; let i = index">
+                <td class="text-center">{{ i + 1 }}</td>
+                <td>{{ data.userCode }}</td>
+                <td>{{ data.userFullName }}</td>
+                <td>{{ data.companyName }}</td>
+                <td>{{ data.comment || 'Không có ý kiến' }}</td>
+                <td>{{ data.datelog | date: 'dd/MM/yyyy HH:mm' }}</td>
+              </tr>
+              </tbody>
+            </nz-table>
+          </div>
+
+        </div>
+      </nz-tab>
+      <nz-tab nzTitle="Dịch vụ VHL">
+        <div class="row mb-3">
+          <div class="col-md-12" *ngIf="!pieChartVHLOptions.length">
+            <div class="alert alert-info">Không thống kê đánh giá nào trong khoảng thời gian được chọn !</div>
+          </div>
+          <div class="col-md-4 mb-3" *ngFor="let option of pieChartVHLOptions">
+            <div class="div-chart border">
+              <div class="text-center">
+                {{chartTitles[option.ratingType - 1]}}
+              </div>
+              <div>
+                <apx-chart
+                  [series]="option.series"
+                  [chart]="option.chart"
+                  [labels]="option.labels"
+                  [responsive]="option.responsive"
+                ></apx-chart>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12" *ngIf="tableVHL">
+            <nz-table
+                #basicTableVHL
+                [nzData]="tableVHL.data"
+                [nzBordered]="true"
+                [nzSize]="'middle'"
+                [nzPaginationPosition]="'bottom'"
+                [nzPageSize]="10">
+              <thead>
+              <tr>
+                <th class="text-center">STT</th>
+                <th>Mã người dùng</th>
+                <th>Người góp ý</th>
+                <th>Doanh nghiệp</th>
+                <th>Góp ý</th>
+                <th>Thời gian góp ý</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let data of basicTableVHL.data; let i = index">
+                <td class="text-center">{{ i + 1 }}</td>
+                <td>{{ data.userCode }}</td>
+                <td>{{ data.userFullName }}</td>
+                <td>{{ data.companyName }}</td>
+                <td>{{ data.comment || 'Không có ý kiến' }}</td>
+                <td>{{ data.datelog | date: 'dd/MM/yyyy HH:mm' }}</td>
+              </tr>
+              </tbody>
+            </nz-table>
+          </div>
+
+        </div>
+      </nz-tab>
+    </nz-tabset>
+  </div>
+</div>

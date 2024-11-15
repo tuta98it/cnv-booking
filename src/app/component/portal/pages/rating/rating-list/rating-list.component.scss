@@ -1,7 +1,9 @@
 .radio-group{
   display: grid;
-  grid-template-columns: 20% 20% 20% 20% 20%;
-
+  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+  label{
+    padding: 5px;
+  }
 }
 .form-rating .item{
   margin-bottom: 10px;
