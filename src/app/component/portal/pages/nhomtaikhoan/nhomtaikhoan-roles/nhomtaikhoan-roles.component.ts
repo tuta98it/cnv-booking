@@ -212,9 +212,13 @@ export class NhomtaikhoanRolesComponent extends TableSelectionAbstract implement
 
   onAllCheckUserReport(isCheck: boolean, group: any) {
     group.groupRoles = [];
+    group.roles = [];
+
     if(isCheck == true){
       group.groupRoles = this.allRoles.map(role => ({ roleId: role.id }));
+      group.roles = this.allRoles.map(role => role.id);
     }
+    group.saveDisable = false;
   }
 
   updateUserGroup(group, roleId, status) {
