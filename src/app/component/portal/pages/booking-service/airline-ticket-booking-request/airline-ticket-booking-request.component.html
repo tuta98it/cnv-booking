@@ -60,9 +60,10 @@
     cssClass="text-left"></dxi-column>
 
   <dxi-column caption="Ngày về" dataField="returnDay" [fixed]="true" dataType="date" format="dd/MM/yyyy"
-    cssClass="text-left" ></dxi-column>
+    cssClass="text-left"></dxi-column>
 
-  <dxi-column caption="Thông tin người đặt" dataField="userCreatedName" [fixed]="true" cssClass="text-left"></dxi-column>
+  <dxi-column caption="Thông tin người đặt" dataField="userCreatedName" [fixed]="true"
+    cssClass="text-left"></dxi-column>
 
   <dxi-column caption="Trạng thái" dataField="status" [fixed]="true" cssClass="text-left vertical-align-middle"
     cellTemplate="cellStatus"></dxi-column>
@@ -132,9 +133,11 @@
   <dxi-column caption="Mã yêu cầu" dataField="bookingCode" cssClass="text-left vertical-align-middle" [width]="150"
     [fixed]="true"></dxi-column>
 
-  <dxi-column caption="Mã phê duyệt" dataField="approvalCode" cssClass="vertical-align-middle" [width]="150"></dxi-column>
+  <dxi-column caption="Mã phê duyệt" dataField="approvalCode" cssClass="vertical-align-middle"
+    [width]="150"></dxi-column>
 
-  <dxi-column caption="Mã đặt chỗ" cssClass="vertical-align-middle" [width]="150" cellTemplate="cellReservationCode"></dxi-column>
+  <dxi-column caption="Mã đặt chỗ" cssClass="vertical-align-middle" [width]="150"
+    cellTemplate="cellReservationCode"></dxi-column>
   <div *dxTemplate="let item of 'cellReservationCode'">
     {{item.data.reservationCode}}{{ item.data.returnReservationCode ? ", " + item.data.returnReservationCode : "" }}
   </div>
@@ -1040,7 +1043,7 @@
             *ngFor="let passenger of itemBookingRequest?.passengers;let i = index;">
             <div nz-col class="gutter-row" nzSpan="5">
               <div class="inner-box">
-                <label for="" style="font-weight: 600;">1. Họ và tên
+                <label for="" style="font-weight: 600;">{{i+1}}. Họ và tên
                   <span style="color: tomato; margin-left: 4px;">(*)</span>
                 </label>
                 <div>
@@ -1058,7 +1061,7 @@
                 </div>
               </div>
             </div>
-            <div nz-col class="gutter-row" nzSpan="5">
+            <div nz-col class="gutter-row" nzSpan="5" *ngIf="passenger?.typeCode == 'ADT'">
               <div class="inner-box">
                 <label for="" style="font-weight: 600;">
                   Email
@@ -1069,7 +1072,7 @@
                 </div>
               </div>
             </div>
-            <div nz-col class="gutter-row" nzSpan="5">
+            <div nz-col class="gutter-row" nzSpan="5" *ngIf="passenger?.typeCode == 'ADT'">
               <div class="inner-box">
                 <label for="" style="font-weight: 600;">Số điện thoại
                   <span style="color: tomato; margin-left: 4px;">(*)</span>
@@ -1079,7 +1082,7 @@
                 </div>
               </div>
             </div>
-            <div nz-col class="gutter-row" nzSpan="5">
+            <div nz-col class="gutter-row" nzSpan="5" *ngIf="passenger?.typeCode == 'ADT'">
               <div class="inner-box">
                 <label for="" style="font-weight: 600;">Mã thẻ thành viên</label>
                 <div>
