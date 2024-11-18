@@ -36,7 +36,7 @@ export class ErrorInterceptor implements HttpInterceptor {
           this.router.navigate(['/login'], { queryParams: { returnUrl: url } });
           return throwError(error);
         } else if (error.status === 403) {
-          this.router.navigate(['/unauthorized']);
+          this.router.navigate(['/login']);
           return throwError(error);
         } else if (error.status === 404) {
           this.router.navigate(['/page-not-found']);

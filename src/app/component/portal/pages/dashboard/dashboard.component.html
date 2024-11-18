@@ -110,6 +110,7 @@
           <apx-chart *ngIf="pieChartUserOptions"
                      [series]="pieChartUserOptions.series"
                      [chart]="pieChartUserOptions.chart"
+                     [plotOptions]="pieChartUserOptions.plotOptions"
                      [labels]="pieChartUserOptions.labels"
                      [responsive]="pieChartUserOptions.responsive"
           ></apx-chart>
@@ -123,6 +124,7 @@
           <apx-chart *ngIf="pieChartProfitOptions"
                      [series]="pieChartProfitOptions.series"
                      [chart]="pieChartProfitOptions.chart"
+                     [plotOptions]="pieChartProfitOptions.plotOptions"
                      [labels]="pieChartProfitOptions.labels"
                      [responsive]="pieChartProfitOptions.responsive"
           ></apx-chart>
@@ -136,6 +138,7 @@
           <apx-chart *ngIf="pieChartServiceOptions"
                      [series]="pieChartServiceOptions.series"
                      [chart]="pieChartServiceOptions.chart"
+                     [plotOptions]="pieChartServiceOptions.plotOptions"
                      [labels]="pieChartServiceOptions.labels"
                      [responsive]="pieChartServiceOptions.responsive"
           ></apx-chart>
@@ -152,6 +155,7 @@
           <apx-chart *ngIf="pieChartRatingOptions"
                      [series]="pieChartRatingOptions.series"
                      [chart]="pieChartRatingOptions.chart"
+                     [plotOptions]="pieChartRatingOptions.plotOptions"
                      [labels]="pieChartRatingOptions.labels"
                      [responsive]="pieChartRatingOptions.responsive"
           ></apx-chart>
@@ -165,6 +169,7 @@
           <apx-chart *ngIf="pieChartBookingUrgentOptions"
                      [series]="pieChartBookingUrgentOptions.series"
                      [chart]="pieChartBookingUrgentOptions.chart"
+                     [plotOptions]="pieChartBookingUrgentOptions.plotOptions"
                      [labels]="pieChartBookingUrgentOptions.labels"
                      [responsive]="pieChartBookingUrgentOptions.responsive"
           ></apx-chart>
@@ -176,8 +181,8 @@
     <div class="row mb-3">
       <div class="col-md-12">
         <div class="div-chart border">
-          <div class="text-center">
-            Yêu cầu dịch vụ
+          <div class="text-center mt-2 mb-2">
+            Trạng thái các yêu cầu
           </div>
           <apx-chart *ngIf="chartOptions"
             [series]="chartOptions.series"
@@ -204,7 +209,83 @@
             [plotOptions]="chartRevenueOptions.plotOptions"
             [xaxis]="chartRevenueOptions.xaxis"
             [stroke]="chartRevenueOptions.stroke"
+                     [tooltip]="chartRevenueOptions.tooltip"
           ></apx-chart>
+        </div>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-md-8">
+        <div class="div-chart border">
+          <div class="text-center mb-2">
+            Top khách sạn có booking cao trong tuần này
+          </div>
+          <dx-data-grid
+            [dataSource]="sourceTopBooking"
+            [showColumnLines]="true"
+            [showRowLines]="true"
+            [rowAlternationEnabled]="true"
+            [showBorders]="true"
+            [allowColumnResizing]="true"
+            columnResizingMode="widget"
+            [columnMinWidth]="50"
+            [columnAutoWidth]="true"
+          >
+            <dxo-paging [enabled]="true" [pageSize]="10"></dxo-paging>
+            <dxo-pager
+              [visible]="true"
+              [showPageSizeSelector]="true"
+              [allowedPageSizes]="[5, 10, 20, 50]"
+              [showNavigationButtons]="true"
+            ></dxo-pager>
+
+            <dxo-load-panel [enabled]="true"></dxo-load-panel>
+            <dxo-scrolling mode="standard"></dxo-scrolling>
+            <dxo-header-filter [visible]="true"></dxo-header-filter>
+            <dxi-column alignment="center" caption="STT" dataField="index" width="100px"></dxi-column>
+            <dxi-column caption="Mã khách sạn" dataField="code"></dxi-column>
+            <dxi-column caption="Tên khách sạn" dataField="name"></dxi-column>
+            <dxi-column caption="Tỉnh" dataField="provinceName"></dxi-column>
+            <dxi-column caption="Số yêu cầu" dataField="totalBooking"></dxi-column>
+            <dxi-column caption="Tổng tiền" dataField="totalMoney" format=",##0.###"></dxi-column>
+            <dxi-column caption="Cần thanh toán" dataField="needPayment" format=",##0.###"></dxi-column>
+            <div *dxTemplate="let item of 'cellTemplate'">
+            </div>
+          </dx-data-grid>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="div-chart border">
+          <div class="text-center mb-2">
+            Hãng bay có booking cao trong kỳ
+          </div>
+          <dx-data-grid
+            [dataSource]="sourceTopAirline"
+            [showColumnLines]="true"
+            [showRowLines]="true"
+            [rowAlternationEnabled]="true"
+            [showBorders]="true"
+            [allowColumnResizing]="true"
+            columnResizingMode="widget"
+            [columnMinWidth]="50"
+            [columnAutoWidth]="true"
+          >
+            <!--<dxo-paging [enabled]="true" [pageSize]="10"></dxo-paging>
+            <dxo-pager
+              [visible]="true"
+              [showPageSizeSelector]="true"
+              [allowedPageSizes]="[5, 10, 20, 50]"
+              [showNavigationButtons]="true"
+            ></dxo-pager>-->
+            <dxo-load-panel [enabled]="true"></dxo-load-panel>
+            <dxo-scrolling mode="standard"></dxo-scrolling>
+            <dxo-header-filter [visible]="true"></dxo-header-filter>
+            <dxi-column alignment="center" caption="STT" width="100px" dataField="index"></dxi-column>
+            <dxi-column caption="Tên hãng bay" dataField="name"></dxi-column>
+            <dxi-column caption="Số yêu cầu" dataField="totalBooking" format=",##0.###"></dxi-column>
+            <dxi-column caption="Tổng tiền" dataField="totalMoney" format=",##0.###"></dxi-column>
+
+          </dx-data-grid>
         </div>
       </div>
     </div>
