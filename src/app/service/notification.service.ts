@@ -41,8 +41,6 @@ export class NotificationService {
         break;
 
       case NotificationType.AccountDepositHistory:
-        console.log(itemNotify);
-
         this.generalService.getPartnerByAccountDepositId(itemNotify.otherId).subscribe({
           next: (partner: any) => {
             this.navigationService.navigateToPageCompanyUpdateAccountInfo(partner.id);
