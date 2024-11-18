@@ -504,9 +504,6 @@ export class ActionPartnerComponent implements OnInit {
     private employeePipe: EmployeePipe,
   ) {
 
-    if (this.router.url.includes(PartnerConfig.PATH_PARTNER_UPDATE_ACCINFO)) {
-      this.selectedMenu = MenuUpgradePartner.AccountInfomation;
-    }
 
     this.formBaseInfoCreatePartner = this.formBuilder.group({
       id: [null],
@@ -785,7 +782,9 @@ export class ActionPartnerComponent implements OnInit {
       });
     }
 
-
+    if (this.router.url.includes(PartnerConfig.PATH_PARTNER_UPDATE_ACCINFO)) {
+      this.selectedMenu = MenuUpgradePartner.AccountInfomation;
+    }
   }
 
   ngOnInit(): void {

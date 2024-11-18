@@ -521,6 +521,15 @@ export class GeneralService extends BaseService {
     return this.get(UrlConstant.LIST_PARTNERS + "/GetRootPartnes");
   }
 
+  getPartnerByUserId(userId: number): Observable<any[]> {
+    return this.get(`${UrlConstant.LIST_PARTNERS}/GetPartnerByUserId/${userId}` + "");
+  }
+
+  getPartnerByAccountDepositId(accountDepositId: number): Observable<any[]> {
+    return this.get(`${UrlConstant.LIST_PARTNERS}/GetPartnerByAccountDepositId/${accountDepositId}` + "");
+  }
+
+
   getAddPartner(item: any): any {
     return this.post(UrlConstant.LIST_PARTNERS, item);
   }

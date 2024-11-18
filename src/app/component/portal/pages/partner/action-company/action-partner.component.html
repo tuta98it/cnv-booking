@@ -1038,7 +1038,7 @@
           <div>
             <nz-table #tagBalanceFluctuation
               [nzScroll]="{ x: scrollXBalanceFluctuationValue, y: scrollYBalanceFluctuationValue }"
-              [nzData]="listOfBalanceFluctuations" [nzTableLayout]="settingTableBalanceFluctuationValue.tableLayout"
+              [nzData]="listOfBalanceFluctuations" [nzTableLayout]="settingTableBalanceFluctuationValue?.tableLayout"
               [nzBordered]="settingTableBalanceFluctuationValue.bordered"
               [nzSimple]="settingTableBalanceFluctuationValue.simple"
               [nzLoading]="settingTableBalanceFluctuationValue.loading"
@@ -1113,7 +1113,7 @@
             <nz-table #tagBusinessUsageHistory
               [nzScroll]="{ x: scrollXBusinessUsageHistoriesValue, y: scrollYBusinessUsageHistoriesValue }"
               [nzData]="listOfBusinessUsageHistories"
-              [nzTableLayout]="settingTableBusinessUsageHistoriesValue.tableLayout"
+              [nzTableLayout]="settingTableBusinessUsageHistoriesValue?.tableLayout"
               [nzBordered]="settingTableBusinessUsageHistoriesValue.bordered"
               [nzSimple]="settingTableBusinessUsageHistoriesValue.simple"
               [nzLoading]="settingTableBusinessUsageHistoriesValue.loading"

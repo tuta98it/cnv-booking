@@ -25,7 +25,7 @@ const routes: Routes = [
     }
   },
   {
-    path: PartnerConfig.PATH_PARTNER_UPDATE_ACCINFO, component: ActionPartnerComponent, canActivate: [AuthGuard], data: {
+    path: "update-account-info", component: ActionPartnerComponent, canActivate: [AuthGuard], data: {
       pagename: 'Danh sách doanh nghiệp',
       breadcrumb: 'Cập nhật',
       type: ActionTypePageVHL.Update

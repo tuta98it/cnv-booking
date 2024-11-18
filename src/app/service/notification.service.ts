@@ -2,11 +2,13 @@ import { Injectable } from '@angular/core';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NotificationType } from '../enums/notification-type.enum';
 import { NavigationService } from 'src/app/service/navigation.service';
+import { GeneralService } from './general-service';
 
 @Injectable({ providedIn: 'root' })
 export class NotificationService {
   constructor(private notification: NzNotificationService,
     private navigationService: NavigationService,
+    private generalService: GeneralService,
   ) {
   }
   showNotification(type: string, message: string) {
@@ -39,7 +41,23 @@ export class NotificationService {
         break;
 
       case NotificationType.AccountDepositHistory:
-        this.navigationService.navigateToPageCompanyUpdateAccountInfo(itemNotify.otherId);
+        console.log(itemNotify);
+
+        this.generalService.getPartnerByAccountDepositId(itemNotify.otherId).subscribe({
+          next: (partner: any) => {
+            this.navigationService.navigateToPageCompanyUpdateAccountInfo(partner.id);
+          },
+
+          error: (err) => {
+
+
+          },
+
+          complete: () => {
+
+          }
+        })
+
         break;
 
       case NotificationType.WhenCustomerRate:
