@@ -110,16 +110,16 @@ export interface LineChartOptions {
 })
 export class DashboardComponent extends TableSelectionAbstract implements OnInit {
   @ViewChild('pieChartUser') pieChartUser: ChartComponent;
-  public pieChartUserOptions: Partial<PieChartOptions>;
+  public pieChartUserOptions: any;
 
   @ViewChild('pieChartProfit') pieChartProfit: ChartComponent;
-  public pieChartProfitOptions: Partial<PieChartOptions>;
+  public pieChartProfitOptions: any;
 
-  public pieChartServiceOptions: Partial<PieChartOptions>;
-  public pieChartRatingOptions: Partial<PieChartOptions>;
-  public pieChartBookingUrgentOptions: Partial<PieChartOptions>;
+  public pieChartServiceOptions: any;
+  public pieChartRatingOptions: any;
+  public pieChartBookingUrgentOptions: any;
 
-  public chartRevenueOptions: Partial<ChartOptions>;
+  public chartRevenueOptions: any;
 
   userInfo: any;
   TIME_RANGE_FILTER = Constant.TIME_RANGE_FILTER;
@@ -156,6 +156,8 @@ export class DashboardComponent extends TableSelectionAbstract implements OnInit
   selectedTinhThanhId: any;
   selectedQuanHuyenId: any;
   objNotification: any;
+  sourceTopBooking: any[] = [];
+  sourceTopAirline: any[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -202,6 +204,25 @@ export class DashboardComponent extends TableSelectionAbstract implements OnInit
     // this.showNotification();
   }
 
+  loadGrid() {
+    const payload = {...this.search, topRecord: 20};
+    this.generalService.reportTopHotel(payload).subscribe(res => {
+      this.sourceTopBooking = res.data;
+      let index = 1;
+      this.sourceTopBooking.forEach(en => {
+        en.index = index++;
+      });
+    }, error => {
+
+    });
+
+    this.generalService.reportTopAirline(payload).subscribe(res => {
+      this.sourceTopAirline = res;
+    }, error => {
+
+    });
+  }
+
   private getDataSalesReport() {
     const payloadSalesReport = {...this.search};
 
@@ -212,7 +233,7 @@ export class DashboardComponent extends TableSelectionAbstract implements OnInit
 
     this.generalService.reportUser(payloadSalesReport).subscribe((res) => {
       this.pieChartUserOptions = {
-        series: [res.newUserActive, res.newUserDeActive, res.oldUserActive,  res.oldUserDeActive],
+        series: [res.newUserActive, res.newUserDeActive, res.oldUserActive, res.oldUserDeActive],
         title: {
           text: 'Tài khoản người dùng',
           align: 'center',
@@ -221,6 +242,10 @@ export class DashboardComponent extends TableSelectionAbstract implements OnInit
           type: 'donut'
         },
         labels: ['Người dùng mới active', 'Người dùng mới deactive', 'Người dùng cũ active', 'Người dùng cũ deactive'],
+        plotOptions: this.toPlotOption(res.totalUser),
+        dataLabels: {
+          enabled: true
+        },
         responsive: [
           {
             breakpoint: 480,
@@ -249,6 +274,10 @@ export class DashboardComponent extends TableSelectionAbstract implements OnInit
           type: 'donut'
         },
         labels: ['Chi phí lưu trú', 'Lợi luận gộp'],
+        plotOptions: this.toPlotOption(res.totalRevenue),
+        dataLabels: {
+          enabled: true
+        },
         responsive: [
           {
             breakpoint: 480,
@@ -273,6 +302,7 @@ export class DashboardComponent extends TableSelectionAbstract implements OnInit
           type: 'donut'
         },
         labels: ['Dịch vụ vé máy bay', 'Dịch vụ lưu trú'],
+        plotOptions: this.toPlotOption(res.totalServices),
         responsive: [
           {
             breakpoint: 480,
@@ -292,11 +322,12 @@ export class DashboardComponent extends TableSelectionAbstract implements OnInit
     // Chỉ số NPS
     this.generalService.reportRating(payloadSalesReport).subscribe((res) => {
       this.pieChartRatingOptions = {
-        series: [res.rateFiveStar, res.rateFourStar, res.rateThreeStar, res.rateTwoStar, res.totalRate + res.rateOneStar],
+        series: [res.rateFiveStar, res.rateFourStar, res.rateThreeStar, res.rateTwoStar + res.rateOneStar],
         chart: {
           type: 'donut'
         },
         labels: ['Khách hàng rất hài lòng', 'Khách hàng đánh giá tốt', 'Trải nghiệm ở mức trung bình', 'Trải nghiệm tệ/rất tệ'],
+        plotOptions: this.toPlotOption(res.totalRate),
         responsive: [
           {
             breakpoint: 480,
@@ -321,6 +352,7 @@ export class DashboardComponent extends TableSelectionAbstract implements OnInit
           type: 'donut'
         },
         labels: ['Dịch vụ vé máy bay', 'Dịch vụ lưu trú'],
+        plotOptions: this.toPlotOption(res.totalServices),
         responsive: [
           {
             breakpoint: 480,
@@ -421,71 +453,26 @@ export class DashboardComponent extends TableSelectionAbstract implements OnInit
         },
         xaxis: {
           categories: res.data.map(en => en.partnerName)
+        },
+        tooltip: {
+          y: {
+            formatter: (value: number) => {
+              // Format số tiền thành tiền tệ Việt Nam Đồng (VND)
+              return value.toLocaleString('vi-VN', {
+                style: 'currency',
+                currency: 'VND'
+              });
+            }
+          }
         }
       };
     });
-    /*this.generalService.salesReport(payloadSalesReport).subscribe((res) => {
-      if (res) {
-        this.objRevenue.totalSales = res.tongDoanhSo;
-
-        let dataSales = [];
-        const top10Seller = res.data.slice(0, 10);
-        for (let i = 0; i < top10Seller.length; i++) {
-          const seller = res.data[i];
-          dataSales.push({x: [seller.code, seller.name], y: seller.doanhSo});
-        }
-        let sales = {
-          name: 'Tổng doanh thu',
-          data: dataSales,
-        };
-
-        let series = [];
-        series.push(sales);
-
-        this.barChartSaleOptions = {
-          series: series,
-          chart: {
-            type: 'bar',
-            height: 350,
-          },
-          title: {
-            text: 'Top Sale có doanh thu cao nhất',
-            align: 'left',
-          },
-          plotOptions: {
-            bar: {
-              horizontal: false,
-            },
-          },
-          dataLabels: {
-            enabled: false,
-          },
-          yaxis: {
-            labels: {
-              formatter(value) {
-                const item = value
-                  .toString()
-                  .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',');
-                return item;
-              },
-            },
-          },
-          xaxis: {
-            labels: {
-              rotate: 0,
-              hideOverlappingLabels: false,
-              trim: true,
-            },
-          },
-        };
-
-      }
-    });*/
   }
 
   doSearch() {
     this.getDataSalesReport();
     this.loadReport();
+    this.loadGrid();
   }
 
   loadReport() {
@@ -605,5 +592,42 @@ export class DashboardComponent extends TableSelectionAbstract implements OnInit
 
   showDetail(type: number) {
     location.href = '/thiet-bi/' + type;
+  }
+
+  toPlotOption(total: number) {
+    return {
+      pie: {
+        donut: {
+          size: '60%',
+          labels: {
+            show: true,
+            name: {
+              show: true,
+              fontSize: '30px',
+              color: '#000',
+              offsetY: -10
+            },
+            value: {
+              show: true,
+              fontSize: '16px',
+              color: '#000',
+              offsetY: 10,
+              formatter: (val: number) => `${val}%`
+            },
+            total: {
+              show: true,
+              showAlways: true,
+              label: 'Tổng',
+              fontSize: '18px',
+              color: '#000',
+              formatter: (w: any) => {
+                // Tính tổng giá trị trong `series`
+                return total;
+              }
+            }
+          }
+        }
+      }
+    };
   }
 }

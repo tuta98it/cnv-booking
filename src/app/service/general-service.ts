@@ -1043,9 +1043,6 @@ export class GeneralService extends BaseService {
   reportRevenueByPartner(payload: any): Observable<any> {
     return this.post(`/api/AdminDashboard/ReportRevenueByPartner`, payload);
   }
-  reportTopAirline(payload: any): Observable<any> {
-    return this.post(`/api/AdminDashboard/ReportTopAirline`, payload);
-  }
 
   getListRating(payload: any): any {
     return this.post(`/api/Rating/QueryRating`, payload);
@@ -1057,5 +1054,12 @@ export class GeneralService extends BaseService {
 
   getRatingItemById(id: number): any {
     return this.get(`/api/Rating/GetById/${id}`);
+  }
+
+  reportTopHotel(payload: any): Observable<any> {
+    return this.post(`/api/AdminDashboard/ReportTopHotel`, payload);
+  }
+  reportTopAirline(payload: any): Observable<any> {
+    return this.post(`/api/AdminDashboard/ReportTopAirline`, payload);
   }
 }
