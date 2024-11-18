@@ -217,7 +217,11 @@ export class DashboardComponent extends TableSelectionAbstract implements OnInit
     });
 
     this.generalService.reportTopAirline(payload).subscribe(res => {
-      this.sourceTopAirline = res;
+      this.sourceTopAirline = res.data;
+      let index = 1;
+      this.sourceTopAirline.forEach(en => {
+        en.index = index++;
+      });
     }, error => {
 
     });
