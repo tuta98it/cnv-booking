@@ -1,7 +1,7 @@
 <div style="display: flex; justify-content: space-between;">
   <h1>Phân quyền theo chức vụ</h1>
   <div class="form-filter ant-form ant-form-inline">
-    <input style="width: 300px; margin-right: 10px;"  nzSize="small" nz-input [(ngModel)]="searchText"
+    <input style="width: 300px; margin-right: 10px;" nzSize="small" nz-input [(ngModel)]="searchText"
       (keyup.enter)="onSearch()" type="text" placeholder="Tìm kiếm theo Chức vụ">
   </div>
 </div>
@@ -16,6 +16,7 @@
         <th rowspan="2" nzLeft nzWidth="50px" class="text-nowrap"></th>
         <th rowspan="2" nzLeft nzWidth="150px" class="text-nowrap">Chức vụ</th>
         <th rowspan="2" nzLeft nzWidth="150px" class="text-nowrap">Ghi chú</th>
+        <th rowspan="2" nzLeft nzWidth="150px" class="text-nowrap editable-row" [nzAlign]="'center'">Chọn tất cả</th>
         <th [colspan]="group.roles.length" [ngStyle]="{'width': group.thWidth + 'px'}"
           *ngFor="let group of this.groupRoles; let i = index">
           {{group.groupName}}
@@ -40,6 +41,9 @@
         </td>
         <td nzLeft class="text-nowrap">{{ data.name }}</td>
         <td nzLeft class="text-nowrap">{{ data.description }}</td>
+        <td nzLeft class="text-nowrap" class="editable-row" [nzAlign]="'center'">
+          <input type="checkbox" [checked]="isCheckAllUserReport(data) == true" (change)="onAllCheckUserReport($event.target.checked, data)">
+        </td>
         <td *ngFor="let role of this.allRoles; let i = index" [attr.data-index]="i" class="editable-row"
           [nzAlign]="'center'">
           <ng-container *ngIf="checkUserReport(role.id, data) == true;else elseBlock">

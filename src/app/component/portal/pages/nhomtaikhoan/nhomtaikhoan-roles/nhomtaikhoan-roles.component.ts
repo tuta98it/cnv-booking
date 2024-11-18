@@ -203,9 +203,20 @@ export class NhomtaikhoanRolesComponent extends TableSelectionAbstract implement
   }
 
   checkUserReport(roleId, group) {
-
     return group.groupRoles.filter(item => item.roleId === roleId).length >= 1;
   }
+
+  isCheckAllUserReport(group: any) {
+    return this.allRoles.map(r => r.id).every(roleId => group.groupRoles.map(r => r.roleId).includes(roleId));
+  }
+
+  onAllCheckUserReport(isCheck: boolean, group: any) {
+    group.groupRoles = [];
+    if(isCheck == true){
+      group.groupRoles = this.allRoles.map(role => ({ roleId: role.id }));
+    }
+  }
+
   updateUserGroup(group, roleId, status) {
     if (!group.roles) {
       group.roles = [];
@@ -221,7 +232,9 @@ export class NhomtaikhoanRolesComponent extends TableSelectionAbstract implement
         group.roles.push(roleId);
     }
     group.saveDisable = false;
-    console.log(group.roles);
+
+    group.groupRoles = group.roles.map(roleId => ({ roleId }));
+    this.isCheckAllUserReport(group);
   }
   saveUserGroup(data) {
     var itemUpdate = { groupId: data.id, roles: data.roles };
