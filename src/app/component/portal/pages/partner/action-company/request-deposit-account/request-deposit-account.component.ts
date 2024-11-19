@@ -18,7 +18,7 @@ import { Constant, DepositConstant } from 'src/app/shared/constants/constant.cla
 export class RequestDepositAccountComponent implements OnInit, AfterViewInit {
 
 
-  @Input() isVisibleRequestDepositAccount: boolean = true;
+  @Input() isVisibleRequestDepositAccount: boolean = false;
   @Input() notifyId: number = null;
   @Output() cancel: EventEmitter<any> = new EventEmitter();
   isDepositAccountOkLoading = false;
@@ -50,29 +50,23 @@ export class RequestDepositAccountComponent implements OnInit, AfterViewInit {
     });
   }
   ngAfterViewInit(): void {
-    this.activatedRoute.params
-  }
-
-  ngOnInit(): void {
-    this.getUserInfo();
-
-  }
-
-
-  AfterViewInit(): void {
     this.activatedRoute.queryParams.subscribe(async params => {
       this.idNotification = +params[Constant.ID_NOTIFY];
+      console.log(this.idNotification);
+
       if (this.idNotification) {
         this.notificationAPIService.getNotificationRequestDepositAccountById(this.idNotification).subscribe(
           {
             next: (res: any) => {
               if (res.isValid) {
                 this.notifyData = res.data;
+                console.log("this.notifyData: ", this.notifyData);
+
                 this.formDepositAccount.reset({
                   id: null,
-                  amountDeposited: this.notifyData.acountDepositHistory.amountDeposited,
-                  implementPersonId: this.notifyData.acountDepositHistory.implenmentPersonId,
-                  depositContent: this.notifyData.acountDepositHistory.depositContent
+                  amountDeposited: this.notifyData.accountDepositHistory.amountDeposited,
+                  implementPersonId: this.notifyData.accountDepositHistory.implenmentPersonId,
+                  depositContent: this.notifyData.accountDepositHistory.depositContent
                 })
               } else {
               }
@@ -89,6 +83,10 @@ export class RequestDepositAccountComponent implements OnInit, AfterViewInit {
         );
       }
     });
+  }
+
+  ngOnInit(): void {
+    this.getUserInfo();
   }
 
 

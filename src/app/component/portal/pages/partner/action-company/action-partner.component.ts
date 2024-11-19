@@ -546,8 +546,6 @@ export class ActionPartnerComponent implements OnInit {
       emailPersonInCharge: new FormControl({ value: null, disabled: true }, Validators.required),
     });
 
-
-
     this.settingTableListEmployeesForm = this.formBuilder.group({
       bordered: [false],
       loading: [false],
@@ -698,7 +696,7 @@ export class ActionPartnerComponent implements OnInit {
       // this.setIsActiveEditBaseInfo(true);
       //this.isActiveEditBaseInfo.setValue(true);
       this.activatedRoute.queryParams.subscribe(async params => {
-        let idPartner = +params['id']; // Lấy id từ query parameter
+        let idPartner = +params[Constant.ID]; // Lấy id từ query parameter
 
         this.settingUploadAuthorizationFile = {
           isMultiple: true,
@@ -792,7 +790,7 @@ export class ActionPartnerComponent implements OnInit {
       this.activatedRoute.queryParams.subscribe(async parmas => {
         this.notificationId = +parmas[Constant.ID_NOTIFY];
         if(this.notificationId){
-          this.isVisibleDepositAccount = true;
+          this.isVisibleRequestDepositAccount = true;
         }
       });
     }

@@ -323,7 +323,7 @@ export class PartnerComponent extends TableSelectionAbstract implements OnInit, 
   }
 
   navigatePageUpdatePartner(idPartner: number) {
-    this.router.navigate([`/companies/update`], { queryParams: { id: idPartner } });
+    this.router.navigate([`/companies/update`], { queryParams: { [Constant.ID] : idPartner } });
 
   }
 
