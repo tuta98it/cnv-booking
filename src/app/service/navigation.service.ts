@@ -65,7 +65,7 @@ export class NavigationService {
   }
 
   navigateToPageHotelDetail(idHotel?: number) {
-    const fullUrl =`/${HotelConfig.PATH_HOTEL_VIEWEDIT}/${idHotel}`
+    const fullUrl = `/${HotelConfig.PATH_HOTEL_VIEWEDIT}/${idHotel}`
     this.ngZone.run(() => {
       window.open(fullUrl, '_blank');  // Mở URL trong một tab mới
     });
@@ -75,6 +75,16 @@ export class NavigationService {
     const url = `/${RattingConfig.PATH_RATING}`;
     const fullUrl = this.router.serializeUrl(
       this.router.createUrlTree([url], { queryParams: { [Constant.ID]: idRating } })
+    );
+    this.ngZone.run(() => {
+      window.open(fullUrl, '_blank');  // Mở URL trong một tab mới
+    });
+  }
+
+  navigateToPageRequestToDepositIntoAccount(idNotify?: number) {
+    const url = `/${PartnerConfig.PATH_PARTNER_REQUEST_DEPOSIT_ACCOUNT}`;
+    const fullUrl = this.router.serializeUrl(
+      this.router.createUrlTree([url], { queryParams: { [Constant.ID_NOTIFY]: idNotify } })
     );
     this.ngZone.run(() => {
       window.open(fullUrl, '_blank');  // Mở URL trong một tab mới

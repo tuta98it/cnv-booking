@@ -32,6 +32,13 @@ const routes: Routes = [
     }
   },
   {
+    path: "update-request-deposit-account", component: ActionPartnerComponent, canActivate: [AuthGuard], data: {
+      pagename: 'Danh sách doanh nghiệp',
+      breadcrumb: 'Cập nhật',
+      type: ActionTypePageVHL.Update
+    }
+  },
+  {
     path: 'employee-action',
     loadChildren: () =>
       import('../upgraed-employee/upgrade-employee.module').then(

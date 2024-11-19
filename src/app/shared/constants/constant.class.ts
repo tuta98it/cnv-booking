@@ -1,6 +1,7 @@
 export class Constant {
   public static readonly DEFAULT_PAGE = '/dashboard';
   public static readonly ID = 'id';
+  public static readonly ID_NOTIFY = 'notifyId';
   public static readonly DATE_FMT = 'dd/MM/yyyy';
   public static readonly DATE_FMT_HOUR = 'dd/MM/yyyy HH:mm';
   public static readonly DATE_FMT_FULL = 'dd/MM/yyyy h:mm a';
@@ -137,6 +138,7 @@ export class PartnerConfig {
   public static readonly TIME_UPDATE_DATAS = 20000;
   public static readonly PATH_PARTNER = "companies/update";
   public static readonly PATH_PARTNER_UPDATE_ACCINFO = "companies/update-account-info";
+  public static readonly PATH_PARTNER_REQUEST_DEPOSIT_ACCOUNT = "companies/update-request-deposit-account";
 }
 export class UserRegisterConfig {
   public static readonly TIME_UPDATE_DATAS = 15000;

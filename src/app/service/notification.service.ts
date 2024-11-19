@@ -63,7 +63,9 @@ export class NotificationService {
       case NotificationType.RatingBookingHotel:
       case NotificationType.RatingRequestBooking:
         this.navigationService.navigateToPageRating(itemNotify.otherId);
-
+        break;
+      case NotificationType.RequestToDepositIntoAccount:
+        this.navigationService.navigateToPageRequestToDepositIntoAccount(itemNotify.id);
         break;
       default:
         this.navigationService.navigateToNotifications(itemNotify.id);

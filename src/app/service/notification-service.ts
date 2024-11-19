@@ -18,6 +18,10 @@ export class NotificationAPIService extends BaseService {
     });
   }
 
+  getNotificationRequestDepositAccountById(idNotify: number): any {
+    return this.get(`/api${UrlConstant.LIST_NOTIFY}/GetNotificationRequestDepositAccountById/${idNotify}`);
+  }
+
   readNotificationByIds(ids: number[]): Observable<any> {
     return this.post(`/api${UrlConstant.LIST_NOTIFY}/ReadNotifications`,{
       "ids": ids,
@@ -39,4 +43,6 @@ export class NotificationAPIService extends BaseService {
   deviceRegistration(data: any): Observable<any> {
     return this.post(`/api${UrlConstant.LIST_NOTIFY}/DeviceRegistration`,data);
   }
+
+
 }

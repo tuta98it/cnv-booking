@@ -357,6 +357,7 @@ export class ActionPartnerComponent implements OnInit {
   isVisibleDepositAccount = false;
   isDepositAccountOkLoading = false;
 
+  isVisibleRequestDepositAccount = false;
 
   valueInputNumberAmount = '';
   tooltipTitleAmount = 'Nhập số tiền';
@@ -489,6 +490,8 @@ export class ActionPartnerComponent implements OnInit {
   ];
   isLoadingBalanceFluctuationStatement = false;
   listOfImolementers: any;
+
+  notificationId: number;
   constructor(
     private msg: NzMessageService,
     private activatedRoute: ActivatedRoute,
@@ -784,7 +787,16 @@ export class ActionPartnerComponent implements OnInit {
 
     if (this.router.url.includes(PartnerConfig.PATH_PARTNER_UPDATE_ACCINFO)) {
       this.selectedMenu = MenuUpgradePartner.AccountInfomation;
+    } else if (this.router.url.includes(PartnerConfig.PATH_PARTNER_REQUEST_DEPOSIT_ACCOUNT)) {
+      this.selectedMenu = MenuUpgradePartner.AccountInfomation;
+      this.activatedRoute.queryParams.subscribe(async parmas => {
+        this.notificationId = +parmas[Constant.ID_NOTIFY];
+        if(this.notificationId){
+          this.isVisibleDepositAccount = true;
+        }
+      });
     }
+
   }
 
   ngOnInit(): void {
@@ -2022,6 +2034,11 @@ export class ActionPartnerComponent implements OnInit {
 
   handleDepositAccountCancel(): void {
     this.isVisibleDepositAccount = false;
+    this.updateBalanceFluctuationsBy();
+  }
+
+  handleRequestDepositAccountCancel(): void {
+    this.isVisibleRequestDepositAccount = false;
     this.updateBalanceFluctuationsBy();
   }
 

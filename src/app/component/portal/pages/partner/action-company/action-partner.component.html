@@ -5,8 +5,7 @@
         <span style="font-weight: 500; font-size: 18px;">{{titleActionCompanyPage}}</span>
         <div>
 
-          <button nz-button nzType="default" nzShape="round"
-            style="margin-right: 8px;" (click)="backToPreviousPage()">
+          <button nz-button nzType="default" nzShape="round" style="margin-right: 8px;" (click)="backToPreviousPage()">
             <div style="display: flex; justify-content: center; align-items: center;">
               <span nz-icon nzType="left"></span>
               <span style="margin-left: 4px; line-height: normal;">Quay lại</span>
@@ -390,7 +389,7 @@
       </div>
     </div>
   </form>
-  <div nz-row [nzGutter]="[16, 24]" >
+  <div nz-row [nzGutter]="[16, 24]">
     <div nz-col class="gutter-row" [nzSpan]="24">
       <div class="inner-box" style="height: calc(100vh - 477px);">
         <ul nz-menu nzMode="horizontal">
@@ -796,8 +795,8 @@
               (nzCurrentPageDataChange)="currentPageDataChangeEmployee($event)">
               <thead>
                 <tr *ngIf="settingTableEmployeesValue.header">
-                  <th *ngIf="settingTableEmployeesValue.checkbox" nzLeft nzWidth="60px" [(nzChecked)]="allCheckedEmployee"
-                    [nzIndeterminate]="indeterminateEmployee"
+                  <th *ngIf="settingTableEmployeesValue.checkbox" nzLeft nzWidth="60px"
+                    [(nzChecked)]="allCheckedEmployee" [nzIndeterminate]="indeterminateEmployee"
                     (nzCheckedChange)="checkAllEmployees($event)">
                   </th>
                   <!-- <th nzWidth="40px">STT</th>
@@ -810,8 +809,8 @@
                   <th>Giới tính</th>
                   <th>Quản lý trực tiếp</th>
                   <th>Mã thẻ thành viên</th> -->
-                  <th *ngFor="let column of listOfColumnEmployeesVHLs" [nzWidth]="column.width"
-                    [nzAlign]="column.align" [nzSortOrder]="column.sortOrder" [nzSortFn]="column.sortFn"
+                  <th *ngFor="let column of listOfColumnEmployeesVHLs" [nzWidth]="column.width" [nzAlign]="column.align"
+                    [nzSortOrder]="column.sortOrder" [nzSortFn]="column.sortFn"
                     [nzSortDirections]="column.sortDirections" [nzShowFilter]="column.showFilter"
                     [nzFilterMultiple]="column.filterMultiple" [nzFilters]="column.listOfFilter"
                     [nzFilterFn]="column.filterFn">
@@ -823,9 +822,8 @@
               <tbody>
                 <ng-container *ngFor="let data of tagEmployeeTable.data">
                   <tr>
-                    <td nzLeft *ngIf="settingTableEmployeesValue.checkbox"
-                      [(nzChecked)]="data.checked" (nzCheckedChange)="refreshStatusEmployee()"
-                      [nzDisabled]="data.disabled"></td>
+                    <td nzLeft *ngIf="settingTableEmployeesValue.checkbox" [(nzChecked)]="data.checked"
+                      (nzCheckedChange)="refreshStatusEmployee()" [nzDisabled]="data.disabled"></td>
                     <td [nzAlign]="'center'">
                       {{data.stt}}
                     </td>
@@ -842,8 +840,7 @@
                     <td [nzDisabled]="data.disabled">{{ data.gender | genderPipe }}</td>
                     <td [nzDisabled]="data.disabled">{{ data.directManagementUserId | employeePipe : employees }}</td>
                     <td [nzDisabled]="data.disabled">{{ data.membershipCode }}</td>
-                    <td nzRight [nzEllipsis]="settingTableEmployeesValue.ellipsis"
-                      class="text-aligin-center">
+                    <td nzRight [nzEllipsis]="settingTableEmployeesValue.ellipsis" class="text-aligin-center">
                       <button title="Sửa thông tin thông tin nhân viên" nz-button nzSize="small" nzType="default"
                         class="button-update"
                         (click)="navigatePage('companies/employee-action/update', ActionTypePageVHL.Update, data.id)"
@@ -927,12 +924,14 @@
             <div>
               Phát sinh trong kỳ
               <span *ngIf="debtBearingSales?.amountIncurredDuringPeriod >= 0">
-                {{debtBearingSales?.amountIncurredDuringPeriod ? (debtBearingSales.amountIncurredDuringPeriod | currencyFormat)
+                {{debtBearingSales?.amountIncurredDuringPeriod ? (debtBearingSales.amountIncurredDuringPeriod |
+                currencyFormat)
                 :
                 '-' }} VNĐ
               </span>
               <span *ngIf="debtBearingSales?.amountIncurredDuringPeriod < 0" style="color: #900B09;">
-                ({{debtBearingSales?.amountIncurredDuringPeriod ? ( -debtBearingSales.amountIncurredDuringPeriod | currencyFormat)
+                ({{debtBearingSales?.amountIncurredDuringPeriod ? ( -debtBearingSales.amountIncurredDuringPeriod |
+                currencyFormat)
                 :
                 '-' }}) VNĐ
               </span>
@@ -1083,7 +1082,8 @@
 
                     <td [nzDisabled]="data.disabled" *ngIf="data.amount > 0">{{ (data.amount) | currencyFormat }} VNĐ
                     </td>
-                    <td [nzDisabled]="data.disabled" *ngIf="data.amount <= 0" style="color: #FF3B30;">({{ (0 -  data.amount) | currencyFormat }}) VNĐ</td>
+                    <td [nzDisabled]="data.disabled" *ngIf="data.amount <= 0" style="color: #FF3B30;">({{ (0 -
+                      data.amount) | currencyFormat }}) VNĐ</td>
 
                     <td [nzDisabled]="data.disabled">{{ data.transactionContent}}</td>
                   </tr>
@@ -1166,3 +1166,6 @@
     </div>
   </div>
 </div>
+<request-deposit-account [isVisibleRequestDepositAccount]="isVisibleRequestDepositAccount" [notifyId]="notificationId"
+  (cancel)="handleRequestDepositAccountCancel()">
+</request-deposit-account>

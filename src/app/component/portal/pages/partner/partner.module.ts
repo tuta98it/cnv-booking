@@ -6,6 +6,7 @@ import { PartnerRoutingModule } from './partner-routing.module';
 import { ActionPartnerComponent } from './action-company/action-partner.component';
 import { DepositAccountComponent } from './action-company/deposit-account/deposit-account.component';
 import { ChangePasswordComponent } from './action-company/change-password/change-password.component';
+import { RequestDepositAccountComponent } from './action-company/request-deposit-account/request-deposit-account.component';
 
 import {DevExtremeModule} from 'devextreme-angular';
 import { EmployeePipe } from 'src/app/shared/pipe/employeePipe.pipe';
@@ -14,6 +15,7 @@ import { EmployeePipe } from 'src/app/shared/pipe/employeePipe.pipe';
     ActionPartnerComponent,
     ChangePasswordComponent,
     DepositAccountComponent,
+    RequestDepositAccountComponent,
   ],
   imports: [
     SharedModule,
