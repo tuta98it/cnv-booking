@@ -3,7 +3,6 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NotificationType } from '../enums/notification-type.enum';
 import { NavigationService } from 'src/app/service/navigation.service';
 import { GeneralService } from './general-service';
-import { MaskDateDirective } from './../shared/directive/mask-date.directive';
 
 @Injectable({ providedIn: 'root' })
 export class NotificationService {
