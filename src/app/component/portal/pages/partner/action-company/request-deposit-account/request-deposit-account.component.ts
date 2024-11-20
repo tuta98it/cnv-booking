@@ -20,7 +20,8 @@ export class RequestDepositAccountComponent implements OnInit, AfterViewInit {
 
 
   @Input() isVisibleRequestDepositAccount: boolean = false;
-  @Input() notifyId: number = null;
+  @Input() customerDepositHistoryId: number = null;
+  @Input() partnerId: number = null;
   @Output() cancel: EventEmitter<any> = new EventEmitter();
   isDepositAccountOkLoading = false;
 
@@ -107,7 +108,7 @@ export class RequestDepositAccountComponent implements OnInit, AfterViewInit {
     this.isDepositAccountOkLoading = true;
     if (this.formDepositAccount.valid) {
       let valueSave = this.formDepositAccount.value;
-      valueSave = { partnerId: this.notifyId, ...valueSave }
+      valueSave = { partnerId: this.partnerId, ...valueSave }
       this.generalService.depositAccount(valueSave).subscribe((res: any) => {
         if (res.isValid) {
           this.isDepositAccountOkLoading = false;

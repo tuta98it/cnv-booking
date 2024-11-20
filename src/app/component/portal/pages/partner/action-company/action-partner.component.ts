@@ -492,7 +492,8 @@ export class ActionPartnerComponent implements OnInit {
   isLoadingBalanceFluctuationStatement = false;
   listOfImolementers: any;
 
-  notificationId: number;
+  customerDepositHistory: number;
+  partnerId: number;
   notifyData: any;
   constructor(
     private msg: NzMessageService,
@@ -793,8 +794,9 @@ export class ActionPartnerComponent implements OnInit {
     } else if (this.router.url.includes(PartnerConfig.PATH_PARTNER_REQUEST_DEPOSIT_ACCOUNT)) {
       this.selectedMenu = MenuUpgradePartner.AccountInfomation;
       this.activatedRoute.queryParams.subscribe(async parmas => {
-        this.notificationId = +parmas[Constant.ID_NOTIFY];
-        if (this.notificationId) {
+        this.customerDepositHistory = +parmas[Constant.ID_CUSTOMER_DEPOSIT_HISTORY];
+        this.partnerId = +parmas[Constant.ID];
+        if (this.customerDepositHistory && this.partnerId ) {
           this.isVisibleRequestDepositAccount = true;
         }
       });
