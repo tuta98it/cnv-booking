@@ -10,5 +10,5 @@ export enum NotificationType {
   RatingBookingHotel = 8,
   Booking = 9,//Trang đặt vé khởi việt
   WhenCustomerRate = 10,
-  RequestToDepositIntoAccount = 11,
+  WhenCustomerDeposit = 11, // Yêu cầu nạp tiền vào tài khoản
 }

@@ -1,4 +1,4 @@
-<nz-modal [(nzVisible)]="isVisibleRequestDepositAccount" nzTitle="Nạp tiền vào tài khoản"
+<nz-modal [(nzVisible)]="isVisibleRequestDepositAccount" nzTitle="Xác nhận nạp tiền vào tài khoản"
   (nzOnCancel)="handleDepositAccountCancel()" (nzOnOk)="handleDepositAccountSave()"
   [nzOkLoading]="isDepositAccountOkLoading" nzMaskClosable="false">
   <div *nzModalContent>
@@ -25,11 +25,11 @@
                 <span style="color: tomato; margin-left: 4px;">*</span>
               </div>
               <div nz-col class="gutter-row" [nzSpan]="16">
-                <!-- <nz-select style="border-radius: 4px;" nzSize="default" nzMode="default"
+                <nz-select style="border-radius: 4px;" nzSize="default" nzMode="default"
                   formControlName='implementPersonId' nzPlaceHolder="Chọn người thực hiện" nzAllowClear nzShowSearch>
                   <nz-option *ngFor="let employee of employees" nzLabel="{{employee.fullname}} - {{employee.username}}"
                     [nzValue]="employee.id"></nz-option>
-                </nz-select> -->
+                </nz-select>
               </div>
             </div>
 

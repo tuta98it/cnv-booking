@@ -10,6 +10,7 @@ import { GeneralService } from 'src/app/service/general-service';
 import { NotificationAPIService } from 'src/app/service/notification-service';
 import { NotificationService } from 'src/app/service/notification.service';
 import { Constant, DepositConstant } from 'src/app/shared/constants/constant.class';
+import { CustomerDepositHistoryService } from './../../../../../../service/customer-deposit-history-service';
 @Component({
   selector: 'request-deposit-account',
   templateUrl: './request-deposit-account.component.html',
@@ -28,8 +29,9 @@ export class RequestDepositAccountComponent implements OnInit, AfterViewInit {
   tooltipTitleAmount = 'Nhập số tiền';
   formDepositAccount: FormGroup;
   userInfor: any;
-  idNotification: number;
-  notifyData: any;
+  idCustomerDepositHistory: number;
+  customerDeposit: any;
+  employees: any;
   constructor(private msg: NzMessageService,
     private activatedRoute: ActivatedRoute,
     private formBuilder: FormBuilder,
@@ -40,6 +42,7 @@ export class RequestDepositAccountComponent implements OnInit, AfterViewInit {
     private router: Router,
     private datePipe: DatePipe,
     private modalService: NzModalService,
+    private customerDepositHistoryService: CustomerDepositHistoryService,
 
   ) {
     this.formDepositAccount = this.formBuilder.group({
@@ -51,23 +54,29 @@ export class RequestDepositAccountComponent implements OnInit, AfterViewInit {
   }
   ngAfterViewInit(): void {
     this.activatedRoute.queryParams.subscribe(async params => {
-      this.idNotification = +params[Constant.ID_NOTIFY];
-      console.log(this.idNotification);
-
-      if (this.idNotification) {
-        this.notificationAPIService.getNotificationRequestDepositAccountById(this.idNotification).subscribe(
+      this.idCustomerDepositHistory = +params[Constant.ID_CUSTOMER_DEPOSIT_HISTORY];
+      if (this.idCustomerDepositHistory) {
+        this.customerDepositHistoryService.getCustomerDepositHistoryById(this.idCustomerDepositHistory).subscribe(
           {
             next: (res: any) => {
               if (res.isValid) {
-                this.notifyData = res.data;
-                console.log("this.notifyData: ", this.notifyData);
-
+                this.customerDeposit = res.data;
                 this.formDepositAccount.reset({
                   id: null,
-                  amountDeposited: this.notifyData.accountDepositHistory.amountDeposited,
-                  implementPersonId: this.notifyData.accountDepositHistory.implenmentPersonId,
-                  depositContent: this.notifyData.accountDepositHistory.depositContent
-                })
+                  amountDeposited: this.customerDeposit.amountDeposited,
+                  implementPersonId: this.customerDeposit.implenmentPersonId,
+                  depositContent: this.customerDeposit.depositContent,
+                });
+
+                this.generalService.getUsersByPartnerId(this.customerDeposit.partnerId).subscribe({
+                  next: (res: any) => {
+                    if(res.isValid) {
+                      this.employees = res.data;
+                    }else{
+                      this.employees = [];
+                    }
+                  }
+                });
               } else {
               }
             },
