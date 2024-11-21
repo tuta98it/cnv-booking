@@ -193,6 +193,8 @@
                                     [selectButtonText]="'Chọn file hợp đồng'"
                                     [uploadButtonText]="'Upload files'"
                                     name="postedFile"
+                                    accept=".pdf"
+                                    (onValueChanged)="validateFileType($event)"
                                     [showFileList]="false"
                                     [multiple]="false"
                                     [visible]="true"

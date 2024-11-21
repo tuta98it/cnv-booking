@@ -823,4 +823,12 @@ export class HotelEditComponent implements OnInit {
       event.preventDefault(); // Chặn ký tự không hợp lệ
     }
   }
+
+  validateFileType(event: any): void {
+    const file = event.value[0];
+    if (file && file.type !== 'application/pdf') {
+      alert('Chỉ được phép tải lên file PDF.');
+      event.component.reset(); // Reset lại file uploader
+    }
+  }
 }
