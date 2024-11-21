@@ -117,10 +117,6 @@ export class RequestDepositAccountComponent implements OnInit, AfterViewInit {
   handleConfirmDepositAccountSave(): void {
     const newCustomerDeposit = this.formRequestDepositAccount.value;
     const oldCustomerDeposit = this.customerDeposit;
-
-    console.log("newCustomerDeposit: ", newCustomerDeposit);
-    console.log("oldCustomerDeposit: ", oldCustomerDeposit);
-
     // So sánh giá trị mới và cũ
     const isUnchanged =
       newCustomerDeposit.amountDeposited === oldCustomerDeposit.amountDeposited &&
@@ -128,7 +124,6 @@ export class RequestDepositAccountComponent implements OnInit, AfterViewInit {
       newCustomerDeposit.depositContent === oldCustomerDeposit.depositContent;
 
     if (isUnchanged) {
-      console.log("showModalContentConfirmDeposit false");
 
       this.isDepositAccountOkLoading = true;
       if (this.formRequestDepositAccount.valid) {
@@ -146,8 +141,6 @@ export class RequestDepositAccountComponent implements OnInit, AfterViewInit {
         this.msg.error(`Tồn tại trường thông tin chưa được nhập`);
       }
     } else {
-      console.log("showModalContentConfirmDeposit");
-
       this.cancelRequestDepositAccount();
       this.showModalContentConfirmDeposit();
     }
