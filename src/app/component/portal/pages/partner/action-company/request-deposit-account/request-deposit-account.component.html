@@ -49,29 +49,33 @@
     </div>
 
     <div *ngIf="isConfirmed">
-      <p>Khách hàng đã được nhân viên {{customerDeposit?.Fullname != null ? customerDeposit?.Fullname : "" }} cập nhật
+      <p>Khách hàng đã được nhân viên <strong>{{customerDeposit?.fullnameConfirmer != null ?
+          customerDeposit?.fullnameConfirmer : "" }}</strong> cập nhật
         thành công lúc
-        {{customerDeposit.ConfirmationTime != null ? (customerDeposit.ConfirmationTime | dateFormat :
-        Constant.DATE_FMT_HOUR): ""}} </p>
+        <strong>{{customerDeposit.confirmationTime != null ? (customerDeposit.confirmationTime | dateFormat :
+          Constant.DATE_FMT_HOUR): ""}}</strong>
+      </p>
     </div>
 
   </div>
 
   <div *nzModalFooter>
-    <button nz-button nzDanger nzType="text" (click)="handlRequestDepositAccountCancel()">
-      <div style="display: flex; align-items: center;">
-        <span nz-icon nzType="close"></span>
-        <span style="margin-left: 4px; line-height: normal;">Huỷ</span>
-      </div>
-    </button>
+    <div *ngIf="!isConfirmed">
+      <button nz-button nzDanger nzType="text" (click)="handlRequestDepositAccountCancel()">
+        <div style="display: flex; align-items: center;">
+          <span nz-icon nzType="close"></span>
+          <span style="margin-left: 4px; line-height: normal;">Huỷ</span>
+        </div>
+      </button>
 
-    <!-- [nzLoading]="isDepositAccountOkLoading"  -->
-    <button nz-button nzType="default" style="margin-right: 8px;" (click)="handleConfirmDepositAccountSave()">
-      <div style="display: flex; align-items: center;">
-        <span nz-icon nzType="save"></span>
-        <span style="margin-left: 6px; line-height: normal;">Xác nhận</span>
-      </div>
-    </button>
+      <!-- [nzLoading]="isDepositAccountOkLoading"  -->
+      <button nz-button nzType="default" style="margin-right: 8px;" (click)="handleConfirmDepositAccountSave()">
+        <div style="display: flex; align-items: center;">
+          <span nz-icon nzType="save"></span>
+          <span style="margin-left: 6px; line-height: normal;">Xác nhận</span>
+        </div>
+      </button>
+    </div>
   </div>
 </nz-modal>
 <nz-modal [(nzVisible)]="isVisibleContentConfirmDeposit" nzTitle="Nội dung ghi chú">

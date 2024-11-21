@@ -20,6 +20,8 @@ export class UrlConstant {
 
   public static readonly LIST_NOTIFY = '/Notification';
   public static readonly LIST_CUSTOMER_DEPOSIT_HISTORY = '/CustomerDepositHistories';
+  public static readonly LIST_ACCOUNT_HISTORY = '/AccountDepositHistories';
+
   public static readonly DOWNLOAD_FILE = '/DownloadFile';
 
   /*Dinh duong*/

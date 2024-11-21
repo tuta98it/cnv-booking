@@ -12,6 +12,7 @@ import { NotificationService } from 'src/app/service/notification.service';
 import { Constant, DepositConstant } from 'src/app/shared/constants/constant.class';
 import { CustomerDepositHistoryService } from './../../../../../../service/customer-deposit-history-service';
 import { constants } from 'buffer';
+import { AccountDepositService } from 'src/app/service/account-deposit-history-service';
 @Component({
   selector: 'request-deposit-account',
   templateUrl: './request-deposit-account.component.html',
@@ -49,6 +50,7 @@ export class RequestDepositAccountComponent implements OnInit, AfterViewInit {
     private datePipe: DatePipe,
     private modalService: NzModalService,
     private customerDepositHistoryService: CustomerDepositHistoryService,
+    private accountDepositService: AccountDepositService,
 
   ) {
     this.formRequestDepositAccount = this.formBuilder.group({
@@ -72,7 +74,7 @@ export class RequestDepositAccountComponent implements OnInit, AfterViewInit {
                 this.formRequestDepositAccount.reset({
                   id: null,
                   amountDeposited: this.customerDeposit.amountDeposited,
-                  implementPersonId: this.customerDeposit.implenmentPersonId,
+                  implementPersonId: this.customerDeposit.implementPersonId,
                   depositContent: this.customerDeposit.depositContent,
                   note: null,
                 });
@@ -113,12 +115,21 @@ export class RequestDepositAccountComponent implements OnInit, AfterViewInit {
   }
 
   handleConfirmDepositAccountSave(): void {
-    let newCustomerDeposit = this.formRequestDepositAccount.value;
-    let oldCustomerDeposit = this.customerDeposit;
-    if (newCustomerDeposit.amountDeposited == oldCustomerDeposit.amountDeposited
-      && newCustomerDeposit.implementPersonId == oldCustomerDeposit.implementPersonId
-      && newCustomerDeposit.depositContent == oldCustomerDeposit.depositContent
-    ) {
+    const newCustomerDeposit = this.formRequestDepositAccount.value;
+    const oldCustomerDeposit = this.customerDeposit;
+
+    console.log("newCustomerDeposit: ", newCustomerDeposit);
+    console.log("oldCustomerDeposit: ", oldCustomerDeposit);
+
+    // So sánh giá trị mới và cũ
+    const isUnchanged =
+    newCustomerDeposit.amountDeposited === oldCustomerDeposit.amountDeposited &&
+    newCustomerDeposit.implementPersonId === oldCustomerDeposit.implementPersonId && // Sửa tên đúng
+    newCustomerDeposit.depositContent === oldCustomerDeposit.depositContent;
+
+    if (isUnchanged) {
+      console.log("showModalContentConfirmDeposit false");
+
       this.isDepositAccountOkLoading = true;
       if (this.formRequestDepositAccount.valid) {
         let valueSave = this.formRequestDepositAccount.value;
@@ -135,8 +146,10 @@ export class RequestDepositAccountComponent implements OnInit, AfterViewInit {
         this.msg.error(`Tồn tại trường thông tin chưa được nhập`);
       }
     } else {
+      console.log("showModalContentConfirmDeposit");
+
       this.cancelRequestDepositAccount();
-      this.showModalContentConfirmDeposi();
+      this.showModalContentConfirmDeposit();
     }
   }
   handleOkContentConfirmDeposit(): void {
@@ -157,7 +170,7 @@ export class RequestDepositAccountComponent implements OnInit, AfterViewInit {
 
   private confirmDepositAccount(valueSave: any): any {
     return new Promise((resolve, reject) => {
-      this.customerDepositHistoryService.confirmDepositAccount(valueSave).subscribe((res: any) => {
+      this.accountDepositService.confirmDepositAccount(valueSave).subscribe((res: any) => {
         if (res.isValid) {
           this.isDepositAccountOkLoading = false;
           this.notificationService.showNotification(Constant.SUCCESS, `Nạp tiền cho doanh nghiệp thành công`);
@@ -178,7 +191,7 @@ export class RequestDepositAccountComponent implements OnInit, AfterViewInit {
       });
     });
   }
-  private showModalContentConfirmDeposi(): void {
+  private showModalContentConfirmDeposit(): void {
     this.isVisibleContentConfirmDeposit = true;
   }
 
