@@ -64,7 +64,7 @@ export class NotificationService {
       case NotificationType.RatingRequestBooking:
         this.navigationService.navigateToPageRating(itemNotify.otherId);
         break;
-      case NotificationType.RequestToDepositIntoAccount:
+      case NotificationType.WhenCustomerDeposit:
         this.navigationService.navigateToPageRequestToDepositIntoAccount(itemNotify.id);
         break;
       default:

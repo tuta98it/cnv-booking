@@ -1,12 +1,13 @@
 import { Injectable, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { Constant, HotelBookingConfig, HotelConfig, NotificationConfig, PartnerConfig, RattingConfig, RequestBookingConfig } from '../shared/constants/constant.class';
+import { NotificationAPIService } from './notification-service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class NavigationService {
-  constructor(private router: Router, private ngZone: NgZone) { }
+  constructor(private router: Router, private ngZone: NgZone, private notificationAPIService: NotificationAPIService) { }
 
   navigateToNotifications(idNotify?: number) {
     const url = `/${NotificationConfig.PATH_NOTIFICATION}`;
@@ -83,11 +84,42 @@ export class NavigationService {
 
   navigateToPageRequestToDepositIntoAccount(idNotify?: number) {
     const url = `/${PartnerConfig.PATH_PARTNER_REQUEST_DEPOSIT_ACCOUNT}`;
-    const fullUrl = this.router.serializeUrl(
-      this.router.createUrlTree([url], { queryParams: { [Constant.ID_NOTIFY]: idNotify } })
+
+    this.notificationAPIService.getNotificationRequestDepositAccountById(idNotify).subscribe(
+      {
+        next: async (res: any) => {
+          if (res.isValid) {
+            let notifyData = res.data;
+            console.log(notifyData);
+
+            var idPartner = notifyData.customerDepositHistory.partnerId;
+            console.log("idPartner: ", idPartner);
+
+
+            var customerDepositHistoryId = notifyData.otherId;
+            console.log("CustomerDepositHistoryId: ", idPartner);
+
+
+            const fullUrl = this.router.serializeUrl(
+              this.router.createUrlTree([url], { queryParams: { [Constant.ID]: idPartner, [Constant.ID_CUSTOMER_DEPOSIT_HISTORY]: customerDepositHistoryId } })
+            );
+            this.ngZone.run(() => {
+              window.open(fullUrl, '_blank');  // Mở URL trong một tab mới
+            });
+
+          } else {
+          }
+        },
+
+        error: (error) => {
+          console.log(error);
+        },
+
+        compile: () => {
+
+        }
+      }
     );
-    this.ngZone.run(() => {
-      window.open(fullUrl, '_blank');  // Mở URL trong một tab mới
-    });
+
   }
 }

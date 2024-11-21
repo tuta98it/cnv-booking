@@ -31,6 +31,7 @@ import { DownloadFileService } from 'src/app/service/download-file.service';
 import { CommonService } from './../../../../../service/common.service';
 import { Gender, TEXT_GENDER } from 'src/app/enums/gender.enum';
 import { EmployeePipe } from 'src/app/shared/pipe/employeePipe.pipe';
+import { NotificationAPIService } from 'src/app/service/notification-service';
 // interface ItemData {
 //   name: string;
 //   age: number | string;
@@ -491,7 +492,9 @@ export class ActionPartnerComponent implements OnInit {
   isLoadingBalanceFluctuationStatement = false;
   listOfImolementers: any;
 
-  notificationId: number;
+  customerDepositHistory: number;
+  partnerId: number;
+  notifyData: any;
   constructor(
     private msg: NzMessageService,
     private activatedRoute: ActivatedRoute,
@@ -505,6 +508,8 @@ export class ActionPartnerComponent implements OnInit {
     private downloadFileService: DownloadFileService,
     private commonService: CommonService,
     private employeePipe: EmployeePipe,
+    private notificationAPIService: NotificationAPIService,
+
   ) {
 
 
@@ -697,6 +702,7 @@ export class ActionPartnerComponent implements OnInit {
       //this.isActiveEditBaseInfo.setValue(true);
       this.activatedRoute.queryParams.subscribe(async params => {
         let idPartner = +params[Constant.ID]; // Lấy id từ query parameter
+        console.log("idPartner: ", idPartner);
 
         this.settingUploadAuthorizationFile = {
           isMultiple: true,
@@ -788,8 +794,9 @@ export class ActionPartnerComponent implements OnInit {
     } else if (this.router.url.includes(PartnerConfig.PATH_PARTNER_REQUEST_DEPOSIT_ACCOUNT)) {
       this.selectedMenu = MenuUpgradePartner.AccountInfomation;
       this.activatedRoute.queryParams.subscribe(async parmas => {
-        this.notificationId = +parmas[Constant.ID_NOTIFY];
-        if(this.notificationId){
+        this.customerDepositHistory = +parmas[Constant.ID_CUSTOMER_DEPOSIT_HISTORY];
+        this.partnerId = +parmas[Constant.ID];
+        if (this.customerDepositHistory && this.partnerId ) {
           this.isVisibleRequestDepositAccount = true;
         }
       });
