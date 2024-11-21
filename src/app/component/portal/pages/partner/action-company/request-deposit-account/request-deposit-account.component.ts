@@ -136,7 +136,7 @@ export class RequestDepositAccountComponent implements OnInit, AfterViewInit {
         valueSave = { partnerId: this.partnerId, customerDepositHistoryId: this.customerDepositHistoryId, ...valueSave }
         this.confirmDepositAccount(valueSave).then((result) => {
           this.handlRequestDepositAccountCancel();
-        }).cath((error) => {
+        }).catch((error) => {
           console.log(error);
         });
       } else {
@@ -160,7 +160,7 @@ export class RequestDepositAccountComponent implements OnInit, AfterViewInit {
       this.confirmDepositAccount(valueSave).then(() => {
         this.handleCancelContentConfirmDeposit();
         this.handlRequestDepositAccountCancel();
-      }).cath((error) => {
+      }).catch((error) => {
         console.log(error);
       });
     } else {
