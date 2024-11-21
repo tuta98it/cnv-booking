@@ -32,7 +32,10 @@
             </div>
             <div class="form-inline-custom">
               <label>Mã khách sạn <span class="required">*</span></label>
-              <input nz-input formControlName="code" type="text"
+              <input placeholder="Tối đa 5 ký tự và không có ký tự đặc biệt" nz-input formControlName="code" type="text" [pattern]="'^[a-zA-Z0-9]*$'"
+                     (input)="onInputCodeChange($event)"
+                     maxlength="5"
+                     (keypress)="preventSpecialChars($event)"
                      [ngClass]="{ 'is-invalid': submitted && formControlHotel.code.errors?.required }"/>
             </div>
             <div class="form-inline-custom">
@@ -121,7 +124,7 @@
             <div class="form-inline-custom align-items-baseline">
               <label>Mô tả ngắn <span class="required">*</span>
                 <div style="font-size: 12px" *ngIf="hotelItem.shortDescription?.length">
-                  ({{hotelItem.shortDescription?.length}}/500)
+                  (<span style="color:#3bc35a;">{{hotelItem.shortDescription?.length}}</span>/500)
                 </div>
               </label>
               <textarea rows="5" (ngModelChange)="changeShortLength($event)" class="form-control"

@@ -808,4 +808,19 @@ export class HotelEditComponent implements OnInit {
       amenities: this.utilityGroupOptions
     });
   }
+
+  onInputCodeChange($event: Event) {
+    const input = event.target as HTMLInputElement;
+    input.value = input.value.toUpperCase(); // Tự động chuyển thành chữ hoa
+    this.formAddHotel.get('code')?.setValue(input.value);
+  }
+
+  preventSpecialChars(event: KeyboardEvent): void {
+    const regex = /^[a-zA-Z0-9]$/; // Chỉ cho phép chữ và số
+    const key = event.key;
+
+    if (!regex.test(key)) {
+      event.preventDefault(); // Chặn ký tự không hợp lệ
+    }
+  }
 }

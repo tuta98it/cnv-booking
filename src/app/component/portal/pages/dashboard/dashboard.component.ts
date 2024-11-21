@@ -124,7 +124,7 @@ export class DashboardComponent extends TableSelectionAbstract implements OnInit
   userInfo: any;
   TIME_RANGE_FILTER = Constant.TIME_RANGE_FILTER;
   search = {
-    type: 1,
+    type: 0,
     fromDate: null,
     toDate: null,
   };

@@ -49,7 +49,18 @@ export class HotelListComponent extends TableSelectionAbstract implements OnInit
 
   onCellPrepared(e: any) {
     if (e.rowType === 'data' && e.column.caption === 'STT') {
-      e.cellElement.innerText = e.rowIndex + 1; // Hiển thị index từ 1
+      const dataSource = e.component.getDataSource(); // Lấy DataSource
+      const pageIndex = dataSource.pageIndex(); // Lấy chỉ số trang hiện tại (bắt đầu từ 0)
+      const pageSize = dataSource.pageSize(); // Lấy số lượng bản ghi trên mỗi trang
+
+      // Tính số thứ tự chính xác dựa trên trang hiện tại
+      const rowIndexOnPage = e.rowIndex + 1; // Thứ tự trên trang
+      const stt = pageIndex * pageSize + rowIndexOnPage; // Số thứ tự tổng quát
+
+      console.log('Page Index:', pageIndex + 1); // Trang hiện tại (1-based)
+      console.log('STT:', stt); // Số thứ tự tổng quát
+
+      e.cellElement.innerText = stt; // Hiển thị số thứ tự chính xác
     }
   }
 
