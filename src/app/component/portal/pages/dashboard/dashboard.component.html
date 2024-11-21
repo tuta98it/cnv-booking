@@ -218,7 +218,7 @@
       <div class="col-md-8">
         <div class="div-chart border">
           <div class="text-center mb-2">
-            Top khách sạn có booking cao trong tuần này
+            Top khách sạn có booking cao trong kỳ này
           </div>
           <dx-data-grid
             [dataSource]="sourceTopBooking"
@@ -243,13 +243,14 @@
             <dxo-scrolling mode="standard"></dxo-scrolling>
             <dxo-header-filter [visible]="true"></dxo-header-filter>
             <dxi-column alignment="center" caption="STT" dataField="index" width="100px"></dxi-column>
-            <dxi-column caption="Mã khách sạn" dataField="code"></dxi-column>
+            <dxi-column caption="Mã khách sạn" cellTemplate="cellTemplate" dataField="code"></dxi-column>
             <dxi-column caption="Tên khách sạn" dataField="name"></dxi-column>
             <dxi-column caption="Tỉnh" dataField="provinceName"></dxi-column>
             <dxi-column caption="Số yêu cầu" dataField="totalBooking"></dxi-column>
             <dxi-column caption="Tổng tiền" dataField="totalMoney" format=",##0.###"></dxi-column>
             <dxi-column caption="Cần thanh toán" dataField="needPayment" format=",##0.###"></dxi-column>
             <div *dxTemplate="let item of 'cellTemplate'">
+              <a target="_blank" [href]="'/hotel/edit-hotel/' + item.data.id">{{item.data.code}}</a>
             </div>
           </dx-data-grid>
         </div>

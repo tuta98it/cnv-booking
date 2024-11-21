@@ -13,7 +13,6 @@
     </div>
   </div>
   <dx-data-grid
-    class="grid theme-dependent"
     columnResizingMode="widget"
     (onCellPrepared)="onCellPrepared($event)"
     [dataSource]="datas"
@@ -27,7 +26,9 @@
     [columnResizingMode]="'nextColumn'"
     [allowColumnResizing]="true"
   >
-    <dxo-scrolling mode="virtual" rowRenderingMode="virtual"></dxo-scrolling>
+    <!--<dxo-scrolling mode="virtual" rowRenderingMode="virtual"></dxo-scrolling>-->
+    <dxo-header-filter [visible]="true"></dxo-header-filter>
+    <dxo-filter-row [visible]="true" [applyFilter]="currentFilter"></dxo-filter-row>
     <dxo-load-panel [showPane]="true" [enabled]="true"></dxo-load-panel>
     <dxo-sorting mode="multiple"></dxo-sorting>
     <dxo-header-filter [visible]="true"></dxo-header-filter>
@@ -65,7 +66,8 @@
     <div *dxTemplate="let item of 'cellBtnTemplate'" style="display: flex; justify-content: space-evenly;">
       <button title="Chỉnh sửa thông tin" nz-button nzSize="small" nzType="default"
               (click)="showModalUpdate(item.data)">
-        <span class="fa fa-edit fa-fw"></span>
+        <!--<span class="fa fa-edit fa-fw"></span>-->
+        <span nz-icon nzType="edit" nzTheme="outline" ></span>
       </button>
       <button [title]="item.data.isActive ? 'Khóa khách sạn' : 'Mở khóa khách sạn'" nz-button nzSize="small" nzType="default" (click)="doLock(item.data)">
         <span nz-icon nzType="lock" nzTheme="outline" *ngIf="item.data.isActive"></span>

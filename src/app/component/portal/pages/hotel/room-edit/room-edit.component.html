@@ -86,8 +86,14 @@
           </div>
           <div class="col-md-4">
             <div class="form-inline-custom">
-              <label>Loại giường </label>
-              <input nz-input formControlName="bedType" type="text" disabled/>
+              <label>Loại giường</label>
+              <nz-select nzAllowClear nzShowSearch nzMode="default" nzPlaceHolder="--Chọn loại giường--" formControlName="bedType">
+                <nz-option nzValue="1m2 x 2m x 30cm" nzLabel="1m2 x 2m x 30cm"></nz-option>
+                <nz-option nzValue="1m4 x 2m x 30cm" nzLabel="1m4 x 2m x 30cm"></nz-option>
+                <nz-option nzValue="1m6 x 2m x 30cm" nzLabel="1m6 x 2m x 30cm"></nz-option>
+                <nz-option nzValue="1m8 x 2m x 30cm" nzLabel="1m8 x 2m x 30cm"></nz-option>
+                <nz-option nzValue="2m x 2m x 30cm" nzLabel="2m x 2m x 30cm"></nz-option>
+              </nz-select>
             </div>
             <div class="form-inline-custom">
               <label>Diện tích (m2) </label>
@@ -213,14 +219,14 @@
             </dxi-item>
             <!-- <dxi-item name="addRowButton"></dxi-item> -->
             <dxi-item location="after">
-              <button class="ant-btn-primary" (click)="openAddRecordPopup(formAddRoom.value.id)" 
-                      style="border: none; color: white; padding: 10px 20px; 
-                             text-align: center; text-decoration: none; display: inline-flex; align-items: center; 
+              <button class="ant-btn-primary" (click)="openAddRecordPopup(formAddRoom.value.id)"
+                      style="border: none; color: white; padding: 10px 20px;
+                             text-align: center; text-decoration: none; display: inline-flex; align-items: center;
                              font-size: 14px; border-radius: 5px; cursor: pointer;">
                 <span nz-icon nzType="plus" nzTheme="outline" style="margin-right: 5px;"></span>
                 Thêm
               </button>
-            </dxi-item>            
+            </dxi-item>
             <dxi-item location="before">
               <div class="title-detail" style="width: 100%;">Bảng giá theo giai đoạn:</div>
             </dxi-item>
@@ -237,17 +243,17 @@
     </nz-tabset>
   </div>
 </div>
-<nz-modal [(nzVisible)]="isAddRecordVisible" nzTitle="Thêm thông tin giá phòng" 
-          (nzOnCancel)="handleCancelPopUp()" [nzOkLoading]="isLoading" 
+<nz-modal [(nzVisible)]="isAddRecordVisible" nzTitle="Thêm thông tin giá phòng"
+          (nzOnCancel)="handleCancelPopUp()" [nzOkLoading]="isLoading"
           (nzOnOk)="onAddRecord()" nzOkText="Lưu" nzCancelText="Huỷ">
-  
+
   <form [formGroup]="roomPriceForm">
     <div class="input-wrap" nz-row>
       <label class="title-detail" nz-col [nzSpan]="8">Tiêu đề</label>
       <div nz-col [nzSpan]="16">
         <input nz-input formControlName="title" placeholder="Nhập tiêu đề" [ngClass]="{ 'is-invalid': submitted && f.title.errors }" />
       </div>
-    </div>    
+    </div>
     <div class="input-wrap" nz-row>
       <label class="title-detail" nz-col [nzSpan]="8">Giá phòng</label>
       <div nz-col [nzSpan]="16">
@@ -255,14 +261,14 @@
                   format="#,##0 VNĐ"></dx-number-box>
       </div>
     </div>
-    
+
     <div class="input-wrap" nz-row>
       <label class="title-detail" nz-col [nzSpan]="8">Thời điểm bắt đầu</label>
       <div nz-col [nzSpan]="16">
         <input nz-input type="date" formControlName="fromDate" [ngClass]="{ 'is-invalid': submitted && f.fromDate.errors }"  />
       </div>
     </div>
-    
+
     <div class="input-wrap" nz-row>
       <label class="title-detail" nz-col [nzSpan]="8">Thời điểm kết thúc</label>
       <div nz-col [nzSpan]="16">

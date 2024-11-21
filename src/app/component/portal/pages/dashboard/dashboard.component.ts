@@ -124,7 +124,7 @@ export class DashboardComponent extends TableSelectionAbstract implements OnInit
   userInfo: any;
   TIME_RANGE_FILTER = Constant.TIME_RANGE_FILTER;
   search = {
-    type: 1,
+    type: 0,
     fromDate: null,
     toDate: null,
   };
@@ -326,7 +326,7 @@ export class DashboardComponent extends TableSelectionAbstract implements OnInit
     // Chỉ số NPS
     this.generalService.reportRating(payloadSalesReport).subscribe((res) => {
       this.pieChartRatingOptions = {
-        series: [res.rateFiveStar, res.rateFourStar, res.rateThreeStar, res.rateTwoStar + res.rateOneStar],
+        series: [res.rateFourStar, res.rateThreeStar, res.rateTwoStar, res.rateOneStar],
         chart: {
           type: 'donut'
         },
