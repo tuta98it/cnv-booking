@@ -11,5 +11,7 @@ export class CustomerDepositHistoryService extends BaseService {
     return this.get(`/api${UrlConstant.LIST_CUSTOMER_DEPOSIT_HISTORY}/GetCustomerDepositHistoryById/${customerDepositHistoryId}`);
   }
 
-
+  confirmDepositAccount(payload: any): Observable<any> {
+    return this.post(`/api${UrlConstant.LIST_CUSTOMER_DEPOSIT_HISTORY}/ConfirmDepositAccount`, payload);
+  }
 }
