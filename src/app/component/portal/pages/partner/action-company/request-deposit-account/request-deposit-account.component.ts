@@ -123,9 +123,9 @@ export class RequestDepositAccountComponent implements OnInit, AfterViewInit {
 
     // So sánh giá trị mới và cũ
     const isUnchanged =
-    newCustomerDeposit.amountDeposited === oldCustomerDeposit.amountDeposited &&
-    newCustomerDeposit.implementPersonId === oldCustomerDeposit.implementPersonId && // Sửa tên đúng
-    newCustomerDeposit.depositContent === oldCustomerDeposit.depositContent;
+      newCustomerDeposit.amountDeposited === oldCustomerDeposit.amountDeposited &&
+      newCustomerDeposit.implementPersonId === oldCustomerDeposit.implementPersonId && // Sửa tên đúng
+      newCustomerDeposit.depositContent === oldCustomerDeposit.depositContent;
 
     if (isUnchanged) {
       console.log("showModalContentConfirmDeposit false");
@@ -134,7 +134,7 @@ export class RequestDepositAccountComponent implements OnInit, AfterViewInit {
       if (this.formRequestDepositAccount.valid) {
         let valueSave = this.formRequestDepositAccount.value;
         valueSave = { partnerId: this.partnerId, customerDepositHistoryId: this.customerDepositHistoryId, ...valueSave }
-        this.confirmDepositAccount(valueSave).then(() => {
+        this.confirmDepositAccount(valueSave).then((result) => {
           this.handlRequestDepositAccountCancel();
         }).cath((error) => {
           console.log(error);
@@ -168,7 +168,7 @@ export class RequestDepositAccountComponent implements OnInit, AfterViewInit {
     }
   }
 
-  private confirmDepositAccount(valueSave: any): any {
+  private confirmDepositAccount(valueSave: any): Promise<any> {
     return new Promise((resolve, reject) => {
       this.accountDepositService.confirmDepositAccount(valueSave).subscribe((res: any) => {
         if (res.isValid) {
