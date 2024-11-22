@@ -86,6 +86,16 @@ export class RequestDepositAccountComponent implements OnInit, AfterViewInit {
                     } else {
                       this.employees = [];
                     }
+                  },
+
+                  error: (err) => {
+                    console.log(err);
+                  },
+
+
+                  complete: () => {
+                    this.userInfor = JSON.parse(localStorage.getItem(Constant.USER_INFO));
+                    this.employees.push(this.userInfor);
                   }
                 });
               } else {
@@ -119,10 +129,7 @@ export class RequestDepositAccountComponent implements OnInit, AfterViewInit {
     const oldCustomerDeposit = this.customerDeposit;
     // So sánh giá trị mới và cũ
     const isUnchanged =
-      newCustomerDeposit.amountDeposited === oldCustomerDeposit.amountDeposited &&
-      newCustomerDeposit.implementPersonId === oldCustomerDeposit.implementPersonId && // Sửa tên đúng
-      newCustomerDeposit.depositContent === oldCustomerDeposit.depositContent;
-
+      newCustomerDeposit.amountDeposited === oldCustomerDeposit.amountDeposited;
     if (isUnchanged) {
 
       this.isDepositAccountOkLoading = true;

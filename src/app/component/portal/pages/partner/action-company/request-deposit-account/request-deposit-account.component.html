@@ -1,5 +1,6 @@
 <nz-modal [(nzVisible)]="isVisibleRequestDepositAccount" nzTitle="Xác nhận nạp tiền vào tài khoản"
-  [nzOkLoading]="isDepositAccountOkLoading" nzMaskClosable="false">
+  [nzOkLoading]="isDepositAccountOkLoading" nzMaskClosable="false" (nzOnCancel)="handlRequestDepositAccountCancel()"
+  (nzOnOk)="handleConfirmDepositAccountSave()">
   <div *nzModalContent>
     <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }" *ngIf="!isConfirmed">
       <div nz-col class="gutter-row" [nzSpan]="24">
@@ -60,36 +61,37 @@
   </div>
 
   <div *nzModalFooter>
-    <div *ngIf="!isConfirmed">
-      <button nz-button nzDanger nzType="text" (click)="handlRequestDepositAccountCancel()">
-        <div style="display: flex; align-items: center;">
-          <span nz-icon nzType="close"></span>
-          <span style="margin-left: 4px; line-height: normal;">Huỷ</span>
-        </div>
-      </button>
+    <button nz-button nzDanger nzType="text" (click)="handlRequestDepositAccountCancel()">
+      <div style="display: flex; align-items: center;">
+        <span nz-icon nzType="close"></span>
+        <span style="margin-left: 4px; line-height: normal;">Huỷ</span>
+      </div>
+    </button>
 
-      <!-- [nzLoading]="isDepositAccountOkLoading"  -->
-      <button nz-button nzType="default" style="margin-right: 8px;" (click)="handleConfirmDepositAccountSave()">
-        <div style="display: flex; align-items: center;">
-          <span nz-icon nzType="save"></span>
-          <span style="margin-left: 6px; line-height: normal;">Xác nhận</span>
-        </div>
-      </button>
-    </div>
+    <!-- [nzLoading]="isDepositAccountOkLoading"  -->
+    <button nz-button nzType="default" style="margin-right: 8px;" (click)="handleConfirmDepositAccountSave()"
+      *ngIf="!isConfirmed">
+      <div style="display: flex; align-items: center;">
+        <span nz-icon nzType="save"></span>
+        <span style="margin-left: 6px; line-height: normal;">Xác nhận</span>
+      </div>
+    </button>
   </div>
+
 </nz-modal>
-<nz-modal [(nzVisible)]="isVisibleContentConfirmDeposit" nzTitle="Nội dung ghi chú">
+<nz-modal [(nzVisible)]="isVisibleContentConfirmDeposit" nzTitle="Ghi chú thay đổi"
+  (nzOnCancel)="handleCancelContentConfirmDeposit()" (nzOnOk)="handleOkContentConfirmDeposit()">
   <ng-container *nzModalContent>
     <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
       <div nz-col class="gutter-row" [nzSpan]="24">
         <form [formGroup]="formRequestDepositAccount">
           <p>
-            Nội dung ghi chú<span style="color: tomato;">*</span>
+            Ghi chú<span style="color: tomato;">*</span>
           </p>
-          <small style="font-style: italic;">
-            (Nội dung ghi chú cần điền để giải thích sự khác biệt trong thông tin xác nhận nạp tiền tài khoản)
-          </small>
           <input formControlName='note' nz-input placeholder="Nội dung ghi chú ..." nzSize="small" />
+          <span style="font-style: italic; color: red; font-size: small;">
+            Bạn đã thay đổi số tiền nạp so với yêu cầu được gửi từ khách hàng. Vui lòng ghi thêm lý do thay đổi!
+          </span>
         </form>
       </div>
     </div>
