@@ -899,11 +899,11 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
                   });
                 }
               } else {
-                this.notificationService.showNotification(Constant.ERROR, `Hệ thống gặp lỗi, xoá file ${file.name} thật bại.`);
+                this.notificationService.showNotification(Constant.ERROR, `Hệ thống gặp lỗi, xoá file ${file.name} thất bại.`);
               }
             },
             error: (error) => {
-              this.notificationService.showNotification(Constant.ERROR, `Hệ thống gặp lỗi, xoá file ${file.name} thật bại.`);
+              this.notificationService.showNotification(Constant.ERROR, `Hệ thống gặp lỗi, xoá file ${file.name} thất bại.`);
             },
             complete: () => {
               this.getListData();
@@ -966,11 +966,11 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
                   });
                 }
               } else {
-                this.notificationService.showNotification(Constant.ERROR, `Hệ thống gặp lỗi, xoá file ${file.name} thật bại.`);
+                this.notificationService.showNotification(Constant.ERROR, `Hệ thống gặp lỗi, xoá file ${file.name} thất bại.`);
               }
             },
             error: (error) => {
-              this.notificationService.showNotification(Constant.ERROR, `Hệ thống gặp lỗi, xoá file ${file.name} thật bại.`);
+              this.notificationService.showNotification(Constant.ERROR, `Hệ thống gặp lỗi, xoá file ${file.name} thất bại.`);
             },
             complete: () => {
               this.getListData();
@@ -1164,7 +1164,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
             }
           },
           error: (error) => {
-            this.notificationService.showNotification(Constant.ERROR, 'Cập nhật thông tin vé phòng thật bại do lỗi hệ thống');
+            this.notificationService.showNotification(Constant.ERROR, 'Cập nhật thông tin vé phòng thất bại do lỗi hệ thống');
           },
 
           complete: () => {
@@ -1256,7 +1256,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
               }
             },
             error: (err: any) => {
-              this.notificationService.showNotification(Constant.ERROR, 'Cập nhật số vé khách hàng thật bại do lỗi hệ thống');
+              this.notificationService.showNotification(Constant.ERROR, 'Cập nhật số vé khách hàng thất bại do lỗi hệ thống');
               reject(err);
             },
             complete: () => {

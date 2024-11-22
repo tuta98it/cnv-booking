@@ -435,11 +435,11 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
               });
             }
           } else {
-            this.notificationService.showNotification(Constant.ERROR, `Hệ thống gặp lỗi, xoá ảnh ${file.name} thật bại.`);
+            this.notificationService.showNotification(Constant.ERROR, `Hệ thống gặp lỗi, xoá ảnh ${file.name} thất bại.`);
           }
         },
         error: (error) => {
-          this.notificationService.showNotification(Constant.ERROR, `Hệ thống gặp lỗi, xoá ảnh ${file.name} thật bại.`);
+          this.notificationService.showNotification(Constant.ERROR, `Hệ thống gặp lỗi, xoá ảnh ${file.name} thất bại.`);
         },
         complete: () => {
         },
@@ -467,11 +467,11 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
               });
             }
           } else {
-            this.notificationService.showNotification(Constant.ERROR, `Hệ thống gặp lỗi, xoá ảnh ${file.name} thật bại.`);
+            this.notificationService.showNotification(Constant.ERROR, `Hệ thống gặp lỗi, xoá ảnh ${file.name} thất bại.`);
           }
         },
         error: (error) => {
-          this.notificationService.showNotification(Constant.ERROR, `Hệ thống gặp lỗi, xoá ảnh ${file.name} thật bại.`);
+          this.notificationService.showNotification(Constant.ERROR, `Hệ thống gặp lỗi, xoá ảnh ${file.name} thất bại.`);
         },
         complete: () => {
         },
@@ -856,7 +856,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
               this.notificationService.showNotification(Constant.ERROR, error.errorMessage);
             });
           } else {
-            this.notificationService.showNotification(Constant.ERROR, 'Tạo giá phòng thật bại');
+            this.notificationService.showNotification(Constant.ERROR, 'Tạo giá phòng thất bại');
           }
         }
       },
@@ -925,7 +925,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
               this.notificationService.showNotification(Constant.ERROR, error.errorMessage);
             });
           } else {
-            this.notificationService.showNotification(Constant.ERROR, 'Cập nhật giá phòng thật bại');
+            this.notificationService.showNotification(Constant.ERROR, 'Cập nhật giá phòng thất bại');
           }
         }
       },
@@ -961,7 +961,7 @@ export class HotelComponent extends TableSelectionAbstract implements OnInit, On
               this.notificationService.showNotification(Constant.ERROR, error.errorMessage);
             });
           } else {
-            this.notificationService.showNotification(Constant.ERROR, 'Xoá giá phòng thật bại');
+            this.notificationService.showNotification(Constant.ERROR, 'Xoá giá phòng thất bại');
           }
         }
       },
