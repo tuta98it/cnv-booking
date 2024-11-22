@@ -158,7 +158,8 @@ export class DashboardComponent extends TableSelectionAbstract implements OnInit
   objNotification: any;
   sourceTopBooking: any[] = [];
   sourceTopAirline: any[] = [];
-
+  isShowModalRevenue = false;
+  popupRevenueDatas: any[] = [];
   constructor(
     private route: ActivatedRoute,
     private fileManagerService: FileManagerService,
@@ -423,6 +424,7 @@ export class DashboardComponent extends TableSelectionAbstract implements OnInit
 
     // Doanh thu theo doanh nghiệp
     this.generalService.reportRevenueByPartner(payloadSalesReport).subscribe((res) => {
+      this.popupRevenueDatas = res.data;
       this.chartRevenueOptions = {
         series: [{
           name: 'Doanh thu kỳ này',
@@ -633,5 +635,13 @@ export class DashboardComponent extends TableSelectionAbstract implements OnInit
         }
       }
     };
+  }
+
+  showRevenueDetail() {
+    this.isShowModalRevenue = true;
+  }
+
+  handleCancel() {
+    this.isShowModalRevenue = false;
   }
 }

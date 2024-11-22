@@ -185,12 +185,12 @@
             Trạng thái các yêu cầu
           </div>
           <apx-chart *ngIf="chartOptions"
-            [series]="chartOptions.series"
-            [chart]="chartOptions.chart"
-            [dataLabels]="chartOptions.dataLabels"
-            [plotOptions]="chartOptions.plotOptions"
-            [xaxis]="chartOptions.xaxis"
-            [stroke]="chartOptions.stroke"
+                     [series]="chartOptions.series"
+                     [chart]="chartOptions.chart"
+                     [dataLabels]="chartOptions.dataLabels"
+                     [plotOptions]="chartOptions.plotOptions"
+                     [xaxis]="chartOptions.xaxis"
+                     [stroke]="chartOptions.stroke"
           ></apx-chart>
         </div>
       </div>
@@ -199,16 +199,19 @@
     <div class="row mb-3">
       <div class="col-md-12">
         <div class="div-chart border">
-          <div class="text-center">
+          <div class="text-center mt-2">
             Doanh thu theo doanh nghiệp
+            <a class="ant-btn-link" (click)="showRevenueDetail()">
+              <span class="fa fa-fw fa-info-circle"></span>
+              Xem chi tiết</a>
           </div>
           <apx-chart *ngIf="chartRevenueOptions"
-            [series]="chartRevenueOptions.series"
-            [chart]="chartRevenueOptions.chart"
-            [dataLabels]="chartRevenueOptions.dataLabels"
-            [plotOptions]="chartRevenueOptions.plotOptions"
-            [xaxis]="chartRevenueOptions.xaxis"
-            [stroke]="chartRevenueOptions.stroke"
+                     [series]="chartRevenueOptions.series"
+                     [chart]="chartRevenueOptions.chart"
+                     [dataLabels]="chartRevenueOptions.dataLabels"
+                     [plotOptions]="chartRevenueOptions.plotOptions"
+                     [xaxis]="chartRevenueOptions.xaxis"
+                     [stroke]="chartRevenueOptions.stroke"
                      [tooltip]="chartRevenueOptions.tooltip"
           ></apx-chart>
         </div>
@@ -293,3 +296,80 @@
   </div>
 </div>
 
+<nz-modal [(nzVisible)]="isShowModalRevenue" nzWidth="1200px" nzClosable="false" [nzTitle]="title" nzMaskClosable="false">
+  <ng-template #title>
+    Thanh toán dịch vụ
+    <div class="pull-right icon-close">
+      <em (click)="handleCancel()" nz-icon nzType="close" nzTheme="outline"></em>
+    </div>
+  </ng-template>
+  <div>
+    <dx-data-grid
+      id="gridContainer"
+      [dataSource]="popupRevenueDatas"
+      [showColumnLines]="true"
+      [showRowLines]="true"
+      [rowAlternationEnabled]="true"
+      [showBorders]="true"
+      [allowColumnResizing]="true"
+      columnResizingMode="widget"
+      [columnMinWidth]="50"
+      [columnAutoWidth]="true"
+    >
+      <dxo-load-panel [enabled]="true"></dxo-load-panel>
+      <dxo-scrolling mode="standard"></dxo-scrolling>
+      <dxo-sorting mode="multiple"></dxo-sorting>
+      <dxo-header-filter [visible]="false"></dxo-header-filter>
+      <dxo-filter-row [visible]="false"></dxo-filter-row>
+
+      <!-- Cột -->
+      <dxi-column caption="Mã doanh nghiệp" dataField="partnerCode"></dxi-column>
+      <dxi-column caption="Tên doanh nghiệp" dataField="partnerName"></dxi-column>
+      <dxi-column
+        caption="Doanh thu máy bay kỳ này"
+        dataField="revenueAirline"
+        format=",##0.###"
+      ></dxi-column>
+      <dxi-column
+        caption="Doanh thu máy bay kỳ trước"
+        dataField="previousAirlineRevenue"
+        format=",##0.###"
+      ></dxi-column>
+      <dxi-column
+        caption="Doanh thu lưu trú kỳ này"
+        dataField="revenueHotel"
+        format=",##0.###"
+      ></dxi-column>
+      <dxi-column
+        caption="Doanh thu lưu trú kỳ trước"
+        dataField="previousHotelRevenue"
+        format=",##0.###"
+      ></dxi-column>
+      <dxi-column
+        caption="Tổng cộng kỳ này"
+        dataField="revenue"
+        format=",##0.###"
+      ></dxi-column>
+      <dxi-column
+        caption="Tổng cộng kỳ trước"
+        dataField="previousRevenue"
+        format=",##0.###"
+      ></dxi-column>
+      <dxi-column
+        caption="Cho phép công nợ"
+        dataField="allowDebt"
+        cellTemplate="debtTemplate"
+      ></dxi-column>
+
+      <!-- Template cho công nợ -->
+      <div *dxTemplate="let cellInfo of 'debtTemplate'">
+        <span>{{ cellInfo.value ? 'Có' : 'Không' }}</span>
+      </div>
+    </dx-data-grid>
+
+  </div>
+  <!-- Footer -->
+  <div *nzModalFooter>
+    <button nz-button (click)="handleCancel()">Đóng</button>
+  </div>
+</nz-modal>
