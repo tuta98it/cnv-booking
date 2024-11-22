@@ -796,7 +796,7 @@ export class ActionPartnerComponent implements OnInit {
       this.activatedRoute.queryParams.subscribe(async parmas => {
         this.customerDepositHistory = +parmas[Constant.ID_CUSTOMER_DEPOSIT_HISTORY];
         this.partnerId = +parmas[Constant.ID];
-        if (this.customerDepositHistory && this.partnerId ) {
+        if (this.customerDepositHistory && this.partnerId) {
           this.isVisibleRequestDepositAccount = true;
         }
       });
@@ -1697,6 +1697,26 @@ export class ActionPartnerComponent implements OnInit {
       });
     });
 
+  }
+
+
+  onSaveUpdateContractInfoForPartner(isShowNotiySuccess: boolean) {
+    // Định nghĩa giá trị tối thiểu cho ngày hợp đồng
+    const DateMinimum = new Date(1900, 0, 1).setHours(0, 0, 0, 0); // 01/01/1900
+    const endTimeContractDate = this.formBaseBusinessContractUpdate.value.endTimeContractDate ?? DateMinimum;
+    const today = new Date();
+    if (today > endTimeContractDate) {
+      this.modalService.confirm({
+        nzTitle: `Bạn đang chọn 1 ngày kết thúc hợp đồng trong quá khứ. Việc lưu lại sẽ khiến doanh nghiệp sẽ bị khóa. Bạn có chắc chắn muốn thực hiện thao tác này không?`,
+        nzContent: 'Ấn đồng ý để lưu lại',
+        nzOkDanger: true,
+        nzOkText: 'Đồng ý',
+        nzCancelText: 'Không',
+        nzOnOk: () => this.saveUpdateContractInfoForPartner(isShowNotiySuccess),
+      });
+    } else {
+      this.saveUpdateContractInfoForPartner(isShowNotiySuccess);
+    }
   }
 
   saveUpdateContractInfoForPartner(isShowNotiySuccess: boolean) {
