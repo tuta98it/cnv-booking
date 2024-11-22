@@ -702,7 +702,7 @@ export class ActionPartnerComponent implements OnInit {
       //this.isActiveEditBaseInfo.setValue(true);
       this.activatedRoute.queryParams.subscribe(async params => {
         let idPartner = +params[Constant.ID]; // Lấy id từ query parameter
-        console.log("idPartner: ", idPartner);
+
 
         this.settingUploadAuthorizationFile = {
           isMultiple: true,

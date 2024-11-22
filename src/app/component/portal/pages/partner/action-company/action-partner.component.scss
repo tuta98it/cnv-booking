@@ -17,3 +17,10 @@ div.content-create-company {
 .fs-xl {
   font-size: x-large;
 }
+
+
+
+
+::ng-deep tr.ant-table-placeholder.ng-star-inserted {
+  display: none;
+}

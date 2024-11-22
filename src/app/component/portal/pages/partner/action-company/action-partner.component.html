@@ -820,7 +820,7 @@
                 </tr>
               </thead>
               <tbody>
-                <ng-container *ngFor="let data of tagEmployeeTable.data">
+                <ng-container *ngFor="let data of listOfEmployees">
                   <tr>
                     <td nzLeft *ngIf="settingTableEmployeesValue.checkbox" [(nzChecked)]="data.checked"
                       (nzCheckedChange)="refreshStatusEmployee()" [nzDisabled]="data.disabled"></td>
@@ -878,6 +878,19 @@
                   </tr>
                   <tr *ngIf="settingTableEmployeesValue.expandable" [nzExpand]="data.expand">
                     <span>{{ data.description }}</span>
+                  </tr>
+                </ng-container>
+
+                <ng-container *ngIf="listOfEmployees.length == 0">
+                  <tr class="" nz-table-fixed-row="">
+                    <td class="nz-disable-td ant-table-cell" colspan="12" style="border: none;">
+                      <div class="ant-table-expanded-row-fixed ng-star-inserted"
+                        style="position: sticky; left: 0px; overflow: hidden; width: 1551px; text-align: center;">
+                        <nz-embed-empty nzcomponentname="table" ng-reflect-nz-component-name="table"
+                          ng-reflect-specific-content="Danh sách nhân viên đang trống" class="ng-star-inserted"> {{
+                          settingTableEmployeesValue.noResultText}} </nz-embed-empty>
+                      </div>
+                    </td>
                   </tr>
                 </ng-container>
               </tbody>
@@ -1166,6 +1179,7 @@
     </div>
   </div>
 </div>
-<request-deposit-account [isVisibleRequestDepositAccount]="isVisibleRequestDepositAccount" [customerDepositHistoryId]="customerDepositHistory" [partnerId]="partnerId"
+<request-deposit-account [isVisibleRequestDepositAccount]="isVisibleRequestDepositAccount"
+  [customerDepositHistoryId]="customerDepositHistory" [partnerId]="partnerId"
   (cancel)="handleRequestDepositAccountCancel()">
 </request-deposit-account>

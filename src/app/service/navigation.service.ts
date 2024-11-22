@@ -93,13 +93,7 @@ export class NavigationService {
             console.log(notifyData);
 
             var idPartner = notifyData.customerDepositHistory.partnerId;
-            console.log("idPartner: ", idPartner);
-
-
             var customerDepositHistoryId = notifyData.otherId;
-            console.log("CustomerDepositHistoryId: ", idPartner);
-
-
             const fullUrl = this.router.serializeUrl(
               this.router.createUrlTree([url], { queryParams: { [Constant.ID]: idPartner, [Constant.ID_CUSTOMER_DEPOSIT_HISTORY]: customerDepositHistoryId } })
             );
