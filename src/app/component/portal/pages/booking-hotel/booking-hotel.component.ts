@@ -925,11 +925,11 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
               });
             }
           } else {
-            this.notificationService.showNotification(Constant.ERROR, `Hệ thống gặp lỗi, xoá ảnh ${file.name} thật bại.`);
+            this.notificationService.showNotification(Constant.ERROR, `Hệ thống gặp lỗi, xoá ảnh ${file.name} thất bại.`);
           }
         },
         error: (error) => {
-          this.notificationService.showNotification(Constant.ERROR, `Hệ thống gặp lỗi, xoá ảnh ${file.name} thật bại.`);
+          this.notificationService.showNotification(Constant.ERROR, `Hệ thống gặp lỗi, xoá ảnh ${file.name} thất bại.`);
         },
         complete: () => {
         },
@@ -957,11 +957,11 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
               });
             }
           } else {
-            this.notificationService.showNotification(Constant.ERROR, `Hệ thống gặp lỗi, xoá ảnh ${file.name} thật bại.`);
+            this.notificationService.showNotification(Constant.ERROR, `Hệ thống gặp lỗi, xoá ảnh ${file.name} thất bại.`);
           }
         },
         error: (error) => {
-          this.notificationService.showNotification(Constant.ERROR, `Hệ thống gặp lỗi, xoá ảnh ${file.name} thật bại.`);
+          this.notificationService.showNotification(Constant.ERROR, `Hệ thống gặp lỗi, xoá ảnh ${file.name} thất bại.`);
         },
         complete: () => {
         },
@@ -1321,12 +1321,12 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
                   this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
                 });
               } else {
-                this.notificationService.showNotification(Constant.ERROR, 'Xác nhận đặt phòng thật bại');
+                this.notificationService.showNotification(Constant.ERROR, 'Xác nhận đặt phòng thất bại');
               }
             }
           },
           error: (error) => {
-            this.notificationService.showNotification(Constant.ERROR, 'Xác nhận đặt phòng thật bại');
+            this.notificationService.showNotification(Constant.ERROR, 'Xác nhận đặt phòng thất bại');
           },
 
           complete: () => {
@@ -1350,10 +1350,10 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
           } else {
             if (res.errors && res.errors.length > 0) {
               res.errors.forEach((el: any) => {
-                this.notificationService.showNotification(Constant.ERROR, 'Từ chối đặt phòng thật bại');
+                this.notificationService.showNotification(Constant.ERROR, 'Từ chối đặt phòng thất bại');
               });
             } else {
-              this.notificationService.showNotification(Constant.ERROR, 'Từ chối đặt phòng thật bại');
+              this.notificationService.showNotification(Constant.ERROR, 'Từ chối đặt phòng thất bại');
             }
           }
         },
@@ -1402,7 +1402,7 @@ export class BookingHotelComponent extends TableSelectionAbstract implements OnI
                 this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
               });
             } else {
-              this.notificationService.showNotification(Constant.ERROR, 'Gửi Email đặt phòng thật bại');
+              this.notificationService.showNotification(Constant.ERROR, 'Gửi Email đặt phòng thất bại');
             }
           }
         },

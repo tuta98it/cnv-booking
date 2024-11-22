@@ -194,23 +194,23 @@ export class UtilitRoomComponent extends TableSelectionAbstract implements OnIni
           this.isVisibleUtilityRoom = false;
           this.getListData();
         } else {
-          this.notificationService.showNotification(Constant.ERROR, `Thêm mới tiện ích phòng thật bại`);
+          this.notificationService.showNotification(Constant.ERROR, `Thêm mới tiện ích phòng thất bại`);
         }
       }, (error: any) => {
-        this.notificationService.showNotification(Constant.ERROR, `Thêm mới tiện ích phòng thật bại`);
+        this.notificationService.showNotification(Constant.ERROR, `Thêm mới tiện ích phòng thất bại`);
       });
     } else {
       // / update
       this.generalService.updateUtilityByID(formValue.id, formValue).subscribe((res: any) => {
         if (res.ret && res.ret[0].code !== 0) {
-          this.notificationService.showNotification(Constant.ERROR, `Cập nhật tiện ích phòng thật bại`);
+          this.notificationService.showNotification(Constant.ERROR, `Cập nhật tiện ích phòng thất bại`);
         } else {
           this.getListData();
           this.isVisibleUtilityRoom = false;
           this.notificationService.showNotification(Constant.SUCCESS, `Cập nhật tiện ích phòng thành công`);
         }
       }, error => {
-        this.notificationService.showNotification(Constant.SUCCESS, `Cập nhật tiện ích phòng thật bại`);
+        this.notificationService.showNotification(Constant.SUCCESS, `Cập nhật tiện ích phòng thất bại`);
       });
     }
   }

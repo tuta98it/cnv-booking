@@ -438,11 +438,11 @@ export class DataAirlineTicketsComponent extends TableSelectionAbstract implemen
               });
             }
           } else {
-            this.notificationService.showNotification(Constant.ERROR, `Hệ thống gặp lỗi, xoá ảnh ${file.name} thật bại.`);
+            this.notificationService.showNotification(Constant.ERROR, `Hệ thống gặp lỗi, xoá ảnh ${file.name} thất bại.`);
           }
         },
         error: (error) => {
-          this.notificationService.showNotification(Constant.ERROR, `Hệ thống gặp lỗi, xoá ảnh ${file.name} thật bại.`);
+          this.notificationService.showNotification(Constant.ERROR, `Hệ thống gặp lỗi, xoá ảnh ${file.name} thất bại.`);
         },
         complete: () => {
         },
@@ -471,11 +471,11 @@ export class DataAirlineTicketsComponent extends TableSelectionAbstract implemen
               });
             }
           } else {
-            this.notificationService.showNotification(Constant.ERROR, `Hệ thống gặp lỗi, xoá ảnh ${file.name} thật bại.`);
+            this.notificationService.showNotification(Constant.ERROR, `Hệ thống gặp lỗi, xoá ảnh ${file.name} thất bại.`);
           }
         },
         error: (error) => {
-          this.notificationService.showNotification(Constant.ERROR, `Hệ thống gặp lỗi, xoá ảnh ${file.name} thật bại.`);
+          this.notificationService.showNotification(Constant.ERROR, `Hệ thống gặp lỗi, xoá ảnh ${file.name} thất bại.`);
         },
         complete: () => {
         },
@@ -942,10 +942,10 @@ export class DataAirlineTicketsComponent extends TableSelectionAbstract implemen
           } else {
             if (res.errors && res.errors.length > 0) {
               res.errors.forEach((el: any) => {
-                this.notificationService.showNotification(Constant.ERROR, 'Xác nhận đặt phòng thật bại');
+                this.notificationService.showNotification(Constant.ERROR, 'Xác nhận đặt phòng thất bại');
               });
             } else {
-              this.notificationService.showNotification(Constant.ERROR, 'Xác nhận đặt phòng thật bại');
+              this.notificationService.showNotification(Constant.ERROR, 'Xác nhận đặt phòng thất bại');
             }
           }
         },
@@ -969,10 +969,10 @@ export class DataAirlineTicketsComponent extends TableSelectionAbstract implemen
           } else {
             if (res.errors && res.errors.length > 0) {
               res.errors.forEach((el: any) => {
-                this.notificationService.showNotification(Constant.ERROR, 'Từ chối đặt phòng thật bại');
+                this.notificationService.showNotification(Constant.ERROR, 'Từ chối đặt phòng thất bại');
               });
             } else {
-              this.notificationService.showNotification(Constant.ERROR, 'Từ chối đặt phòng thật bại');
+              this.notificationService.showNotification(Constant.ERROR, 'Từ chối đặt phòng thất bại');
             }
           }
         },

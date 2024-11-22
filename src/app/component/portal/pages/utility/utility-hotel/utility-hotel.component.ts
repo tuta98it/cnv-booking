@@ -194,23 +194,23 @@ export class UtilitHotelComponent extends TableSelectionAbstract implements OnIn
           this.isVisibleUtilityHotel = false;
           this.getListData();
         } else {
-          this.notificationService.showNotification(Constant.ERROR, `Thêm mới tiện ích khách sạn thật bại`);
+          this.notificationService.showNotification(Constant.ERROR, `Thêm mới tiện ích khách sạn thất bại`);
         }
       }, (error: any) => {
-        this.notificationService.showNotification(Constant.ERROR, `Thêm mới tiện ích khách sạn thật bại`);
+        this.notificationService.showNotification(Constant.ERROR, `Thêm mới tiện ích khách sạn thất bại`);
       });
     } else {
       // / update
       this.generalService.updateUtilityByID(formValue.id, formValue).subscribe((res: any) => {
         if (res.ret && res.ret[0].code !== 0) {
-          this.notificationService.showNotification(Constant.ERROR, `Cập nhật tiện ích khách sạn thật bại`);
+          this.notificationService.showNotification(Constant.ERROR, `Cập nhật tiện ích khách sạn thất bại`);
         } else {
           this.getListData();
           this.isVisibleUtilityHotel = false;
           this.notificationService.showNotification(Constant.SUCCESS, `Cập nhật tiện ích khách sạn thành công`);
         }
       }, error => {
-        this.notificationService.showNotification(Constant.SUCCESS, `Cập nhật tiện ích khách sạn ${formValue.name} thật bại`);
+        this.notificationService.showNotification(Constant.SUCCESS, `Cập nhật tiện ích khách sạn ${formValue.name} thất bại`);
       });
     }
   }

@@ -505,11 +505,11 @@ export class HotelEditComponent implements OnInit {
                 });
               }
             } else {
-              this.notificationService.showNotification(Constant.ERROR, `Hệ thống gặp lỗi, xoá ảnh ${file.name} thật bại.`);
+              this.notificationService.showNotification(Constant.ERROR, `Hệ thống gặp lỗi, xoá ảnh ${file.name} thất bại.`);
             }
           },
           error: (error) => {
-            this.notificationService.showNotification(Constant.ERROR, `Hệ thống gặp lỗi, xoá ảnh ${file.name} thật bại.`);
+            this.notificationService.showNotification(Constant.ERROR, `Hệ thống gặp lỗi, xoá ảnh ${file.name} thất bại.`);
           },
           complete: () => {
           },
