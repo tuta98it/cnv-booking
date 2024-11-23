@@ -1092,7 +1092,7 @@
                     <td [nzLeft]="fixedColumnBalanceFluctuation" [nzDisabled]="data.disabled">{{ data.transactionTime |
                       dateFormat : Constant.DATE_FMT_HOUR }}</td>
                     <td [nzDisabled]="data.disabled">{{ data.implementPersonInfo }}
-                      <span class="icon-info-note" *ngIf="data.note" [title]="data.note">
+                      <span class="icon-info-note" *ngIf="data.note" nz-tooltip [nzTooltipTitle]="data.note" nzTooltipPlacement="right" nzTooltipColor="#ff6347">
                         &#123;i&#125;
                       </span>
                     </td>
