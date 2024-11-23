@@ -1091,7 +1091,11 @@
                     </td>
                     <td [nzLeft]="fixedColumnBalanceFluctuation" [nzDisabled]="data.disabled">{{ data.transactionTime |
                       dateFormat : Constant.DATE_FMT_HOUR }}</td>
-                    <td [nzDisabled]="data.disabled">{{ data.implementPersonInfo }}</td>
+                    <td [nzDisabled]="data.disabled">{{ data.implementPersonInfo }}
+                      <span class="icon-info-note" *ngIf="data.note" [title]="data.note">
+                        &#123;i&#125;
+                      </span>
+                    </td>
 
                     <td [nzDisabled]="data.disabled" *ngIf="data.amount > 0">{{ (data.amount) | currencyFormat }} VNĐ
                     </td>

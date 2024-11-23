@@ -1708,7 +1708,7 @@ export class ActionPartnerComponent implements OnInit {
     if (today > endTimeContractDate) {
       this.modalService.confirm({
         nzTitle: `Bạn đang chọn 1 ngày kết thúc hợp đồng trong quá khứ. Việc lưu lại sẽ khiến doanh nghiệp sẽ bị khóa. Bạn có chắc chắn muốn thực hiện thao tác này không?`,
-        nzContent: 'Ấn đồng ý để lưu lại',
+        nzContent: '',
         nzOkDanger: true,
         nzOkText: 'Đồng ý',
         nzCancelText: 'Không',

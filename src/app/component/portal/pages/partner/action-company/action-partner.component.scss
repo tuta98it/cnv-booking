@@ -23,4 +23,16 @@ div.content-create-company {
 
 ::ng-deep tr.ant-table-placeholder.ng-star-inserted {
   display: none;
+
+
+}
+
+::ng-deep {
+  .icon-info-note {
+    color: tomato;
+    font-size: smaller;
+    vertical-align: super;
+    cursor: pointer;
+    padding: 0.5rem 0.5rem 0.5rem 0;
+  }
 }
