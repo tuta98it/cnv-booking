@@ -1705,70 +1705,81 @@ export class ActionPartnerComponent implements OnInit {
     const DateMinimum = new Date(1900, 0, 1).setHours(0, 0, 0, 0); // 01/01/1900
     const endTimeContractDate = this.formBaseBusinessContractUpdate.value.endTimeContractDate ?? DateMinimum;
     const today = new Date();
-    if (today > endTimeContractDate) {
-      this.modalService.confirm({
-        nzTitle: `Bạn đang chọn 1 ngày kết thúc hợp đồng trong quá khứ. Việc lưu lại sẽ khiến doanh nghiệp sẽ bị khóa. Bạn có chắc chắn muốn thực hiện thao tác này không?`,
-        nzContent: '',
-        nzOkDanger: true,
-        nzOkText: 'Đồng ý',
-        nzCancelText: 'Không',
-        nzOnOk: () => this.saveUpdateContractInfoForPartner(isShowNotiySuccess),
-      });
+    let partnerBusinessLicenseFileIds = this.listUploadBusinessLicenseFile?.map((bl: any) => bl.uid) ?? null;
+    this.formBaseBusinessContractUpdate.controls['partnerBusinessLicenseFileIDs'].setValue(partnerBusinessLicenseFileIds);
+
+    let partnerContractFileIds = this.listUploadContractFile?.map((bl: any) => bl.uid) ?? null;
+    this.formBaseBusinessContractUpdate.controls['partnerContractFileIDs'].setValue(partnerContractFileIds);
+
+    let partnerTypeOfServices = this.checkOptionsBusinessServiceVHL?.filter(option => option.checked).map(option => option.value) ?? null;
+    this.formBaseBusinessContractUpdate.controls['typeOfServices'].setValue(JSON.stringify(partnerTypeOfServices));
+
+
+
+    if (this.formBaseBusinessContractUpdate.valid) {
+      if (this.formBaseInfoCreatePartner.get('allowDebt')?.value == AllowDebtPartner.NOT_ALLOW) {
+        this.formBaseBusinessContractUpdate.controls['debtMax'].setValue(null);
+      }
+
+      if (this.itemPartner?.id) {
+        if (today > endTimeContractDate) {
+          this.modalService.confirm({
+            nzTitle: `Bạn đang chọn 1 ngày kết thúc hợp đồng trong quá khứ. Việc lưu lại sẽ khiến doanh nghiệp sẽ bị khóa. Bạn có chắc chắn muốn thực hiện thao tác này không?`,
+            nzContent: '',
+            nzOkDanger: true,
+            nzOkText: 'Đồng ý',
+            nzCancelText: 'Không',
+            nzOnOk: () => this.saveUpdateContractInfoForPartner(isShowNotiySuccess).then(async () => {
+              this.itemPartner = await this.getPartnerById(this.itemPartner.id).catch((reject) => {
+                this.notificationService.showNotification(Constant.ERROR, `Lỗi truy vấn dữ liệu doanh nghiệp`);
+              });
+              this.setActionPageByStatus(this.itemPartner?.status);
+              this.resetFormBaseInfoCreatePartner(this.itemPartner);
+              this.resetFormContractUpdatePartner(this.itemPartner);
+            }),
+          });
+        } else {
+          this.saveUpdateContractInfoForPartner(isShowNotiySuccess);
+        }
+      } else {
+        this.msg.error(`Doanh nghiệp không tồn tại`);
+      }
+
     } else {
-      this.saveUpdateContractInfoForPartner(isShowNotiySuccess);
+      // Đánh dấu tất cả các trường là đã được chạm (touched) để hiển thị lỗi
+      this.formBaseInfoCreatePartner.markAllAsTouched();
+      // this.notificationService.showNotification(Constant.SUCCESS, "Tồn tại trường thông tin chưa được nhập");
+      this.msg.error(`Tồn tại trường thông tin quản lý hợp đồng chưa được nhập`);
     }
+
+
+
+
   }
 
   saveUpdateContractInfoForPartner(isShowNotiySuccess: boolean) {
     return new Promise((resolve, reject) => {
-      let partnerBusinessLicenseFileIds = this.listUploadBusinessLicenseFile?.map((bl: any) => bl.uid) ?? null;
-      this.formBaseBusinessContractUpdate.controls['partnerBusinessLicenseFileIDs'].setValue(partnerBusinessLicenseFileIds);
-
-      let partnerContractFileIds = this.listUploadContractFile?.map((bl: any) => bl.uid) ?? null;
-      this.formBaseBusinessContractUpdate.controls['partnerContractFileIDs'].setValue(partnerContractFileIds);
-
-      let partnerTypeOfServices = this.checkOptionsBusinessServiceVHL?.filter(option => option.checked).map(option => option.value) ?? null;
-      this.formBaseBusinessContractUpdate.controls['typeOfServices'].setValue(JSON.stringify(partnerTypeOfServices));
-
-
-
-      if (this.formBaseBusinessContractUpdate.valid) {
-        if (this.formBaseInfoCreatePartner.get('allowDebt')?.value == AllowDebtPartner.NOT_ALLOW) {
-          this.formBaseBusinessContractUpdate.controls['debtMax'].setValue(null);
-        }
-        let valueSave = this.formBaseBusinessContractUpdate.value;
-        if (this.itemPartner?.id) {
-          this.generalService.updateContractInfoForPartner(this.itemPartner?.id, valueSave).subscribe((res: any) => {
-            if (res.isValid) {
-              if (isShowNotiySuccess) {
-                this.notificationService.showNotification(Constant.SUCCESS, `Cập nhật thông tin hợp đồng doanh nghiệp thành công`);
-              }
-              this.changeValueBaseBusinessContractReversal();
-              resolve(true);
-            } else {
-              if (res.errors && res.errors.length > 0) {
-                res.errors.forEach((el: any) => {
-                  this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
-                });
-              } else {
-                this.notificationService.showNotification(Constant.ERROR, 'Cập nhật thông tin hợp đồng doanh nghiệp không thành công');
-              }
-            }
-          }, error => {
-            this.notificationService.showNotification(Constant.ERROR, 'Cập nhật thông tin hợp đồng doanh nghiệp thất bại do lỗi hệ thống');
-          });
+      let valueSave = this.formBaseBusinessContractUpdate.value;
+      this.generalService.updateContractInfoForPartner(this.itemPartner?.id, valueSave).subscribe((res: any) => {
+        if (res.isValid) {
+          if (isShowNotiySuccess) {
+            this.notificationService.showNotification(Constant.SUCCESS, `Cập nhật thông tin hợp đồng doanh nghiệp thành công`);
+          }
+          this.changeValueBaseBusinessContractReversal();
+          resolve(res.data);
         } else {
-          this.msg.error(`Doanh nghiệp không tồn tại`);
+          if (res.errors && res.errors.length > 0) {
+            res.errors.forEach((el: any) => {
+              this.notificationService.showNotification(Constant.ERROR, el.errorMessage);
+            });
+          } else {
+            this.notificationService.showNotification(Constant.ERROR, 'Cập nhật thông tin hợp đồng doanh nghiệp không thành công');
+          }
         }
-
-      } else {
-        // Đánh dấu tất cả các trường là đã được chạm (touched) để hiển thị lỗi
-        this.formBaseInfoCreatePartner.markAllAsTouched();
-        // this.notificationService.showNotification(Constant.SUCCESS, "Tồn tại trường thông tin chưa được nhập");
-        this.msg.error(`Tồn tại trường thông tin quản lý hợp đồng chưa được nhập`);
-      }
+      }, error => {
+        this.notificationService.showNotification(Constant.ERROR, 'Cập nhật thông tin hợp đồng doanh nghiệp thất bại do lỗi hệ thống');
+      });
     });
-
   }
 
   changeValueBaseBusinessContractReversal(value?: boolean) {
