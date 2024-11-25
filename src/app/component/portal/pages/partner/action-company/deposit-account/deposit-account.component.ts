@@ -28,7 +28,6 @@ export class DepositAccountComponent implements OnInit {
   set isVisibleDepositAccount(value: boolean) {
     this._isVisibleDepositAccount = value;
     if (value) {
-      this.getUserInfo();
       this.formDepositAccount.reset({
         id: null,
         implementPersonId: this.userInfor.id,
@@ -65,7 +64,7 @@ export class DepositAccountComponent implements OnInit {
 
 
   ngOnInit(): void {
-
+    this.getUserInfo();
   }
   getUserInfo() {
     this.userInfor = JSON.parse(localStorage.getItem(Constant.USER_INFO));
