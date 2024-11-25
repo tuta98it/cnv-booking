@@ -16,12 +16,30 @@ import { Constant, DepositConstant } from 'src/app/shared/constants/constant.cla
 export class DepositAccountComponent implements OnInit {
 
 
-  @Input() isVisibleDepositAccount: boolean = false;
+
   @Input() partnerId: number = null;
   @Output() cancel: EventEmitter<any> = new EventEmitter();
   @Input() employees: any[] = [];
   isDepositAccountOkLoading = false;
 
+  private _isVisibleDepositAccount: boolean = false;
+
+  @Input()
+  set isVisibleDepositAccount(value: boolean) {
+    this._isVisibleDepositAccount = value;
+    if (value) {
+      this.getUserInfo();
+      this.formDepositAccount.reset({
+        id: null,
+        implementPersonId: this.userInfor.id,
+        depositContent: DepositConstant.DEPOSIT_CONTENT_DEFAULT,
+      });
+    }
+  }
+
+  get isVisibleDepositAccount(): boolean {
+    return this._isVisibleDepositAccount;
+  }
 
   valueInputNumberAmount = '';
   tooltipTitleAmount = 'Nhập số tiền';
@@ -44,13 +62,10 @@ export class DepositAccountComponent implements OnInit {
     });
   }
 
+
+
   ngOnInit(): void {
-    this.getUserInfo();
-    this.formDepositAccount.reset({
-      id: null,
-      implementPersonId: this.userInfor.id,
-      depositContent: DepositConstant.DEPOSIT_CONTENT_DEFAULT,
-    })
+
   }
   getUserInfo() {
     this.userInfor = JSON.parse(localStorage.getItem(Constant.USER_INFO));
@@ -118,7 +133,7 @@ export class DepositAccountComponent implements OnInit {
     this.isDepositAccountOkLoading = true;
     if (this.formDepositAccount.valid) {
       let valueSave = this.formDepositAccount.value;
-      valueSave = { partnerId : this.partnerId, ...valueSave}
+      valueSave = { partnerId: this.partnerId, ...valueSave }
       this.generalService.depositAccount(valueSave).subscribe((res: any) => {
         if (res.isValid) {
           this.isDepositAccountOkLoading = false;
