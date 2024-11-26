@@ -21,8 +21,7 @@
         <div>
 
 
-          <button nz-button nzType="default" nzShape="round"
-            style="margin-right: 8px;" (click)="backToPreviousPage()">
+          <button nz-button nzType="default" nzShape="round" style="margin-right: 8px;" (click)="backToPreviousPage()">
             <div style="display: flex; justify-content: center; align-items: center;">
               <span nz-icon nzType="left"></span>
               <span style="margin-left: 4px; line-height: normal;">Quay lại</span>
@@ -30,9 +29,10 @@
           </button>
 
           <!-- (click)="handleUnLockCompany()" *ngIf="itemPartner?.status == PartnerStatus.Locked"-->
-          <button *ngIf="actionEmployeeVHL == ActionTypePageVHL.Update
-                        && (itemEmployee == null ? actionEmployeeVHL  == ActionTypePageVHL.Create : itemEmployee?.status == EmployeeStatus.LOCKED)" nz-button nzType="default"
-            style="margin-right: 8px; " (click)="showUnlockAccountConfirm()">
+          <button
+            *ngIf="actionEmployeeVHL == ActionTypePageVHL.Update
+                        && (itemEmployee == null ? actionEmployeeVHL  == ActionTypePageVHL.Create : itemEmployee?.status == EmployeeStatus.LOCKED)"
+            nz-button nzType="default" style="margin-right: 8px; " (click)="showUnlockAccountConfirm()">
             <div style="display: flex; align-items: center;">
               <span nz-icon nzType="unlock"></span>
               <span style="margin-left: 6px; line-height: normal;">Mở khoá</span>
@@ -51,7 +51,8 @@
 
           <!-- (click)="cancelPageActionPartner()" *ngIf="itemPartner?.status != PartnerStatus.Active" -->
 
-          <button *ngIf="actionEmployeeVHL == ActionTypePageVHL.Update && (itemEmployee == null ? actionEmployeeVHL  == ActionTypePageVHL.Create : itemEmployee?.status == EmployeeStatus.ACTIVE)"
+          <button
+            *ngIf="actionEmployeeVHL == ActionTypePageVHL.Update && (itemEmployee == null ? actionEmployeeVHL  == ActionTypePageVHL.Create : itemEmployee?.status == EmployeeStatus.ACTIVE)"
             nz-button nzType="default" style="margin-right: 8px;" (click)="showResetPassword()">
             <div style="display: flex; align-items: center; ">
               <span nz-icon nzType="key"></span>
@@ -176,8 +177,8 @@
                         formControlName='fullname' placeholder="Nhập họ và tên">
                     </div>
                     <div nz-col class="gutter-row" [nzSpan]="3" style="display: flex; align-items: center;">
-                      CCCD
-                      <!-- <span style="color: tomato; margin-left: 4px;">*</span> -->
+                      CCCD <span style="color: tomato; margin-left: 4px;">*</span>
+
                     </div>
                     <div nz-col class="gutter-row" [nzSpan]="8">
                       <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
@@ -213,10 +214,10 @@
                       </nz-select>
                     </div>
 
-                    <div nz-col class="gutter-row" [nzSpan]="4" style="display: flex; align-items: center;">
-                      Ngày sinh
+                    <div nz-col class="gutter-row" [nzSpan]="5" style="display: flex; align-items: center;">
+                      Ngày sinh <span style="color: tomato; margin-left: 4px;">*</span>
                     </div>
-                    <div nz-col class="gutter-row" [nzSpan]="7">
+                    <div nz-col class="gutter-row" [nzSpan]="6">
                       <nz-date-picker [nzMode]="'date'" nzSize="default" style="border-radius: 4px; width: 100%;"
                         nzFormat="dd/MM/yyyy" nzPlaceHolder="Nhập ngày sinh"
                         formControlName='birthday'></nz-date-picker>
@@ -232,10 +233,10 @@
                       <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
                         placeholder="Nhập số điện thoại" formControlName='phoneNo'>
                     </div>
-                    <div nz-col class="gutter-row" [nzSpan]="4" style="display: flex; align-items: center;">
+                    <div nz-col class="gutter-row" [nzSpan]="5" style="display: flex; align-items: center;">
                       Quốc tịch
                     </div>
-                    <div nz-col class="gutter-row" [nzSpan]="7">
+                    <div nz-col class="gutter-row" [nzSpan]="6">
                       <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
                         placeholder="Nhập quốc tịch" formControlName='nationality'>
                     </div>
@@ -267,10 +268,10 @@
                         placeholder="Nhập mã nhân viên" formControlName='staffCode'>
                     </div>
 
-                    <div nz-col class="gutter-row" [nzSpan]="4" style="display: flex; align-items: center;">
+                    <div nz-col class="gutter-row" [nzSpan]="5" style="display: flex; align-items: center;">
                       Mã thẻ TV
                     </div>
-                    <div nz-col class="gutter-row" [nzSpan]="7">
+                    <div nz-col class="gutter-row" [nzSpan]="6">
                       <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
                         placeholder="Nhập mã thẻ thành viên" formControlName='membershipCode'>
                     </div>
@@ -286,10 +287,10 @@
                         placeholder="Nhập chức vụ" formControlName='position'>
                     </div>
 
-                    <div nz-col class="gutter-row" [nzSpan]="4" style="display: flex; align-items: center;">
-                      Phòng ban
+                    <div nz-col class="gutter-row" [nzSpan]="5" style="display: flex; align-items: center;">
+                      Phòng ban <span style="color: tomato; margin-left: 4px;">*</span>
                     </div>
-                    <div nz-col class="gutter-row" [nzSpan]="7">
+                    <div nz-col class="gutter-row" [nzSpan]="6">
                       <input style="border-radius: 4px;" nzSize="default" nz-input type="text"
                         placeholder="Nhập phòng ban" formControlName='department'>
                     </div>
@@ -330,7 +331,7 @@
                 <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }"
                   style="display: flex; align-items: center; padding: 8px 0;">
                   <div nz-col class="gutter-row fs-xl box-center" [nzSpan]="24">
-                    {{amountOfMoneyUsed ? (amountOfMoneyUsed  | currencyFormat ): "-"}} VNĐ
+                    {{amountOfMoneyUsed ? (amountOfMoneyUsed | currencyFormat ): "-"}} VNĐ
                   </div>
                 </div>
               </div>

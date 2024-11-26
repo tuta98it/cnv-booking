@@ -244,17 +244,17 @@ export class UpgradeEmployeeComponent implements OnInit {
       userType: new FormControl({ value: UserType.NormalAccount, disabled: false }),
       userCode: new FormControl({ value: null, disabled: true }),
       fullname: new FormControl({ value: null, disabled: false }, Validators.required),
-      personalIdentifier: new FormControl({ value: null, disabled: false }),
+      personalIdentifier: new FormControl({ value: null, disabled: false }, Validators.required),
       email: new FormControl({ value: null, disabled: false }, Validators.required),
       gender: new FormControl({ value: Gender.MALE, disabled: false }, Validators.required),
-      birthday: new FormControl({ value: null, disabled: false }),
+      birthday: new FormControl({ value: null, disabled: false }, Validators.required),
       phoneNo: new FormControl({ value: null, disabled: false }, Validators.required),
       nationality: new FormControl({ value: null, disabled: false }),
       directManagementUserId: new FormControl({ value: null, disabled: !this.idPartner }),
       staffCode: new FormControl({ value: null, disabled: false }),
       membershipCode: new FormControl({ value: null, disabled: false }),
       position: new FormControl({ value: null, disabled: false }),
-      department: new FormControl({ value: null, disabled: false }),
+      department: new FormControl({ value: null, disabled: false }, Validators.required),
     });
 
 
