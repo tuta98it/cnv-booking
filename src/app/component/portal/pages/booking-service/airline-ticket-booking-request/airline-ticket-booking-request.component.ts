@@ -119,6 +119,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   isLoadingButtonSaveAirlineTicketInfo: boolean = false;
   idRequestBooking: number;
   BadyCribEnumText = BadyCribEnumText;
+  AirlineTicketBookingRequestStatus = AirlineTicketBookingRequestStatus;
   constructor(
     public translate: TranslateService,
     private notificationService: NotificationService,
@@ -599,6 +600,13 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
     });
   }
 
+
+  confirmBookingRequestReserveSeat(){
+    this.isSetSinalUpdateStatusRequestBooking = false;
+    this.showPopupAirlineTicket(this.itemBookingRequest, this.OptionAirlineTicketInfoEnum.Update)
+    this.getListData();
+  }
+
   handleChangeStatusByItem(status: any) {
     this.itemBookingRequest = status.data;
     this.ticketRoundTrip = this.itemBookingRequest.typeTicket == TypeAirlineTicket.RoundTrip
@@ -613,17 +621,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
         });
         break;
       case this.BookingRequestStatusEnum.ReserveSeat:
-        this.isSetSinalUpdateStatusRequestBooking = false;
-
-        // this.sendEmailToPassengerToConfirmFlightTicket(requestBookingId);
-        this.showPopupAirlineTicket(this.itemBookingRequest, this.OptionAirlineTicketInfoEnum.Update)
-
-
-        // this.signalOpenPopupUpdateNumberTicket = false;
-        // this.isSendEmailToPassengerToConfirmFlightTicket = true;
-        // this.isSendEmailToPassengerToConfirmSuccessIssuedTicket = false;
-
-        this.getListData();
+        this.confirmBookingRequestReserveSeat();
         break;
       case this.BookingRequestStatusEnum.ReceivedTicket:
 

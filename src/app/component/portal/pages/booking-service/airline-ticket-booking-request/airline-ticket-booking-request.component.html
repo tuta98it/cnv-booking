@@ -1121,12 +1121,12 @@
       </div>
     </button>
 
-    <!-- <button *ngIf="optionAirlineTicketInfo == OptionAirlineTicketInfoEnum.Update" nz-button nzType="primary"
-      (click)="handleSaveArilineTicketPopup()">
+    <button *ngIf="itemBookingRequest.status == AirlineTicketBookingRequestStatus.SubmitRequest" nz-button nzType="primary"
+      (click)="confirmBookingRequestReserveSeat()">
       <div style="display: flex; align-items: center;">
-        <span nz-icon nzType="save"></span>
-        <span style="margin-left: 6px; line-height: normal;">Lưu</span>
+        <span nz-icon nzType="check"></span>
+        <span style="margin-left: 6px; line-height: normal;">Xác nhận giữ chỗ</span>
       </div>
-    </button> -->
+    </button>
   </div>
 </nz-modal>
