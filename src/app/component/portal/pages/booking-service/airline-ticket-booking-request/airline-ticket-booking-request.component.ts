@@ -33,13 +33,13 @@ import { TypeOfDocument } from 'src/app/enums/type-of-document.enum';
 import { DisabledTimeFn, DisabledTimePartial } from 'ng-zorro-antd/date-picker';
 import { differenceInCalendarDays, isThisSecond, setHours } from 'date-fns';
 import { EmployeePipe } from 'src/app/shared/pipe/employeePipe.pipe';
+import { BadyCribEnumText } from 'src/app/enums/bady-crib.emum';
 @Component({
   selector: 'airline-ticket-booking-request',
   templateUrl: './airline-ticket-booking-request.component.html',
   styleUrls: ['./airline-ticket-booking-request.component.scss']
 })
 export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract implements OnInit, AfterViewInit, OnDestroy {
-
   Constant = Constant;
   @ViewChild("ListAccount") dataGridDetail: DxDataGridComponent;
   datas: any[] = [];
@@ -118,6 +118,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
 
   isLoadingButtonSaveAirlineTicketInfo: boolean = false;
   idRequestBooking: number;
+  BadyCribEnumText = BadyCribEnumText;
   constructor(
     public translate: TranslateService,
     private notificationService: NotificationService,
