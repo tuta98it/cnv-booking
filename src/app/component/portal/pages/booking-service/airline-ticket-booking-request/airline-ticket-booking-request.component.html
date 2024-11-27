@@ -849,7 +849,6 @@
   </div>
   <ng-template #contentpViewRequestBookingTicket>
     <div>
-      <label><strong>Mã yêu cầu: </strong>{{itemBookingRequest?.bookingCode}}</label>
       <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
         <div nz-col class="gutter-row" nzSpan="24">
           <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
@@ -861,27 +860,37 @@
             </div>
           </div>
           <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
-            <div nz-col class="gutter-row" nzSpan="8">
+            <div nz-col class="gutter-row" nzSpan="6">
               <div class="inner-box">
-                <label for="" style="font-weight: 600;">Mã người dùng</label>
+                <label for="" style="font-weight: 600;">Mã yêu cầu</label>
                 <div>
-                  <span>{{ itemBookingRequest?.userBooking?.userCode }}</span>
+                  <span>{{ itemBookingRequest?.bookingCode }}</span>
                 </div>
               </div>
             </div>
-            <div nz-col class="gutter-row" nzSpan="8">
+            <div nz-col class="gutter-row" nzSpan="6">
               <div class="inner-box">
-                <label for="" style="font-weight: 600;">Tên người dùng</label>
+                <label for="" style="font-weight: 600;">Thông tin người đặt</label>
                 <div>
-                  <span>{{ itemBookingRequest?.userBooking?.fullname }}</span>
+                  <span>{{ itemBookingRequest?.userBooking?.userCode }}</span> - <span>{{
+                    itemBookingRequest?.userBooking?.fullname }}</span>
                 </div>
               </div>
             </div>
-            <div nz-col class="gutter-row" nzSpan="8">
+            <div nz-col class="gutter-row" nzSpan="6">
               <div class="inner-box">
-                <label for="" style="font-weight: 600;">Công ty</label>
+                <label for="" style="font-weight: 600;">Trực thuộc doanh nghiệp</label>
                 <div>
-                  <span>{{ itemBookingRequest?.userBooking?.companyName }}</span>
+                  <span>{{ itemBookingRequest?.userBooking?.companyCode }}</span> - <span>{{
+                    itemBookingRequest?.userBooking?.companyName }}</span>
+                </div>
+              </div>
+            </div>
+            <div nz-col class="gutter-row" nzSpan="6">
+              <div class="inner-box">
+                <label for="" style="font-weight: 600;">Thời gian gửi yêu cầu</label>
+                <div>
+                  <span>{{ itemBookingRequest?.dateCreated | dateFormat : Constant.DATE_FMT_HOUR }}</span>
                 </div>
               </div>
             </div>
@@ -1103,12 +1112,12 @@
       </div>
     </button>
 
-    <button *ngIf="optionAirlineTicketInfo == OptionAirlineTicketInfoEnum.Update" nz-button nzType="primary"
+    <!-- <button *ngIf="optionAirlineTicketInfo == OptionAirlineTicketInfoEnum.Update" nz-button nzType="primary"
       (click)="handleSaveArilineTicketPopup()">
       <div style="display: flex; align-items: center;">
         <span nz-icon nzType="save"></span>
         <span style="margin-left: 6px; line-height: normal;">Lưu</span>
       </div>
-    </button>
+    </button> -->
   </div>
 </nz-modal>

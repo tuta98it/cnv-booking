@@ -11,9 +11,9 @@
         </nz-select>
         <ng-container *ngIf="search.type == 10">
           <nz-date-picker style="margin-right: 10px;" [(ngModel)]="search.fromDate" (ngModelChange)="doSearch()"
-                          nzPlaceHolder="Từ ngày" nzFormat="dd/MM/yyyy"></nz-date-picker>
+                          nzPlaceHolder="Từ ngày" nzFormat="yyyy/MM/dd"></nz-date-picker>
           <nz-date-picker [(ngModel)]="search.toDate" (ngModelChange)="doSearch()" nzPlaceHolder="Đến ngày"
-                          nzFormat="dd/MM/yyyy"></nz-date-picker>
+                          nzFormat="yyyy/MM/dd"></nz-date-picker>
         </ng-container>
       </div>
     </div>

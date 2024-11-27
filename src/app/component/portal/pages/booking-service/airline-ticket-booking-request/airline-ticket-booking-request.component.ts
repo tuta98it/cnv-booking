@@ -40,7 +40,7 @@ import { EmployeePipe } from 'src/app/shared/pipe/employeePipe.pipe';
 })
 export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract implements OnInit, AfterViewInit, OnDestroy {
 
-
+  Constant = Constant;
   @ViewChild("ListAccount") dataGridDetail: DxDataGridComponent;
   datas: any[] = [];
   OptionAirlineTicketInfoEnum = OptionAirlineTicketPopup;
@@ -1434,6 +1434,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   showPopupViewRequestBookingTicket(requestBooking: any) {
     this.itemBookingRequest = requestBooking;
     this.isVisiblePopupViewRequestBookingTicket = true;
+    this.optionAirlineTicketInfo = OptionAirlineTicketPopup.View;
   }
 
   handleChangeTypeTicket(event: any) {
