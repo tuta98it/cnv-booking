@@ -99,7 +99,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
 
   isVisiblePopupUpdateNumberTicket: boolean = false;
   isVisibleRequestBookingHistory: boolean = false;
-  isVisiblePopupUpdatePassengerInfo: boolean = false;
+  isVisiblePopupUpdatePassengerInfo: boolean = true;
 
   listOfOptionPassengers = [];
   newStatus: any;
@@ -120,6 +120,9 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
   idRequestBooking: number;
   BadyCribEnumText = BadyCribEnumText;
   AirlineTicketBookingRequestStatus = AirlineTicketBookingRequestStatus;
+
+
+
   constructor(
     public translate: TranslateService,
     private notificationService: NotificationService,
