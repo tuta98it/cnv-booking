@@ -99,7 +99,7 @@ export class AirlineTicketBookingRequestComponent extends TableSelectionAbstract
 
   isVisiblePopupUpdateNumberTicket: boolean = false;
   isVisibleRequestBookingHistory: boolean = false;
-  isVisiblePopupUpdatePassengerInfo: boolean = true;
+  isVisiblePopupUpdatePassengerInfo: boolean = false;
 
   listOfOptionPassengers = [];
   newStatus: any;
